@@ -1,7 +1,5 @@
 package com.aristowebapi.controller;
 
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,29 +12,30 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.aristowebapi.constant.AristoWebLogMsgConstant;
-import com.aristowebapi.request.MktRepo1Request;
+import com.aristowebapi.request.MktRepo7Request;
 import com.aristowebapi.response.ApiResponse;
-import com.aristowebapi.response.MktRepo1Response;
-import com.aristowebapi.service.MktRepo1Service;
+import com.aristowebapi.response.MktRepo7Response;
+import com.aristowebapi.service.MktRepo7Service;
 
 @RestController
 @CrossOrigin
 @RequestMapping("/api/mis")
-public class MktRepo1Controller {
-	
-	Logger logger = LoggerFactory.getLogger(MktRepo1Controller.class);
+public class MktRepo7Controller {
+Logger logger = LoggerFactory.getLogger(MktRepo1Controller.class);
 	
 	@Autowired
-	private MktRepo1Service mktRepo1Service;
+	private MktRepo7Service mktRepo7Service;
 	
 	
-	@GetMapping("/grosssale")
-	public ResponseEntity<ApiResponse<MktRepo1Response>> getMktRepo1(@RequestBody MktRepo1Request request)
+	@GetMapping("/mktrepo7")
+	public ResponseEntity<ApiResponse<MktRepo7Response>> getMktRepo7(@RequestBody MktRepo7Request request)
 	{
-		logger.info(AristoWebLogMsgConstant.MKT_REPORT_CONTROLLER_01,"getMktRepo1", request.getMyear(),request.getDivCode());
+		logger.info(AristoWebLogMsgConstant.MKT_REPORT_CONTROLLER_07,"getMktRepo7", request.getMyear(),request.getDivCode());
 
-		return new ResponseEntity<ApiResponse<MktRepo1Response>>(mktRepo1Service.getMktRepo1(request), HttpStatus.OK);
+		return new ResponseEntity<ApiResponse<MktRepo7Response>>(mktRepo7Service.getMktRepo7(request), HttpStatus.OK);
 	
 	}
+
+
 
 }

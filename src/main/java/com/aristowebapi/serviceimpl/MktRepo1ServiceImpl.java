@@ -14,9 +14,9 @@ import com.aristowebapi.constant.AristoWebLogMsgConstant;
 import com.aristowebapi.dao.MktRepo1Dao;
 import com.aristowebapi.dto.BranchMasterDto;
 import com.aristowebapi.dto.MktRepo1;
-import com.aristowebapi.request.GrossSaleRequest;
+import com.aristowebapi.request.MktRepo1Request;
 import com.aristowebapi.response.ApiResponse;
-import com.aristowebapi.response.GrossSaleResponse;
+import com.aristowebapi.response.MktRepo1Response;
 import com.aristowebapi.service.MktRepo1Service;
 
 @Service
@@ -27,7 +27,7 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 	private MktRepo1Dao mktRepo1Dao;
 	
 
-	private List<BranchMasterDto> getBranchData(GrossSaleRequest request)
+	private List<BranchMasterDto> getBranchData(MktRepo1Request request)
 	{
 		List<BranchMasterDto> branchData = null;
 		if(request.getUtype()==4 && request.getDepoCode()==0)
@@ -44,7 +44,7 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 		
 	}
 	
-	private String getTitle(GrossSaleRequest request,MktRepo1 data)
+	private String getTitle(MktRepo1Request request,MktRepo1 data)
 	{
 		StringBuilder title=new StringBuilder();
 		title.append(request.getDepoCode()==0?"All India ":data.getDepo_name());
@@ -60,7 +60,7 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 	
 
 	@Override
-	public ApiResponse<GrossSaleResponse> getMktRepo1(GrossSaleRequest request) {
+	public ApiResponse<MktRepo1Response> getMktRepo1(MktRepo1Request request) {
 //		return mktRepo1Dao.web_report_gross(2023, 1, 0, 1, 3, 2, 163,1,1);
 
 		logger.info(AristoWebLogMsgConstant.MKT_REPORT_SERVICE_01,"getMktRepo1");
@@ -73,8 +73,8 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 		
 		List<MktRepo1> grossSaleList=mktRepo1Dao.getWebReportGross(request.getMyear(),request.getDivCode(),request.getDepoCode()
 				,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId(),request.getRepType(),request.getDataType());
-		GrossSaleResponse response=null;
-		List<GrossSaleResponse> saleList = new ArrayList();
+		MktRepo1Response response=null;
+		List<MktRepo1Response> saleList = new ArrayList();
 		Map<String, Long> branches=null;
 		Map<String, Long> group=null;
 		Map<String, Long> total=null;
@@ -101,7 +101,7 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 				pack=data.getPack();
 				mgrp=data.getMgrp();
 				gname=data.getGp_name();
-				response=new GrossSaleResponse();
+				response=new MktRepo1Response();
 				branches=new LinkedHashMap();
 				group=new LinkedHashMap();
 				total=new LinkedHashMap();
@@ -133,7 +133,7 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 				columnTotal=0;
 				
 				k=0;
-				response=new GrossSaleResponse();
+				response=new MktRepo1Response();
 				branches=new LinkedHashMap();
 
 			}
@@ -165,7 +165,7 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 				
 				z=0;
 				groupColumnTotal=0;
-				response=new GrossSaleResponse();
+				response=new MktRepo1Response();
 				branches=new LinkedHashMap();
 				group=new LinkedHashMap();
 				
@@ -238,7 +238,7 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 
 		
 		
-		response=new GrossSaleResponse();
+		response=new MktRepo1Response();
 		response.setPcode(pcode);
 		response.setPname(pname);
 		response.setPack(pack);
@@ -256,7 +256,7 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 
 		
 		branches=new LinkedHashMap();
-		response=new GrossSaleResponse();
+		response=new MktRepo1Response();
 		response.setPcode(mgrp);
 		response.setPname(gname);
 		response.setPack("");
@@ -281,7 +281,7 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 		total.put("TOTAL", grandColumnTotal);
 
 		branches.putAll(total);
-		response=new GrossSaleResponse();
+		response=new MktRepo1Response();
 		response.setPcode(0);
 		response.setPname("Grand Total");
 		response.setPack("");
@@ -289,7 +289,7 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 		response.setColor(2);
 		saleList.add(response);
 
-		return new ApiResponse<GrossSaleResponse>(title.toString(),saleList);
+		return new ApiResponse<MktRepo1Response>(title.toString(),saleList);
 //		return saleList;
 	}
 

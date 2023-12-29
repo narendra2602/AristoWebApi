@@ -1,25 +1,18 @@
-package com.aristowebapi.response;
-
-import java.util.Map;
+package com.aristowebapi.request;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
 @NoArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+public class LoginRequest {
 
-public class GrossSaleResponse {
-	
-	private int pcode;
-	private String pname;
-	private String pack;
-	private int color;
-	private Map<String,Long> branches;
-	
-
-
+	private String userName;
+	private String password;
 }

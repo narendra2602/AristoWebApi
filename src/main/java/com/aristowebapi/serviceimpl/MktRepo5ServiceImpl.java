@@ -10,12 +10,10 @@ import org.springframework.stereotype.Service;
 
 import com.aristowebapi.constant.AristoWebLogMsgConstant;
 import com.aristowebapi.dao.MktRepo5Dao;
-import com.aristowebapi.dto.MktRepo2;
 import com.aristowebapi.dto.MktRepo5;
 import com.aristowebapi.exception.ApiException;
 import com.aristowebapi.request.MktRepo5Request;
 import com.aristowebapi.response.ApiResponse;
-import com.aristowebapi.response.MktRepo2Response;
 import com.aristowebapi.response.MktRepo5Response;
 import com.aristowebapi.service.MktRepo5Service;
 

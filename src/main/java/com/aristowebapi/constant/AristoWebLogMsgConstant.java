@@ -19,4 +19,12 @@ public class AristoWebLogMsgConstant {
 	public static final String MKT_REPORT_CONTROLLER_05="MktRepo5Controller:: {} method execution started, myear : {} , div_code: {}";
 	public static final String MKT_REPORT_SERVICE_05="MktRepo5ServiceImpl:: {} method execution started";
 
+	
+	public static final String MKT_REPORT_CONTROLLER_06="MktRepo6Controller:: {} method execution started, myear : {} , div_code: {}";
+	public static final String MKT_REPORT_SERVICE_06="MktRepo6ServiceImpl:: {} method execution started";
+
+	public static final String MKT_REPORT_CONTROLLER_07="MktRepo7Controller:: {} method execution started, myear : {} , div_code: {}";
+	public static final String MKT_REPORT_SERVICE_07="MktRepo7ServiceImpl:: {} method execution started";
+	public static final String MKT_REPORT_SERVICE_071="MktRepo7ServiceImpl:: {} method occurred exception while fetching data from the database, kindly check store procedure ::web_report_hqwise_salable_exp_brk";
+
 }

@@ -21,18 +21,5 @@ public interface MktRepo1 {
 	public String getEmname();
 	public String getGp_name();
 
-	
-
-
-
-
-
-
-
-
-
-
-
-
 
 }
