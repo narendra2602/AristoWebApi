@@ -27,4 +27,23 @@ public class AristoWebLogMsgConstant {
 	public static final String MKT_REPORT_SERVICE_07="MktRepo7ServiceImpl:: {} method execution started";
 	public static final String MKT_REPORT_SERVICE_071="MktRepo7ServiceImpl:: {} method occurred exception while fetching data from the database, kindly check store procedure ::web_report_hqwise_salable_exp_brk";
 
+	public static final String MKT_REPORT_CONTROLLER_08="MktRepo8Controller:: {} method execution started, myear : {} , div_code: {}";
+	public static final String MKT_REPORT_SERVICE_08="MktRepo8ServiceImpl:: {} method execution started";
+	public static final String MKT_REPORT_SERVICE_081="MktRepo8ServiceImpl:: {} method occurred exception while fetching data from the database, kindly check store procedure ::web_report_hqwise_expiry_ratio";
+
+
+	public static final String MKT_REPORT_CONTROLLER_09="MktRepo9Controller:: {} method execution started, myear : {} , div_code: {}";
+	public static final String MKT_REPORT_SERVICE_09="MktRepo9ServiceImpl:: {} method execution started";
+	public static final String MKT_REPORT_SERVICE_091="MktRepo9ServiceImpl:: {} method occurred exception while fetching data from the database, kindly check store procedure ::web_report_group_product_summary";
+
+	public static final String MKT_REPORT_CONTROLLER_10="MktRepo10Controller:: {} method execution started, myear : {} , div_code: {}";
+	public static final String MKT_REPORT_SERVICE_10="MktRepo10ServiceImpl:: {} method execution started";
+	public static final String MKT_REPORT_SERVICE_101="MktRepo10ServiceImpl:: {} method occurred exception while fetching data from the database, kindly check store procedure ::web_report_br_hq_trend";
+
+
+	public static final String MKT_REPORT_CONTROLLER_11="MktRepo11Controller:: {} method execution started, myear : {} , div_code: {}";
+	public static final String MKT_REPORT_SERVICE_11="MktRepo11ServiceImpl:: {} method execution started";
+	public static final String MKT_REPORT_SERVICE_111="MktRepo11ServiceImpl:: {} method occurred exception while fetching data from the database, kindly check store procedure ::web_salesreview_spl";
+
+	
 }

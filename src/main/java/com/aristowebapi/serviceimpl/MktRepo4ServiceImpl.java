@@ -47,9 +47,8 @@ public class MktRepo4ServiceImpl implements MktRepo4Service{
 		
 		
 		String title=null;
-		
-		
 		List<MktRepo4> MktRepo4SaleList=null;
+
 		if(request.getGpCode()>0)
 		{
 			MktRepo4SaleList=mktRepo4Dao.getWebReportAllGroupValue(request.getMyear(),request.getDivCode(),request.getDepoCode()
