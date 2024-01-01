@@ -7,6 +7,10 @@ public class AristoWebLogMsgConstant {
 		
 	}
 
+	public static final String LOGIN_CONTROLLER="LoginController";
+	public static final String LOGIN_SERVICE="LoginServiceImpl:: {} method execution started";
+
+	
 	public static final String MKT_REPORT_CONTROLLER_01="MktRepo1Controller:: {} method execution started, myear : {} , div_code: {}";
 	public static final String MKT_REPORT_SERVICE_01="MktRepo1ServiceImpl:: {} method execution started";
 

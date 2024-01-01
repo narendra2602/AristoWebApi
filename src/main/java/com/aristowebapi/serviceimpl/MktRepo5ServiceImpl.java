@@ -16,6 +16,7 @@ import com.aristowebapi.request.MktRepo5Request;
 import com.aristowebapi.response.ApiResponse;
 import com.aristowebapi.response.MktRepo5Response;
 import com.aristowebapi.service.MktRepo5Service;
+import com.aristowebapi.utility.AppCalculationUtils;
 
 @Service
 public class MktRepo5ServiceImpl  implements MktRepo5Service  {
@@ -80,7 +81,7 @@ public class MktRepo5ServiceImpl  implements MktRepo5Service  {
 	    	response.setGross(data.getSaleval());
 	    	response.setCredit(data.getCrval());
 	    	response.setNet(data.getSaleval()-data.getCrval());
-	    	response.setAch(data.getTargetval()!=0?calculateAch(response.getNet(), data.getTargetval()):0);
+	    	response.setAch(data.getTargetval()!=0?AppCalculationUtils.calculateAch(response.getNet(), data.getTargetval()):0);
 	    	response.setSd(response.getNet()-data.getTargetval());
 	    	response.setPisale(data.getPisale());
 
@@ -103,7 +104,7 @@ public class MktRepo5ServiceImpl  implements MktRepo5Service  {
 			response.setGross(sval);
 			response.setCredit(cval);
 			response.setNet(sval-cval);
-			response.setAch(tval!=0?calculateAch((sval-cval), tval):0);
+			response.setAch(tval!=0?AppCalculationUtils.calculateAch((sval-cval), tval):0);
 			response.setSd((sval-cval)-tval);
 			response.setPisale(pval);
 			response.setColor(2);
@@ -123,13 +124,6 @@ public class MktRepo5ServiceImpl  implements MktRepo5Service  {
 
 	}
 
-	
-	private double calculateAch(long sale,long target)
-	{
-		double ach1=0.00;  
-		ach1=Math.round(((sale*1.0/target)*100)*100.0)/100.0;
-		return (ach1);
-	}
 
 }
 

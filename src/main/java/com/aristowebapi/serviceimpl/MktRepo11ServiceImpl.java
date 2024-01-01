@@ -18,6 +18,7 @@ import com.aristowebapi.response.ApiResponse;
 import com.aristowebapi.response.MktRepo11Response;
 import com.aristowebapi.response.MktRepo5Response;
 import com.aristowebapi.service.MktRepo11Service;
+import com.aristowebapi.utility.AppCalculationUtils;
 
 @Service
 public class MktRepo11ServiceImpl implements MktRepo11Service{
@@ -80,24 +81,24 @@ public class MktRepo11ServiceImpl implements MktRepo11Service{
 			
 			response.setMonth(data.getMnth_abbr());
 			response.setFs(data.getFs());
-	    	response.setMonthTgt(valueDivideByLacs(data.getTgt_val()));
-	    	response.setMonthSale(valueDivideByLacs(data.getSales_val()));
-	    	response.setMonthLys(valueDivideByLacs(data.getLys_val()));
+	    	response.setMonthTgt(AppCalculationUtils.valueDivideByLacs(data.getTgt_val()));
+	    	response.setMonthSale(AppCalculationUtils.valueDivideByLacs(data.getSales_val()));
+	    	response.setMonthLys(AppCalculationUtils.valueDivideByLacs(data.getLys_val()));
 	    	response.setMonthAch(data.getAch());
 	    	response.setMonthGth(data.getGth());
-	    	response.setMonthPmr(calculatePmr(data.getSales_val(),data.getFs()));
-	    	response.setMonthSd(valueDivideByLacs(data.getSurdef()));
+	    	response.setMonthPmr(AppCalculationUtils.calculatePmr(AppCalculationUtils.valueDivideByLacs(data.getSales_val()),data.getFs()));
+	    	response.setMonthSd(AppCalculationUtils.valueDivideByLacs(data.getSurdef()));
 
 			response.setCummFs(cummFs);
-	    	response.setCummTgt(valueDivideByLacs(cummTarget));
-	    	response.setCummSale(valueDivideByLacs(cummSale));
+	    	response.setCummTgt(AppCalculationUtils.valueDivideByLacs(cummTarget));
+	    	response.setCummSale(AppCalculationUtils.valueDivideByLacs(cummSale));
 
-	    	response.setCummLys(valueDivideByLacs(cummLys));
-	    	response.setCummAch(calculateAch(cummSale, cummTarget));
-	    	response.setCummGth(calculateGth(cummSale, cummLys));
-	    	response.setCummPmr(calculatePmr(cummSale, cummFs));
-	    	response.setCummSd(valueDivideByLacs((cummSale-cummTarget)));
-	    	response.setCummIncrSale(valueDivideByLacs((cummSale-cummLys)));
+	    	response.setCummLys(AppCalculationUtils.valueDivideByLacs(cummLys));
+	    	response.setCummAch(AppCalculationUtils.calculateAch(cummSale, cummTarget));
+	    	response.setCummGth(AppCalculationUtils.calculateGth(cummSale, cummLys));
+	    	response.setCummPmr(AppCalculationUtils.calculatePmr(AppCalculationUtils.valueDivideByLacs(cummSale), cummFs));
+	    	response.setCummSd(AppCalculationUtils.valueDivideByLacs((cummSale-cummTarget)));
+	    	response.setCummIncrSale(AppCalculationUtils.valueDivideByLacs((cummSale-cummLys)));
 
 
 
@@ -130,33 +131,7 @@ public class MktRepo11ServiceImpl implements MktRepo11Service{
 	}
 
 	
-	private double calculateAch(long sale,long target)
-	{
-		double ach1=0.00;  
-		ach1=Math.round(((sale*1.0/target)*100)*100.0)/100.0;
-		return (ach1);
-	}
-	private double calculateGth(long sale,long lys)
-	{
-		double ach1=0.00;  
-		ach1=Math.round(((sale*1.0/lys)*100-100)*100.0)/100.0;
-		return (ach1);
-	}
 
-	private double calculatePmr(long sale,int fs)
-	{
-		double pmr=0.00; 
-
-		pmr=Math.round(((sale*1.0/100000)/fs)*100.0)/100.0;
-		
-		return (pmr);
-	}
-
-	
-	private long valueDivideByLacs(long value)
-	{
-		return (value/100000);
-	}
 }
 
 

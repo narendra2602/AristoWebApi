@@ -18,15 +18,15 @@ public class MktRepo2Response {
 	private String pack;
 	private long tgt;
 	private long sale;
-	private int  ach;
+	private double  ach;
 	private long sd;
 	private long cummTgt;
 	private long cummSale;
-	private long cummAch;
+	private double cummAch;
 	private long cummSd;
 	private long lyr;
 	private double growth;
-	private int pmr;
+	private double pmr;
 	
 	
 	private int color;

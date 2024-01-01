@@ -8,6 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.aristowebapi.constant.AristoWebLogMsgConstant;
+import com.aristowebapi.constant.AristoWebMessageConstant;
 import com.aristowebapi.dao.LoginDao;
 import com.aristowebapi.dto.BranchMasterDto;
 import com.aristowebapi.dto.DivDto;
@@ -15,6 +17,7 @@ import com.aristowebapi.dto.LoginDto;
 import com.aristowebapi.dto.ReportMenuDto;
 import com.aristowebapi.request.LoginRequest;
 import com.aristowebapi.response.BranchResponse;
+import com.aristowebapi.response.DataUploadMessageResponse;
 import com.aristowebapi.response.DivResponse;
 import com.aristowebapi.response.LoginResponse;
 import com.aristowebapi.response.ReportMenuResponse;
@@ -29,8 +32,13 @@ public class LoginServiceImpl implements LoginService {
 	@Autowired
 	private LoginDao loginDao;
 	
+	@Autowired
+	private AristoWebMessageConstant aristoWebMessageConstant;
+	
 	@Override
 	public LoginResponse authenticateUser(LoginRequest request) {
+		
+		logger.info(AristoWebLogMsgConstant.LOGIN_SERVICE,"authenticateUser");
 		
 		LoginDto ldto=loginDao.authenticateUser(request.getUserName(), request.getPassword(), "Yes");
 		
@@ -117,6 +125,18 @@ public class LoginServiceImpl implements LoginService {
 		
 		
 		return response ;
+	}
+
+	@Override
+	public DataUploadMessageResponse getMessage(int depoCode) {
+		
+		logger.info(AristoWebLogMsgConstant.LOGIN_SERVICE,"getMessage");
+		
+		String message=aristoWebMessageConstant.message+" "+loginDao.getMessage(depoCode);
+		DataUploadMessageResponse response = new DataUploadMessageResponse();
+		response.setMessage(message);
+		return response;
+		
 	}
 
 	 
