@@ -1,5 +1,7 @@
 package com.aristowebapi.controller;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,7 @@ import com.aristowebapi.request.MktRepo9Request;
 import com.aristowebapi.request.ViewRequest;
 import com.aristowebapi.response.ApiResponse;
 import com.aristowebapi.response.MktRepo11Response;
+import com.aristowebapi.response.MktRepo1AchResponse;
 import com.aristowebapi.response.MktRepo1Response;
 import com.aristowebapi.response.MktRepo2Response;
 import com.aristowebapi.response.MktRepo3Response;
@@ -45,6 +48,8 @@ import com.aristowebapi.service.MktRepo6Service;
 import com.aristowebapi.service.MktRepo7Service;
 import com.aristowebapi.service.MktRepo8Service;
 import com.aristowebapi.service.MktRepo9Service;
+import com.aristowebapi.serviceimpl.JwtService;
+import com.aristowebapi.utility.AppRequestParameterUtils;
 
 @RestController
 @CrossOrigin
@@ -53,6 +58,13 @@ public class MktReportController {
 	
 	
 	Logger logger = LoggerFactory.getLogger(MktReportController.class);
+
+	@Autowired
+	private AppRequestParameterUtils appRequestParameterUtils;
+
+	
+	@Autowired
+	private JwtService jwtService;
 	
 	@Autowired
 	private MktRepo1Service mktRepo1Service;
@@ -97,6 +109,14 @@ public class MktReportController {
 	
 	}
 
+	@GetMapping("${mrc_repo1ach_path}")
+	public ResponseEntity<ApiResponse<MktRepo1AchResponse>> getMktRepo1Ach(@RequestBody MktRepo1Request request)
+	{
+		logger.info(AristoWebLogMsgConstant.MKT_REPORT_CONTROLLER_01,"getMktRepo1", request.getMyear(),request.getDivCode());
+
+		return new ResponseEntity<ApiResponse<MktRepo1AchResponse>>(mktRepo1Service.getMktRepo1Ach(request), HttpStatus.OK);
+	
+	}
 
 	@GetMapping("${mrc_repo2_path}")
 	public ResponseEntity<ApiResponse<MktRepo2Response>> getMktRepo2(@RequestBody MktRepo2Request request)
@@ -107,8 +127,17 @@ public class MktReportController {
 	}
 	
 	@GetMapping("${mrc_repo3_path}")
-	public ResponseEntity<ApiResponse<MktRepo3Response>> getMktRepo3(@RequestBody MktRepo3Request request)
+	public ResponseEntity<ApiResponse<MktRepo3Response>> getMktRepo3(@RequestBody MktRepo3Request request,HttpServletRequest req)
 	{
+		String authHeader = req.getHeader("Authorization");
+		int requestValues[]=appRequestParameterUtils.getRequestBodyParameters(authHeader);
+        int loginId=requestValues[0]; 
+        int userType=requestValues[1];
+
+         System.out.println("login id is "+loginId);
+         request.setLoginId(loginId);
+         request.setUtype(userType);
+		
 		return new ResponseEntity<ApiResponse<MktRepo3Response>>(mktRepo3Service.getMktRepo3(request), HttpStatus.OK);
 	
 	}
@@ -182,5 +211,6 @@ public class MktReportController {
 		return new ResponseEntity<ApiResponse<MktRepo11Response>>(mktRepo11Service.getMktRepo11(request), HttpStatus.OK);
 	
 	}
+
 
 }

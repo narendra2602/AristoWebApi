@@ -119,7 +119,7 @@ public class MktRepo11ServiceImpl implements MktRepo11Service{
 		}
 
 		
-		ApiResponse<MktRepo11Response> apiResponse = new ApiResponse<>(title!=null?title.toString():"", saleList);
+		ApiResponse<MktRepo11Response> apiResponse = new ApiResponse<>(title!=null?title.toString():"", size,saleList);
 		return apiResponse;
 		
 		} catch (Exception e) {

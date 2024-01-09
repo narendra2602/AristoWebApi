@@ -253,7 +253,7 @@ public class MktRepo3ServiceImpl implements MktRepo3Service {
 			
 			months=new LinkedHashMap();
 			total.put("TOTAL", grandColumnTotal);
-			total.keySet().stream().forEach(d->System.out.print(d));
+//			total.keySet().stream().forEach(d->System.out.print(d));
 
 			months.putAll(total);
 			response=new MktRepo3Response();
@@ -264,7 +264,7 @@ public class MktRepo3ServiceImpl implements MktRepo3Service {
 			response.setColor(2);
 			saleList.add(response);
 
-			return new ApiResponse<MktRepo3Response>(title.toString(),saleList);
+			return new ApiResponse<MktRepo3Response>(title.toString(),size,saleList);
 
 
 			

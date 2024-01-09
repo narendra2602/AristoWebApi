@@ -7,6 +7,8 @@ public class AppCalculationUtils {
 		double ach=0.00;  
 //		ach1=Math.ceil((sale*1.0/target)*100);
 		ach=Math.round(((sale*1.0/target)*100)*100.0)/100.0;
+		ach=target!=0?Math.round(((sale*1.0/target)*100)*100.0)/100.0:0;
+
 		return  ach;
 	}
 

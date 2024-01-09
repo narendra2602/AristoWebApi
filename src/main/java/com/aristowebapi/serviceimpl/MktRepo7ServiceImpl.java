@@ -110,7 +110,7 @@ public class MktRepo7ServiceImpl implements  MktRepo7Service{
 		}
 
 		
-		ApiResponse<MktRepo7Response> apiResponse = new ApiResponse<>(title!=null?title.toString():"", saleList);
+		ApiResponse<MktRepo7Response> apiResponse = new ApiResponse<>(title!=null?title.toString():"",size, saleList);
 		return apiResponse;
 		
 		} catch (Exception e) {

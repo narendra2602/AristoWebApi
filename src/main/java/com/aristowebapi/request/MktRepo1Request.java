@@ -16,6 +16,7 @@ public class MktRepo1Request extends ViewRequest{
 	private int repType;
 	private int dataType;
 	private int uv;
+	private int optType;
 	
 
 }

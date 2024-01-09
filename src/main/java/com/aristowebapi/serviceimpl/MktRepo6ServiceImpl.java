@@ -193,7 +193,7 @@ public class MktRepo6ServiceImpl implements MktRepo6Service  {
 		response.setColor(2);
 		saleList.add(response);
 
-		return new ApiResponse<MktRepo6Response>(title.toString(),saleList);
+		return new ApiResponse<MktRepo6Response>(title.toString(),size,saleList);
 
 
 	}

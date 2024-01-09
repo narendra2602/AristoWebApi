@@ -16,6 +16,7 @@ import com.aristowebapi.dto.DivDto;
 import com.aristowebapi.dto.LoginDto;
 import com.aristowebapi.dto.ReportMenuDto;
 import com.aristowebapi.request.LoginRequest;
+import com.aristowebapi.response.ApiResponse;
 import com.aristowebapi.response.BranchResponse;
 import com.aristowebapi.response.DataUploadMessageResponse;
 import com.aristowebapi.response.DivResponse;
@@ -40,7 +41,7 @@ public class LoginServiceImpl implements LoginService {
 		
 		logger.info(AristoWebLogMsgConstant.LOGIN_SERVICE,"authenticateUser");
 		
-		LoginDto ldto=loginDao.authenticateUser(request.getUserName(), request.getPassword(), "Yes");
+		LoginDto ldto=loginDao.authenticateUser(request.getUsername(), request.getPassword(), "Yes");
 		
 		List<DivDto> divlist=loginDao.getDivList(ldto.getId());
 		List<BranchMasterDto> branchlist=loginDao.getBranchList(ldto.getId());
@@ -139,5 +140,97 @@ public class LoginServiceImpl implements LoginService {
 		
 	}
 
-	 
+	@Override
+	public ApiResponse<DivResponse> getDivisionList(int loginId) {
+		
+		List<DivDto> divlist=loginDao.getDivList(loginId);
+		List<DivResponse> divResponseList=new ArrayList<>();
+		
+		int size=divlist.size();
+		divlist.forEach(data->{
+			DivResponse divres=new DivResponse();
+			divres.setDivCode(data.getDiv_code());
+			divres.setDivName(data.getDiv_name());
+			divResponseList.add(divres);
+		});
+	
+		ApiResponse<DivResponse> apiResponse = new ApiResponse<>("Division", size,divResponseList);
+		return apiResponse;
+
+	}
+
+
+	@Override
+	public ApiResponse<BranchResponse> getBranchList(int loginId) {
+		
+		List<BranchMasterDto> branchlist=loginDao.getBranchList(loginId);
+		List<BranchResponse> branchResponseList=new ArrayList<>();
+		
+		int size=branchlist.size();
+		branchlist.forEach(data->{
+			BranchResponse branchres=new BranchResponse();
+			branchres.setDepoCode(data.getDepo_code());
+			branchres.setDepoName(data.getDepo_name());
+			branchResponseList.add(branchres);
+		});
+	
+		ApiResponse<BranchResponse> apiResponse = new ApiResponse<>("Branch",size, branchResponseList);
+		return apiResponse;
+
+	}
+
+	@Override
+	public List<ReportTabResponse> getReportMenuList(int loginId) {
+		
+		List<ReportMenuResponse> reportResponseList=new ArrayList<>();
+		List<ReportTabResponse> reportTabResponseList=new ArrayList<>();
+		
+		List<ReportMenuDto> reportList = loginDao.getMenuList(loginId);
+		
+		int size=reportList.size();
+		ReportMenuDto reportMenuDto=null;
+		ReportTabResponse reportTabResponse=null;
+		ReportMenuResponse reportMenuResponse=null;
+		boolean first=true;
+		int tabId=0;
+		String tabName=null;
+		for(int i=0;i<size;i++)
+		{
+			reportMenuDto = reportList.get(i);
+			if(first)
+			{
+				tabId=reportMenuDto.getTab_id();
+				tabName=reportMenuDto.getTab_name();
+				first=false;
+			}
+			if(tabId!=reportMenuDto.getTab_id())
+			{
+				reportTabResponse = new ReportTabResponse();
+				reportTabResponse.setTabName(tabName);
+				reportTabResponse.setMenuList(reportResponseList);
+
+				reportTabResponseList.add(reportTabResponse);
+				tabId=reportMenuDto.getTab_id();
+				tabName=reportMenuDto.getTab_name();
+				reportResponseList=new ArrayList<>();
+
+			}
+			
+			  reportMenuResponse = new ReportMenuResponse();
+			  reportMenuResponse.setRepoId(reportMenuDto.getRepo_id());
+			  reportMenuResponse.setRepoName(reportMenuDto.getRepo_name());
+			  reportResponseList.add(reportMenuResponse);
+			  
+			
+		}
+		reportTabResponse = new ReportTabResponse();
+		reportTabResponse.setTabName(tabName);
+		reportTabResponse.setMenuList(reportResponseList);
+		reportTabResponseList.add(reportTabResponse);
+
+//		ApiResponse<ReportTabResponse> apiResponse = new ApiResponse<>(fname, reportTabResponseList);
+		return reportTabResponseList;
+
+	}
+
 }

@@ -144,7 +144,7 @@ public class MktRepo4ServiceImpl implements MktRepo4Service{
 		response.setSd(sd);
 
 		saleList.add(response);
-		return new ApiResponse<MktRepo4Response>(title.toString(),saleList);
+		return new ApiResponse<MktRepo4Response>(title.toString(),size,saleList);
 	}
 
 }

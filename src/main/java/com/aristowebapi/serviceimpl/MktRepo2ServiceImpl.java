@@ -212,7 +212,7 @@ public class MktRepo2ServiceImpl implements MktRepo2Service {
 		}
 
 		
-		ApiResponse<MktRepo2Response> apiResponse = new ApiResponse<>(title!=null?title.toString():"", saleList);
+		ApiResponse<MktRepo2Response> apiResponse = new ApiResponse<>(title!=null?title.toString():"", size,saleList);
 		return apiResponse;
 		
 		} catch (Exception e) {

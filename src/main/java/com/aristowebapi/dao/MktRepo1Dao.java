@@ -7,9 +7,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.aristowebapi.dto.BranchMasterDto;
-import com.aristowebapi.dto.MktRepo1;
 import com.aristowebapi.dto.MktDataDto;
-import com.aristowebapi.dto.HqMasterDto;
+import com.aristowebapi.dto.MktRepo1;
+import com.aristowebapi.dto.MktRepo1Ach;
 
 public interface MktRepo1Dao extends JpaRepository<MktDataDto, Integer>{
 	
@@ -17,6 +17,31 @@ public interface MktRepo1Dao extends JpaRepository<MktDataDto, Integer>{
 	List<MktRepo1> getWebReportGross(@Param("myear") int myear,@Param("div_code") int div_code,@Param("depo_code") int depo_code,
 			@Param("smon") int smon,@Param("emon") int emon,@Param("utype") int utype,@Param("login_id") int login_id,
 			@Param("rep_type") int rep_type,@Param("data_type") int data_type);
+
+	
+	@Query(value="CALL web_report_net(:myear,:div_code,:depo_code,:smon,:emon,:utype,:login_id,:rep_type);", nativeQuery=true)
+	List<MktRepo1> getWebReportNet(@Param("myear") int myear,@Param("div_code") int div_code,@Param("depo_code") int depo_code,
+			@Param("smon") int smon,@Param("emon") int emon,@Param("utype") int utype,@Param("login_id") int login_id,
+			@Param("rep_type") int rep_type);
+
+	@Query(value="CALL web_report_credit(:myear,:div_code,:depo_code,:smon,:emon,:utype,:login_id,:rep_type,:data_type);", nativeQuery=true)
+	List<MktRepo1> getWebReportCredit(@Param("myear") int myear,@Param("div_code") int div_code,@Param("depo_code") int depo_code,
+			@Param("smon") int smon,@Param("emon") int emon,@Param("utype") int utype,@Param("login_id") int login_id,
+			@Param("rep_type") int rep_type,@Param("data_type") int data_type);
+	
+
+	// doc_type 10=target   20=last year
+	@Query(value="CALL web_report_target(:myear,:div_code,:depo_code,:smon,:emon,:utype,:login_id,:rep_type,:doc_type);", nativeQuery=true)
+	List<MktRepo1> getWebReportTarget(@Param("myear") int myear,@Param("div_code") int div_code,@Param("depo_code") int depo_code,
+			@Param("smon") int smon,@Param("emon") int emon,@Param("utype") int utype,@Param("login_id") int login_id,
+			@Param("rep_type") int rep_type,@Param("doc_type") int doc_type);
+
+	
+	@Query(value="CALL web_report_ach(:myear,:div_code,:depo_code,:smon,:emon,:utype,:login_id,:rep_type);", nativeQuery=true)
+	List<MktRepo1Ach> getWebReportAch(@Param("myear") int myear,@Param("div_code") int div_code,@Param("depo_code") int depo_code,
+			@Param("smon") int smon,@Param("emon") int emon,@Param("utype") int utype,@Param("login_id") int login_id,
+			@Param("rep_type") int rep_type);
+
 	
 	@Query(value = "SELECT depo_code,depo_name FROM branch_comp where depo_code <>32 order by depo_code", nativeQuery = true)
 	List<BranchMasterDto> getAllBranch();
@@ -33,5 +58,7 @@ public interface MktRepo1Dao extends JpaRepository<MktDataDto, Integer>{
 	@Query(value = "SELECT depo_code,depo_name FROM branch_comp  where depo_code<>32 and depo_code in  (Select depo_code from user_branch08 where user_id=:loginId and status='Y') order by depo_code ",  nativeQuery = true)
 	List<BranchMasterDto> getUtype5Branch(@Param("loginId") int loginId);
 
-	
+	@Query(value = "SELECT depo_name FROM branch_comp where depo_code=:depo", nativeQuery = true)
+	String getBranch(@Param("depo") int depo);
+
 }
