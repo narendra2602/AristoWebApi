@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -47,7 +49,12 @@ public class JwtService {
 	} 
 
 	public String extractUsername(String token) { 
-		return extractClaim(token, Claims::getSubject); 
+		try {
+		return extractClaim(token, Claims::getSubject);
+		 }catch (ExpiredJwtException ex){
+		        System.out.println("Expired JWT token in extratUsername methd.....");
+		        return null;
+		    }
 	} 
 
 	public Date extractExpiration(String token) { 
@@ -93,14 +100,15 @@ public class JwtService {
 		return (username.equals(userDetails.getUsername()) && !isTokenExpired(token)); 
 	}*/ 
 	
-	 public boolean validateToken(String token, UserDetails userDetails) {
+	 public boolean validateToken(String token, UserDetails userDetails,HttpServletRequest request) {
 	        try {
 	    		final String username = extractUsername(token); 
 	    		return (username.equals(userDetails.getUsername()) && !isTokenExpired(token)); 
 	        } catch (SignatureException ex) {
 	            // Invalid signature/claims
 	        } catch (ExpiredJwtException ex) {
-	            // Expired token
+	        	 System.out.println("Expired JWT token par aaya kya check karo");
+	             request.setAttribute("expired",ex.getMessage());
 	        } catch (UnsupportedJwtException ex) {
 	            // Unsupported JWT token
 	        } catch (MalformedJwtException ex) {

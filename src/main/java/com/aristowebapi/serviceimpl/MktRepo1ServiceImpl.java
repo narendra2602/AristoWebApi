@@ -50,26 +50,28 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 	private String getTitle(MktRepo1Request request,MktRepo1 data)
 	{
 		String repname="Gross Sale";
-		if(request.getOptType()==2)
-			repname="Saleable";
-		else if(request.getOptType()==3)
-			repname="Expiry Return";
-		else if(request.getOptType()==4)
-			repname="Breakage";
-		else if(request.getOptType()==5)
-			repname="Net Sale";
-		else if(request.getOptType()==6)
-			repname="Target";
-		else if(request.getOptType()==7)
-			repname="Lys Sale";
-		else if(request.getOptType()==8)
-			repname="Ach.";
-		else if(request.getOptType()==9)
-			repname="Gth";
-		else if(request.getOptType()==10)
-			repname="PMR";
-		else if(request.getOptType()==11)
-			repname="PI Sale";
+
+		switch(request.getOptType())
+		{
+		    case 1: repname="Gross Sale";
+		            break;
+		    case 2: repname="Saleable";
+		    		break;
+		    case 3: repname="Expiry Return";
+		    		break;
+		    case 4: repname="Breakage";
+		    		break;
+		    case 5: repname="Net Sale";
+    				break;
+		    case 6: repname="Target";
+    				break;
+		    case 7: repname="Lys Sale";
+					break;
+
+
+		}
+		
+		
 		
 		StringBuilder title=new StringBuilder();
 		title.append(request.getDepoCode()==0?"All India ":mktRepo1Dao.getBranch(request.getDepoCode())+" Branch: ");
@@ -109,14 +111,20 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 	private String getTitleAch(MktRepo1Request request,MktRepo1Ach data)
 	{
 		String repname="";
-		if(request.getOptType()==8)
-			repname="Achievment";
-		else if(request.getOptType()==9)
-			repname="Gth";
-		else if(request.getOptType()==10)
-			repname="PMR";
-		else if(request.getOptType()==11)
-			repname="PI Sale";
+
+
+		switch(request.getOptType())
+		{
+		    case 8: repname="Achievement";
+		            break;
+		    case 9: repname="Gth";
+		    		break;
+		    case 10: repname="PMR";
+		    		break;
+		    case 11: repname="PI Sale";
+		    		break;
+		}
+		
 		
 		StringBuilder title=new StringBuilder();
 		title.append(request.getDepoCode()==0?"All India ":mktRepo1Dao.getBranch(request.getDepoCode())+" Branch: ");

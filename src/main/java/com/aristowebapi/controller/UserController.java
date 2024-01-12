@@ -19,7 +19,9 @@ import com.aristowebapi.response.TokenResponse;
 import com.aristowebapi.serviceimpl.JwtService;
 import com.aristowebapi.serviceimpl.UserInfoDetails;
 import com.aristowebapi.serviceimpl.UserInfoService;
-  
+
+
+
 @RestController
 @RequestMapping("/auth") 
 public class UserController { 
@@ -71,7 +73,7 @@ public class UserController {
     } 
   
     @PostMapping("/generateToken") 
-    public ResponseEntity<TokenResponse> authenticateAndGetToken(@RequestBody LoginRequest authRequest) { 
+    public ResponseEntity<?> authenticateAndGetToken(@RequestBody LoginRequest authRequest) { 
     	System.out.println(authRequest.getUsername());
     	System.out.println(authRequest.getPassword());
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword())); 
@@ -80,12 +82,13 @@ public class UserController {
         UserInfoDetails userDetails = (UserInfoDetails) authentication.getPrincipal();
         
         
-        if (authentication.isAuthenticated()) { 
+       // if (authentication.isAuthenticated()) { 
             String token =  jwtService.generateToken(authRequest.getUsername(),userDetails.getLoginId(),userDetails.getUserType(),userDetails.getFname());
             return new ResponseEntity<TokenResponse>(new TokenResponse(token),HttpStatus.OK);
-        } else { 
-            throw new UsernameNotFoundException("invalid user request !"); 
-        } 
+            //return ResponseEntity.ok(new AuthenticationResponse(token));
+        //} else { 
+          //  throw new UsernameNotFoundException("invalid user request !"); 
+        //} 
     } 
   
 } 

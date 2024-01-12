@@ -49,5 +49,8 @@ public class AristoWebLogMsgConstant {
 	public static final String MKT_REPORT_SERVICE_11="MktRepo11ServiceImpl:: {} method execution started";
 	public static final String MKT_REPORT_SERVICE_111="MktRepo11ServiceImpl:: {} method occurred exception while fetching data from the database, kindly check store procedure ::web_salesreview_spl";
 
-	
+
+	public static final String DAILY_REPORT_CONTROLLER="DailyReportController";
+	public static final String DAILY_REPORT_SERVICE="DailyReporterviceImpl:: {} method execution started";
+
 }

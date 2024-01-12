@@ -12,14 +12,13 @@ import org.springframework.stereotype.Service;
 
 import com.aristowebapi.constant.AristoWebLogMsgConstant;
 import com.aristowebapi.dao.MktRepo9Dao;
-import com.aristowebapi.dto.MktRepo4;
 import com.aristowebapi.dto.MktRepo9;
 import com.aristowebapi.dto.MonthDto;
 import com.aristowebapi.request.MktRepo9Request;
 import com.aristowebapi.response.ApiResponse;
-import com.aristowebapi.response.MktRepo4Response;
 import com.aristowebapi.response.MktRepo9Response;
 import com.aristowebapi.service.MktRepo9Service;
+import com.aristowebapi.utility.AppCalculationUtils;
 
 @Service
 public class MktRepo9ServiceImpl  implements MktRepo9Service{
@@ -145,13 +144,16 @@ public class MktRepo9ServiceImpl  implements MktRepo9Service{
 				incr.put("TOTAL",incrColumnTotal);
 				response.setIncr(incr);
 
-				ach.put("TOTAL", Math.round(((salesColumnTotal*1.0/tgtColumnTotal)*100)*100.0)/100.0);
+//				ach.put("TOTAL", Math.round(((salesColumnTotal*1.0/tgtColumnTotal)*100)*100.0)/100.0);
+				ach.put("TOTAL", AppCalculationUtils.calculateAch(salesColumnTotal, tgtColumnTotal));
 				response.setAch(ach);
 
-				gth.put("TOTAL", Math.round((((salesColumnTotal*1.0/lysColumnTotal)*100)-100)*100.0)/100.0);
+//				gth.put("TOTAL", Math.round((((salesColumnTotal*1.0/lysColumnTotal)*100)-100)*100.0)/100.0);
+				gth.put("TOTAL",AppCalculationUtils.calculateGth(salesColumnTotal, lysColumnTotal));
 				response.setGth(gth);
 
-				pmr.put("TOTAL", fsColumnTotal!=0?Math.round((salesColumnTotal*1.0/fsColumnTotal)*100.0)/100.0:0.00);
+//				pmr.put("TOTAL", fsColumnTotal!=0?Math.round((salesColumnTotal*1.0/fsColumnTotal)*100.0)/100.0:0.00);
+				pmr.put("TOTAL", AppCalculationUtils.calculatePmr(salesColumnTotal,fsColumnTotal));
 				response.setPmr(pmr);
 
 				sd.put("TOTAL", salesColumnTotal-tgtColumnTotal);
@@ -199,9 +201,9 @@ public class MktRepo9ServiceImpl  implements MktRepo9Service{
 					sales.put(data.getMnth_abbr(), data.getSales_val());
 					lys.put(data.getMnth_abbr(), data.getLys_val());
 					incr.put(data.getMnth_abbr(), data.getIncr_val());
-					ach.put(data.getMnth_abbr(), data.getTgt_val()!=0?Math.round(((data.getSales_val()*1.0/data.getTgt_val())*100)*100.0)/100.0:0.00);
-					gth.put(data.getMnth_abbr(), data.getLys_val()!=0?Math.round((((data.getSales_val()*1.0/data.getLys_val())*100)-100)*100.0)/100.0:0.00);
-					pmr.put(data.getMnth_abbr(), data.getFs()!=0?Math.round((data.getSales_val()*1.0/data.getFs())*100.0)/100.0:0.00);
+					ach.put(data.getMnth_abbr(), AppCalculationUtils.calculateAch(data.getSales_val(), data.getTgt_val()));
+					gth.put(data.getMnth_abbr(), AppCalculationUtils.calculateGth(data.getSales_val(), data.getLys_val()));
+					pmr.put(data.getMnth_abbr(), AppCalculationUtils.calculatePmr(data.getSales_val(), data.getFs()));
 					sd.put(data.getMnth_abbr(), data.getSales_val()-data.getTgt_val());
 
 					
@@ -301,15 +303,16 @@ public class MktRepo9ServiceImpl  implements MktRepo9Service{
 		incr.put("TOTAL",incrColumnTotal);
 		response.setIncr(incr);
 
-		ach.put("TOTAL", Math.round(((salesColumnTotal*1.0/tgtColumnTotal)*100)*100.0)/100.0);
+		
+		ach.put("TOTAL", AppCalculationUtils.calculateAch(salesColumnTotal, tgtColumnTotal));
 		response.setAch(ach);
 
-		gth.put("TOTAL", Math.round((((salesColumnTotal*1.0/lysColumnTotal)*100)-100)*100.0)/100.0);
+		gth.put("TOTAL",AppCalculationUtils.calculateGth(salesColumnTotal, lysColumnTotal));
 		response.setGth(gth);
 
-		pmr.put("TOTAL", fsColumnTotal!=0?Math.round((salesColumnTotal*1.0/fsColumnTotal)*100.0)/100.0:0.00);
+		pmr.put("TOTAL", AppCalculationUtils.calculatePmr(salesColumnTotal,fsColumnTotal));
 		response.setPmr(pmr);
-
+		
 		sd.put("TOTAL", salesColumnTotal-tgtColumnTotal);
 		response.setSd(sd);
 
