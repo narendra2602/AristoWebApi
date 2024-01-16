@@ -1,4 +1,6 @@
 package com.aristowebapi.controller;
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -6,7 +8,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.aristowebapi.dto.UserInfo;
 import com.aristowebapi.request.LoginRequest;
 import com.aristowebapi.response.TokenResponse;
+import com.aristowebapi.service.TokenBlacklist;
 import com.aristowebapi.serviceimpl.JwtService;
 import com.aristowebapi.serviceimpl.UserInfoDetails;
 import com.aristowebapi.serviceimpl.UserInfoService;
@@ -34,7 +37,10 @@ public class UserController {
   
     @Autowired
     private AuthenticationManager authenticationManager; 
-  
+
+    @Autowired
+    private TokenBlacklist tokenBlacklist;
+    
     @GetMapping("/welcome") 
     public String welcome() { 
         return "Welcome this endpoint is not secure"; 
@@ -72,6 +78,16 @@ public class UserController {
         return "Welcome to Admin Profile"; 
     } 
   
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(HttpServletRequest request) {
+        String token = extractTokenFromRequest(request);
+        tokenBlacklist.addToBlacklist(token);
+
+        // Clear any session-related data if necessary
+
+        return ResponseEntity.ok("Logged out successfully");
+    }
+    
     @PostMapping("/generateToken") 
     public ResponseEntity<?> authenticateAndGetToken(@RequestBody LoginRequest authRequest) { 
     	System.out.println(authRequest.getUsername());
@@ -91,4 +107,18 @@ public class UserController {
         //} 
     } 
   
+    
+    public String extractTokenFromRequest(HttpServletRequest request) {
+        // Get the Authorization header from the request
+        String authorizationHeader = request.getHeader("Authorization");
+
+        // Check if the Authorization header is not null and starts with "Bearer "
+        if (StringUtils.hasText(authorizationHeader) && authorizationHeader.startsWith("Bearer ")) {
+            // Extract the JWT token (remove "Bearer " prefix)
+            return authorizationHeader.substring(7);
+        }
+
+        // If the Authorization header is not valid, return null
+        return null;
+    }
 } 

@@ -49,12 +49,7 @@ public class JwtService {
 	} 
 
 	public String extractUsername(String token) { 
-		try {
 		return extractClaim(token, Claims::getSubject);
-		 }catch (ExpiredJwtException ex){
-		        System.out.println("Expired JWT token in extratUsername methd.....");
-		        return null;
-		    }
 	} 
 
 	public Date extractExpiration(String token) { 

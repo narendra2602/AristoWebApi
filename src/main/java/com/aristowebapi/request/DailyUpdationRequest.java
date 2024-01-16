@@ -13,14 +13,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class DailyReportRequest {
+public class DailyUpdationRequest {
 	
-	private int divCode;
-	private int depoCode;
 	private int loginId;
 	private Date entryDate;
 	private int month;
-	private int repType;
-	
+
 
 }
