@@ -53,4 +53,9 @@ public class AristoWebLogMsgConstant {
 	public static final String DAILY_REPORT_CONTROLLER="DailyReportController";
 	public static final String DAILY_REPORT_SERVICE="DailyReporterviceImpl:: {} method execution started";
 
+	
+	public static final String BRANCH_MIS_REPORT_5_CONTROLLER="BranchMisRepo5Controller:: {} method execution started, myear : {} , depo_code: {}";
+	public static final String BRANCH_MIS_REPORT_5_SERVICE="BranchMisRepo5ServiceImpl:: {} method execution started";
+	public static final String BRANCH_MIS_REPORT_5_SERVICE_021="BranchMisRepo5ServiceImpl:: {} method occurred exception while fetching data from the database, kindly check store procedure ::getBranchMisRepo5";
+
 }
