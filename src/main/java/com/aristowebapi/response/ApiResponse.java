@@ -17,6 +17,8 @@ public class ApiResponse<T> {
 	
 	private String title;
 	private int noOfRecords;
+	private String lastUpdate;
 	private List<T> data;
+	
 
 }

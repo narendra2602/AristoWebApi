@@ -27,6 +27,8 @@ public class MktRepo7ServiceImpl implements  MktRepo7Service{
 	@Autowired
 	private MktRepo7Dao mktRepo7Dao;
 
+	public String lupdate="";
+	
 	private String getTitle(MktRepo7Request request,MktRepo7 data)
 	{
 		StringBuilder title=new StringBuilder();
@@ -110,7 +112,7 @@ public class MktRepo7ServiceImpl implements  MktRepo7Service{
 		}
 
 		
-		ApiResponse<MktRepo7Response> apiResponse = new ApiResponse<>(title!=null?title.toString():"",size, saleList);
+		ApiResponse<MktRepo7Response> apiResponse = new ApiResponse<>(title!=null?title.toString():"",size,lupdate,saleList);
 		return apiResponse;
 		
 		} catch (Exception e) {

@@ -24,7 +24,8 @@ public class BranchMisRepo5ServiceImpl implements BranchMisRepo5Service{
 	Logger logger = LoggerFactory.getLogger(MktRepo2ServiceImpl.class);
 	@Autowired
 	private BranchMisRepo5Dao branchMisRepo5Dao;
-
+	public String lupdate="";
+	
 	private String getTitle(BranchMisRepo5Request request,BranchMisRepo5 data)
 	{
 		StringBuilder title=new StringBuilder();
@@ -62,6 +63,7 @@ public class BranchMisRepo5ServiceImpl implements BranchMisRepo5Service{
 		{
 			BranchMisRepo5 data = BranchMisRepo5List.get(i);
 			
+			
 			if(first)
 			{
 				title = getTitle(request, data);
@@ -84,7 +86,7 @@ public class BranchMisRepo5ServiceImpl implements BranchMisRepo5Service{
 		} //end of for loop
 
 		
-		ApiResponse<BranchMisRepo5Response> apiResponse = new ApiResponse<>(title!=null?title.toString():"", size,saleList);
+		ApiResponse<BranchMisRepo5Response> apiResponse = new ApiResponse<>(title!=null?title.toString():"", size,lupdate,saleList);
 		return apiResponse;
 		
 		} catch (Exception e) {

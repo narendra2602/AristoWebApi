@@ -1,7 +1,4 @@
-package com.aristowebapi.response;
-
-import java.sql.Time;
-import java.util.Date;
+package com.aristowebapi.request;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -14,13 +11,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class DailyStatusResponse {
+public class HOMarketingRepo1Request extends ViewRequest {
 
+	private int repType;
 	private int code;
-	private String branchName;
-	private String billingDate;
-	private String entryDate;
-	private Time time;
-	private String remark;
-	private int color;
+	private int dataType; // 1=product 2=group
 }

@@ -22,6 +22,7 @@ public class MktRepo4Response {
 	private Map<String,Double> gth;
 	private Map<String,Double> pmr;
 	private Map<String,Double> sd;
+	private int color;
 	
 
 }

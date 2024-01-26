@@ -29,6 +29,7 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 	@Autowired
 	private MktRepo1Dao mktRepo1Dao;
 	
+	public String lupdate="";
 
 	private List<BranchMasterDto> getBranchData(MktRepo1Request request)
 	{
@@ -384,7 +385,7 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 		response.setColor(2);
 		saleList.add(response);
 
-		return new ApiResponse<MktRepo1Response>(title.toString(),size,saleList);
+		return new ApiResponse<MktRepo1Response>(title.toString(),size,lupdate,saleList);
 //		return saleList;
 	}
 
@@ -728,7 +729,7 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 		response.setColor(2);
 		saleList.add(response);
 
-		return new ApiResponse<MktRepo1AchResponse>(title.toString(),size,saleList);
+		return new ApiResponse<MktRepo1AchResponse>(title.toString(),size,lupdate,saleList);
 	}
 
 

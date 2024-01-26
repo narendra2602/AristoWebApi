@@ -28,6 +28,8 @@ Logger logger = LoggerFactory.getLogger(MktRepo9ServiceImpl.class);
 	@Autowired
 	private MktRepo10Dao mktRepo10Dao;
 
+	public String lupdate="";
+	
 	private String getTitle(ViewRequest request,MktRepo10 data)
 	{
 		StringBuilder title=new StringBuilder();
@@ -317,7 +319,7 @@ Logger logger = LoggerFactory.getLogger(MktRepo9ServiceImpl.class);
 		response.setSd(sd);
 
 		saleList.add(response);
-		return new ApiResponse<MktRepo9Response>(title.toString(),size,saleList);
+		return new ApiResponse<MktRepo9Response>(title.toString(),size,lupdate,saleList);
 	}
 
 }

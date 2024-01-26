@@ -1,7 +1,6 @@
 package com.aristowebapi.response;
 
-import java.sql.Time;
-import java.util.Date;
+import java.util.Map;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -11,16 +10,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class DailyStatusResponse {
+public class StkRepo2UnitResponse {
 
-	private int code;
-	private String branchName;
-	private String billingDate;
-	private String entryDate;
-	private Time time;
-	private String remark;
+	private String name;
+	private Map<String,Object> months;
 	private int color;
+
 }

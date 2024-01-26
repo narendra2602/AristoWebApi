@@ -1,6 +1,5 @@
-package com.aristowebapi.response;
+package com.aristowebapi.request;
 
-import java.sql.Time;
 import java.util.Date;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
@@ -14,13 +13,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class DailyStatusResponse {
-
+public class NearExpiryRequest {
+	
+	private int divCode;
+	private int loginId;
+	private Date currDate;
 	private int code;
-	private String branchName;
-	private String billingDate;
-	private String entryDate;
-	private Time time;
-	private String remark;
-	private int color;
+	private int mktYear;
 }

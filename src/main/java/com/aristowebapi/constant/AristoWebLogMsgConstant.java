@@ -58,4 +58,23 @@ public class AristoWebLogMsgConstant {
 	public static final String BRANCH_MIS_REPORT_5_SERVICE="BranchMisRepo5ServiceImpl:: {} method execution started";
 	public static final String BRANCH_MIS_REPORT_5_SERVICE_021="BranchMisRepo5ServiceImpl:: {} method occurred exception while fetching data from the database, kindly check store procedure ::getBranchMisRepo5";
 
+	public static final String NEAR_EXPIRY_CONTROLLER="NearExpiryController";
+	public static final String NEAR_EXPIRY_SERVICE="NeareXPIRYServiceImpl:: {} method execution started";
+
+	public static final String HO_MARKEING_REPO1_CONTROLLER="HOMarketingRepo1Controller";
+	public static final String HO_MARKEING_REPO1_SERVICE="HOMarketingRepo1ServiceImpl:: {} method execution started";
+	public static final String HO_MARKEING_REPO1_SERVICE_01="HOMarketingRepo1ServiceImpl:: {} method execution started";
+
+	public static final String STK_REPO2_CONTROLLER="StkRepo2Controller";
+	public static final String STK_REPO2_SERVICE="StkRepo2ServiceImpl:: {} method execution started";
+	public static final String STK_REPO2_SERVICE_01="StkRepo2ServiceImpl:: {} method execution started";
+
+	public static final String STK_REPO3_CONTROLLER="StkRepo3Controller";
+	public static final String STK_REPO3_SERVICE="StkRepo3ServiceImpl:: {} method execution started";
+	public static final String STK_REPO3_SERVICE_01="StkRepo3ServiceImpl:: {} method execution started";
+	
+	public static final String DASH_BOARD_CONTROLLER="DashBoardController";
+	public static final String DASH_BOARD_SERVICE="DashBoardServiceImpl:: {} method execution started";
+
+
 }

@@ -1,7 +1,7 @@
 package com.aristowebapi.response;
 
-import java.sql.Time;
-import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -14,13 +14,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class DailyStatusResponse {
+public class DashBoardDataResponse {
+	
+	private String name;
+	private long value;
 
-	private int code;
-	private String branchName;
-	private String billingDate;
-	private String entryDate;
-	private Time time;
-	private String remark;
-	private int color;
 }

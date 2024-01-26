@@ -91,7 +91,7 @@ public class LoginController {
 
          System.out.println("login id is "+loginId);
 
-        ApiResponse<ReportTabResponse> apiResponse = new ApiResponse<>(fname,0, loginService.getReportMenuList(163));
+        ApiResponse<ReportTabResponse> apiResponse = new ApiResponse<>(fname,0,"",loginService.getReportMenuList(163));
 
 
 		return new ResponseEntity<ApiResponse<ReportTabResponse>>(apiResponse, HttpStatus.OK);

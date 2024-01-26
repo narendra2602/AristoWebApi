@@ -28,6 +28,8 @@ public class MktRepo9ServiceImpl  implements MktRepo9Service{
 	@Autowired
 	private MktRepo9Dao mktRepo9Dao;
 
+	public String lupdate="";
+	
 	private String getTitle(MktRepo9Request request,MktRepo9 data)
 	{
 		StringBuilder title=new StringBuilder();
@@ -317,7 +319,7 @@ public class MktRepo9ServiceImpl  implements MktRepo9Service{
 		response.setSd(sd);
 
 		saleList.add(response);
-		return new ApiResponse<MktRepo9Response>(title.toString(),size,saleList);
+		return new ApiResponse<MktRepo9Response>(title.toString(),size,lupdate,saleList);
 	}
 
 }

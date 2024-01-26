@@ -33,6 +33,8 @@ public class LoginServiceImpl implements LoginService {
 	@Autowired
 	private LoginDao loginDao;
 	
+	public String lupdate="";
+	
 	@Autowired
 	private AristoWebMessageConstant aristoWebMessageConstant;
 	
@@ -154,7 +156,7 @@ public class LoginServiceImpl implements LoginService {
 			divResponseList.add(divres);
 		});
 	
-		ApiResponse<DivResponse> apiResponse = new ApiResponse<>("Division", size,divResponseList);
+		ApiResponse<DivResponse> apiResponse = new ApiResponse<>("Division", size,lupdate,divResponseList);
 		return apiResponse;
 
 	}
@@ -174,7 +176,7 @@ public class LoginServiceImpl implements LoginService {
 			branchResponseList.add(branchres);
 		});
 	
-		ApiResponse<BranchResponse> apiResponse = new ApiResponse<>("Branch",size, branchResponseList);
+		ApiResponse<BranchResponse> apiResponse = new ApiResponse<>("Branch",size,lupdate, branchResponseList);
 		return apiResponse;
 
 	}

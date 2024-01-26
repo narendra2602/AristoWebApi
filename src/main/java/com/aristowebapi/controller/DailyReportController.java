@@ -30,7 +30,7 @@ public class DailyReportController {
 	private DailyReportService dailyReportService;
 	
 	@GetMapping("${mrc_daily_path}")
-	public ResponseEntity<ApiResponse<DailyReportResponse>> getDaiilyReport(@RequestBody DailyReportRequest request)
+	public ResponseEntity<ApiResponse<DailyReportResponse>> getDailyReport(@RequestBody DailyReportRequest request)
 	{
 		logger.info(AristoWebLogMsgConstant.DAILY_REPORT_CONTROLLER,"getDailyRepo1");
 

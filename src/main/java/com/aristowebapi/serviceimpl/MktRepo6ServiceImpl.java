@@ -27,6 +27,7 @@ public class MktRepo6ServiceImpl implements MktRepo6Service  {
 	@Autowired
 	private MktRepo6Dao mktRepo6Dao;
 	
+	public String lupdate="";
 	
 	private String getTitle(MktRepo6Request request,MktRepo6 data)
 	{
@@ -193,7 +194,7 @@ public class MktRepo6ServiceImpl implements MktRepo6Service  {
 		response.setColor(2);
 		saleList.add(response);
 
-		return new ApiResponse<MktRepo6Response>(title.toString(),size,saleList);
+		return new ApiResponse<MktRepo6Response>(title.toString(),size,lupdate,saleList);
 
 
 	}

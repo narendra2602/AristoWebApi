@@ -33,7 +33,7 @@ public class DailyReportServiceImpl  implements DailyReportService{
 	
 	@Autowired
 	private DailyReportDao dailyReportDao;
-
+	public String lupdate="";
 	
 	private String getTitle(DailyReportRequest request,DailyReport data)
 	{
@@ -184,7 +184,7 @@ public class DailyReportServiceImpl  implements DailyReportService{
 		} //end of for loop
 
 		
-		ApiResponse<DailyReportResponse> apiResponse = new ApiResponse<>(title!=null?title.toString():"", size,saleList);
+		ApiResponse<DailyReportResponse> apiResponse = new ApiResponse<>(title!=null?title.toString():"", size,lupdate,saleList);
 		return apiResponse;
 		
 		} catch (Exception e) {
@@ -239,7 +239,7 @@ public class DailyReportServiceImpl  implements DailyReportService{
 		} //end of for loop
 
 		
-		ApiResponse<DailyStatusResponse> apiResponse = new ApiResponse<>(title!=null?title.toString():"", size,saleList);
+		ApiResponse<DailyStatusResponse> apiResponse = new ApiResponse<>(title!=null?title.toString():"", size,lupdate,saleList);
 		return apiResponse;
 		
 		} catch (Exception e) {

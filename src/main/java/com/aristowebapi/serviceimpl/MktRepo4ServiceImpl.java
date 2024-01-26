@@ -25,6 +25,8 @@ public class MktRepo4ServiceImpl implements MktRepo4Service{
 	@Autowired
 	private MktRepo4Dao mktRepo4Dao;
 
+	public String lupdate="";
+	
 	private String getTitle(MktRepo4Request request,MktRepo4 data)
 	{
 		StringBuilder title=new StringBuilder();
@@ -144,7 +146,7 @@ public class MktRepo4ServiceImpl implements MktRepo4Service{
 		response.setSd(sd);
 
 		saleList.add(response);
-		return new ApiResponse<MktRepo4Response>(title.toString(),size,saleList);
+		return new ApiResponse<MktRepo4Response>(title.toString(),size,lupdate,saleList);
 	}
 
 }
