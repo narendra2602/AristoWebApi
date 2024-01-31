@@ -54,16 +54,12 @@ public class LoginController {
 	{
 		logger.info(AristoWebLogMsgConstant.LOGIN_CONTROLLER,"authenticateUser");
 
-		String authHeader = request.getHeader("Authorization");
-		int requestValues[]=appRequestParameterUtils.getRequestBodyParameters(authHeader);
-        int loginId=requestValues[0]; 
-
-         System.out.println("login id is "+loginId);
+        int loginId=getLoginIdFromToken(request);
 
 		
 //		return new ResponseEntity<LoginResponse>(loginService.authenticateUser(request), HttpStatus.OK);
 		//loginService.getDivisionList(163);
-		return new ResponseEntity<ApiResponse<DivResponse>>(loginService.getDivisionList(163), HttpStatus.OK);
+		return new ResponseEntity<ApiResponse<DivResponse>>(loginService.getDivisionList(loginId), HttpStatus.OK);
 
 	
 	}
@@ -73,7 +69,11 @@ public class LoginController {
 	public ResponseEntity<ApiResponse<BranchResponse>> getBranchList(HttpServletRequest request)
 	{
 		logger.info(AristoWebLogMsgConstant.LOGIN_CONTROLLER,"authenticateUser");
-		return new ResponseEntity<ApiResponse<BranchResponse>>(loginService.getBranchList(163), HttpStatus.OK);
+
+        int loginId=getLoginIdFromToken(request);
+
+        
+		return new ResponseEntity<ApiResponse<BranchResponse>>(loginService.getBranchList(loginId), HttpStatus.OK);
 
 	
 	}
@@ -89,9 +89,9 @@ public class LoginController {
 		int requestValues[]=appRequestParameterUtils.getRequestBodyParameters(authHeader);
         int loginId=requestValues[0]; 
 
-         System.out.println("login id is "+loginId);
+       
 
-        ApiResponse<ReportTabResponse> apiResponse = new ApiResponse<>(fname,0,"",loginService.getReportMenuList(163));
+        ApiResponse<ReportTabResponse> apiResponse = new ApiResponse<>(fname,0,"",loginService.getReportMenuList(loginId));
 
 
 		return new ResponseEntity<ApiResponse<ReportTabResponse>>(apiResponse, HttpStatus.OK);
@@ -110,5 +110,12 @@ public class LoginController {
 	
 	}
 
-
+     private int getLoginIdFromToken(HttpServletRequest request)
+     {
+ 		String authHeader = request.getHeader("Authorization");
+ 		int requestValues[]=appRequestParameterUtils.getRequestBodyParameters(authHeader);
+         int loginId=requestValues[0]; 
+         return loginId;
+     }
+	
 }

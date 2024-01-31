@@ -13,13 +13,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class StkRepo2UVResponse {
+public class StkRepo2Response {
 
 	private String name;
-	private Map<String,Integer> unitmap;
-	private Map<String,Double> valuemap;
+//	private Map<String,Object> months;
+	private Map<String,Long> months;
 	private int color;
-	
-	
-	
+
 }

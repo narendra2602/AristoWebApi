@@ -30,7 +30,7 @@ public class StkRepo3Controller {
 	@GetMapping("${mrc_stkRep3_path}")
 	public ResponseEntity<ApiResponse<StkRepo3Response>> getStkRepo3(@RequestBody StkRepo3Request request)
 	{
-		logger.info(AristoWebLogMsgConstant.STK_REPO3_CONTROLLER,"getStkRepo2");
+		logger.info(AristoWebLogMsgConstant.STK_REPO3_CONTROLLER,"getStkRepo3");
 
 		return new ResponseEntity<ApiResponse<StkRepo3Response>>(stkRepo3Service.getStkRepo3(request), HttpStatus.OK);
 	

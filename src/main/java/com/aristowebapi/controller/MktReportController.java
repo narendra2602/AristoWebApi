@@ -129,19 +129,22 @@ public class MktReportController {
 	@GetMapping("${mrc_repo3_path}")
 	public ResponseEntity<ApiResponse<MktRepo3Response>> getMktRepo3(@RequestBody MktRepo3Request request,HttpServletRequest req)
 	{
-		String authHeader = req.getHeader("Authorization");
-		int requestValues[]=appRequestParameterUtils.getRequestBodyParameters(authHeader);
-        int loginId=requestValues[0]; 
-        int userType=requestValues[1];
-
-         System.out.println("login id is "+loginId);
-         request.setLoginId(loginId);
-         request.setUtype(userType);
+		
+		int requestValues[]=getRequestData(req);
+		request.setLoginId(requestValues[0]);
+		request.setUtype(requestValues[1]);
 		
 		return new ResponseEntity<ApiResponse<MktRepo3Response>>(mktRepo3Service.getMktRepo3(request), HttpStatus.OK);
 	
 	}
 
+	private int[] getRequestData(HttpServletRequest req)
+	{
+		String authHeader = req.getHeader("Authorization");
+		int requestValues[]=appRequestParameterUtils.getRequestBodyParameters(authHeader);
+		return requestValues;
+	}
+	
 	@GetMapping("${mrc_repo4_path}")
 	public ResponseEntity<ApiResponse<MktRepo4Response>> getMktRepo4(@RequestBody MktRepo4Request request)
 	{

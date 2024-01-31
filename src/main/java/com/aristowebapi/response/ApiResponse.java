@@ -20,5 +20,6 @@ public class ApiResponse<T> {
 	private String lastUpdate;
 	private List<T> data;
 	
+	
 
 }

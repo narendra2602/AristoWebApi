@@ -12,12 +12,11 @@ import org.springframework.stereotype.Service;
 
 import com.aristowebapi.constant.AristoWebLogMsgConstant;
 import com.aristowebapi.dao.StkRepo2Dao;
+import com.aristowebapi.dto.MonthDto;
 import com.aristowebapi.dto.StkRepo2;
 import com.aristowebapi.request.StkRepo2Request;
 import com.aristowebapi.response.ApiResponse;
-import com.aristowebapi.response.StkRepo2UnitResponse;
-import com.aristowebapi.response.StkRepo2UVResponse;
-import com.aristowebapi.response.StkRepo2ValueResponse;
+import com.aristowebapi.response.StkRepo2Response;
 import com.aristowebapi.service.StkRepo2Service;
 
 @Service
@@ -25,14 +24,14 @@ public class StkRepo2ServiceImpl implements StkRepo2Service{
 
 	
 	Logger logger = LoggerFactory.getLogger(StkRepo2ServiceImpl.class);
-	private final String monthArray[] = new String[] {"","OCT","NOV","DEC","JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP"};
 	@Autowired
 	private StkRepo2Dao stkRepo2Dao;
 	
 	public String lupdate="";
 	Map<String, Object> grandTotalMap=null;
 	Map<String, Integer> grandTotalIntMap=null;
-	int grandColumnTotal=0;
+	long grandColumnTotal=0;
+	long vgrandColumnTotal=0;
 
 	Map<String, Double> grandTotalDoubleMap=null;
 	double grandColumnTotalDouble=0.00;
@@ -44,7 +43,7 @@ public class StkRepo2ServiceImpl implements StkRepo2Service{
 		
 		StringBuilder title=new StringBuilder();
 		title.append(" STOCKIEST : ");
-		title.append(data.getStkname());
+		title.append(data.getStk_name());
 		title.append(" ");
 		switch(request.getRepType())
 		{
@@ -68,494 +67,449 @@ public class StkRepo2ServiceImpl implements StkRepo2Service{
 
 	
 	@Override
-	public ApiResponse<StkRepo2UnitResponse> getStkRepo2Unit(StkRepo2Request request) {
+	public ApiResponse<StkRepo2Response> getStkRepo2(StkRepo2Request request) {
 		logger.info(AristoWebLogMsgConstant.STK_REPO2_SERVICE,"getStkRepo2Unit");
 
 
-		
+		List<MonthDto> monthData = stkRepo2Dao.getAllMonth(request.getMyear());
+		int sz=monthData.size();
+		int k=0;
+		int z=0;
+		sz=request.getEmon();
 
 		
 		String title=null;
 		
 		
 		List<StkRepo2> stkRepo2SaleList=stkRepo2Dao.getStockiestRepo2(request.getMyear(),request.getDivCode(),request.getDepoCode()
-				,request.getSmon(),request.getEmon(),request.getRepType(),request.getStkCode(),request.getUv());
+				,request.getSmon(),request.getEmon(),request.getRepType(),request.getStkCode(),request.getLoginId());
 		
-		StkRepo2UnitResponse response=null;
+		StkRepo2Response response=null;
+
+		Map<String, Long> months=null;
+		Map<String, Long> total=null;
+		Map<String, Long> group=null;
 		
-		List<StkRepo2UnitResponse> saleList = new ArrayList();
+		List<StkRepo2Response> saleList = new ArrayList();
 
 		int size = stkRepo2SaleList.size();
-		int columnTotal=0;
+		
+		
+		long columnTotal=0;
+		long groupColumnTotal=0;
 		boolean first=true;
 		int depo_code=0;
+		int mgrp=0;
 		String name="";
+		String gname="";
 		int fs=0;
 		int gfs=0;
+		int pcode=0;
 		for (int i=0;i<size;i++)
 		{
-			
 			StkRepo2 data = stkRepo2SaleList.get(i);
-
+			
 			if(first)
 			{
+				response=new StkRepo2Response();
+				pcode=data.getMcode();
+				name=data.getMname();
+				mgrp=data.getMgrp();
+				gname=data.getGp_name();
+				months=new LinkedHashMap();
+				group=new LinkedHashMap();
+				total=new LinkedHashMap();
 				first=false;
+				
 				title = getTitle(request, data); 
-				lupdate=data.getLastupdate();
-				grandTotalMap=new LinkedHashMap();
+			}
+
+			if(pcode!=data.getMcode())
+			{
+				response.setName(name);
+				z=k;
+				for(int b=k;b<sz;b++)
+				{
+					MonthDto mn=monthData.get(b);
+					months.put(mn.getMnth_abbr(), 0L);
+					k++;
+				}
+
+				months.put("TOTAL", columnTotal);
+				response.setMonths(months);
+				
+				saleList.add(response);
+				pcode=data.getMcode();
+				name=data.getMname();
+				columnTotal=0;
+				
+				k=0;
+				response=new StkRepo2Response();
+				months=new LinkedHashMap();
+
 			}
 
 			
-			Map<String,Object> dataMap = getMonthlyData(request.getSmon(), request.getEmon(),data);
-			columnTotal = dataMap.values().stream().mapToInt(d -> (Integer) d).sum();
-
-			if(columnTotal>0)
+/*			if(mgrp!=data.getMgrp())
 			{
-				response=new StkRepo2UnitResponse();
-				response.setName(data.getName());
-				response.setMonths(dataMap);
-				saleList.add(response);
-			}
+				response.setName(gname);
+				for(int b=z;b<sz;b++)
+				{
+					MonthDto mn=monthData.get(b);
+					group.put(mn.getMnth_abbr(), 0L);
+					z++;
+				}
 
-		}
-		
-		grandColumnTotal = grandTotalMap.values().stream().mapToInt(d -> (Integer) d).sum();
-		grandTotalMap.put("Grand Total", grandColumnTotal);
-		if((Integer) grandTotalMap.get("Grand Total")>0)
-		{
+				group.put("TOTAL", groupColumnTotal);
+
+				months.putAll(group);
+
+				
+				response.setMonths(months);
+				response.setColor(1);
+				saleList.add(response);
+
+				
+				mgrp=data.getMgrp();
+				gname=data.getGp_name();
+				
+				z=0;
+				groupColumnTotal=0;
+				response=new StkRepo2Response();
+				months=new LinkedHashMap();
+				group=new LinkedHashMap();
+				
+			}
+*/
+			
+			// before put please check depo code in branch list if not found put 0 value in map otherwise actual zero
+			for(int b=k;b<sz;b++)
+			{
+				MonthDto mn=monthData.get(b);
+				if(mn.getMnth_code()==data.getMnth_code())
+				{
+					months.put(data.getMnth_abbr(), request.getUv()==2?data.getSales_val():data.getSales());
+					columnTotal+=request.getUv()==2?data.getSales_val():data.getSales();
+					if(group.containsKey(data.getMnth_abbr()))
+					{
+						long gval = group.get(data.getMnth_abbr())+data.getSales_val();
+						group.put(data.getMnth_abbr(), gval);
+					}
+					else
+					{
+						group.put(data.getMnth_abbr(), data.getSales_val());
+					}
+					
+					if(total.containsKey(data.getMnth_abbr()))
+					{
+						long ggval = total.get(data.getMnth_abbr())+data.getSales_val();
+						total.put(data.getMnth_abbr(), ggval);
+					}
+					else
+					{
+						total.put(data.getMnth_abbr(), data.getSales_val());
+					}
+
+					k++;
+					break;
+				}
+				else
+				{
+					months.put(mn.getMnth_abbr(), 0L);
+					if(group.containsKey(mn.getMnth_abbr()))
+					{
+						// do nothing
+					}
+					else
+					{
+						group.put(mn.getMnth_abbr(), 0L);
+
+					}
+
+					if(total.containsKey(mn.getMnth_abbr()))
+					{
+						// do nothing
+					}
+					else
+					{
+						total.put(mn.getMnth_abbr(), 0L);
+
+					}
+
+					
+					k++;
+				}
+			}
+			
+		}			
+			response=new StkRepo2Response();
+			response.setName("");
+			z=k;
+			for(int b=k;b<sz;b++)
+			{
+				MonthDto mn=monthData.get(b);
+				months.put(mn.getMnth_abbr(), 0L);
+				k++;
+			}
+			months.put("TOTAL", columnTotal);
+
+			response.setMonths(months);
+			saleList.add(response);
+
+			
+/*			months=new LinkedHashMap();
 			response=new StkRepo2UnitResponse();
-			response.setName("GRAND TOTAL");
-			response.setMonths(grandTotalMap);
+			response.setName("");
+			for(int b=z;b<sz;b++)
+			{
+				MonthDto mn=monthData.get(b);
+				group.put(mn.getMnth_abbr(), 0L);
+				total.put(mn.getMnth_abbr(), 0L);
+				z++;
+			}
+
+			group.put("TOTAL", groupColumnTotal);
+
+			months.putAll(group);
+			response.setMonths(months);
+			response.setColor(1);
 			saleList.add(response);
-		}
+*/			
+			
+			grandColumnTotal = total.values().stream().mapToLong(d -> d).sum();
+			
+			months=new LinkedHashMap();
+			total.put("TOTAL", grandColumnTotal);
+//			total.keySet().stream().forEach(d->System.out.print(d));
 
-		
-		return new ApiResponse<StkRepo2UnitResponse>(title.toString(),size,lupdate,saleList);
+			months.putAll(total);
+			response=new StkRepo2Response();
+			response.setName("Total");
+			response.setMonths(months);
+			response.setColor(2);
+			saleList.add(response);		
+		return new ApiResponse<StkRepo2Response>(title.toString(),size,lupdate,saleList);
 
 	}
 	
 	
-	private Map getMonthlyData(int smon, int emon,StkRepo2 data)
-	{
-		Map<String,Integer> monthMap = new LinkedHashMap<String,Integer>();
-		int colTotal=0;
-		for(int j=smon;j<=emon;j++)
-		{
-				int total=0;
 
-				switch(j)
-				{
-					case 1 : monthMap.put(monthArray[j], data.getQtyoct());
-							 colTotal+=data.getQtyoct();
-					         total = grandTotalMap.containsKey(monthArray[j])?(Integer) grandTotalMap.get(monthArray[j])+data.getQtyoct():data.getQtyoct();
-					         grandTotalMap.put(monthArray[j], total);
-					break;
-					
-					case 2 : monthMap.put(monthArray[j], data.getQtynov());
-							colTotal+=data.getQtynov();
-					         total = grandTotalMap.containsKey(monthArray[j])?(Integer) grandTotalMap.get(monthArray[j])+data.getQtynov():data.getQtynov();
-					         grandTotalMap.put(monthArray[j], total);
-
-					break;
-
-					case 3 : monthMap.put(monthArray[j], data.getQtydec());
-							 colTotal+=data.getQtydec();
-					         total = grandTotalMap.containsKey(monthArray[j])?(Integer) grandTotalMap.get(monthArray[j])+data.getQtydec():data.getQtydec();
-					         grandTotalMap.put(monthArray[j], total);
-
-
-					break;
-
-					case 4 : monthMap.put(monthArray[j], data.getQtyjan());
-					         colTotal+=data.getQtyjan();
-					         total = grandTotalMap.containsKey(monthArray[j])?(Integer) grandTotalMap.get(monthArray[j])+data.getQtyjan():data.getQtyjan();
-					         grandTotalMap.put(monthArray[j], total);
-
-
-					break;
-
-					case 5 : monthMap.put(monthArray[j], data.getQtyfeb());
-			         colTotal+=data.getQtyfeb();
-			         total = grandTotalMap.containsKey(monthArray[j])?(Integer) grandTotalMap.get(monthArray[j])+data.getQtyfeb():data.getQtyfeb();
-			         grandTotalMap.put(monthArray[j], total);
-
-		
-					break;
-
-					case 6 : monthMap.put(monthArray[j], data.getQtymar());
-			         colTotal+=data.getQtymar();
-			         total = grandTotalMap.containsKey(monthArray[j])?(Integer) grandTotalMap.get(monthArray[j])+data.getQtymar():data.getQtymar();
-			         grandTotalMap.put(monthArray[j], total);
-
-
-
-					break;
-					
-					case 7 : monthMap.put(monthArray[j], data.getQtyapr());
-			         colTotal+=data.getQtyapr();
-			         total = grandTotalMap.containsKey(monthArray[j])?(Integer) grandTotalMap.get(monthArray[j])+data.getQtyapr():data.getQtyapr();
-			         grandTotalMap.put(monthArray[j], total);
-
-
-					break;
-
-					case 8 : monthMap.put(monthArray[j], data.getQtymay());
-			         colTotal+=data.getQtymay();
-			         total = grandTotalMap.containsKey(monthArray[j])?(Integer) grandTotalMap.get(monthArray[j])+data.getQtymay():data.getQtymay();
-			         grandTotalMap.put(monthArray[j], total);
-
-
-					break;
-					
-					case 9 : monthMap.put(monthArray[j], data.getQtyjun());
-			         colTotal+=data.getQtyjun();
-			         total = grandTotalMap.containsKey(monthArray[j])?(Integer) grandTotalMap.get(monthArray[j])+data.getQtyjun():data.getQtyjun();
-			         grandTotalMap.put(monthArray[j], total);
-
-
-					break;
-					
-					case 10 : monthMap.put(monthArray[j], data.getQtyjul());
-			         colTotal+=data.getQtyjul();
-			         total = grandTotalMap.containsKey(monthArray[j])?(Integer) grandTotalMap.get(monthArray[j])+data.getQtyjul():data.getQtyjul();
-			         grandTotalMap.put(monthArray[j], total);
-
-
-					break;
-
-
-					case 11 : monthMap.put(monthArray[j], data.getQtyaug());
-			         colTotal+=data.getQtyaug();
-			         total = grandTotalMap.containsKey(monthArray[j])?(Integer) grandTotalMap.get(monthArray[j])+data.getQtyaug():data.getQtyaug();
-			         grandTotalMap.put(monthArray[j], total);
-
-					break;
-
-					case 12 : monthMap.put(monthArray[j], data.getQtysep());
-			         colTotal+=data.getQtysep();
-			         total = grandTotalMap.containsKey(monthArray[j])?(Integer) grandTotalMap.get(monthArray[j])+data.getQtysep():data.getQtysep();
-			         grandTotalMap.put(monthArray[j], total);
-
-					break;
-
-					
-				}
-		}
-      				 monthMap.put("Total", colTotal);
-
-                   return monthMap;
-	}
 	@Override
-	public ApiResponse<StkRepo2ValueResponse> getStkRepo2Value(StkRepo2Request request) {
-		logger.info(AristoWebLogMsgConstant.STK_REPO2_SERVICE,"getStkRepo2Value");
+	public ApiResponse<StkRepo2Response> getStkRepo2UV(StkRepo2Request request) {
+		logger.info(AristoWebLogMsgConstant.STK_REPO2_SERVICE,"getStkRepo2Unit");
 
 
-		
+		List<MonthDto> monthData = stkRepo2Dao.getAllMonth(request.getMyear());
+		int sz=monthData.size();
+		int k=0;
+		int z=0;
 
+		sz=request.getEmon();
 		
 		String title=null;
 		
 		
 		List<StkRepo2> stkRepo2SaleList=stkRepo2Dao.getStockiestRepo2(request.getMyear(),request.getDivCode(),request.getDepoCode()
-				,request.getSmon(),request.getEmon(),request.getRepType(),request.getStkCode(),request.getUv());
+				,request.getSmon(),request.getEmon(),request.getRepType(),request.getStkCode(),request.getLoginId());
 		
-		StkRepo2ValueResponse response=null;
+		StkRepo2Response response=null;
+
+		Map<String, Long> months=null;
+		Map<String, Long> total=null;
+		Map<String, Long> vtotal=null;
+		Map<String, Long> group=null;
 		
-		List<StkRepo2ValueResponse> saleList = new ArrayList();
+		List<StkRepo2Response> saleList = new ArrayList();
 
 		int size = stkRepo2SaleList.size();
-		double columnTotal=0;
+		
+		
+		long columnTotal=0;
+		long vcolumnTotal=0;
+
+		long groupColumnTotal=0;
 		boolean first=true;
 		int depo_code=0;
+		int mgrp=0;
 		String name="";
+		String gname="";
 		int fs=0;
 		int gfs=0;
+		int pcode=0;
 		for (int i=0;i<size;i++)
 		{
-			
 			StkRepo2 data = stkRepo2SaleList.get(i);
-
+			
 			if(first)
 			{
+				response=new StkRepo2Response();
+				pcode=data.getMcode();
+				name=data.getMname();
+				mgrp=data.getMgrp();
+				gname=data.getGp_name();
+				months=new LinkedHashMap();
+				group=new LinkedHashMap();
+				total=new LinkedHashMap();
+				vtotal=new LinkedHashMap();
 				first=false;
+				
 				title = getTitle(request, data); 
-				lupdate=data.getLastupdate();
-				grandTotalDoubleMap=new LinkedHashMap();
+			}
+
+			if(pcode!=data.getMcode())
+			{
+				response.setName(name);
+				z=k;
+				for(int b=k;b<sz;b++)
+				{
+					MonthDto mn=monthData.get(b);
+					months.put(mn.getMnth_abbr()+" UNITS", 0L);
+					months.put(mn.getMnth_abbr()+" VALUES", 0L);
+					k++;
+				}
+
+				months.put("TOTAL UNITS", columnTotal);
+				months.put("TOTAL VALUE", vcolumnTotal);
+				response.setMonths(months);
+				
+				saleList.add(response);
+				pcode=data.getMcode();
+				name=data.getMname();
+				columnTotal=0;
+				vcolumnTotal=0;
+				
+				k=0;
+				response=new StkRepo2Response();
+				months=new LinkedHashMap();
+
 			}
 
 			
-			Map<String,Double> dataMap = getMonthlyDataValue(request.getSmon(), request.getEmon(),data);
-			columnTotal = dataMap.values().stream().mapToDouble(d -> d).sum();
-
-			if(columnTotal>0)
+		
+			// before put please check depo code in branch list if not found put 0 value in map otherwise actual zero
+			for(int b=k;b<sz;b++)
 			{
-				response=new StkRepo2ValueResponse();
-				response.setName(data.getName());
-				response.setMonths(dataMap);
-				saleList.add(response);
+				
+				MonthDto mn=monthData.get(b);
+				if(mn.getMnth_code()==data.getMnth_code())
+				{
+					months.put(data.getMnth_abbr()+" UNITS",data.getSales());
+					months.put(data.getMnth_abbr()+" VALUE",data.getSales_val());
+					columnTotal+=data.getSales();
+					grandColumnTotal+=data.getSales();
+					vgrandColumnTotal+=data.getSales_val();
+					vcolumnTotal+=data.getSales_val();
+					if(group.containsKey(data.getMnth_abbr()))
+					{
+						long gval = group.get(data.getMnth_abbr())+data.getSales_val();
+						group.put(data.getMnth_abbr(), gval);
+					}
+					else
+					{
+						group.put(data.getMnth_abbr(), data.getSales_val());
+					}
+					
+					if(total.containsKey(data.getMnth_abbr()+" UNITS"))
+					{
+						long ggval = total.get(data.getMnth_abbr()+" UNITS")+data.getSales();
+						total.put(data.getMnth_abbr()+" UNITS", ggval);
+
+					}
+					else
+					{
+						total.put(data.getMnth_abbr()+" UNITS", data.getSales());
+
+					}
+
+					if(total.containsKey(data.getMnth_abbr()+" VALUES"))
+					{
+						long ggval = total.get(data.getMnth_abbr()+" VALUES")+data.getSales_val();
+						total.put(data.getMnth_abbr()+" VALUES", ggval);
+
+					}
+					else
+					{
+						total.put(data.getMnth_abbr()+" VALUES", data.getSales_val());
+
+					}
+
+					k++;
+					break;
+				}
+				else
+				{
+					months.put(mn.getMnth_abbr()+" UNITS", 0L);
+					months.put(mn.getMnth_abbr()+" VALUES", 0L);
+					if(group.containsKey(mn.getMnth_abbr()))
+					{
+						// do nothing
+					}
+					else
+					{
+						group.put(mn.getMnth_abbr(), 0L);
+
+					}
+
+					if(total.containsKey(mn.getMnth_abbr()+" UNITS"))
+					{
+						// do nothing
+					}
+					else
+					{
+						total.put(mn.getMnth_abbr()+" UNITS", 0L);
+
+					}
+
+					if(total.containsKey(mn.getMnth_abbr()+" VALUES"))
+					{
+						// do nothing
+					}
+					else
+					{
+						total.put(mn.getMnth_abbr()+" VALUES", 0L);
+
+					}
+					
+					k++;
+				}
 			}
+			
+		}			
+			response=new StkRepo2Response();
+			response.setName("");
+			z=k;
+			for(int b=k;b<sz;b++)
+			{
+				MonthDto mn=monthData.get(b);
+				months.put(mn.getMnth_abbr()+" UNITS", 0L);
+				months.put(mn.getMnth_abbr()+" VALUES", 0L);
+				k++;
+			}
+			months.put("TOTAL UNITS", columnTotal);
+			months.put("TOTAL VALUES", vcolumnTotal);
 
-		}
-		
-		grandColumnTotalDouble = grandTotalDoubleMap.values().stream().mapToDouble(d -> d).sum();
-		grandTotalDoubleMap.put("Grand Total", Math.round(grandColumnTotalDouble*100)/100.00);
-		if(grandTotalDoubleMap.get("Grand Total")>0)
-		{
-			response=new StkRepo2ValueResponse();
-			response.setName("GRAND TOTAL");
-			response.setMonths(grandTotalDoubleMap);
+			response.setMonths(months);
 			saleList.add(response);
-		}
+// grand total 
+			
+			response=new StkRepo2Response();
+			response.setName("TOTAL : ");
+			z=k;
+			for(int b=k;b<sz;b++)
+			{
+				MonthDto mn=monthData.get(b);
+				total.put(mn.getMnth_abbr()+" UNITS", 0L);
+				total.put(mn.getMnth_abbr()+" VALUES", 0L);
+				k++;
+			}
+			total.put("TOTAL UNITS", grandColumnTotal);
+			total.put("TOTAL VALUES", vgrandColumnTotal);
 
+			response.setMonths(total);
+			saleList.add(response);
+			
 		
-		return new ApiResponse<StkRepo2ValueResponse>(title.toString(),size,lupdate,saleList);
-
-	}
-	
-	
-	private Map getMonthlyDataValue(int smon, int emon,StkRepo2 data)
-	{
-		Map<String,Double> monthMap = new LinkedHashMap<String,Double>();
-		double  colTotal=0.00;
-		for(int j=smon;j<=emon;j++)
-		{
-				double total=0.00;
-
-				switch(j)
-				{
-					case 1 : monthMap.put(monthArray[j], data.getValoct());
-							 colTotal+=data.getValoct();
-					         total = grandTotalDoubleMap.containsKey(monthArray[j])?grandTotalDoubleMap.get(monthArray[j])+data.getValoct():data.getValoct();
-					         grandTotalDoubleMap.put(monthArray[j], Math.round(total*100)/100.00);
-					break;
-					
-					case 2 : monthMap.put(monthArray[j], data.getValnov());
-							colTotal+=data.getValnov();
-					         total = grandTotalDoubleMap.containsKey(monthArray[j])?grandTotalDoubleMap.get(monthArray[j])+data.getValnov():data.getValnov();
-					         grandTotalDoubleMap.put(monthArray[j], Math.round(total*100)/100.00);
-
-					break;
-
-					case 3 : monthMap.put(monthArray[j], data.getValdec());
-							 colTotal+=data.getValdec();
-					         total = grandTotalDoubleMap.containsKey(monthArray[j])?grandTotalDoubleMap.get(monthArray[j])+data.getValdec():data.getValdec();
-					         grandTotalDoubleMap.put(monthArray[j], Math.round(total*100)/100.00);
-
-
-					break;
-
-					case 4 : monthMap.put(monthArray[j], data.getValjan());
-					         colTotal+=data.getValjan();
-					         total = grandTotalDoubleMap.containsKey(monthArray[j])?grandTotalDoubleMap.get(monthArray[j])+data.getValjan():data.getValjan();
-					         grandTotalDoubleMap.put(monthArray[j], Math.round(total*100)/100.00);
-
-
-					break;
-
-					case 5 : monthMap.put(monthArray[j], data.getValfeb());
-			         colTotal+=data.getValfeb();
-			         total = grandTotalDoubleMap.containsKey(monthArray[j])?grandTotalDoubleMap.get(monthArray[j])+data.getValfeb():data.getValfeb();
-			         grandTotalDoubleMap.put(monthArray[j], Math.round(total*100)/100.00);
-
-		
-					break;
-
-					case 6 : monthMap.put(monthArray[j], data.getValmar());
-			         colTotal+=data.getValmar();
-			         total = grandTotalDoubleMap.containsKey(monthArray[j])?grandTotalDoubleMap.get(monthArray[j])+data.getValmar():data.getValmar();
-			         grandTotalDoubleMap.put(monthArray[j], Math.round(total*100)/100.00);
-
-
-
-					break;
-					
-					case 7 : monthMap.put(monthArray[j], data.getValapr());
-			         colTotal+=data.getValapr();
-			         total = grandTotalDoubleMap.containsKey(monthArray[j])?grandTotalDoubleMap.get(monthArray[j])+data.getValapr():data.getValapr();
-			         grandTotalDoubleMap.put(monthArray[j], Math.round(total*100)/100.00);
-
-
-					break;
-
-					case 8 : monthMap.put(monthArray[j], data.getValmay());
-			         colTotal+=data.getValmay();
-			         total = grandTotalDoubleMap.containsKey(monthArray[j])?grandTotalDoubleMap.get(monthArray[j])+data.getValmay():data.getValmay();
-			         grandTotalDoubleMap.put(monthArray[j], Math.round(total*100)/100.00);
-
-
-					break;
-					
-					case 9 : monthMap.put(monthArray[j], data.getValjun());
-			         colTotal+=data.getValjun();
-			         total = grandTotalDoubleMap.containsKey(monthArray[j])?grandTotalDoubleMap.get(monthArray[j])+data.getValjun():data.getValjun();
-			         grandTotalDoubleMap.put(monthArray[j], Math.round(total*100)/100.00);
-
-
-					break;
-					
-					case 10 : monthMap.put(monthArray[j], data.getValjul());
-			         colTotal+=data.getValjul();
-			         total = grandTotalDoubleMap.containsKey(monthArray[j])?grandTotalDoubleMap.get(monthArray[j])+data.getValjul():data.getValjul();
-			         grandTotalDoubleMap.put(monthArray[j],Math.round(total*100)/100.00);
-
-
-					break;
-
-
-					case 11 : monthMap.put(monthArray[j], data.getValaug());
-			         colTotal+=data.getValaug();
-			         total = grandTotalDoubleMap.containsKey(monthArray[j])?grandTotalDoubleMap.get(monthArray[j])+data.getValaug():data.getValaug();
-			         grandTotalDoubleMap.put(monthArray[j], Math.round(total*100)/100.00);
-
-					break;
-
-					case 12 : monthMap.put(monthArray[j], data.getValsep());
-			         colTotal+=data.getValsep();
-			         total = grandTotalDoubleMap.containsKey(monthArray[j])?grandTotalDoubleMap.get(monthArray[j])+data.getValsep():data.getValsep();
-			         grandTotalDoubleMap.put(monthArray[j], Math.round(total*100)/100.00);
-
-					break;
-
-					
-				}
-		}
-      				 monthMap.put("Total", Math.round(colTotal*100)/100.00);
-
-                   return monthMap;
+			return new ApiResponse<StkRepo2Response>(title.toString(),size,lupdate,saleList);
 	}
 
-
-	@Override
-	public ApiResponse<StkRepo2UVResponse> getStkRepo2UV(StkRepo2Request request) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	private Map getMonthlyDataUV(int smon, int emon,StkRepo2 data)
-	{
-		Map<String,Double> monthMap = new LinkedHashMap<String,Double>();
-		Map<String,Integer> monthunitMap = new LinkedHashMap<String,Integer>();
-		double  colTotal=0.00;
-		int colUnitTotal=0;
-		for(int j=smon;j<=emon;j++)
-		{
-				double total=0.00;
-				int ctotal=0;
-				switch(j)
-				{
-					case 1 : monthMap.put(monthArray[j], data.getValoct());
-							 colTotal+=data.getValoct();
-					         total = grandTotalDoubleMap.containsKey(monthArray[j])?grandTotalDoubleMap.get(monthArray[j])+data.getValoct():data.getValoct();
-					         grandTotalDoubleMap.put(monthArray[j], Math.round(total*100)/100.00);
-
-					         monthunitMap.put(monthArray[j], data.getQtyoct());
-							 colUnitTotal+=data.getQtyoct();
-					         ctotal = grandTotalIntMap.containsKey(monthArray[j])?grandTotalIntMap.get(monthArray[j])+data.getQtyoct():data.getQtyoct();
-					         grandTotalIntMap.put(monthArray[j], ctotal);
-			         break;
-					
-					case 2 : monthMap.put(monthArray[j], data.getValnov());
-							 colTotal+=data.getValnov();
-							 total = grandTotalDoubleMap.containsKey(monthArray[j])?grandTotalDoubleMap.get(monthArray[j])+data.getValnov():data.getValnov();
-					         grandTotalDoubleMap.put(monthArray[j], Math.round(total*100)/100.00);
-					         
-					         monthunitMap.put(monthArray[j], data.getQtynov());
-							 colUnitTotal+=data.getQtynov();
-					         ctotal = grandTotalIntMap.containsKey(monthArray[j])?grandTotalIntMap.get(monthArray[j])+data.getQtynov():data.getQtynov();
-					         grandTotalIntMap.put(monthArray[j], ctotal);
-
-
-					break;
-
-					case 3 : monthMap.put(monthArray[j], data.getValdec());
-							 colTotal+=data.getValdec();
-					         total = grandTotalDoubleMap.containsKey(monthArray[j])?grandTotalDoubleMap.get(monthArray[j])+data.getValdec():data.getValdec();
-					         grandTotalDoubleMap.put(monthArray[j], Math.round(total*100)/100.00);
-
-					         monthunitMap.put(monthArray[j], data.getQtydec());
-							 colUnitTotal+=data.getQtydec();
-					         ctotal = grandTotalIntMap.containsKey(monthArray[j])?grandTotalIntMap.get(monthArray[j])+data.getQtydec():data.getQtydec();
-					         grandTotalIntMap.put(monthArray[j], ctotal);
-
-					break;
-
-					case 4 : monthMap.put(monthArray[j], data.getValjan());
-					         colTotal+=data.getValjan();
-					         total = grandTotalDoubleMap.containsKey(monthArray[j])?grandTotalDoubleMap.get(monthArray[j])+data.getValjan():data.getValjan();
-					         grandTotalDoubleMap.put(monthArray[j], Math.round(total*100)/100.00);
-
-
-					break;
-
-					case 5 : monthMap.put(monthArray[j], data.getValfeb());
-			         colTotal+=data.getValfeb();
-			         total = grandTotalDoubleMap.containsKey(monthArray[j])?grandTotalDoubleMap.get(monthArray[j])+data.getValfeb():data.getValfeb();
-			         grandTotalDoubleMap.put(monthArray[j], Math.round(total*100)/100.00);
-
-		
-					break;
-
-					case 6 : monthMap.put(monthArray[j], data.getValmar());
-			         colTotal+=data.getValmar();
-			         total = grandTotalDoubleMap.containsKey(monthArray[j])?grandTotalDoubleMap.get(monthArray[j])+data.getValmar():data.getValmar();
-			         grandTotalDoubleMap.put(monthArray[j], Math.round(total*100)/100.00);
-
-
-
-					break;
-					
-					case 7 : monthMap.put(monthArray[j], data.getValapr());
-			         colTotal+=data.getValapr();
-			         total = grandTotalDoubleMap.containsKey(monthArray[j])?grandTotalDoubleMap.get(monthArray[j])+data.getValapr():data.getValapr();
-			         grandTotalDoubleMap.put(monthArray[j], Math.round(total*100)/100.00);
-
-
-					break;
-
-					case 8 : monthMap.put(monthArray[j], data.getValmay());
-			         colTotal+=data.getValmay();
-			         total = grandTotalDoubleMap.containsKey(monthArray[j])?grandTotalDoubleMap.get(monthArray[j])+data.getValmay():data.getValmay();
-			         grandTotalDoubleMap.put(monthArray[j], Math.round(total*100)/100.00);
-
-
-					break;
-					
-					case 9 : monthMap.put(monthArray[j], data.getValjun());
-			         colTotal+=data.getValjun();
-			         total = grandTotalDoubleMap.containsKey(monthArray[j])?grandTotalDoubleMap.get(monthArray[j])+data.getValjun():data.getValjun();
-			         grandTotalDoubleMap.put(monthArray[j], Math.round(total*100)/100.00);
-
-
-					break;
-					
-					case 10 : monthMap.put(monthArray[j], data.getValjul());
-			         colTotal+=data.getValjul();
-			         total = grandTotalDoubleMap.containsKey(monthArray[j])?grandTotalDoubleMap.get(monthArray[j])+data.getValjul():data.getValjul();
-			         grandTotalDoubleMap.put(monthArray[j],Math.round(total*100)/100.00);
-
-
-					break;
-
-
-					case 11 : monthMap.put(monthArray[j], data.getValaug());
-			         colTotal+=data.getValaug();
-			         total = grandTotalDoubleMap.containsKey(monthArray[j])?grandTotalDoubleMap.get(monthArray[j])+data.getValaug():data.getValaug();
-			         grandTotalDoubleMap.put(monthArray[j], Math.round(total*100)/100.00);
-
-					break;
-
-					case 12 : monthMap.put(monthArray[j], data.getValsep());
-			         colTotal+=data.getValsep();
-			         total = grandTotalDoubleMap.containsKey(monthArray[j])?grandTotalDoubleMap.get(monthArray[j])+data.getValsep():data.getValsep();
-			         grandTotalDoubleMap.put(monthArray[j], Math.round(total*100)/100.00);
-
-					break;
-
-					
-				}
-		}
-      				 monthMap.put("Total", Math.round(colTotal*100)/100.00);
-
-                   return monthMap;
-	}
 }

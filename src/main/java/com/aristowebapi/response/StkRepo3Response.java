@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 public class StkRepo3Response {
 	
 	private String name;
-	private Map<String,Double> months;
+	private Map<String,Long> months;
 	private int color;
 
 

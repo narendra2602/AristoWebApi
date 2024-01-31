@@ -50,6 +50,7 @@ public class MktRepo3ServiceImpl implements MktRepo3Service {
 		List<MktRepo3> mktRepo3List=mktRepo3Dao.getWebReportNetTrend(request.getMyear(),request.getDivCode(),request.getDepoCode()
 				,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId(),request.getRepType(),request.getHqCode());
 
+		
 		MktRepo3Response response=null;
 		List<MktRepo3Response> saleList = new ArrayList();
 		Map<String, Long> months=null;
@@ -68,7 +69,6 @@ public class MktRepo3ServiceImpl implements MktRepo3Service {
 		String pname=null;
 		String pack=null;
 		String gname=null;
-
 		for (int i=0;i<size;i++)
 		{
 			MktRepo3 data = mktRepo3List.get(i);
