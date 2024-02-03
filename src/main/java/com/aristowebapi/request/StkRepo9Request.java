@@ -1,6 +1,4 @@
-package com.aristowebapi.response;
-
-import java.util.Map;
+package com.aristowebapi.request;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -10,13 +8,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class StkRepo2Response {
+public class StkRepo9Request extends ViewRequest{
 
-	private String name;
-	private Map<String,Long> months;
-	private int color;
-
+	private int code;
+	
 }

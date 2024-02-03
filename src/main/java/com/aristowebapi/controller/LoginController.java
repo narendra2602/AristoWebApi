@@ -49,35 +49,6 @@ public class LoginController {
 	
 	}
 
-	@PostMapping("/logindiv")
-	public ResponseEntity<ApiResponse<DivResponse>> getDivisionList(HttpServletRequest request)
-	{
-		logger.info(AristoWebLogMsgConstant.LOGIN_CONTROLLER,"authenticateUser");
-
-        int loginId=getLoginIdFromToken(request);
-
-		
-//		return new ResponseEntity<LoginResponse>(loginService.authenticateUser(request), HttpStatus.OK);
-		//loginService.getDivisionList(163);
-		return new ResponseEntity<ApiResponse<DivResponse>>(loginService.getDivisionList(loginId), HttpStatus.OK);
-
-	
-	}
-
-
-	@PostMapping("/logindepo")
-	public ResponseEntity<ApiResponse<BranchResponse>> getBranchList(HttpServletRequest request)
-	{
-		logger.info(AristoWebLogMsgConstant.LOGIN_CONTROLLER,"authenticateUser");
-
-        int loginId=getLoginIdFromToken(request);
-
-        
-		return new ResponseEntity<ApiResponse<BranchResponse>>(loginService.getBranchList(loginId), HttpStatus.OK);
-
-	
-	}
-
 	
 	@PostMapping("/loginmenu")
 	public ResponseEntity<ApiResponse<ReportTabResponse>> getMenuList(HttpServletRequest request)

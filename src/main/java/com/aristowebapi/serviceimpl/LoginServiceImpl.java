@@ -11,12 +11,9 @@ import org.springframework.stereotype.Service;
 import com.aristowebapi.constant.AristoWebLogMsgConstant;
 import com.aristowebapi.constant.AristoWebMessageConstant;
 import com.aristowebapi.dao.LoginDao;
-import com.aristowebapi.dto.BranchMasterDto;
-import com.aristowebapi.dto.DivDto;
 import com.aristowebapi.dto.LoginDto;
 import com.aristowebapi.dto.ReportMenuDto;
 import com.aristowebapi.request.LoginRequest;
-import com.aristowebapi.response.ApiResponse;
 import com.aristowebapi.response.BranchResponse;
 import com.aristowebapi.response.DataUploadMessageResponse;
 import com.aristowebapi.response.DivResponse;
@@ -45,8 +42,8 @@ public class LoginServiceImpl implements LoginService {
 		
 		LoginDto ldto=loginDao.authenticateUser(request.getUsername(), request.getPassword(), "Yes");
 		
-		List<DivDto> divlist=loginDao.getDivList(ldto.getId());
-		List<BranchMasterDto> branchlist=loginDao.getBranchList(ldto.getId());
+//		List<DivDto> divlist=loginDao.getDivList(ldto.getId());
+//		List<BranchMasterDto> branchlist=loginDao.getBranchList(ldto.getId());
 		List<ReportMenuDto> reportList = loginDao.getMenuList(ldto.getId());
 		
 		List<DivResponse> divResponseList=new ArrayList<>();
@@ -64,7 +61,7 @@ public class LoginServiceImpl implements LoginService {
 		
 
 		
-		divlist.forEach(data->{
+/*		divlist.forEach(data->{
 			DivResponse divres=new DivResponse();
 			divres.setDivCode(data.getDiv_code());
 			divres.setDivName(data.getDiv_name());
@@ -82,7 +79,7 @@ public class LoginServiceImpl implements LoginService {
 		});
 		
 		response.setBranches(branchResponseList);
-
+*/
 		int size=reportList.size();
 		ReportMenuDto reportMenuDto=null;
 		ReportTabResponse reportTabResponse=null;
@@ -142,44 +139,6 @@ public class LoginServiceImpl implements LoginService {
 		
 	}
 
-	@Override
-	public ApiResponse<DivResponse> getDivisionList(int loginId) {
-		
-		List<DivDto> divlist=loginDao.getDivList(loginId);
-		List<DivResponse> divResponseList=new ArrayList<>();
-		
-		int size=divlist.size();
-		divlist.forEach(data->{
-			DivResponse divres=new DivResponse();
-			divres.setDivCode(data.getDiv_code());
-			divres.setDivName(data.getDiv_name());
-			divResponseList.add(divres);
-		});
-	
-		ApiResponse<DivResponse> apiResponse = new ApiResponse<>("Division", size,lupdate,divResponseList);
-		return apiResponse;
-
-	}
-
-
-	@Override
-	public ApiResponse<BranchResponse> getBranchList(int loginId) {
-		
-		List<BranchMasterDto> branchlist=loginDao.getBranchList(loginId);
-		List<BranchResponse> branchResponseList=new ArrayList<>();
-		
-		int size=branchlist.size();
-		branchlist.forEach(data->{
-			BranchResponse branchres=new BranchResponse();
-			branchres.setDepoCode(data.getDepo_code());
-			branchres.setDepoName(data.getDepo_name());
-			branchResponseList.add(branchres);
-		});
-	
-		ApiResponse<BranchResponse> apiResponse = new ApiResponse<>("Branch",size,lupdate, branchResponseList);
-		return apiResponse;
-
-	}
 
 	@Override
 	public List<ReportTabResponse> getReportMenuList(int loginId) {

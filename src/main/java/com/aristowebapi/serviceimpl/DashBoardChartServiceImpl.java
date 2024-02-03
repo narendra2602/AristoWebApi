@@ -16,6 +16,7 @@ import com.aristowebapi.dto.DashBoardSalesChart;
 import com.aristowebapi.response.ApiResponse;
 import com.aristowebapi.response.DashBoardChartResponse;
 import com.aristowebapi.response.DashBoardDataResponse;
+import com.aristowebapi.response.DashBoardPanelDataResponse;
 import com.aristowebapi.response.DataSetResponse;
 import com.aristowebapi.service.DashBoardService;
 import com.aristowebapi.utility.AppCalculationUtils;
@@ -32,9 +33,9 @@ public class DashBoardChartServiceImpl implements DashBoardService {
 	private DashBoardDao dashBoardDao; 
 	
 	@Override
-	public DashBoardChartResponse getDashboardMainChart(int div_code, int depo_code) {
+	public DashBoardChartResponse getDashboardMainChart(int myear,int div_code, int depo_code,int login_id,int utype) {
 		// TODO Auto-generated method stub
-		List<DashBoardSalesChart> chartList= dashBoardDao.getDashboardMainChart(div_code, depo_code);
+		List<DashBoardSalesChart> chartList= dashBoardDao.getDashboardMainChart(myear,div_code,depo_code,login_id,utype);
 		
 		DashBoardChartResponse dashBoardChartResponse=null;
 		DashBoardSalesChart dashBoardChart=null;
@@ -96,9 +97,9 @@ public class DashBoardChartServiceImpl implements DashBoardService {
 	}
 
 	@Override
-	public DashBoardChartResponse getDashboardCurrentMonth(int div_code, int depo_code) {
+	public DashBoardChartResponse getDashboardCurrentMonth(int myear,int div_code, int depo_code,int cmon,int login_id,int utype) {
 		
-		DashBoardCurrentMonthChart chartData= dashBoardDao.getDashboardCurrentMonthChart(div_code, depo_code,2);
+		DashBoardCurrentMonthChart chartData= dashBoardDao.getDashboardCurrentMonthChart(myear,div_code,depo_code,cmon,login_id,utype,2);
 		DashBoardChartResponse dashBoardChartResponse=new DashBoardChartResponse();
 		List<Integer> dataValue=null;
 		List<DataSetResponse> dataSetResponseList= new ArrayList<>();
@@ -133,41 +134,43 @@ public class DashBoardChartServiceImpl implements DashBoardService {
 	}
 
 	@Override
-	public ApiResponse<DashBoardDataResponse> getDashboardTop5(int div_code, int depo_code) {
-		List<DashBoardData> dataList= dashBoardDao.getDashboardTop5Stockiest(div_code, depo_code);
+	public ApiResponse<DashBoardDataResponse> getDashboardTop5(int myear,int div_code, int depo_code,int cmon,int login_id,int utype) {
+		List<DashBoardData> dataList= dashBoardDao.getDashboardTop5Stockiest(myear,div_code,depo_code,cmon,login_id,utype);
 		
 		List<DashBoardDataResponse> saleList = getResponseData(dataList);
-		String title="Top 5 Stockiest";
-		String lupdate="";
+		String title=getMonth("Top 5 Stockiest ",myear,cmon);
+		
 		int size=dataList.size();
 		
-		ApiResponse<DashBoardDataResponse> apiResponse = new ApiResponse<>(title!=null?title.toString():"", size,lupdate,saleList);
+		ApiResponse<DashBoardDataResponse> apiResponse = new ApiResponse<>(title!=null?title.toString():"", size,saleList);
 		return apiResponse;
 
 	}
 
 	@Override
-	public ApiResponse<DashBoardDataResponse> getDashboardThept(int div_code, int depo_code) {
-		List<DashBoardData> dataList= dashBoardDao.getDashboardTheraputicSales(div_code, depo_code);
+	public ApiResponse<DashBoardDataResponse> getDashboardThept(int myear,int div_code, int depo_code,int cmon,int login_id,int utype) {
+		List<DashBoardData> dataList= dashBoardDao.getDashboardTheraputicSales(myear,div_code,depo_code,cmon,login_id,utype);
 		List<DashBoardDataResponse> saleList = getResponseData(dataList);
-		String title="Theraputic Sales";
-		String lupdate="";
+		
+		String title=getMonth("Theraputic Sales ",myear,cmon);
+		
 		int size=dataList.size();
 		
-		ApiResponse<DashBoardDataResponse> apiResponse = new ApiResponse<>(title!=null?title.toString():"", size,lupdate,saleList);
+		ApiResponse<DashBoardDataResponse> apiResponse = new ApiResponse<>(title!=null?title.toString():"", size,saleList);
 		return apiResponse;
 
 	}
 
 	@Override
-	public ApiResponse<DashBoardDataResponse> getDashboardPendingPI(int div_code, int depo_code) {
-		List<DashBoardData> dataList= dashBoardDao.getDashboardPendingPI(div_code, depo_code);
+	public ApiResponse<DashBoardDataResponse> getDashboardPendingPI(int myear,int div_code, int depo_code,int cmon,int login_id,int utype) {
+		List<DashBoardData> dataList= dashBoardDao.getDashboardPendingPI(myear,div_code,depo_code,cmon,login_id,utype);
 		List<DashBoardDataResponse> saleList = getResponseData(dataList);
-		String title="Pending PI";
-		String lupdate="";
+		
+		String title=getMonth("Pending PI ",myear,cmon);
+		
 		int size=dataList.size();
 		
-		ApiResponse<DashBoardDataResponse> apiResponse = new ApiResponse<>(title!=null?title.toString():"", size,lupdate,saleList);
+		ApiResponse<DashBoardDataResponse> apiResponse = new ApiResponse<>(title!=null?title.toString():"", size,saleList);
 		return apiResponse;
 
 	}
@@ -194,46 +197,56 @@ public class DashBoardChartServiceImpl implements DashBoardService {
 	}
 
 	@Override
-	public ApiResponse<DashBoardDataResponse> getDashboardPanelData(int div_code, int depo_code) {
+	public ApiResponse<DashBoardPanelDataResponse> getDashboardPanelData(int myear,int div_code, int depo_code,int cmon,int login_id,int utype) {
 		// TODO Auto-generated method stub
-		DashBoardCurrentMonthChart panelData= dashBoardDao.getDashboardCurrentMonthChart(div_code, depo_code,1);
+		DashBoardCurrentMonthChart panelDataCumm= dashBoardDao.getDashboardCurrentMonthChart(myear,div_code,depo_code,cmon,login_id,utype,1);
+		DashBoardCurrentMonthChart panelDataMonthly= dashBoardDao.getDashboardCurrentMonthChart(myear,div_code,depo_code,cmon,login_id,utype,2);
 		
-		List<DashBoardDataResponse> saleList = new ArrayList<DashBoardDataResponse>();
-		DashBoardDataResponse response= new DashBoardDataResponse();
+		List<DashBoardPanelDataResponse> saleList = new ArrayList<DashBoardPanelDataResponse>();
+		DashBoardPanelDataResponse response= new DashBoardPanelDataResponse();
 		response.setName("Sale");
-		response.setValue(panelData.getSaleval());
+		response.setMonthly(String.valueOf(panelDataMonthly.getSaleval()));
+		response.setCumm(String.valueOf(panelDataCumm.getSaleval()));
 		saleList.add(response);
 		
-		response= new DashBoardDataResponse();
+		response= new DashBoardPanelDataResponse();
 		response.setName("Target");
-		response.setValue(panelData.getTargetval());
+		response.setMonthly(String.valueOf(panelDataMonthly.getTargetval()));
+		response.setCumm(String.valueOf(panelDataCumm.getTargetval()));
+
 		saleList.add(response);
 		
-		response= new DashBoardDataResponse();
+		response= new DashBoardPanelDataResponse();
 		response.setName("Last Year");
-		response.setValue(panelData.getLysval());
+		response.setMonthly(String.valueOf(panelDataMonthly.getLysval()));
+		response.setCumm(String.valueOf(panelDataCumm.getLysval()));
 		saleList.add(response);
 		
-		response= new DashBoardDataResponse();
+		response= new DashBoardPanelDataResponse();
 		response.setName("Ach");
-		response.setValue((int) panelData.getAch());
+		response.setMonthly(String.valueOf(panelDataMonthly.getAch()));
+		response.setCumm(String.valueOf(panelDataCumm.getAch()));
 		saleList.add(response);
 		
-		response= new DashBoardDataResponse();
+		response= new DashBoardPanelDataResponse();
 		response.setName("SurDef");
-		response.setValue((int) panelData.getSurdef());
+		response.setMonthly(String.valueOf(panelDataMonthly.getSurdef()));
+		response.setCumm(String.valueOf(panelDataCumm.getSurdef()));
+
 		saleList.add(response);
 		
 
-		response= new DashBoardDataResponse();
+		response= new DashBoardPanelDataResponse();
 		response.setName("Gth");
-		response.setValue((int) panelData.getGth());
+		response.setMonthly(String.valueOf(panelDataMonthly.getGth()));
+		response.setCumm(String.valueOf(panelDataCumm.getGth()));
+
 		saleList.add(response);
-		String title="Current Month Chart";
+		String title="Panel Data";
 		String lupdate="";
-		int size=1;
+		int size=6;
 		
-		ApiResponse<DashBoardDataResponse> apiResponse = new ApiResponse<>(title!=null?title.toString():"", size,lupdate,saleList);
+		ApiResponse<DashBoardPanelDataResponse> apiResponse = new ApiResponse<>(title!=null?title.toString():"", size,lupdate,saleList);
 		return apiResponse;
 	}
 
@@ -265,7 +278,7 @@ public class DashBoardChartServiceImpl implements DashBoardService {
 	public ApiResponse<DashBoardDataResponse> getDashboardHqwiseAch(int myear,int div_code, int depo_code,int cmon,int login_id,int utype) {
 		List<DashBoardData> dataList= dashBoardDao.getDashboardHqwiseAch(myear, div_code, depo_code, cmon, login_id, utype);
 		List<DashBoardDataResponse> saleList = getResponseData(dataList);
-		String title=getMonth("Hqwise Achievement % ",myear,cmon);
+		String title=getMonth("HQwise Achievement % ",myear,cmon);
 
 		String lupdate="";
 		int size=dataList.size();
@@ -281,4 +294,111 @@ public class DashBoardChartServiceImpl implements DashBoardService {
 		sb.append(monthArray[mon]).append("-").append(mon>3?myear+1:myear);
 		return sb.toString();
 	}
+
+	@Override
+	public ApiResponse<DashBoardDataResponse> getDashboardTop5Products(int div_code, int depo_code, int login_id) {
+		List<DashBoardData> dataList= dashBoardDao.getDashboardTop5Products(div_code, depo_code, login_id);
+		List<DashBoardDataResponse> saleList = getResponseData(dataList);
+		String title=getMonth("Top5 Products ",2024,4);
+
+		String lupdate="";
+		int size=dataList.size();
+		
+		ApiResponse<DashBoardDataResponse> apiResponse = new ApiResponse<>(title!=null?title.toString():"", size,lupdate,saleList);
+		return apiResponse;
+	}
+
+	@Override
+	public ApiResponse<DashBoardDataResponse> getDashboardMonthCombo(int myear, int div_code, int depo_code,int login_id, int usertype) 
+	{
+		int monthIndex= dashBoardDao.getDashboardMonthIndex(myear,div_code, depo_code, login_id,usertype);
+		
+		List<DashBoardDataResponse> monthList = new ArrayList<>();
+		for(int i=1;i<monthArray.length;i++)
+		{
+			DashBoardDataResponse response=new DashBoardDataResponse();
+			response.setName(monthArray[i]);
+			response.setValue(i);
+			monthList.add(response);
+		}
+			
+		ApiResponse<DashBoardDataResponse> apiResponse = new ApiResponse<>("Month",12,monthList,monthIndex);
+		return apiResponse;
+
+	}
+
+	@Override
+	public ApiResponse<DashBoardDataResponse> getDashboardYearCombo() {
+		List<DashBoardData> dataList= dashBoardDao.getDashboardYearCombo();
+		List<DashBoardDataResponse> yearList = getResponseData(dataList);
+		
+
+		
+		int size=dataList.size();
+		System.out.println("size is "+size);
+		
+		ApiResponse<DashBoardDataResponse> apiResponse = new ApiResponse<>("Year",size,yearList);
+		return apiResponse;
+		
+	}
+
+	@Override
+	public ApiResponse<DashBoardDataResponse> getDivisionList(int loginId) {
+		
+		List<DashBoardData> dataList=dashBoardDao.getDivList(loginId);
+		List<DashBoardDataResponse> divlist = getResponseData(dataList);
+		int size=dataList.size();
+		ApiResponse<DashBoardDataResponse> apiResponse = new ApiResponse<>("Year",size,divlist);
+		return apiResponse;
+
+	}
+
+
+	@Override
+	public ApiResponse<DashBoardDataResponse> getBranchList(int loginId) {
+		
+		List<DashBoardData> branchlist=dashBoardDao.getBranchList(loginId);
+		List<DashBoardDataResponse> branchResponseList=new ArrayList<>();
+		
+		int size=branchlist.size();
+
+		if(size>1 )
+		{
+			DashBoardData  branchdto=new DashBoardData()
+			{
+				
+				@Override
+				public String getName() {
+					return "All";
+				}
+				
+				public int getValue() 
+				{
+					return 0;
+				}
+
+				@Override
+				public long getVal() {
+					// TODO Auto-generated method stub
+					return 0;
+				}
+			};
+			branchlist.add(0, branchdto);
+		}
+
+		branchlist.forEach(data->{
+			
+			
+
+			DashBoardDataResponse branchres=new DashBoardDataResponse();
+			branchres.setValue(data.getVal());
+			branchres.setName(data.getName());
+			branchResponseList.add(branchres);
+		});
+	
+		ApiResponse<DashBoardDataResponse> apiResponse = new ApiResponse<>("Branch",size,branchResponseList);
+		return apiResponse;
+
+	}
+
 }

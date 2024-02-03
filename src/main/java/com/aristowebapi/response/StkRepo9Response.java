@@ -13,10 +13,18 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class StkRepo2Response {
-
+public class StkRepo9Response {
+	
 	private String name;
-	private Map<String,Long> months;
+	private int saleQty;
+	private double saleVal;
+	private int salableQty;
+	private double salableVal;
+	private int ebspdQty;
+	private double ebspdVal;
+	private int netQty;
+	private double netVal;
 	private int color;
+	
 
 }

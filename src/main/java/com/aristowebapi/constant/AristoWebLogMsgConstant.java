@@ -72,6 +72,16 @@ public class AristoWebLogMsgConstant {
 	public static final String STK_REPO3_CONTROLLER="StkRepo3Controller";
 	public static final String STK_REPO3_SERVICE="StkRepo3ServiceImpl:: {} method execution started";
 	public static final String STK_REPO3_SERVICE_01="StkRepo3ServiceImpl:: {} method execution started";
+
+	
+	public static final String STK_REPO9_CONTROLLER="StkRepo9Controller";
+	public static final String STK_REPO9_SERVICE="StkRepo9ServiceImpl:: {} method execution started";
+	public static final String STK_REPO9_SERVICE_01="StkRepo9ServiceImpl:: {} method execution started";
+
+	public static final String STK_REPO10_CONTROLLER="StkRepo10Controller";
+	public static final String STK_REPO10_SERVICE="StkRepo10ServiceImpl:: {} method execution started";
+	public static final String STK_REPO10_SERVICE_01="StkRepo10ServiceImpl:: {} method execution started";
+
 	
 	public static final String DASH_BOARD_CONTROLLER="DashBoardController";
 	public static final String DASH_BOARD_SERVICE="DashBoardServiceImpl:: {} method execution started";

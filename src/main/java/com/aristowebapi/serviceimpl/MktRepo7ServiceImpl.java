@@ -27,7 +27,7 @@ public class MktRepo7ServiceImpl implements  MktRepo7Service{
 	@Autowired
 	private MktRepo7Dao mktRepo7Dao;
 
-	public String lupdate="";
+	private String lupdate="";
 	
 	private String getTitle(MktRepo7Request request,MktRepo7 data)
 	{
@@ -86,7 +86,10 @@ public class MktRepo7ServiceImpl implements  MktRepo7Service{
 	    	response.setSaleable(data.getSalable());
 	    	response.setExpiry(data.getExpiry());
 	    	response.setBreakage(data.getBreakage());
-	    	response.setTotal(data.getSalable()+data.getExpiry()+data.getBreakage());
+	    	response.setRatediff(data.getRatediff());
+	    	response.setShortReceived(data.getShort());
+	    	response.setLossInTransit(data.getLoss());
+	    	response.setTotal(data.getTotal());
 
 	    	saleList.add(response);
 

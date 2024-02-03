@@ -27,7 +27,7 @@ public class StkRepo2ServiceImpl implements StkRepo2Service{
 	@Autowired
 	private StkRepo2Dao stkRepo2Dao;
 	
-	public String lupdate="";
+	private String lupdate="";
 	Map<String, Object> grandTotalMap=null;
 	Map<String, Integer> grandTotalIntMap=null;
 	long grandColumnTotal=0;

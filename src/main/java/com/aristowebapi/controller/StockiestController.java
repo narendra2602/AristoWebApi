@@ -1,0 +1,102 @@
+package com.aristowebapi.controller;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.aristowebapi.constant.AristoWebLogMsgConstant;
+import com.aristowebapi.request.StkRepo10Request;
+import com.aristowebapi.request.StkRepo2Request;
+import com.aristowebapi.request.StkRepo3Request;
+import com.aristowebapi.request.StkRepo9Request;
+import com.aristowebapi.response.ApiResponse;
+import com.aristowebapi.response.StkRepo10Response;
+import com.aristowebapi.response.StkRepo2Response;
+import com.aristowebapi.response.StkRepo3Response;
+import com.aristowebapi.response.StkRepo9Response;
+import com.aristowebapi.service.StkRepo10Service;
+import com.aristowebapi.service.StkRepo2Service;
+import com.aristowebapi.service.StkRepo3Service;
+import com.aristowebapi.service.StkRepo9Service;
+
+@RestController
+@CrossOrigin
+@RequestMapping("${mrc_base_path}")
+public class StockiestController {
+
+	
+	Logger logger = LoggerFactory.getLogger(StockiestController.class);
+
+	@Autowired
+	private StkRepo2Service stkRepo2Service;
+	
+
+
+	@Autowired
+	private StkRepo3Service stkRepo3Service;
+	
+	@Autowired
+	private StkRepo9Service stkRepo9Service;
+
+	
+	@Autowired
+	private StkRepo10Service stkRepo10Service;
+
+	
+	@GetMapping("${mrc_stk_rep2_path}")
+	public ResponseEntity<ApiResponse<StkRepo2Response>> getStkRepo2(@RequestBody StkRepo2Request request)
+	{
+		logger.info(AristoWebLogMsgConstant.STK_REPO2_CONTROLLER,"getStkRepo2");
+
+		return new ResponseEntity<ApiResponse<StkRepo2Response>>(stkRepo2Service.getStkRepo2(request), HttpStatus.OK);
+	
+	}
+
+
+	@GetMapping("${mrc_stk_rep2_uv_path}")
+	public ResponseEntity<ApiResponse<StkRepo2Response>> getStkRepo2UV(@RequestBody StkRepo2Request request)
+	{
+		logger.info(AristoWebLogMsgConstant.STK_REPO2_CONTROLLER,"getStkRepo2Value");
+
+		return new ResponseEntity<ApiResponse<StkRepo2Response>>(stkRepo2Service.getStkRepo2UV(request), HttpStatus.OK);
+	
+	}
+	
+	@GetMapping("${mrc_stk_rep3_path}")
+	public ResponseEntity<ApiResponse<StkRepo3Response>> getStkRepo3(@RequestBody StkRepo3Request request)
+	{
+		logger.info(AristoWebLogMsgConstant.STK_REPO3_CONTROLLER,"getStkRepo3");
+
+		return new ResponseEntity<ApiResponse<StkRepo3Response>>(stkRepo3Service.getStkRepo3(request), HttpStatus.OK);
+	
+	}
+
+
+	@GetMapping("${mrc_stk_rep9_path}")
+	public ResponseEntity<ApiResponse<StkRepo9Response>> getStkRepo9(@RequestBody StkRepo9Request request)
+	{
+		logger.info(AristoWebLogMsgConstant.STK_REPO9_CONTROLLER,"getStkRepo9");
+
+		return new ResponseEntity<ApiResponse<StkRepo9Response>>(stkRepo9Service.getStkRepo9(request), HttpStatus.OK);
+	
+	}
+
+	
+	@GetMapping("${mrc_stk_rep10_path}")
+	public ResponseEntity<ApiResponse<StkRepo10Response>> getStkRepo10(@RequestBody StkRepo10Request request)
+	{
+		logger.info(AristoWebLogMsgConstant.STK_REPO9_CONTROLLER,"getStkRepo10");
+
+		return new ResponseEntity<ApiResponse<StkRepo10Response>>(stkRepo10Service.getStkRepo10(request), HttpStatus.OK);
+	
+	}
+}
+
+

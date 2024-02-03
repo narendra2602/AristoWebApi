@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.aristowebapi.dto.BranchMasterDto;
 import com.aristowebapi.dto.MktDataDto;
 import com.aristowebapi.dto.MktRepo4;
 

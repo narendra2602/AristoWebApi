@@ -16,9 +16,6 @@ public interface LoginService {
 	
 	DataUploadMessageResponse getMessage(int depoCode);
 	
-	ApiResponse<DivResponse> getDivisionList(int loginId);
-
-	ApiResponse<BranchResponse> getBranchList(int loginId);
 	
 	List<ReportTabResponse> getReportMenuList(int loginId);
 

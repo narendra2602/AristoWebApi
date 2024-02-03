@@ -11,8 +11,9 @@ public interface MktRepo7 {
 	public long getExpiry();
 	public long getBreakage();
 	public int getFs();
-	public long getSpoiled();
-	public long getOthers();
+	public long getRatediff();
+	public long getShort();
+	public long getLoss();
 	public long getTotal();
 	public String getSmname();
 	public String getEmname();
