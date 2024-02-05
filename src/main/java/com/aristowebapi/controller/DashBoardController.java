@@ -10,17 +10,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.aristowebapi.constant.AristoWebLogMsgConstant;
 import com.aristowebapi.response.ApiResponse;
-import com.aristowebapi.response.BranchResponse;
 import com.aristowebapi.response.DashBoardChartResponse;
 import com.aristowebapi.response.DashBoardDataResponse;
 import com.aristowebapi.response.DashBoardPanelDataResponse;
-import com.aristowebapi.response.DivResponse;
 import com.aristowebapi.service.DashBoardService;
 import com.aristowebapi.utility.AppRequestParameterUtils;
 
@@ -59,7 +56,7 @@ public class DashBoardController {
 	
 	}
 
-	@GetMapping("${mrc_dashboardtop5_path}")
+	@GetMapping("${mrc_dashboardtop5Stockiest_path}")
 	public ResponseEntity<ApiResponse<DashBoardDataResponse>> getDashboardTop5(@PathVariable("myear") int myear,@PathVariable("divCode") int divCode,@PathVariable("depoCode") int depoCode,@PathVariable("cmon") int cmon,HttpServletRequest request)
 
 	{
@@ -72,6 +69,21 @@ public class DashBoardController {
 		return new ResponseEntity<ApiResponse<DashBoardDataResponse>>(dashBoardService.getDashboardTop5(myear,divCode,depoCode,cmon,loginId,uType), HttpStatus.OK);
 	
 	}
+
+	@GetMapping("${mrc_dashboardtop5Products_path}")
+	public ResponseEntity<ApiResponse<DashBoardDataResponse>> getDashboardTop5Products(@PathVariable("myear") int myear,@PathVariable("divCode") int divCode,@PathVariable("depoCode") int depoCode,@PathVariable("cmon") int cmon,HttpServletRequest request)
+
+	{
+
+		logger.info(AristoWebLogMsgConstant.DASH_BOARD_CONTROLLER,"getDashboardTop5");
+		
+		int loginId=getLoginIdFromToken(request)[0];
+        int uType=getLoginIdFromToken(request)[1];
+
+		return new ResponseEntity<ApiResponse<DashBoardDataResponse>>(dashBoardService.getDashboardTop5Products(myear,divCode,depoCode,cmon,loginId), HttpStatus.OK);
+	
+	}
+
 	@GetMapping("${mrc_dashboardthept_path}")
 	public ResponseEntity<ApiResponse<DashBoardDataResponse>> getDashboardThept(@PathVariable("myear") int myear,@PathVariable("divCode") int divCode,@PathVariable("depoCode") int depoCode,@PathVariable("cmon") int cmon,HttpServletRequest request)
 	{

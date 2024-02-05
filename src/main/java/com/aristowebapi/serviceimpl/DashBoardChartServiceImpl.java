@@ -243,10 +243,10 @@ public class DashBoardChartServiceImpl implements DashBoardService {
 
 		saleList.add(response);
 		String title="Panel Data";
-		String lupdate="";
+		
 		int size=6;
 		
-		ApiResponse<DashBoardPanelDataResponse> apiResponse = new ApiResponse<>(title!=null?title.toString():"", size,lupdate,saleList);
+		ApiResponse<DashBoardPanelDataResponse> apiResponse = new ApiResponse<>(title!=null?title.toString():"", size,saleList);
 		return apiResponse;
 	}
 
@@ -255,10 +255,10 @@ public class DashBoardChartServiceImpl implements DashBoardService {
 		List<DashBoardData> dataList= dashBoardDao.getDashboardGroupwiseAch(myear, div_code, depo_code, cmon, login_id, utype);
 		List<DashBoardDataResponse> saleList = getResponseData(dataList);
 		String title=getMonth("Groupwise Achievement % ",myear,cmon);
-		String lupdate="";
+		
 		int size=dataList.size();
 		
-		ApiResponse<DashBoardDataResponse> apiResponse = new ApiResponse<>(title!=null?title.toString():"", size,lupdate,saleList);
+		ApiResponse<DashBoardDataResponse> apiResponse = new ApiResponse<>(title!=null?title.toString():"", size,saleList);
 		return apiResponse;
 	}
 
@@ -267,10 +267,10 @@ public class DashBoardChartServiceImpl implements DashBoardService {
 		List<DashBoardData> dataList= dashBoardDao.getDashboardBranchwiseAch(myear, div_code, depo_code, cmon, login_id, utype);
 		List<DashBoardDataResponse> saleList = getResponseData(dataList);
 		String title=getMonth("Branchwise Achievement % ",myear,cmon);
-		String lupdate="";
+		
 		int size=dataList.size();
 		
-		ApiResponse<DashBoardDataResponse> apiResponse = new ApiResponse<>(title!=null?title.toString():"", size,lupdate,saleList);
+		ApiResponse<DashBoardDataResponse> apiResponse = new ApiResponse<>(title!=null?title.toString():"", size,saleList);
 		return apiResponse;
 	}
 
@@ -280,10 +280,10 @@ public class DashBoardChartServiceImpl implements DashBoardService {
 		List<DashBoardDataResponse> saleList = getResponseData(dataList);
 		String title=getMonth("HQwise Achievement % ",myear,cmon);
 
-		String lupdate="";
+		
 		int size=dataList.size();
 		
-		ApiResponse<DashBoardDataResponse> apiResponse = new ApiResponse<>(title!=null?title.toString():"", size,lupdate,saleList);
+		ApiResponse<DashBoardDataResponse> apiResponse = new ApiResponse<>(title!=null?title.toString():"", size,saleList);
 		return apiResponse;
 	}
 
@@ -291,20 +291,20 @@ public class DashBoardChartServiceImpl implements DashBoardService {
 	private String getMonth(String title,int myear,int mon)
 	{
 		StringBuilder sb=new StringBuilder(title);
-		sb.append(monthArray[mon]).append("-").append(mon>3?myear+1:myear);
+		sb.append(monthArray[mon]).append("-").append(mon>3?(myear+1):myear);
 		return sb.toString();
 	}
 
 	@Override
-	public ApiResponse<DashBoardDataResponse> getDashboardTop5Products(int div_code, int depo_code, int login_id) {
-		List<DashBoardData> dataList= dashBoardDao.getDashboardTop5Products(div_code, depo_code, login_id);
+	public ApiResponse<DashBoardDataResponse> getDashboardTop5Products(int myear,int div_code, int depo_code, int cmon,int login_id) {
+		List<DashBoardData> dataList= dashBoardDao.getDashboardTop5Products(myear,div_code, depo_code,cmon, login_id);
 		List<DashBoardDataResponse> saleList = getResponseData(dataList);
-		String title=getMonth("Top5 Products ",2024,4);
+		String title=getMonth("Top 5 Products ",myear,cmon);
 
-		String lupdate="";
+		
 		int size=dataList.size();
 		
-		ApiResponse<DashBoardDataResponse> apiResponse = new ApiResponse<>(title!=null?title.toString():"", size,lupdate,saleList);
+		ApiResponse<DashBoardDataResponse> apiResponse = new ApiResponse<>(title!=null?title.toString():"", size,saleList);
 		return apiResponse;
 	}
 
@@ -371,15 +371,9 @@ public class DashBoardChartServiceImpl implements DashBoardService {
 				public String getName() {
 					return "All";
 				}
-				
-				public int getValue() 
-				{
-					return 0;
-				}
 
 				@Override
 				public long getVal() {
-					// TODO Auto-generated method stub
 					return 0;
 				}
 			};

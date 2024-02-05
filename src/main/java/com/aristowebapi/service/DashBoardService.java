@@ -24,7 +24,7 @@ public interface DashBoardService {
 	ApiResponse<DashBoardDataResponse> getDashboardGroupwiseAch(int myear,int div_code, int depo_code,int cmon,int login_id,int usertype);
 	ApiResponse<DashBoardDataResponse> getDashboardBranchAch(int myear,int div_code, int depo_code,int cmon,int login_id,int usertype);
 	ApiResponse<DashBoardDataResponse> getDashboardHqwiseAch(int myear,int div_code, int depo_code,int cmon,int login_id,int usertype);
-	ApiResponse<DashBoardDataResponse> getDashboardTop5Products(int div_code, int depo_code,int login_id);
+	ApiResponse<DashBoardDataResponse> getDashboardTop5Products(int myear,int div_code, int depo_code,int cmon,int login_id);
 	ApiResponse<DashBoardDataResponse> getDashboardMonthCombo(int myear,int div_code, int depo_code,int login_id,int usertype);
 	ApiResponse<DashBoardDataResponse> getDashboardYearCombo();
 	

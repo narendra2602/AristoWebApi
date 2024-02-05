@@ -56,9 +56,9 @@ public interface DashBoardDao extends JpaRepository<MktDataDto, Integer> {
 	List<DashBoardData> getDashboardHqwiseAch(@Param("myear") int myear,@Param("div_code") int div_code,
 			@Param("depo_code") int depo_code,@Param("cmon") int cmon,@Param("login_id") int login_id,@Param("utype") int utype);
 
-	@Query(value="CALL getDashboardTop5Products(:div_code,:depo_code,:login_id);", nativeQuery=true)
-	List<DashBoardData> getDashboardTop5Products(@Param("div_code") int div_code,
-			@Param("depo_code") int depo_code,@Param("login_id") int login_id);
+	@Query(value="CALL getDashboardTop5Products(:myear,:div_code,:depo_code,:cmon,:login_id);", nativeQuery=true)
+	List<DashBoardData> getDashboardTop5Products(@Param("myear") int myear,@Param("div_code") int div_code,
+			@Param("depo_code") int depo_code,@Param("cmon") int cmon,@Param("login_id") int login_id);
 	
 	@Query(value="CALL getDashboardMonthIndex(:myear,:div_code,:depo_code,:login_id,:utype);", nativeQuery=true)
 	int  getDashboardMonthIndex(@Param("myear") int myear,@Param("div_code") int div_code,
