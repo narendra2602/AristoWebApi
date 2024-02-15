@@ -84,8 +84,6 @@ public class StkRepo10ServiceImpl implements StkRepo10Service {
 		List<StkRepo10> stkRepo10SaleList=stkRepo10Dao.getStockiestRepo10(request.getMyear(),request.getDivCode(),request.getDepoCode()
 				,request.getSmon(),request.getEmon(),request.getRepType(),request.getPcode(),request.getLoginId());
 	
-		System.out.println(request.getMyear()+" "+request.getDivCode()+" "+request.getDepoCode()
-				+" "+request.getSmon()+" "+request.getEmon()+" "+request.getRepType()+" "+request.getPcode()+" "+request.getLoginId());
 		
 		StkRepo10Response response=null;
 

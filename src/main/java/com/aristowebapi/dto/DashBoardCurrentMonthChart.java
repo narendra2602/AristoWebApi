@@ -2,12 +2,12 @@ package com.aristowebapi.dto;
 
 public interface DashBoardCurrentMonthChart {
 	
-	public int getSaleval();
-	public int getTargetval();
-	public int getLysval();
+	public long getSaleval();
+	public long getTargetval();
+	public long getLysval();
 	public double getAch();
 	public double getGth();
-	public int getSurdef();
+	public long getSurdef();
 	
 
 }

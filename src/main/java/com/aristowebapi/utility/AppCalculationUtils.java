@@ -65,5 +65,13 @@ public class AppCalculationUtils {
 				?doubleVal1
 				:((new BigDecimal(doubleVal1)).add(new BigDecimal(doubleVal2))).doubleValue();
 	}
+
+	public static double roundToDecimal2Places(double number)
+	{
+		  
+		number=Math.round(number*100.0)/100.0;
+		return number;
+	}
+
 	
 }

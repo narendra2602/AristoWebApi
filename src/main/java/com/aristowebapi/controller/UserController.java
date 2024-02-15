@@ -9,6 +9,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,7 +25,7 @@ import com.aristowebapi.serviceimpl.UserInfoDetails;
 import com.aristowebapi.serviceimpl.UserInfoService;
 
 
-
+@CrossOrigin
 @RestController
 @RequestMapping("/auth") 
 public class UserController { 

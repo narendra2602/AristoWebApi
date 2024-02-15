@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import com.aristowebapi.dto.DashBoardCurrentMonthChart;
 import com.aristowebapi.dto.DashBoardData;
+import com.aristowebapi.dto.DashBoardDataDouble;
 import com.aristowebapi.dto.DashBoardSalesChart;
 import com.aristowebapi.dto.MktDataDto;
 
@@ -45,15 +46,15 @@ public interface DashBoardDao extends JpaRepository<MktDataDto, Integer> {
 	
 
 	@Query(value="CALL getDashboardGroupwiseAch(:myear,:div_code,:depo_code,:cmon,:login_id,:utype);", nativeQuery=true)
-	List<DashBoardData> getDashboardGroupwiseAch(@Param("myear") int myear,@Param("div_code") int div_code,
+	List<DashBoardDataDouble> getDashboardGroupwiseAch(@Param("myear") int myear,@Param("div_code") int div_code,
 			@Param("depo_code") int depo_code,@Param("cmon") int cmon,@Param("login_id") int login_id,@Param("utype") int utype);
 
 	@Query(value="CALL getDashboardBranchwiseAch(:myear,:div_code,:depo_code,:cmon,:login_id,:utype);", nativeQuery=true)
-	List<DashBoardData> getDashboardBranchwiseAch(@Param("myear") int myear,@Param("div_code") int div_code,
+	List<DashBoardDataDouble> getDashboardBranchwiseAch(@Param("myear") int myear,@Param("div_code") int div_code,
 			@Param("depo_code") int depo_code,@Param("cmon") int cmon,@Param("login_id") int login_id,@Param("utype") int utype);
 
 	@Query(value="CALL getDashboardHqwiseAch(:myear,:div_code,:depo_code,:cmon,:login_id,:utype);", nativeQuery=true)
-	List<DashBoardData> getDashboardHqwiseAch(@Param("myear") int myear,@Param("div_code") int div_code,
+	List<DashBoardDataDouble> getDashboardHqwiseAch(@Param("myear") int myear,@Param("div_code") int div_code,
 			@Param("depo_code") int depo_code,@Param("cmon") int cmon,@Param("login_id") int login_id,@Param("utype") int utype);
 
 	@Query(value="CALL getDashboardTop5Products(:myear,:div_code,:depo_code,:cmon,:login_id);", nativeQuery=true)
@@ -72,6 +73,17 @@ public interface DashBoardDao extends JpaRepository<MktDataDto, Integer> {
 
 	@Query(value = "select depo_code val,depo_name name from branch_comp where depo_code in (select depo_code from user_branch08 where user_id=:userId and status='Y')  order by depo_code ", nativeQuery = true)
 	List<DashBoardData> getBranchList(@Param("userId") int userId);
+
+	
+	@Query(value="CALL getHqList(:myear,:div_code,:depo_code,:utype,:login_id);", nativeQuery=true)
+	List<DashBoardData> getHqList(@Param("myear") int myear,@Param("div_code") int div_code,
+			@Param("depo_code") int depo_code,@Param("utype") int utype,@Param("login_id") int login_id);
+	
+	@Query(value="CALL getProductList(:div_code,:utype,:login_id);", nativeQuery=true)
+	List<DashBoardData> getProductList(@Param("div_code") int div_code,	@Param("utype") int utype,@Param("login_id") int login_id);
+
+	@Query(value="CALL getGroupList(:div_code,:utype,:login_id);", nativeQuery=true)
+	List<DashBoardData> getGroupList(@Param("div_code") int div_code,	@Param("utype") int utype,@Param("login_id") int login_id);
 
 
 }

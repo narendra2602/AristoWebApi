@@ -1,5 +1,7 @@
 package com.aristowebapi.controller;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,7 @@ import com.aristowebapi.service.StkRepo10Service;
 import com.aristowebapi.service.StkRepo2Service;
 import com.aristowebapi.service.StkRepo3Service;
 import com.aristowebapi.service.StkRepo9Service;
+import com.aristowebapi.utility.AppRequestParameterUtils;
 
 @RestController
 @CrossOrigin
@@ -34,6 +37,11 @@ public class StockiestController {
 	
 	Logger logger = LoggerFactory.getLogger(StockiestController.class);
 
+	
+	@Autowired
+	private AppRequestParameterUtils appRequestParameterUtils;
+
+	
 	@Autowired
 	private StkRepo2Service stkRepo2Service;
 	
@@ -51,28 +59,44 @@ public class StockiestController {
 
 	
 	@GetMapping("${mrc_stk_rep2_path}")
-	public ResponseEntity<ApiResponse<StkRepo2Response>> getStkRepo2(@RequestBody StkRepo2Request request)
+	public ResponseEntity<ApiResponse<StkRepo2Response>> getStkRepo2(@RequestBody StkRepo2Request request,HttpServletRequest req)
 	{
 		logger.info(AristoWebLogMsgConstant.STK_REPO2_CONTROLLER,"getStkRepo2");
 
+		int requestValues[]=getRequestData(req);
+		request.setLoginId(requestValues[0]);
+		request.setUtype(requestValues[1]);
+
+		
 		return new ResponseEntity<ApiResponse<StkRepo2Response>>(stkRepo2Service.getStkRepo2(request), HttpStatus.OK);
 	
 	}
 
 
 	@GetMapping("${mrc_stk_rep2_uv_path}")
-	public ResponseEntity<ApiResponse<StkRepo2Response>> getStkRepo2UV(@RequestBody StkRepo2Request request)
+	public ResponseEntity<ApiResponse<StkRepo2Response>> getStkRepo2UV(@RequestBody StkRepo2Request request,HttpServletRequest req)
 	{
 		logger.info(AristoWebLogMsgConstant.STK_REPO2_CONTROLLER,"getStkRepo2Value");
+		
+		int requestValues[]=getRequestData(req);
+		request.setLoginId(requestValues[0]);
+		request.setUtype(requestValues[1]);
+
 
 		return new ResponseEntity<ApiResponse<StkRepo2Response>>(stkRepo2Service.getStkRepo2UV(request), HttpStatus.OK);
 	
 	}
 	
 	@GetMapping("${mrc_stk_rep3_path}")
-	public ResponseEntity<ApiResponse<StkRepo3Response>> getStkRepo3(@RequestBody StkRepo3Request request)
+	public ResponseEntity<ApiResponse<StkRepo3Response>> getStkRepo3(@RequestBody StkRepo3Request request,HttpServletRequest req)
 	{
 		logger.info(AristoWebLogMsgConstant.STK_REPO3_CONTROLLER,"getStkRepo3");
+		
+		
+		int requestValues[]=getRequestData(req);
+		request.setLoginId(requestValues[0]);
+		request.setUtype(requestValues[1]);
+
 
 		return new ResponseEntity<ApiResponse<StkRepo3Response>>(stkRepo3Service.getStkRepo3(request), HttpStatus.OK);
 	
@@ -80,9 +104,14 @@ public class StockiestController {
 
 
 	@GetMapping("${mrc_stk_rep9_path}")
-	public ResponseEntity<ApiResponse<StkRepo9Response>> getStkRepo9(@RequestBody StkRepo9Request request)
+	public ResponseEntity<ApiResponse<StkRepo9Response>> getStkRepo9(@RequestBody StkRepo9Request request ,HttpServletRequest req)
 	{
 		logger.info(AristoWebLogMsgConstant.STK_REPO9_CONTROLLER,"getStkRepo9");
+		
+		int requestValues[]=getRequestData(req);
+		request.setLoginId(requestValues[0]);
+		request.setUtype(requestValues[1]);
+
 
 		return new ResponseEntity<ApiResponse<StkRepo9Response>>(stkRepo9Service.getStkRepo9(request), HttpStatus.OK);
 	
@@ -90,13 +119,25 @@ public class StockiestController {
 
 	
 	@GetMapping("${mrc_stk_rep10_path}")
-	public ResponseEntity<ApiResponse<StkRepo10Response>> getStkRepo10(@RequestBody StkRepo10Request request)
+	public ResponseEntity<ApiResponse<StkRepo10Response>> getStkRepo10(@RequestBody StkRepo10Request request ,HttpServletRequest req)
 	{
 		logger.info(AristoWebLogMsgConstant.STK_REPO9_CONTROLLER,"getStkRepo10");
+		
+		int requestValues[]=getRequestData(req);
+		request.setLoginId(requestValues[0]);
+		request.setUtype(requestValues[1]);
+
 
 		return new ResponseEntity<ApiResponse<StkRepo10Response>>(stkRepo10Service.getStkRepo10(request), HttpStatus.OK);
 	
 	}
+
+
+private int[] getRequestData(HttpServletRequest req)
+{
+	String authHeader = req.getHeader("Authorization");
+	int requestValues[]=appRequestParameterUtils.getRequestBodyParameters(authHeader);
+	return requestValues;
 }
 
-
+}

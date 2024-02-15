@@ -12,7 +12,6 @@ import com.aristowebapi.constant.AristoWebLogMsgConstant;
 import com.aristowebapi.dao.MKtRepo2Dao;
 import com.aristowebapi.dto.MktRepo2;
 import com.aristowebapi.exception.ApiException;
-import com.aristowebapi.exception.DataNotFoundException;
 import com.aristowebapi.request.MktRepo2Request;
 import com.aristowebapi.response.ApiResponse;
 import com.aristowebapi.response.MktRepo2Response;
@@ -51,9 +50,79 @@ public class MktRepo2ServiceImpl implements MktRepo2Service {
 		int size = 0;
 
 		try {
-			MktRepo2List=mktRepo2Dao.getWebMkt2All(request.getMyear(),request.getDivCode(),request.getDepoCode()
-					,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId(),request.getRepType());
+			
+			if(request.getUtype()==2 && request.getDepoCode()==0)
+				{
+				MktRepo2List=mktRepo2Dao.getWebMkt2All(request.getMyear(),request.getDivCode(),request.getDepoCode()
+						,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId(),request.getHqCode());
+				}
+			else if(request.getUtype()==2 && request.getDepoCode()>0 && request.getHqCode()==0)
+			{
+			MktRepo2List=mktRepo2Dao.getWebMkt2(request.getMyear(),request.getDivCode(),request.getDepoCode()
+					,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId(),request.getHqCode());
+			}
+
+			else if((request.getUtype()==5 || request.getUtype()==2 ) && request.getDepoCode()>0 && request.getHqCode()>0)
+			{
+				MktRepo2List=mktRepo2Dao.getWebMkt2Hq(request.getMyear(),request.getDivCode(),request.getDepoCode()
+						,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId(),request.getHqCode());
+			}
+
+			
+			else if(request.getUtype()==5 && request.getDepoCode()>0)
+			{
+			MktRepo2List=mktRepo2Dao.getWebMkt2(request.getMyear(),request.getDivCode(),request.getDepoCode()
+					,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId(),request.getHqCode());
+			}
+
+			
+			else if(request.getUtype()==3 && request.getDepoCode()==0)
+			{
+			MktRepo2List=mktRepo2Dao.getWebMkt2AllPmt(request.getMyear(),request.getDivCode(),request.getDepoCode()
+					,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId(),request.getHqCode());
+			}
+
+			else if(request.getUtype()==3 && request.getHqCode()>0)
+			{
+			MktRepo2List=mktRepo2Dao.getWebMkt2HqPmt(request.getMyear(),request.getDivCode(),request.getDepoCode()
+					,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId(),request.getHqCode());
+			}
+
+			else if(request.getUtype()==3 && request.getDepoCode()>0)
+			{
+			MktRepo2List=mktRepo2Dao.getWebMkt2Pmt(request.getMyear(),request.getDivCode(),request.getDepoCode()
+					,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId(),request.getHqCode());
+			}
+
+			else if(request.getUtype()==5 && request.getDepoCode()==0)
+			{
+			MktRepo2List=mktRepo2Dao.getWebMkt5(request.getMyear(),request.getDivCode(),request.getDepoCode()
+					,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId(),request.getHqCode());
+			}
+
+			else if(request.getUtype()==4 && request.getDepoCode()==0)
+			{
+			MktRepo2List=mktRepo2Dao.getWebMkt2Hq4(request.getMyear(),request.getDivCode(),request.getDepoCode()
+					,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId(),request.getHqCode());
+			}
+
+			else if(request.getUtype()==4 && request.getDepoCode()>0 && request.getHqCode()==0)
+			{
+			MktRepo2List=mktRepo2Dao.getWebMkt2Depo4(request.getMyear(),request.getDivCode(),request.getDepoCode()
+					,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId(),request.getHqCode());
+			}
+
+			else if(request.getHqCode()>0)
+			{
+			MktRepo2List=mktRepo2Dao.getWebMkt2Hq(request.getMyear(),request.getDivCode(),request.getDepoCode()
+					,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId(),request.getHqCode());
+			}
+
 			size = MktRepo2List.size();
+			
+			
+			
+			
 			logger.info("size of the data is {}",size);
 /*			if(size==0)
 				throw new DataNotFoundException(AristoWebLogMsgConstant.MKT_REPORT_SERVICE_022);

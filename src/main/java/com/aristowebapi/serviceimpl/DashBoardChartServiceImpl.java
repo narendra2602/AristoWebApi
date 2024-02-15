@@ -12,10 +12,12 @@ import com.aristowebapi.constant.AristoWebMessageConstant;
 import com.aristowebapi.dao.DashBoardDao;
 import com.aristowebapi.dto.DashBoardCurrentMonthChart;
 import com.aristowebapi.dto.DashBoardData;
+import com.aristowebapi.dto.DashBoardDataDouble;
 import com.aristowebapi.dto.DashBoardSalesChart;
 import com.aristowebapi.response.ApiResponse;
 import com.aristowebapi.response.DashBoardChartResponse;
 import com.aristowebapi.response.DashBoardDataResponse;
+import com.aristowebapi.response.DashBoardDataResponseDouble;
 import com.aristowebapi.response.DashBoardPanelDataResponse;
 import com.aristowebapi.response.DataSetResponse;
 import com.aristowebapi.service.DashBoardService;
@@ -62,8 +64,8 @@ public class DashBoardChartServiceImpl implements DashBoardService {
 
 				DataSetResponse dataSetResponse = new DataSetResponse();
 				dataSetResponse.setValues(dataValue);
-				dataSetResponse.setDatasetLabel(srno==1?"Sales":srno==2?"Target":"Last Year");
-				dataSetResponse.setDataSetColor(srno==1?aristoWebMessageConstant.sale:srno==2?aristoWebMessageConstant.target:aristoWebMessageConstant.lys);
+				dataSetResponse.setDatasetLabel(srno==2?"Sales":srno==1?"Target":"Last Year");
+				dataSetResponse.setDataSetColor(srno==2?aristoWebMessageConstant.sale:srno==1?aristoWebMessageConstant.target:aristoWebMessageConstant.lys);
 				dataSetResponseList.add(dataSetResponse);
 				
 				
@@ -138,7 +140,7 @@ public class DashBoardChartServiceImpl implements DashBoardService {
 		List<DashBoardData> dataList= dashBoardDao.getDashboardTop5Stockiest(myear,div_code,depo_code,cmon,login_id,utype);
 		
 		List<DashBoardDataResponse> saleList = getResponseData(dataList);
-		String title=getMonth("Top 5 Stockiest ",myear,cmon);
+		String title=getMonth("Top 5 Stockiest for ",myear,cmon);
 		
 		int size=dataList.size();
 		
@@ -152,7 +154,7 @@ public class DashBoardChartServiceImpl implements DashBoardService {
 		List<DashBoardData> dataList= dashBoardDao.getDashboardTheraputicSales(myear,div_code,depo_code,cmon,login_id,utype);
 		List<DashBoardDataResponse> saleList = getResponseData(dataList);
 		
-		String title=getMonth("Theraputic Sales ",myear,cmon);
+		String title=getMonth("Theraputic Sales for ",myear,cmon);
 		
 		int size=dataList.size();
 		
@@ -166,7 +168,7 @@ public class DashBoardChartServiceImpl implements DashBoardService {
 		List<DashBoardData> dataList= dashBoardDao.getDashboardPendingPI(myear,div_code,depo_code,cmon,login_id,utype);
 		List<DashBoardDataResponse> saleList = getResponseData(dataList);
 		
-		String title=getMonth("Pending PI ",myear,cmon);
+		String title=getMonth("Pending PI for ",myear,cmon);
 		
 		int size=dataList.size();
 		
@@ -196,6 +198,28 @@ public class DashBoardChartServiceImpl implements DashBoardService {
 
 	}
 
+	private List<DashBoardDataResponseDouble> getResponseDataDouble(List<DashBoardDataDouble> dataList)
+	{
+		List<DashBoardDataResponseDouble> saleList = new ArrayList<DashBoardDataResponseDouble>();
+		int size = dataList.size();
+		
+		DashBoardDataResponseDouble response=null;
+		
+		
+		for(int i=0; i<size;i++)
+		{
+
+			DashBoardDataDouble data = dataList.get(i);
+			response= new DashBoardDataResponseDouble();
+			response.setName(data.getName());
+			response.setValue(data.getVal());
+			saleList.add(response);
+		}
+		return saleList;
+
+	}
+
+	
 	@Override
 	public ApiResponse<DashBoardPanelDataResponse> getDashboardPanelData(int myear,int div_code, int depo_code,int cmon,int login_id,int utype) {
 		// TODO Auto-generated method stub
@@ -251,39 +275,39 @@ public class DashBoardChartServiceImpl implements DashBoardService {
 	}
 
 	@Override
-	public ApiResponse<DashBoardDataResponse> getDashboardGroupwiseAch(int myear,int div_code, int depo_code,int cmon,int login_id,int utype) {
-		List<DashBoardData> dataList= dashBoardDao.getDashboardGroupwiseAch(myear, div_code, depo_code, cmon, login_id, utype);
-		List<DashBoardDataResponse> saleList = getResponseData(dataList);
-		String title=getMonth("Groupwise Achievement % ",myear,cmon);
+	public ApiResponse<DashBoardDataResponseDouble> getDashboardGroupwiseAch(int myear,int div_code, int depo_code,int cmon,int login_id,int utype) {
+		List<DashBoardDataDouble> dataList= dashBoardDao.getDashboardGroupwiseAch(myear, div_code, depo_code, cmon, login_id, utype);
+		List<DashBoardDataResponseDouble> saleList = getResponseDataDouble(dataList);
+		String title=getMonth("Groupwise Achievement % for ",myear,cmon);
 		
 		int size=dataList.size();
 		
-		ApiResponse<DashBoardDataResponse> apiResponse = new ApiResponse<>(title!=null?title.toString():"", size,saleList);
+		ApiResponse<DashBoardDataResponseDouble> apiResponse = new ApiResponse<>(title!=null?title.toString():"", size,saleList);
 		return apiResponse;
 	}
 
 	@Override
-	public ApiResponse<DashBoardDataResponse> getDashboardBranchAch(int myear,int div_code, int depo_code,int cmon,int login_id,int utype) {
-		List<DashBoardData> dataList= dashBoardDao.getDashboardBranchwiseAch(myear, div_code, depo_code, cmon, login_id, utype);
-		List<DashBoardDataResponse> saleList = getResponseData(dataList);
-		String title=getMonth("Branchwise Achievement % ",myear,cmon);
+	public ApiResponse<DashBoardDataResponseDouble> getDashboardBranchAch(int myear,int div_code, int depo_code,int cmon,int login_id,int utype) {
+		List<DashBoardDataDouble> dataList= dashBoardDao.getDashboardBranchwiseAch(myear, div_code, depo_code, cmon, login_id, utype);
+		List<DashBoardDataResponseDouble> saleList = getResponseDataDouble(dataList);
+		String title=getMonth("Branchwise Achievement % for ",myear,cmon);
 		
 		int size=dataList.size();
 		
-		ApiResponse<DashBoardDataResponse> apiResponse = new ApiResponse<>(title!=null?title.toString():"", size,saleList);
+		ApiResponse<DashBoardDataResponseDouble> apiResponse = new ApiResponse<>(title!=null?title.toString():"", size,saleList);
 		return apiResponse;
 	}
 
 	@Override
-	public ApiResponse<DashBoardDataResponse> getDashboardHqwiseAch(int myear,int div_code, int depo_code,int cmon,int login_id,int utype) {
-		List<DashBoardData> dataList= dashBoardDao.getDashboardHqwiseAch(myear, div_code, depo_code, cmon, login_id, utype);
-		List<DashBoardDataResponse> saleList = getResponseData(dataList);
-		String title=getMonth("HQwise Achievement % ",myear,cmon);
+	public ApiResponse<DashBoardDataResponseDouble> getDashboardHqwiseAch(int myear,int div_code, int depo_code,int cmon,int login_id,int utype) {
+		List<DashBoardDataDouble> dataList= dashBoardDao.getDashboardHqwiseAch(myear, div_code, depo_code, cmon, login_id, utype);
+		List<DashBoardDataResponseDouble> saleList = getResponseDataDouble(dataList);
+		String title=getMonth("HQwise Achievement % for ",myear,cmon);
 
 		
 		int size=dataList.size();
 		
-		ApiResponse<DashBoardDataResponse> apiResponse = new ApiResponse<>(title!=null?title.toString():"", size,saleList);
+		ApiResponse<DashBoardDataResponseDouble> apiResponse = new ApiResponse<>(title!=null?title.toString():"", size,saleList);
 		return apiResponse;
 	}
 
@@ -299,7 +323,7 @@ public class DashBoardChartServiceImpl implements DashBoardService {
 	public ApiResponse<DashBoardDataResponse> getDashboardTop5Products(int myear,int div_code, int depo_code, int cmon,int login_id) {
 		List<DashBoardData> dataList= dashBoardDao.getDashboardTop5Products(myear,div_code, depo_code,cmon, login_id);
 		List<DashBoardDataResponse> saleList = getResponseData(dataList);
-		String title=getMonth("Top 5 Products ",myear,cmon);
+		String title=getMonth("Top 5 Products for ",myear,cmon);
 
 		
 		int size=dataList.size();
@@ -393,6 +417,49 @@ public class DashBoardChartServiceImpl implements DashBoardService {
 		ApiResponse<DashBoardDataResponse> apiResponse = new ApiResponse<>("Branch",size,branchResponseList);
 		return apiResponse;
 
+	}
+
+	@Override
+	public ApiResponse<DashBoardDataResponse> getHqList(int myear, int div_code, int depo_code, int utype,int login_id) {
+		List<DashBoardData> dataList= dashBoardDao.getHqList(myear,div_code, depo_code,utype, login_id);
+		List<DashBoardDataResponse> saleList = getResponseData(dataList);
+		String title="Hq List ";
+
+		
+		int size=dataList.size();
+		
+		ApiResponse<DashBoardDataResponse> apiResponse = new ApiResponse<>(title!=null?title.toString():"", size,saleList);
+		return apiResponse;
+
+		
+	}
+
+	@Override
+	public ApiResponse<DashBoardDataResponse> getProductList(int div_code, int utype, int login_id) {
+		List<DashBoardData> dataList= dashBoardDao.getProductList(div_code,utype, login_id);
+		List<DashBoardDataResponse> saleList = getResponseData(dataList);
+		String title="Product List ";
+
+		
+		int size=dataList.size();
+		
+		ApiResponse<DashBoardDataResponse> apiResponse = new ApiResponse<>(title!=null?title.toString():"", size,saleList);
+		return apiResponse;
+
+		
+	}
+
+	@Override
+	public ApiResponse<DashBoardDataResponse> getGroupList(int div_code, int utype, int login_id) {
+		List<DashBoardData> dataList= dashBoardDao.getGroupList(div_code,utype, login_id);
+		List<DashBoardDataResponse> saleList = getResponseData(dataList);
+		String title="Group List ";
+
+		
+		int size=dataList.size();
+		
+		ApiResponse<DashBoardDataResponse> apiResponse = new ApiResponse<>(title!=null?title.toString():"", size,saleList);
+		return apiResponse;
 	}
 
 }

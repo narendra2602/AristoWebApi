@@ -1,4 +1,4 @@
-package com.aristowebapi.request;
+package com.aristowebapi.response;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -11,8 +11,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class BranchMisRepo5Request extends ViewRequest{
+public class DashBoardDataResponseDouble {
 	
-	private int repType;
-	private int code;
+	
+	private String name;
+	private double value;
+
 }

@@ -1,4 +1,4 @@
-package com.aristowebapi.request;
+package com.aristowebapi.response;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -8,11 +8,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class BranchMisRepo5Request extends ViewRequest{
+public class BranchMisRepo8Response extends StkRepo10Response{
 	
-	private int repType;
-	private int code;
+	private int fs;
+
 }

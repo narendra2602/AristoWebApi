@@ -1,11 +1,10 @@
 package com.aristowebapi.service;
 
 import com.aristowebapi.response.ApiResponse;
-import com.aristowebapi.response.BranchResponse;
 import com.aristowebapi.response.DashBoardChartResponse;
 import com.aristowebapi.response.DashBoardDataResponse;
+import com.aristowebapi.response.DashBoardDataResponseDouble;
 import com.aristowebapi.response.DashBoardPanelDataResponse;
-import com.aristowebapi.response.DivResponse;
 
 public interface DashBoardService {
 	
@@ -21,9 +20,9 @@ public interface DashBoardService {
 
 	ApiResponse<DashBoardPanelDataResponse> getDashboardPanelData(int myear,int div_code, int depo_code,int cmon,int login_id,int utype);
 	
-	ApiResponse<DashBoardDataResponse> getDashboardGroupwiseAch(int myear,int div_code, int depo_code,int cmon,int login_id,int usertype);
-	ApiResponse<DashBoardDataResponse> getDashboardBranchAch(int myear,int div_code, int depo_code,int cmon,int login_id,int usertype);
-	ApiResponse<DashBoardDataResponse> getDashboardHqwiseAch(int myear,int div_code, int depo_code,int cmon,int login_id,int usertype);
+	ApiResponse<DashBoardDataResponseDouble> getDashboardGroupwiseAch(int myear,int div_code, int depo_code,int cmon,int login_id,int usertype);
+	ApiResponse<DashBoardDataResponseDouble> getDashboardBranchAch(int myear,int div_code, int depo_code,int cmon,int login_id,int usertype);
+	ApiResponse<DashBoardDataResponseDouble> getDashboardHqwiseAch(int myear,int div_code, int depo_code,int cmon,int login_id,int usertype);
 	ApiResponse<DashBoardDataResponse> getDashboardTop5Products(int myear,int div_code, int depo_code,int cmon,int login_id);
 	ApiResponse<DashBoardDataResponse> getDashboardMonthCombo(int myear,int div_code, int depo_code,int login_id,int usertype);
 	ApiResponse<DashBoardDataResponse> getDashboardYearCombo();
@@ -31,6 +30,11 @@ public interface DashBoardService {
 	ApiResponse<DashBoardDataResponse> getDivisionList(int loginId);
 
 	ApiResponse<DashBoardDataResponse> getBranchList(int loginId);
+	ApiResponse<DashBoardDataResponse> getHqList(int myear,int div_code, int depo_code,int utype,int login_id);
+	
+	ApiResponse<DashBoardDataResponse> getProductList(int div_code,int utype,int login_id);
+	
+	ApiResponse<DashBoardDataResponse> getGroupList(int div_code,int utype,int login_id);
 
 	
 }
