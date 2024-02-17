@@ -32,6 +32,11 @@ public class AppCalculationUtils {
 		return (value/100000);
 	}
 
+	public static double valueDivideByLacs(double value)
+	{
+		return (value/100000);
+	}
+
 
 	public static  double calculateAch(double sale,double target)
 	{

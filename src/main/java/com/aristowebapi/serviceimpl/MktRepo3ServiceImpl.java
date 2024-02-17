@@ -27,10 +27,10 @@ public class MktRepo3ServiceImpl implements MktRepo3Service {
 	private String getTitle(MktRepo3Request request,MktRepo3 data)
 	{
 		StringBuilder title=new StringBuilder();
-		title.append(request.getDepoCode()==0?"All India ":"");
+		title.append(request.getDepoCode()==0?"All India ":data.getBrname());
 		title.append(request.getRepType()==1?" Product/ ":" Group/ ");
 		title.append(request.getUv()==1?"Unit Wise ":"Value Wise ");
-		title.append("Sales Trend ");
+		title.append(request.getOption()==1?"Sales Trend ":"Target Trend ");
 		return title.toString();
 
 	}
@@ -46,10 +46,18 @@ public class MktRepo3ServiceImpl implements MktRepo3Service {
 
 		
 		String title=null;
+		List<MktRepo3> mktRepo3List=null;
 		
-		List<MktRepo3> mktRepo3List=mktRepo3Dao.getWebReportNetTrend(request.getMyear(),request.getDivCode(),request.getDepoCode()
+		if(request.getOption()==1) /// sale trend
+		{
+		 mktRepo3List=mktRepo3Dao.getWebReportNetTrend(request.getMyear(),request.getDivCode(),request.getDepoCode()
 				,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId(),request.getRepType(),request.getHqCode());
-
+		}
+		else if(request.getOption()==2) /// target trend
+		{
+		 mktRepo3List=mktRepo3Dao.getWebReportTargetTrend(request.getMyear(),request.getDivCode(),request.getDepoCode()
+				,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId(),request.getRepType(),request.getHqCode());
+		}
 		
 		MktRepo3Response response=null;
 		List<MktRepo3Response> saleList = new ArrayList();

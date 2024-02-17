@@ -4,7 +4,7 @@ public interface DashBoardSalesChart {
 
 	
 	public String getMnth_abbr();
-	public int    getVal();
+	public double    getVal();
 	public String  getLabel();
 	public int getSrno();
 }

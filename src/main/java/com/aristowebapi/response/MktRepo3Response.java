@@ -19,4 +19,5 @@ public class MktRepo3Response {
 	private int color;
 	private Map<String,Long> months;
 
+
 }

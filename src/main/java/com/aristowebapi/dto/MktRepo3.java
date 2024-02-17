@@ -18,6 +18,7 @@ public interface MktRepo3 {
 	public int getNet_u();
 	public long getSales_val();
 	public String getGp_name();
+	public String getBrname();
 
 
 }

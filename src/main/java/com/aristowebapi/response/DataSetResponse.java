@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class DataSetResponse {
 	
-	private List<Integer> values;
+	private List<Double> values;
 	private String datasetLabel;
 	private String dataSetColor;
 	

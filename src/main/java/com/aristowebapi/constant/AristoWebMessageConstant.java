@@ -19,4 +19,8 @@ public class AristoWebMessageConstant {
 	
 	@Value("${chart_lys_color}")
 	public String lys;
+
+	@Value("${dashboard_pending}")
+	public String pendingPi;
+
 }

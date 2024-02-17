@@ -58,7 +58,7 @@ public class DashBoardController {
 	}
 
 	@GetMapping("${mrc_dashboardtop5Stockiest_path}")
-	public ResponseEntity<ApiResponse<DashBoardDataResponse>> getDashboardTop5(@PathVariable("myear") int myear,@PathVariable("divCode") int divCode,@PathVariable("depoCode") int depoCode,@PathVariable("cmon") int cmon,HttpServletRequest request)
+	public ResponseEntity<ApiResponse<DashBoardDataResponseDouble>> getDashboardTop5(@PathVariable("myear") int myear,@PathVariable("divCode") int divCode,@PathVariable("depoCode") int depoCode,@PathVariable("cmon") int cmon,HttpServletRequest request)
 
 	{
 
@@ -67,12 +67,12 @@ public class DashBoardController {
 		int loginId=getLoginIdFromToken(request)[0];
         int uType=getLoginIdFromToken(request)[1];
 
-		return new ResponseEntity<ApiResponse<DashBoardDataResponse>>(dashBoardService.getDashboardTop5(myear,divCode,depoCode,cmon,loginId,uType), HttpStatus.OK);
+		return new ResponseEntity<ApiResponse<DashBoardDataResponseDouble>>(dashBoardService.getDashboardTop5(myear,divCode,depoCode,cmon,loginId,uType), HttpStatus.OK);
 	
 	}
 
 	@GetMapping("${mrc_dashboardtop5Products_path}")
-	public ResponseEntity<ApiResponse<DashBoardDataResponse>> getDashboardTop5Products(@PathVariable("myear") int myear,@PathVariable("divCode") int divCode,@PathVariable("depoCode") int depoCode,@PathVariable("cmon") int cmon,HttpServletRequest request)
+	public ResponseEntity<ApiResponse<DashBoardDataResponseDouble>> getDashboardTop5Products(@PathVariable("myear") int myear,@PathVariable("divCode") int divCode,@PathVariable("depoCode") int depoCode,@PathVariable("cmon") int cmon,HttpServletRequest request)
 
 	{
 
@@ -81,12 +81,12 @@ public class DashBoardController {
 		int loginId=getLoginIdFromToken(request)[0];
         int uType=getLoginIdFromToken(request)[1];
 
-		return new ResponseEntity<ApiResponse<DashBoardDataResponse>>(dashBoardService.getDashboardTop5Products(myear,divCode,depoCode,cmon,loginId), HttpStatus.OK);
+		return new ResponseEntity<ApiResponse<DashBoardDataResponseDouble>>(dashBoardService.getDashboardTop5Products(myear,divCode,depoCode,cmon,loginId), HttpStatus.OK);
 	
 	}
 
 	@GetMapping("${mrc_dashboardthept_path}")
-	public ResponseEntity<ApiResponse<DashBoardDataResponse>> getDashboardThept(@PathVariable("myear") int myear,@PathVariable("divCode") int divCode,@PathVariable("depoCode") int depoCode,@PathVariable("cmon") int cmon,HttpServletRequest request)
+	public ResponseEntity<ApiResponse<DashBoardDataResponseDouble>> getDashboardThept(@PathVariable("myear") int myear,@PathVariable("divCode") int divCode,@PathVariable("depoCode") int depoCode,@PathVariable("cmon") int cmon,HttpServletRequest request)
 	{
 
 		logger.info(AristoWebLogMsgConstant.DASH_BOARD_CONTROLLER,"getDashboardThept");
@@ -94,12 +94,12 @@ public class DashBoardController {
 		int loginId=getLoginIdFromToken(request)[0];
         int uType=getLoginIdFromToken(request)[1];
 
-		return new ResponseEntity<ApiResponse<DashBoardDataResponse>>(dashBoardService.getDashboardThept(myear,divCode,depoCode,cmon,loginId,uType), HttpStatus.OK);
+		return new ResponseEntity<ApiResponse<DashBoardDataResponseDouble>>(dashBoardService.getDashboardThept(myear,divCode,depoCode,cmon,loginId,uType), HttpStatus.OK);
 	
 	}
 
 	@GetMapping("${mrc_dashboardpendingpi_path}")
-	public ResponseEntity<ApiResponse<DashBoardDataResponse>> getDashboardPendingPI(@PathVariable("myear") int myear,@PathVariable("divCode") int divCode,@PathVariable("depoCode") int depoCode,@PathVariable("cmon") int cmon,HttpServletRequest request)
+	public ResponseEntity<ApiResponse<DashBoardDataResponseDouble>> getDashboardPendingPI(@PathVariable("myear") int myear,@PathVariable("divCode") int divCode,@PathVariable("depoCode") int depoCode,@PathVariable("cmon") int cmon,HttpServletRequest request)
 	{
 
 		logger.info(AristoWebLogMsgConstant.DASH_BOARD_CONTROLLER,"getDashboardPendingPI");
@@ -107,7 +107,7 @@ public class DashBoardController {
 		int loginId=getLoginIdFromToken(request)[0];
         int uType=getLoginIdFromToken(request)[1];
 
-		return new ResponseEntity<ApiResponse<DashBoardDataResponse>>(dashBoardService.getDashboardPendingPI(myear,divCode,depoCode,cmon,loginId,uType), HttpStatus.OK);
+		return new ResponseEntity<ApiResponse<DashBoardDataResponseDouble>>(dashBoardService.getDashboardPendingPI(myear,divCode,depoCode,cmon,loginId,uType), HttpStatus.OK);
 	
 	}
 

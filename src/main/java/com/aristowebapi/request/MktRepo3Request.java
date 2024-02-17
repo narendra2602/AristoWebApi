@@ -17,6 +17,6 @@ public class MktRepo3Request extends ViewRequest{
 	private int hqCode;
 	private int uv;
 	private String depoName;
-
+	private int option;
 
 }

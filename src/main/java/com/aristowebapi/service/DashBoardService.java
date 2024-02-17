@@ -14,16 +14,16 @@ public interface DashBoardService {
 
 
 	
-	ApiResponse<DashBoardDataResponse> getDashboardTop5(int myear,int div_code, int depo_code,int cmon,int login_id,int utype);
-	ApiResponse<DashBoardDataResponse> getDashboardThept(int myear,int div_code, int depo_code,int cmon,int login_id,int utype);
-	ApiResponse<DashBoardDataResponse> getDashboardPendingPI(int myear,int div_code, int depo_code,int cmon,int login_id,int utype);
+	ApiResponse<DashBoardDataResponseDouble> getDashboardTop5(int myear,int div_code, int depo_code,int cmon,int login_id,int utype);
+	ApiResponse<DashBoardDataResponseDouble> getDashboardThept(int myear,int div_code, int depo_code,int cmon,int login_id,int utype);
+	ApiResponse<DashBoardDataResponseDouble> getDashboardPendingPI(int myear,int div_code, int depo_code,int cmon,int login_id,int utype);
 
 	ApiResponse<DashBoardPanelDataResponse> getDashboardPanelData(int myear,int div_code, int depo_code,int cmon,int login_id,int utype);
 	
 	ApiResponse<DashBoardDataResponseDouble> getDashboardGroupwiseAch(int myear,int div_code, int depo_code,int cmon,int login_id,int usertype);
 	ApiResponse<DashBoardDataResponseDouble> getDashboardBranchAch(int myear,int div_code, int depo_code,int cmon,int login_id,int usertype);
 	ApiResponse<DashBoardDataResponseDouble> getDashboardHqwiseAch(int myear,int div_code, int depo_code,int cmon,int login_id,int usertype);
-	ApiResponse<DashBoardDataResponse> getDashboardTop5Products(int myear,int div_code, int depo_code,int cmon,int login_id);
+	ApiResponse<DashBoardDataResponseDouble> getDashboardTop5Products(int myear,int div_code, int depo_code,int cmon,int login_id);
 	ApiResponse<DashBoardDataResponse> getDashboardMonthCombo(int myear,int div_code, int depo_code,int login_id,int usertype);
 	ApiResponse<DashBoardDataResponse> getDashboardYearCombo();
 	
