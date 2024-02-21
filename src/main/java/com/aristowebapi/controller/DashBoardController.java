@@ -19,6 +19,7 @@ import com.aristowebapi.response.DashBoardChartResponse;
 import com.aristowebapi.response.DashBoardDataResponse;
 import com.aristowebapi.response.DashBoardDataResponseDouble;
 import com.aristowebapi.response.DashBoardPanelDataResponse;
+import com.aristowebapi.response.StockiestResponse;
 import com.aristowebapi.service.DashBoardService;
 import com.aristowebapi.utility.AppRequestParameterUtils;
 
@@ -252,6 +253,18 @@ public class DashBoardController {
         int uType=getLoginIdFromToken(request)[1];
         
 		return new ResponseEntity<ApiResponse<DashBoardDataResponse>>(dashBoardService.getGroupList(divCode,uType,loginId), HttpStatus.OK);
+	
+	}
+	
+	@GetMapping("${mrc_dashboardStockiestCombo_path}")
+	public ResponseEntity<ApiResponse<StockiestResponse>> getStockiestList(@PathVariable("myear") int myear,@PathVariable("divCode") int divCode,@PathVariable("depoCode") int depoCode,HttpServletRequest request)
+	{
+		logger.info(AristoWebLogMsgConstant.DASH_BOARD_CONTROLLER,"authenticateUser");
+
+        int loginId=getLoginIdFromToken(request)[0];
+        int uType=getLoginIdFromToken(request)[1];
+        
+		return new ResponseEntity<ApiResponse<StockiestResponse>>(dashBoardService.getStockiestList(myear,divCode,depoCode,uType,loginId), HttpStatus.OK);
 	
 	}
 

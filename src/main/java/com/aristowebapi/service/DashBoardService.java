@@ -5,6 +5,7 @@ import com.aristowebapi.response.DashBoardChartResponse;
 import com.aristowebapi.response.DashBoardDataResponse;
 import com.aristowebapi.response.DashBoardDataResponseDouble;
 import com.aristowebapi.response.DashBoardPanelDataResponse;
+import com.aristowebapi.response.StockiestResponse;
 
 public interface DashBoardService {
 	
@@ -36,5 +37,6 @@ public interface DashBoardService {
 	
 	ApiResponse<DashBoardDataResponse> getGroupList(int div_code,int utype,int login_id);
 
+	ApiResponse<StockiestResponse> getStockiestList(int myear,int div_code, int depo_code,int utype,int login_id);
 	
 }

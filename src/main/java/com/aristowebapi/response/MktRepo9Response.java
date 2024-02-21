@@ -22,7 +22,7 @@ public class MktRepo9Response {
 	private Map<String,Long> incr;
 	private Map<String,Double> ach;
 	private Map<String,Double> gth;
-	private Map<String,Double> pmr;
+	private Map<String,Integer> pmr;
 	private Map<String,Long> sd;
 	private int color;
 

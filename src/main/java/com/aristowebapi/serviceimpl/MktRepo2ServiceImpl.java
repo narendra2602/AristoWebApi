@@ -30,7 +30,7 @@ public class MktRepo2ServiceImpl implements MktRepo2Service {
 	private String getTitle(MktRepo2Request request,MktRepo2 data)
 	{
 		StringBuilder title=new StringBuilder();
-		title.append(data.getBrname());
+		title.append(request.getDepoCode()==0?"All India ":data.getBrname());
 		title.append(" Product Wise ");
 		title.append(request.getUv()==1?"Unit Wise ":"Value Wise ");
 		title.append("Detail From  ");
@@ -50,13 +50,14 @@ public class MktRepo2ServiceImpl implements MktRepo2Service {
 		int size = 0;
 
 		try {
+			System.out.println("utype kya hai "+request.getUtype()+" depo "+request.getDepoCode());
 			
 			if(request.getUtype()==2 && request.getDepoCode()==0)
 				{
 				MktRepo2List=mktRepo2Dao.getWebMkt2All(request.getMyear(),request.getDivCode(),request.getDepoCode()
 						,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId(),request.getHqCode());
 				}
-			else if(request.getUtype()==2 && request.getDepoCode()>0 && request.getHqCode()==0)
+			else if((request.getUtype()==2 || request.getUtype()==1 ) && request.getDepoCode()>0 && request.getHqCode()==0)
 			{
 			MktRepo2List=mktRepo2Dao.getWebMkt2(request.getMyear(),request.getDivCode(),request.getDepoCode()
 					,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId(),request.getHqCode());
@@ -193,7 +194,7 @@ public class MktRepo2ServiceImpl implements MktRepo2Service {
 			}
 			
 			response=new MktRepo2Response();
-			response.setCode(data.getSprd_cd());
+			response.setCode(data.getMcode());
 			response.setName(data.getMname());
 			response.setPack(data.getPack());
 

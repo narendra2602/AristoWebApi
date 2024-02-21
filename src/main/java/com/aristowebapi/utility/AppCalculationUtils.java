@@ -20,12 +20,20 @@ public class AppCalculationUtils {
 	}
 
 
-	public static double calculatePmr(long sale,int fs)
+/*	public static double calculatePmr(long sale,int fs)
 	{
 		double pmr=0.00;  
 		pmr=fs!=0?Math.round(((sale*1.0)/fs)*100.0)/100.0:0;
 		return  pmr;
 	}
+*/
+	public static int calculatePmr(long sale,int fs)
+	{
+		int pmr=0;  
+		pmr=fs!=0?Math.round(((sale)/fs)):0;
+		return  pmr;
+	}
+
 	
 	public static long valueDivideByLacs(long value)
 	{
@@ -61,6 +69,12 @@ public class AppCalculationUtils {
 		return  pmr;
 	}
 	
+	public static double calculatePmr(long sale,long fs)
+	{
+		double pmr=0.00;  
+		pmr=fs!=0?Math.round(((sale*1.0)/fs)*100.0)/100.0:0;
+		return  pmr;
+	}
 	
 	public static double addDouble(double doubleVal1,double doubleVal2)
 	{

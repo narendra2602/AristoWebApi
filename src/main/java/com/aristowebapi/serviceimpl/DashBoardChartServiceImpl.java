@@ -14,12 +14,14 @@ import com.aristowebapi.dto.DashBoardCurrentMonthChart;
 import com.aristowebapi.dto.DashBoardData;
 import com.aristowebapi.dto.DashBoardDataDouble;
 import com.aristowebapi.dto.DashBoardSalesChart;
+import com.aristowebapi.dto.StockiestMaster;
 import com.aristowebapi.response.ApiResponse;
 import com.aristowebapi.response.DashBoardChartResponse;
 import com.aristowebapi.response.DashBoardDataResponse;
 import com.aristowebapi.response.DashBoardDataResponseDouble;
 import com.aristowebapi.response.DashBoardPanelDataResponse;
 import com.aristowebapi.response.DataSetResponse;
+import com.aristowebapi.response.StockiestResponse;
 import com.aristowebapi.service.DashBoardService;
 import com.aristowebapi.utility.AppCalculationUtils;
 
@@ -198,6 +200,29 @@ public class DashBoardChartServiceImpl implements DashBoardService {
 
 	}
 
+	
+	private List<StockiestResponse> getResponseStk(List<StockiestMaster> dataList)
+	{
+		List<StockiestResponse> saleList = new ArrayList<StockiestResponse>();
+		int size = dataList.size();
+		
+		StockiestResponse response=null;
+		
+		
+		for(int i=0; i<size;i++)
+		{
+
+			StockiestMaster data = dataList.get(i);
+			response= new StockiestResponse();
+			response.setName(data.getName());
+			response.setCode(data.getCode());
+			saleList.add(response);
+		}
+		return saleList;
+
+	}
+
+	
 	private List<DashBoardDataResponseDouble> getResponseDataDouble(List<DashBoardDataDouble> dataList)
 	{
 		List<DashBoardDataResponseDouble> saleList = new ArrayList<DashBoardDataResponseDouble>();
@@ -459,6 +484,19 @@ public class DashBoardChartServiceImpl implements DashBoardService {
 		int size=dataList.size();
 		
 		ApiResponse<DashBoardDataResponse> apiResponse = new ApiResponse<>(title!=null?title.toString():"", size,saleList);
+		return apiResponse;
+	}
+
+	@Override
+	public ApiResponse<StockiestResponse> getStockiestList(int myear, int div_code, int depo_code, int utype,int login_id) {
+		List<StockiestMaster> dataList= dashBoardDao.getStockiestList(myear,div_code,depo_code,utype, login_id);
+		List<StockiestResponse> saleList = getResponseStk(dataList);
+		String title="Stockiest List ";
+
+		
+		int size=dataList.size();
+		
+		ApiResponse<StockiestResponse> apiResponse = new ApiResponse<>(title!=null?title.toString():"", size,saleList);
 		return apiResponse;
 	}
 

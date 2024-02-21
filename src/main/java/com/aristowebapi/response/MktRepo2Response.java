@@ -26,7 +26,7 @@ public class MktRepo2Response {
 	private long cummSd;
 	private long lyr;
 	private double growth;
-	private double pmr;
+	private int pmr;
 	
 	
 	private int color;

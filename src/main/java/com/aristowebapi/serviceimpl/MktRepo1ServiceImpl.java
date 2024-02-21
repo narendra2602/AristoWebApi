@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.aristowebapi.constant.AristoWebLogMsgConstant;
 import com.aristowebapi.dao.MktRepo1Dao;
 import com.aristowebapi.dto.BranchMasterDto;
+import com.aristowebapi.dto.DashBoardData;
 import com.aristowebapi.dto.MktRepo1;
 import com.aristowebapi.dto.MktRepo1Ach;
 import com.aristowebapi.request.MktRepo1Request;
@@ -34,6 +35,8 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 	private List<BranchMasterDto> getBranchData(MktRepo1Request request)
 	{
 		List<BranchMasterDto> branchData = null;
+
+		
 		if(request.getUtype()==4 && request.getDepoCode()==0)
 			branchData =mktRepo1Dao.getUtype4Hq(request.getMyear(),request.getDivCode(), request.getLoginId());
 		else if(request.getUtype()==5 && request.getDepoCode()==0)
@@ -68,6 +71,10 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
     				break;
 		    case 7: repname="Lys Sale";
 					break;
+		    case 10: repname="PMR";
+		    		break;
+		    case 11: repname="PI Sale";
+					break;
 
 
 		}
@@ -92,16 +99,28 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 	
 		if(request.getOptType()==1)
 				reportList=mktRepo1Dao.getWebReportGross(request.getMyear(),request.getDivCode(),request.getDepoCode()
-					,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId(),request.getRepType(),request.getDataType());
-		else if(request.getOptType()==2 || request.getOptType()==3 || request.getOptType()==4)
+					,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId(),request.getRepType(),1);
+		else if(request.getOptType()==11)
+			reportList=mktRepo1Dao.getWebReportGross(request.getMyear(),request.getDivCode(),request.getDepoCode()
+				,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId(),request.getRepType(),2);
+		else if(request.getOptType()==2 )
 			reportList=mktRepo1Dao.getWebReportCredit(request.getMyear(),request.getDivCode(),request.getDepoCode()
-				,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId(),request.getRepType(),request.getDataType());
+			,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId(),request.getRepType(),10);
+		else if(request.getOptType()==3)
+			reportList=mktRepo1Dao.getWebReportCredit(request.getMyear(),request.getDivCode(),request.getDepoCode()
+			,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId(),request.getRepType(),11);
+		else if(request.getOptType()==4)
+			reportList=mktRepo1Dao.getWebReportCredit(request.getMyear(),request.getDivCode(),request.getDepoCode()
+			,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId(),request.getRepType(),12);
 		else if(request.getOptType()==5)
 			reportList=mktRepo1Dao.getWebReportNet(request.getMyear(),request.getDivCode(),request.getDepoCode()
 				,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId(),request.getRepType());
-		else if(request.getOptType()==6 || request.getOptType()==7)
+		else if(request.getOptType()==6)
 			reportList=mktRepo1Dao.getWebReportTarget(request.getMyear(),request.getDivCode(),request.getDepoCode()
-				,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId(),request.getRepType(),request.getDataType());
+				,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId(),request.getRepType(),10);
+		else if(request.getOptType()==7)
+			reportList=mktRepo1Dao.getWebReportTarget(request.getMyear(),request.getDivCode(),request.getDepoCode()
+				,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId(),request.getRepType(),20);
 
 		return reportList;
 		
@@ -120,10 +139,7 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 		            break;
 		    case 9: repname="Gth";
 		    		break;
-		    case 10: repname="PMR";
-		    		break;
-		    case 11: repname="PI Sale";
-		    		break;
+
 		}
 		
 		
@@ -147,16 +163,51 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 		if(request.getOptType()==8)
 				reportList=mktRepo1Dao.getWebReportAch(request.getMyear(),request.getDivCode(),request.getDepoCode()
 					,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId(),request.getRepType());
-
+		else if(request.getOptType()==9)
+			reportList=mktRepo1Dao.getWebReportGth(request.getMyear(),request.getDivCode(),request.getDepoCode()
+				,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId(),request.getRepType(),20);
+		
 		return reportList;
 		
 	}
+
+	private List<MktRepo1> getReportPMR(MktRepo1Request request)
+	{
+		List<MktRepo1> 	reportList=mktRepo1Dao.getWebReportNet(request.getMyear(),request.getDivCode(),request.getDepoCode()
+				,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId(),request.getRepType());
+		return reportList;
+		
+	}
+
+	
+	
+	private Map<String, Long> getNoOfRepMap(MktRepo1Request request)
+	{
+		Map<String, Long> fsMap=null;
+		List<DashBoardData> fsData = null;
+		fsData =mktRepo1Dao.getNoOfRep(request.getMyear(), request.getDivCode(), request.getDepoCode(),request.getSmon(), request.getEmon(),request.getUtype(),request.getLoginId());
+		int sz1=fsData.size();
+	    long totalFs=0;
+		fsMap=new LinkedHashMap();
+		for(int b=0;b<sz1;b++)
+		{
+			DashBoardData fs=fsData.get(b);
+			fsMap.put(fs.getName(),fs.getVal());
+			totalFs+=fs.getVal();
+			System.out.println(fsMap.get(fs.getName())+" "+fs.getName());
+		}
+		
+		fsMap.put("Total", totalFs);
+		return fsMap;
+	}
+	
 	@Override
 	public ApiResponse<MktRepo1Response> getMktRepo1(MktRepo1Request request) {
-//		return mktRepo1Dao.web_report_gross(2023, 1, 0, 1, 3, 2, 163,1,1);
+
 
 		logger.info(AristoWebLogMsgConstant.MKT_REPORT_SERVICE_01,"getMktRepo1");
 		List<BranchMasterDto> branchData = getBranchData(request);
+
 		int sz=branchData.size();
 		int k=0;
 		int z=0;
@@ -219,6 +270,7 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 					k++;
 				}
 
+				
 				branches.put("TOTAL", columnTotal);
 				response.setBranches(branches);
 				
@@ -433,13 +485,15 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 		String pack=null;
 		String gname=null;
 		int size = grossSaleList.size();
-		System.out.println("size of gross list "+size);
+		System.out.println("size of gross list in ach menthod "+size);
 		//create ReportTitleResponse class object and set title with Report heading
 		for (int i=0;i<size;i++)
 		{
 			MktRepo1Ach data = grossSaleList.get(i);
 			if(data.getDepo_code()==0)
 				continue;
+			
+			System.out.println("sale val "+data.getSales_val()+" target "+data.getNet_u()+" name "+data.getMname());
 			if(first)
 			{
 				pcode=data.getMcode();
@@ -473,11 +527,20 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 					k++;
 				}
 
-				if(request.getUv()==1)
-					columnTotal=horizontalTarqty!=0?AppCalculationUtils.calculateAch(horizontalSalqty, horizontalTarqty):0;
-				else
-					columnTotal=horizontalTarval!=0?AppCalculationUtils.calculateAch(horizontalSalval, horizontalTarval):0;
-		
+				if(request.getOptType()==8)
+				{
+					if(request.getUv()==1)
+						columnTotal=horizontalTarqty!=0?AppCalculationUtils.calculateAch(horizontalSalqty, horizontalTarqty):0;
+						else
+						columnTotal=horizontalTarval!=0?AppCalculationUtils.calculateAch(horizontalSalval, horizontalTarval):0;
+				}
+				else if(request.getOptType()==9)
+				{
+					if(request.getUv()==1)
+						columnTotal=horizontalTarqty!=0?AppCalculationUtils.calculateGth(horizontalSalqty, horizontalTarqty):0;
+						else
+						columnTotal=horizontalTarval!=0?AppCalculationUtils.calculateGth(horizontalSalval, horizontalTarval):0;
+				}
 				branches.put("TOTAL", columnTotal);
 				response.setBranches(branches);
 				
@@ -499,6 +562,7 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 
 			if(mgrp!=data.getMgrp())
 			{
+				
 				response.setPcode(mgrp);
 				response.setPname(gname);
 				response.setPack("");
@@ -513,12 +577,16 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 				for(int b=0;b<sz;b++)
 				{
 					BranchMasterDto bm=branchData.get(b);
-					long sale = grVerticalSalval.get(bm.getDepo_name());
-					long target = grVerticalTarval.get(bm.getDepo_name());
+					double sale = grVerticalSalval.get(bm.getDepo_name());
+					double target = grVerticalTarval.get(bm.getDepo_name());
+//					System.out.println("sale "+sale+" target "+target+" branch "+bm.getDepo_name()+" group "+gname+" ach "+AppCalculationUtils.calculateAch(sale, target));
 					gsale += grVerticalSalval.get(bm.getDepo_name());
 					gtarget += grVerticalTarval.get(bm.getDepo_name());
-					group.put(bm.getDepo_name(), AppCalculationUtils.calculateAch(sale, target));
-					
+					if(request.getOptType()==8)
+						group.put(bm.getDepo_name(), AppCalculationUtils.calculateAch(sale, target));
+					else
+						group.put(bm.getDepo_name(), AppCalculationUtils.calculateGth(sale, target));
+
 				}
 
 				groupColumnTotal=gtarget!=0?AppCalculationUtils.calculateAch(gsale, gtarget):0;
@@ -536,6 +604,7 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 				
 				mgrp=data.getMgrp();
 				gname=data.getGp_name();
+				
 				
 				z=0;
 				groupColumnTotal=0;
@@ -655,10 +724,362 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 			k++;
 		}
 		
-		if(request.getUv()==1)
-			columnTotal=horizontalTarqty!=0?AppCalculationUtils.calculateAch(horizontalSalqty, horizontalTarqty):0;
-		else
-			columnTotal=horizontalTarval!=0?AppCalculationUtils.calculateAch(horizontalSalval, horizontalTarval):0;
+		if(request.getOptType()==8)
+		{
+			if(request.getUv()==1)
+					columnTotal=horizontalTarqty!=0?AppCalculationUtils.calculateAch(horizontalSalqty, horizontalTarqty):0;
+				else
+					columnTotal=horizontalTarval!=0?AppCalculationUtils.calculateAch(horizontalSalval, horizontalTarval):0;
+		}
+
+		else if(request.getOptType()==9)
+		{
+			if(request.getUv()==1)
+				columnTotal=horizontalTarqty!=0?AppCalculationUtils.calculateGth(horizontalSalqty, horizontalTarqty):0;
+				else
+					columnTotal=horizontalTarval!=0?AppCalculationUtils.calculateGth(horizontalSalval, horizontalTarval):0;
+		}
+
+		branches.put("TOTAL", columnTotal);
+
+		response.setBranches(branches);
+		saleList.add(response);
+
+		
+		branches=new LinkedHashMap();
+		response=new MktRepo1AchResponse();
+		response.setPcode(mgrp);
+		response.setPname(gname);
+		response.setPack("");
+		for(int b=z;b<sz;b++)
+		{
+			BranchMasterDto bm=branchData.get(b);
+			group.put(bm.getDepo_name(), 0.0);
+			z++;
+		}
+
+		for(int b=0;b<sz;b++)
+		{
+			BranchMasterDto bm=branchData.get(b);
+			double sale = grVerticalSalval.get(bm.getDepo_name());
+			double target = grVerticalTarval.get(bm.getDepo_name());
+			gsale += grVerticalSalval.get(bm.getDepo_name());
+			gtarget += grVerticalTarval.get(bm.getDepo_name());
+			if(request.getOptType()==8)
+				group.put(bm.getDepo_name(), AppCalculationUtils.calculateAch(sale, target));
+			else
+				group.put(bm.getDepo_name(), AppCalculationUtils.calculateGth(sale, target));
+				
+		}
+
+		if(request.getOptType()==8)
+			groupColumnTotal=gtarget!=0?AppCalculationUtils.calculateAch(gsale, gtarget):0;
+		else	
+			groupColumnTotal=gtarget!=0?AppCalculationUtils.calculateGth(gsale, gtarget):0;
+
+			group.put("TOTAL", groupColumnTotal);
+
+		branches.putAll(group);
+		response.setBranches(branches);
+		response.setColor(1);
+		saleList.add(response);
+		
+		
+		
+		branches=new LinkedHashMap();
+
+
+		for(int b=0;b<sz;b++)
+		{
+			BranchMasterDto bm=branchData.get(b);
+			double sale = bottomVerticalSalval.get(bm.getDepo_name());
+			double target = bottomVerticalTarval.get(bm.getDepo_name());
+			gsale += bottomVerticalSalval.get(bm.getDepo_name());
+			gtarget += bottomVerticalTarval.get(bm.getDepo_name());
+			if(request.getOptType()==8)
+				total.put(bm.getDepo_name(), AppCalculationUtils.calculateAch(sale, target));
+			else
+				total.put(bm.getDepo_name(), AppCalculationUtils.calculateGth(sale, target));
+			
+		}
+
+		if(request.getOptType()==8)
+			grandColumnTotal=gtarget!=0?AppCalculationUtils.calculateAch(gsale, gtarget):0;
+		else	
+			grandColumnTotal=gtarget!=0?AppCalculationUtils.calculateGth(gsale, gtarget):0;
+
+		
+		
+		
+		total.put("TOTAL", grandColumnTotal);
+
+		branches.putAll(total);
+		response=new MktRepo1AchResponse();
+		response.setPcode(0);
+		response.setPname("Grand Total");
+		response.setPack("");
+		response.setBranches(branches);
+		response.setColor(2);
+		saleList.add(response);
+
+		return new ApiResponse<MktRepo1AchResponse>(title.toString(),size,lupdate,saleList);
+	}
+
+	@Override
+	public ApiResponse<MktRepo1AchResponse> getMktRepo1Pmr(MktRepo1Request request) {
+		
+		logger.info(AristoWebLogMsgConstant.MKT_REPORT_SERVICE_01,"getMktRepo1");
+		List<BranchMasterDto> branchData = getBranchData(request);
+		int sz=branchData.size();
+		int k=0;
+		int z=0;
+		String title=null;
+		
+		long gfs=0;
+		List<MktRepo1> grossSaleList=getReportPMR(request);
+
+		Map<String, Long> fsMap=null;
+		fsMap=getNoOfRepMap(request);
+		
+		MktRepo1AchResponse response=null;
+		List<MktRepo1AchResponse> saleList = new ArrayList();
+		Map<String, Double> branches=null;
+		Map<String, Double> group=null;
+		Map<String, Double> total=null;
+		boolean first=true;
+		int pcode=0;
+		int mgrp=0;
+		double columnTotal=0;
+		double groupColumnTotal=0;
+		double grandColumnTotal=0;
+
+		long gsale=0;
+		long gtarget=0;
+		
+		 long horizontalSalqty=0;
+		 long horizontalSalval=0;
+		 long horizontalTarqty=0;
+		 long horizontalTarval=0;
+		 Map<String, Long> grVerticalSalval = null; 
+		 Map<String, Long> grVerticalTarval = null;
+		 Map<String, Long> bottomVerticalSalval = null; 
+		 Map<String, Long> bottomVerticalTarval = null;
+
+		
+		String pname=null;
+		String pack=null;
+		String gname=null;
+		int size = grossSaleList.size();
+		long fs=0;
+		System.out.println("size of gross list in pmr menthod "+size);
+		//create ReportTitleResponse class object and set title with Report heading
+		for (int i=0;i<size;i++)
+		{
+			MktRepo1 data = grossSaleList.get(i);
+			if(data.getDepo_code()==0)
+				continue;
+			
+			
+			if(first)
+			{
+				pcode=data.getMcode();
+				pname=data.getMname();
+				pack=data.getPack();
+				mgrp=data.getMgrp();
+				gname=data.getGp_name();
+				response=new MktRepo1AchResponse();
+				branches=new LinkedHashMap();
+				group=new LinkedHashMap();
+				total=new LinkedHashMap();
+				grVerticalSalval =new LinkedHashMap();
+				grVerticalTarval=new LinkedHashMap();
+				bottomVerticalSalval =new LinkedHashMap();
+				bottomVerticalTarval =new LinkedHashMap();
+				first=false;
+				
+				title = getTitle(request, data); 
+				
+			}
+			if(pcode!=data.getMcode())
+			{
+				response.setPcode(pcode);
+				response.setPname(pname);
+				response.setPack(pack);
+				z=k;
+				for(int b=k;b<sz;b++)
+				{
+					BranchMasterDto bm=branchData.get(b);
+					branches.put(bm.getDepo_name(), 0.0);
+					k++;
+				}
+				
+				fs = fsMap.get("Total");
+				
+				
+					if(request.getUv()==1)
+						columnTotal=AppCalculationUtils.calculatePmr(horizontalSalqty, fs);
+					else
+						columnTotal=AppCalculationUtils.calculatePmr(horizontalSalval, fs);
+				branches.put("TOTAL", columnTotal);
+				response.setBranches(branches);
+				
+				saleList.add(response);
+				pcode=data.getMcode();
+				pname=data.getMname();
+				pack=data.getPack();
+				columnTotal=0;
+				horizontalSalqty=0;
+				horizontalSalval=0;
+				horizontalTarqty=0;
+				horizontalTarval=0;
+				
+				k=0;
+				response=new MktRepo1AchResponse();
+				branches=new LinkedHashMap();
+
+			}
+
+			if(mgrp!=data.getMgrp())
+			{
+				
+				response.setPcode(mgrp);
+				response.setPname(gname);
+				response.setPack("");
+				System.out.println("value of z and sz "+z+" "+sz+" "+gname);
+				
+				for(int b=z;b<sz;b++)
+				{
+					BranchMasterDto bm=branchData.get(b);
+					group.put(bm.getDepo_name(), 0.0);
+					z++;
+				}
+
+
+				for(int b=0;b<sz;b++)
+				{
+					BranchMasterDto bm=branchData.get(b);
+//					logger.info(grVerticalSalval.get(bm.getDepo_name())+" "+bm.getDepo_name()+" gname "+gname);
+					long sale = grVerticalSalval.get(bm.getDepo_name())==null?0:grVerticalSalval.get(bm.getDepo_name());
+					fs = fsMap.get(bm.getDepo_name());
+					gsale += sale;
+					group.put(bm.getDepo_name(), AppCalculationUtils.calculatePmr(sale, fs));
+
+				}
+
+				groupColumnTotal=AppCalculationUtils.calculatePmr(gsale, fs);
+				
+				group.put("TOTAL", groupColumnTotal);
+
+				branches.putAll(group);
+
+				
+				response.setBranches(branches);
+				response.setColor(1);
+				saleList.add(response);
+				gsale=0;
+				gtarget=0;
+				
+				mgrp=data.getMgrp();
+				gname=data.getGp_name();
+				
+				
+				z=0;
+				groupColumnTotal=0;
+				response=new MktRepo1AchResponse();
+				branches=new LinkedHashMap();
+				group=new LinkedHashMap();
+				grVerticalSalval =new LinkedHashMap();
+				grVerticalTarval =new LinkedHashMap();
+				
+			}
+
+			
+			// before put please check depo code in branch list if not found put 0 value in map otherwise actual zero
+			for(int b=k;b<sz;b++)
+			{
+				BranchMasterDto bm=branchData.get(b);
+				if(bm.getDepo_code()==data.getDepo_code())
+				{
+						System.out.println("depo name "+bm.getDepo_code()+" "+bm.getDepo_name());
+						fs = fsMap.get(bm.getDepo_name());
+						if(fs!=0)
+						 branches.put(data.getDepo_name(), request.getUv()==2?AppCalculationUtils.calculatePmr(data.getSales_val(),fs):AppCalculationUtils.calculatePmr(data.getSales(),fs));
+						else
+							branches.put(data.getDepo_name(), 0.0);							
+					
+	        		 horizontalSalqty+= data.getSales();
+	        		 horizontalSalval+= data.getSales_val();
+	        		 
+					if(grVerticalSalval.containsKey(data.getDepo_name()))
+					{
+						if(data.getSales_val()>0)
+						{
+							long gval = grVerticalSalval.get(data.getDepo_name())+data.getSales_val();
+							grVerticalSalval.put(data.getDepo_name(), gval);
+						}
+
+					}
+					else
+					{
+						grVerticalSalval.put(data.getDepo_name(), data.getSales_val());
+					}
+
+//					System.out.println(grVerticalSalval.get(data.getDepo_name())+" "+data.getDepo_name());
+					
+					if(bottomVerticalSalval.containsKey(data.getDepo_name()))
+					{
+						long ggval = bottomVerticalSalval.get(data.getDepo_name())+data.getSales_val();
+						bottomVerticalSalval.put(data.getDepo_name(), ggval);
+					}
+					else
+					{
+						bottomVerticalSalval.put(data.getDepo_name(), data.getSales_val());
+					}
+
+					k++;
+					break;
+				}
+				else
+				{
+					branches.put(bm.getDepo_name(), 0.0);
+
+					if(grVerticalSalval.containsKey(bm.getDepo_name()))
+					{
+						// do nothing
+					}
+					else
+					{
+						grVerticalSalval.put(bm.getDepo_name(), 0L);
+
+					}
+
+
+					
+					k++;
+				}
+			}
+			
+		}
+
+		
+		
+		response=new MktRepo1AchResponse();
+		response.setPcode(pcode);
+		response.setPname(pname);
+		response.setPack(pack);
+		z=k;
+		for(int b=k;b<sz;b++)
+		{
+			BranchMasterDto bm=branchData.get(b);
+			branches.put(bm.getDepo_name(), 0.0);
+			k++;
+		}
+		
+			if(request.getUv()==1)
+					columnTotal=AppCalculationUtils.calculatePmr(horizontalSalqty, fs);
+				else
+					columnTotal=AppCalculationUtils.calculatePmr(horizontalSalval, fs);
+
 
 		branches.put("TOTAL", columnTotal);
 
@@ -682,14 +1103,14 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 		{
 			BranchMasterDto bm=branchData.get(b);
 			long sale = grVerticalSalval.get(bm.getDepo_name());
-			long target = grVerticalTarval.get(bm.getDepo_name());
 			gsale += grVerticalSalval.get(bm.getDepo_name());
-			gtarget += grVerticalTarval.get(bm.getDepo_name());
-			group.put(bm.getDepo_name(), AppCalculationUtils.calculateAch(sale, target));
-			
+			fs = fsMap.get(bm.getDepo_name());
+			group.put(bm.getDepo_name(), AppCalculationUtils.calculatePmr(sale, fs));
+				
 		}
 
-		groupColumnTotal=gtarget!=0?AppCalculationUtils.calculateAch(gsale, gtarget):0;
+			groupColumnTotal=AppCalculationUtils.calculatePmr(gsale, fs);
+
 			group.put("TOTAL", groupColumnTotal);
 
 		branches.putAll(group);
@@ -701,22 +1122,24 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 		
 		branches=new LinkedHashMap();
 
-
+		
+		gsale=0;
 		for(int b=0;b<sz;b++)
 		{
 			BranchMasterDto bm=branchData.get(b);
 			long sale = bottomVerticalSalval.get(bm.getDepo_name());
-			long target = bottomVerticalTarval.get(bm.getDepo_name());
+			fs = fsMap.get(bm.getDepo_name());
 			gsale += bottomVerticalSalval.get(bm.getDepo_name());
-			gtarget += bottomVerticalTarval.get(bm.getDepo_name());
-			total.put(bm.getDepo_name(), AppCalculationUtils.calculateAch(sale, target));
+			total.put(bm.getDepo_name(), AppCalculationUtils.calculatePmr(sale, fs));
 			
 		}
 
-		grandColumnTotal=gtarget!=0?AppCalculationUtils.calculateAch(gsale, gtarget):0;
+		fs = fsMap.get("Total");
+		System.out.println("total gsale "+gsale);
+		grandColumnTotal=AppCalculationUtils.calculatePmr(gsale, fs);
 
 		
-		
+		System.out.println("total fs "+fs);
 		
 		total.put("TOTAL", grandColumnTotal);
 

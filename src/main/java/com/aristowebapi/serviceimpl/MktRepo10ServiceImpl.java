@@ -19,6 +19,7 @@ import com.aristowebapi.request.ViewRequest;
 import com.aristowebapi.response.ApiResponse;
 import com.aristowebapi.response.MktRepo9Response;
 import com.aristowebapi.service.MktRepo10Service;
+import com.aristowebapi.utility.AppCalculationUtils;
 
 @Service
 public class MktRepo10ServiceImpl implements MktRepo10Service {
@@ -73,7 +74,7 @@ Logger logger = LoggerFactory.getLogger(MktRepo9ServiceImpl.class);
 		Map<String, Long> incr=null;
 		Map<String, Double> ach=null;
 		Map<String, Double> gth=null;
-		Map<String, Double> pmr=null;
+		Map<String, Integer> pmr=null;
 		Map<String, Long> sd=null;
 
 		
@@ -124,7 +125,7 @@ Logger logger = LoggerFactory.getLogger(MktRepo9ServiceImpl.class);
 					incr.put(mn.getMnth_abbr(), 0L);
 					ach.put(mn.getMnth_abbr(), 0.00);
 					gth.put(mn.getMnth_abbr(), 0.00);
-					pmr.put(mn.getMnth_abbr(), 0.00);
+					pmr.put(mn.getMnth_abbr(), 0);
 					sd.put(mn.getMnth_abbr(), 0L);
 					k++;
 				}
@@ -156,7 +157,7 @@ Logger logger = LoggerFactory.getLogger(MktRepo9ServiceImpl.class);
 				gth.put("TOTAL", Math.round((((salesColumnTotal*1.0/lysColumnTotal)*100)-100)*100.0)/100.0);
 				response.setGth(gth);
 
-				pmr.put("TOTAL", fsColumnTotal!=0?Math.round((salesColumnTotal*1.0/fsColumnTotal)*100.0)/100.0:0.00);
+				pmr.put("TOTAL", fsColumnTotal!=0?Math.round((salesColumnTotal/fsColumnTotal)):0);
 				response.setPmr(pmr);
 
 				sd.put("TOTAL", salesColumnTotal-tgtColumnTotal);
@@ -206,7 +207,8 @@ Logger logger = LoggerFactory.getLogger(MktRepo9ServiceImpl.class);
 					incr.put(data.getMnth_abbr(), data.getIncr_val());
 					ach.put(data.getMnth_abbr(), data.getTgt_val()!=0?Math.round(((data.getSales_val()*1.0/data.getTgt_val())*100)*100.0)/100.0:0.00);
 					gth.put(data.getMnth_abbr(), data.getLys_val()!=0?Math.round((((data.getSales_val()*1.0/data.getLys_val())*100)-100)*100.0)/100.0:0.00);
-					pmr.put(data.getMnth_abbr(), data.getFs()!=0?Math.round((data.getSales_val()*1.0/data.getFs())*100.0)/100.0:0.00);
+//					pmr.put(data.getMnth_abbr(), data.getFs()!=0?Math.round((data.getSales_val()/data.getFs())):0);
+					pmr.put(data.getMnth_abbr(), AppCalculationUtils.calculatePmr(data.getSales_val(),data.getFs()));
 					sd.put(data.getMnth_abbr(), data.getSales_val()-data.getTgt_val());
 
 					
@@ -232,7 +234,7 @@ Logger logger = LoggerFactory.getLogger(MktRepo9ServiceImpl.class);
 					incr.put(data.getMnth_abbr(), 0L);
 					ach.put(data.getMnth_abbr(), 0.00);
 					gth.put(data.getMnth_abbr(), 0.00);
-					pmr.put(data.getMnth_abbr(), 0.00);
+					pmr.put(data.getMnth_abbr(), 0);
 					sd.put(data.getMnth_abbr(), 0L);
 
 
@@ -266,7 +268,7 @@ Logger logger = LoggerFactory.getLogger(MktRepo9ServiceImpl.class);
 			incr.put(mn.getMnth_abbr(), 0L);
 			ach.put(mn.getMnth_abbr(), 0.00);
 			gth.put(mn.getMnth_abbr(), 0.00);
-			pmr.put(mn.getMnth_abbr(), 0.00);
+			pmr.put(mn.getMnth_abbr(), 0);
 			sd.put(mn.getMnth_abbr(), 0L);
 			k++;
 		}
@@ -312,7 +314,9 @@ Logger logger = LoggerFactory.getLogger(MktRepo9ServiceImpl.class);
 		gth.put("TOTAL", Math.round((((salesColumnTotal*1.0/lysColumnTotal)*100)-100)*100.0)/100.0);
 		response.setGth(gth);
 
-		pmr.put("TOTAL", fsColumnTotal!=0?Math.round((salesColumnTotal*1.0/fsColumnTotal)*100.0)/100.0:0.00);
+//		pmr.put("TOTAL", fsColumnTotal!=0?Math.round((salesColumnTotal*1.0/fsColumnTotal)*100.0)/100.0:0.00);
+		pmr.put("TOTAL", AppCalculationUtils.calculatePmr(salesColumnTotal,fsColumnTotal));
+
 		response.setPmr(pmr);
 
 		sd.put("TOTAL", salesColumnTotal-tgtColumnTotal);

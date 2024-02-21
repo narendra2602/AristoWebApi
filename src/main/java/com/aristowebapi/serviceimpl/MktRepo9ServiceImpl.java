@@ -72,7 +72,7 @@ public class MktRepo9ServiceImpl  implements MktRepo9Service{
 		Map<String, Long> incr=null;
 		Map<String, Double> ach=null;
 		Map<String, Double> gth=null;
-		Map<String, Double> pmr=null;
+		Map<String, Integer> pmr=null;
 		Map<String, Long> sd=null;
 
 		
@@ -120,7 +120,7 @@ public class MktRepo9ServiceImpl  implements MktRepo9Service{
 					incr.put(mn.getMnth_abbr(), 0L);
 					ach.put(mn.getMnth_abbr(), 0.00);
 					gth.put(mn.getMnth_abbr(), 0.00);
-					pmr.put(mn.getMnth_abbr(), 0.00);
+					pmr.put(mn.getMnth_abbr(), 0);
 					sd.put(mn.getMnth_abbr(), 0L);
 					k++;
 				}
@@ -231,7 +231,7 @@ public class MktRepo9ServiceImpl  implements MktRepo9Service{
 					incr.put(data.getMnth_abbr(), 0L);
 					ach.put(data.getMnth_abbr(), 0.00);
 					gth.put(data.getMnth_abbr(), 0.00);
-					pmr.put(data.getMnth_abbr(), 0.00);
+					pmr.put(data.getMnth_abbr(), 0);
 					sd.put(data.getMnth_abbr(), 0L);
 
 
@@ -265,7 +265,7 @@ public class MktRepo9ServiceImpl  implements MktRepo9Service{
 			incr.put(mn.getMnth_abbr(), 0L);
 			ach.put(mn.getMnth_abbr(), 0.00);
 			gth.put(mn.getMnth_abbr(), 0.00);
-			pmr.put(mn.getMnth_abbr(), 0.00);
+			pmr.put(mn.getMnth_abbr(), 0);
 			sd.put(mn.getMnth_abbr(), 0L);
 			k++;
 		}

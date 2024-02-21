@@ -117,15 +117,31 @@ public class MktReportController {
 	@GetMapping("${mrc_repo1ach_path}")
 	public ResponseEntity<ApiResponse<MktRepo1AchResponse>> getMktRepo1Ach(@RequestBody MktRepo1Request request,HttpServletRequest req)
 	{
-		logger.info(AristoWebLogMsgConstant.MKT_REPORT_CONTROLLER_01,"getMktRepo1", request.getMyear(),request.getDivCode());
 
 		int requestValues[]=getRequestData(req);
 		request.setLoginId(requestValues[0]);
 		request.setUtype(requestValues[1]);
+		logger.info(AristoWebLogMsgConstant.MKT_REPORT_CONTROLLER_01,"getMktRepo1", request.getMyear(),request.getDivCode(),request.getDepoCode(),request.getUtype(),request.getLoginId());
 
+		
 		return new ResponseEntity<ApiResponse<MktRepo1AchResponse>>(mktRepo1Service.getMktRepo1Ach(request), HttpStatus.OK);
 	
 	}
+	
+	@GetMapping("${mrc_repo1pmr_path}")
+	public ResponseEntity<ApiResponse<MktRepo1AchResponse>> getMktRepo1Pmr(@RequestBody MktRepo1Request request,HttpServletRequest req)
+	{
+
+		int requestValues[]=getRequestData(req);
+		request.setLoginId(requestValues[0]);
+		request.setUtype(requestValues[1]);
+		logger.info(AristoWebLogMsgConstant.MKT_REPORT_CONTROLLER_01,"getMktRepo1Pmr", request.getMyear(),request.getDivCode(),request.getDepoCode(),request.getUtype(),request.getLoginId());
+
+		
+		return new ResponseEntity<ApiResponse<MktRepo1AchResponse>>(mktRepo1Service.getMktRepo1Pmr(request), HttpStatus.OK);
+	
+	}
+
 
 	@GetMapping("${mrc_repo2_path}")
 	public ResponseEntity<ApiResponse<MktRepo2Response>> getMktRepo2(@RequestBody MktRepo2Request request,HttpServletRequest req)

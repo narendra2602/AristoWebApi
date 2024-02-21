@@ -11,6 +11,7 @@ import com.aristowebapi.dto.DashBoardData;
 import com.aristowebapi.dto.DashBoardDataDouble;
 import com.aristowebapi.dto.DashBoardSalesChart;
 import com.aristowebapi.dto.MktDataDto;
+import com.aristowebapi.dto.StockiestMaster;
 
 public interface DashBoardDao extends JpaRepository<MktDataDto, Integer> {
 	
@@ -85,5 +86,9 @@ public interface DashBoardDao extends JpaRepository<MktDataDto, Integer> {
 	@Query(value="CALL getGroupList(:div_code,:utype,:login_id);", nativeQuery=true)
 	List<DashBoardData> getGroupList(@Param("div_code") int div_code,	@Param("utype") int utype,@Param("login_id") int login_id);
 
+	@Query(value="CALL getStockiestList(:myear,:div_code,:depo_code,:utype,:login_id);", nativeQuery=true)
+	List<StockiestMaster> getStockiestList(@Param("myear") int myear,@Param("div_code") int div_code,
+			@Param("depo_code") int depo_code,@Param("utype") int utype,@Param("login_id") int login_id);
 
+	
 }

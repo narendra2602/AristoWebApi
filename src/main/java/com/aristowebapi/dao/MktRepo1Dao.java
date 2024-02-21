@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.aristowebapi.dto.BranchMasterDto;
+import com.aristowebapi.dto.DashBoardData;
 import com.aristowebapi.dto.MktDataDto;
 import com.aristowebapi.dto.MktRepo1;
 import com.aristowebapi.dto.MktRepo1Ach;
@@ -41,6 +42,16 @@ public interface MktRepo1Dao extends JpaRepository<MktDataDto, Integer>{
 	List<MktRepo1Ach> getWebReportAch(@Param("myear") int myear,@Param("div_code") int div_code,@Param("depo_code") int depo_code,
 			@Param("smon") int smon,@Param("emon") int emon,@Param("utype") int utype,@Param("login_id") int login_id,
 			@Param("rep_type") int rep_type);
+
+	@Query(value="CALL web_report_gthnew(:myear,:div_code,:depo_code,:smon,:emon,:utype,:login_id,:rep_type,:doc_type);", nativeQuery=true)
+	List<MktRepo1Ach> getWebReportGth(@Param("myear") int myear,@Param("div_code") int div_code,@Param("depo_code") int depo_code,
+			@Param("smon") int smon,@Param("emon") int emon,@Param("utype") int utype,@Param("login_id") int login_id,
+			@Param("rep_type") int rep_type,@Param("doc_type") int doc_type);
+
+	
+	@Query(value="CALL getNoOfRep(:myear,:div_code,:depo_code,:smon,:emon,:utype,:login_id);", nativeQuery=true)
+	List<DashBoardData> getNoOfRep(@Param("myear") int myear,@Param("div_code") int div_code,@Param("depo_code") int depo_code,
+			@Param("smon") int smon,@Param("emon") int emon,@Param("utype") int utype,@Param("login_id") int login_id);
 
 	
 	@Query(value = "SELECT depo_code,depo_name FROM branch_comp where depo_code <>32 order by depo_code", nativeQuery = true)
