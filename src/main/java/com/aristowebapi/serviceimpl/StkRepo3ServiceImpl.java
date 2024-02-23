@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.aristowebapi.constant.AristoWebLogMsgConstant;
+import com.aristowebapi.constant.AristoWebMessageConstant;
 import com.aristowebapi.dao.StkRepo3Dao;
 import com.aristowebapi.dto.MonthDto;
 import com.aristowebapi.dto.StkRepo3;
@@ -35,13 +36,16 @@ public class StkRepo3ServiceImpl implements StkRepo3Service{
 	@Autowired
 	private StkRepo3Dao stkRepo3Dao;
 	
-	
+	@Autowired
+	private AristoWebMessageConstant  aristoWebMessageConstant;
+
 	
 	private String getTitle(StkRepo3Request request,StkRepo3 data)
 	{
 
 		
 		StringBuilder title=new StringBuilder();
+		title.append(aristoWebMessageConstant.divisionMap.get(String.valueOf(request.getDivCode())));
 		title.append(" STOCKIEST/RUPEES/SALES WISE : ");
 		switch(request.getRepType())
 		{
@@ -82,6 +86,7 @@ public class StkRepo3ServiceImpl implements StkRepo3Service{
 		
 		List<StkRepo3> stkRepo3SaleList=stkRepo3Dao.getStockiestRepo3(request.getMyear(),request.getDivCode(),request.getDepoCode()
 				,request.getSmon(),request.getEmon(),request.getRepType(),request.getLoginId());
+		System.out.println("depo code "+request.getDepoCode());
 		
 		StkRepo3Response response=null;
 		

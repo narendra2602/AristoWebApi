@@ -43,11 +43,11 @@ public class BranchMisController {
 	@GetMapping("${mrc_branch_mis_repo5_path}")
 	public ResponseEntity<ApiResponse<BranchMisRepo5Response>> getBranchMisRepo5(@RequestBody BranchMisRepo5Request request,HttpServletRequest req)
 	{
-		logger.info(AristoWebLogMsgConstant.BRANCH_MIS_REPORT_5_CONTROLLER,"getBranchMisRepo5");
+		
 		int requestValues[]=getRequestData(req);
 		request.setLoginId(requestValues[0]);
 		request.setUtype(requestValues[1]);
-
+		logger.info(AristoWebLogMsgConstant.BRANCH_MIS_REPORT_5_CONTROLLER,"getBranchMisRepo5", request.getMyear(),request.getDivCode(),request.getDepoCode(),request.getUtype(),request.getLoginId());
 		
 		return new ResponseEntity<ApiResponse<BranchMisRepo5Response>>(branchMisService.getBranchMisRepo5(request), HttpStatus.OK);
 	
@@ -56,11 +56,11 @@ public class BranchMisController {
 	@GetMapping("${mrc_branch_mis_repo6_path}")
 	public ResponseEntity<ApiResponse<BranchMisRepo6Response>> getBranchMisRepo6(@RequestBody BranchMisRepo6Request request,HttpServletRequest req)
 	{
-		logger.info(AristoWebLogMsgConstant.BRANCH_MIS_REPORT_6_CONTROLLER,"getBranchMisRepo6");
+		
 		int requestValues[]=getRequestData(req);
 		request.setLoginId(requestValues[0]);
 		request.setUtype(requestValues[1]);
-
+		logger.info(AristoWebLogMsgConstant.BRANCH_MIS_REPORT_6_CONTROLLER,"getBranchMisRepo6", request.getMyear(),request.getDivCode(),request.getDepoCode(),request.getUtype(),request.getLoginId());
 		
 		return new ResponseEntity<ApiResponse<BranchMisRepo6Response>>(branchMisService.getBranchMisRepo6(request), HttpStatus.OK);
 	
@@ -69,12 +69,13 @@ public class BranchMisController {
 	@GetMapping("${mrc_branch_mis_repo8_path}")
 	public ResponseEntity<ApiResponse<BranchMisRepo8Response>> getBranchMisRepo8(@RequestBody BranchMisRepo8Request request,HttpServletRequest req)
 	{
-		logger.info(AristoWebLogMsgConstant.BRANCH_MIS_REPORT_8_CONTROLLER,"getBranchMisRepo8");
+		
 
 		int requestValues[]=getRequestData(req);
 		request.setLoginId(requestValues[0]);
 		request.setUtype(requestValues[1]);
-
+		logger.info(AristoWebLogMsgConstant.BRANCH_MIS_REPORT_8_CONTROLLER,"getBranchMisRepo8", request.getMyear(),request.getDivCode(),request.getDepoCode(),request.getUtype(),request.getLoginId());
+		
 		return new ResponseEntity<ApiResponse<BranchMisRepo8Response>>(branchMisService.getBranchMisRepo8(request), HttpStatus.OK);
 	
 	}

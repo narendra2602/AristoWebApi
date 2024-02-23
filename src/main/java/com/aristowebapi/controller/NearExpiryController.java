@@ -37,12 +37,12 @@ public class NearExpiryController {
 	@GetMapping("${mrc_nearexpiry_path}")
 	public ResponseEntity<ApiResponse<NearExpiryResponse>> getExpiryReport(@RequestBody NearExpiryRequest request,HttpServletRequest req)
 	{
-		logger.info(AristoWebLogMsgConstant.DAILY_REPORT_CONTROLLER,"getDailyRepo1");
+		
 
         int loginId=getLoginIdFromToken(req)[0];
         int uType=getLoginIdFromToken(req)[1];
 
-		
+        logger.info(AristoWebLogMsgConstant.NEAR_EXPIRY_CONTROLLER,"getExpiryReport", request.getDivCode(),request.getLoginId());
 		return new ResponseEntity<ApiResponse<NearExpiryResponse>>(nearExpiryService.getExpiryReport(request), HttpStatus.OK);
 	
 	}

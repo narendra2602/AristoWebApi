@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.aristowebapi.constant.AristoWebLogMsgConstant;
+import com.aristowebapi.constant.AristoWebMessageConstant;
 import com.aristowebapi.dao.MktRepo6Dao;
 import com.aristowebapi.dto.MktRepo6;
 import com.aristowebapi.dto.MonthDto;
@@ -18,20 +19,29 @@ import com.aristowebapi.request.MktRepo6Request;
 import com.aristowebapi.response.ApiResponse;
 import com.aristowebapi.response.MktRepo6Response;
 import com.aristowebapi.service.MktRepo6Service;
+import com.aristowebapi.utility.AppCalculationUtils;
 
 @Service
 public class MktRepo6ServiceImpl implements MktRepo6Service  {
+
 
 	Logger logger = LoggerFactory.getLogger(MktRepo6ServiceImpl.class);
 	
 	@Autowired
 	private MktRepo6Dao mktRepo6Dao;
 	
+	@Autowired
+	private AristoWebMessageConstant  aristoWebMessageConstant;
+
+	
 	public String lupdate="";
 	
 	private String getTitle(MktRepo6Request request,MktRepo6 data)
 	{
+		
 		StringBuilder title=new StringBuilder();
+
+		title.append(aristoWebMessageConstant.divisionMap.get(String.valueOf(data.getDiv_code())));
 		title.append(request.getDepoCode()==0?"All India ":mktRepo6Dao.getBranch(request.getDepoCode())+" Branch: " );
 		title.append(request.getGpCode()==0?" All Groups ": data.getGp_name());
 		title.append(" Branch Wise Sales Trend ");

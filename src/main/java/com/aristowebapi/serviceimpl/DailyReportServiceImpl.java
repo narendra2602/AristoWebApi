@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.aristowebapi.constant.AristoWebLogMsgConstant;
+import com.aristowebapi.constant.AristoWebMessageConstant;
 import com.aristowebapi.dao.DailyReportDao;
 import com.aristowebapi.dto.DailyEntryStatus;
 import com.aristowebapi.dto.DailyReport;
@@ -33,11 +34,14 @@ public class DailyReportServiceImpl  implements DailyReportService{
 	
 	@Autowired
 	private DailyReportDao dailyReportDao;
+	@Autowired
+	private AristoWebMessageConstant  aristoWebMessageConstant;
 	public String lupdate="";
 	
 	private String getTitle(DailyReportRequest request,DailyReport data)
 	{
 		StringBuilder title=new StringBuilder();
+		title.append(aristoWebMessageConstant.divisionMap.get(String.valueOf(data.getDiv_code())));
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		title.append(" BILLING MONTH ");
 		title.append(getDayMonthYear(sdf.format(request.getEntryDate())));

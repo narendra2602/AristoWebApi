@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.aristowebapi.constant.AristoWebLogMsgConstant;
+import com.aristowebapi.constant.AristoWebMessageConstant;
 import com.aristowebapi.dao.BranchMisDao;
 import com.aristowebapi.dto.BranchMisRepo5;
 import com.aristowebapi.dto.BranchMisRepo6;
@@ -36,10 +37,14 @@ public class BranchMisServiceImpl implements BranchMisservice{
 	@Autowired
 	private BranchMisDao branchMisDao;
 	
+	@Autowired
+	private AristoWebMessageConstant  aristoWebMessageConstant;
+	
 	
 	private String getTitle(BranchMisRepo5Request request,BranchMisRepo5 data)
 	{
 		StringBuilder title=new StringBuilder();
+		title.append(aristoWebMessageConstant.divisionMap.get(String.valueOf(data.getDiv_code())));
 		title.append(" H.Q. WISE/GROSS/CREDIT/NET SALE FROM ");
 		title.append(data.getSmname());
 		title.append(" To ");

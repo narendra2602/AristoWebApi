@@ -1,5 +1,7 @@
 package com.aristowebapi.constant;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
@@ -22,5 +24,8 @@ public class AristoWebMessageConstant {
 
 	@Value("${dashboard_pending}")
 	public String pendingPi;
+	
+	@Value("#{${division}}")
+	public Map<String, String> divisionMap;
 
 }

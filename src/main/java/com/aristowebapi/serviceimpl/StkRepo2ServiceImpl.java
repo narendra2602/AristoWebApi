@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.aristowebapi.constant.AristoWebLogMsgConstant;
+import com.aristowebapi.constant.AristoWebMessageConstant;
 import com.aristowebapi.dao.StkRepo2Dao;
 import com.aristowebapi.dto.MonthDto;
 import com.aristowebapi.dto.StkRepo2;
@@ -18,6 +19,7 @@ import com.aristowebapi.request.StkRepo2Request;
 import com.aristowebapi.response.ApiResponse;
 import com.aristowebapi.response.StkRepo2Response;
 import com.aristowebapi.service.StkRepo2Service;
+import com.aristowebapi.utility.AppCalculationUtils;
 
 @Service
 public class StkRepo2ServiceImpl implements StkRepo2Service{
@@ -26,6 +28,9 @@ public class StkRepo2ServiceImpl implements StkRepo2Service{
 	Logger logger = LoggerFactory.getLogger(StkRepo2ServiceImpl.class);
 	@Autowired
 	private StkRepo2Dao stkRepo2Dao;
+	
+	@Autowired
+	private AristoWebMessageConstant  aristoWebMessageConstant;
 	
 	private String lupdate="";
 	Map<String, Object> grandTotalMap=null;
@@ -42,6 +47,7 @@ public class StkRepo2ServiceImpl implements StkRepo2Service{
 
 		
 		StringBuilder title=new StringBuilder();
+		title.append(aristoWebMessageConstant.divisionMap.get(String.valueOf(data.getDiv_code())));
 		title.append(" STOCKIEST : ");
 		title.append(data.getStk_name());
 		title.append(" ");

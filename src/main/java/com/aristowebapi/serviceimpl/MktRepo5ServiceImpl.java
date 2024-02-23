@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.aristowebapi.constant.AristoWebLogMsgConstant;
+import com.aristowebapi.constant.AristoWebMessageConstant;
 import com.aristowebapi.dao.MktRepo5Dao;
 import com.aristowebapi.dto.MktRepo5;
 import com.aristowebapi.exception.ApiException;
@@ -21,16 +22,26 @@ import com.aristowebapi.utility.AppCalculationUtils;
 @Service
 public class MktRepo5ServiceImpl  implements MktRepo5Service  {
 	
+
+
+	
 	Logger logger = LoggerFactory.getLogger(MktRepo5ServiceImpl.class);
 
 	@Autowired
 	private MktRepo5Dao mktRepo5Dao;
 	
+	@Autowired
+	private AristoWebMessageConstant  aristoWebMessageConstant;
+
+	
 	public String lupdate="";
 	
 	private String getTitle(MktRepo5Request request,MktRepo5 data)
 	{
+		
 		StringBuilder title=new StringBuilder();
+
+		title.append(aristoWebMessageConstant.divisionMap.get(String.valueOf(data.getDiv_code())));
 		title.append(request.getDepoCode()==0?"All India":mktRepo5Dao.getBranch(request.getDepoCode())+" Branch: ");
 		title.append("GROSS/CREDIT/NET SALE From  ");
 		title.append(data.getSmname());

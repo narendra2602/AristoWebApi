@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.aristowebapi.dto.UserInfo;
+import com.aristowebapi.request.ChangePasswordRequest;
 import com.aristowebapi.request.LoginRequest;
 import com.aristowebapi.response.TokenResponse;
 import com.aristowebapi.service.TokenBlacklist;
@@ -66,6 +67,15 @@ public class UserController {
         return service.updateAllUser(); 
     } 
 
+    
+    @PostMapping("/changePassword") 
+    public ResponseEntity<String> changePassword(@RequestBody ChangePasswordRequest request) { 
+        if(service.changePassword(request)==1)
+        	return ResponseEntity.ok("Password Changes successfully");
+        else
+        	return ResponseEntity.ok("Error while Password Changed");
+        	 
+    } 
     
     @GetMapping("/user/userProfile") 
     @PreAuthorize("hasAuthority('ROLE_USER')") 

@@ -10,26 +10,36 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.aristowebapi.constant.AristoWebMessageConstant;
 import com.aristowebapi.dao.MktRepo4Dao;
 import com.aristowebapi.dto.MktRepo4;
 import com.aristowebapi.request.MktRepo4Request;
 import com.aristowebapi.response.ApiResponse;
 import com.aristowebapi.response.MktRepo4Response;
 import com.aristowebapi.service.MktRepo4Service;
+import com.aristowebapi.utility.AppCalculationUtils;
 
 @Service
 public class MktRepo4ServiceImpl implements MktRepo4Service{
+	
+
 	
 	Logger logger = LoggerFactory.getLogger(MktRepo4ServiceImpl.class);
 	
 	@Autowired
 	private MktRepo4Dao mktRepo4Dao;
+	
+	@Autowired
+	private AristoWebMessageConstant  aristoWebMessageConstant;
 
 	public String lupdate="";
 	
 	private String getTitle(MktRepo4Request request,MktRepo4 data)
 	{
+		
 		StringBuilder title=new StringBuilder();
+
+		title.append(aristoWebMessageConstant.divisionMap.get(String.valueOf(data.getDiv_code())));
 		title.append(request.getDepoCode()==0?"All India":mktRepo4Dao.getBranch(request.getDepoCode())+" Branch: ");
 		title.append(request.getGpCode()!=0?" Group -> "+data.getGp_name():"");
 		title.append(" Rupeewise Performance for the Month of ");

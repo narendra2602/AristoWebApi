@@ -9,4 +9,6 @@ import com.aristowebapi.dto.UserInfo;
 @Repository
 public interface UserInfoRepository extends JpaRepository<UserInfo, Integer> { 
     Optional<UserInfo> findByLoginName(String username); 
+    UserInfo findById(int  userId);
+    
 }

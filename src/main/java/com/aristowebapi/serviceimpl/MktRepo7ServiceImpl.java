@@ -9,29 +9,36 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.aristowebapi.constant.AristoWebLogMsgConstant;
+import com.aristowebapi.constant.AristoWebMessageConstant;
 import com.aristowebapi.dao.MktRepo7Dao;
-import com.aristowebapi.dto.MktRepo5;
 import com.aristowebapi.dto.MktRepo7;
 import com.aristowebapi.exception.ApiException;
 import com.aristowebapi.request.MktRepo7Request;
 import com.aristowebapi.response.ApiResponse;
-import com.aristowebapi.response.MktRepo5Response;
 import com.aristowebapi.response.MktRepo7Response;
 import com.aristowebapi.service.MktRepo7Service;
 
 @Service
 public class MktRepo7ServiceImpl implements  MktRepo7Service{
 
+
+
 	Logger logger = LoggerFactory.getLogger(MktRepo5ServiceImpl.class);
 	
 	@Autowired
 	private MktRepo7Dao mktRepo7Dao;
 
+	@Autowired
+	private AristoWebMessageConstant  aristoWebMessageConstant;
+	
 	private String lupdate="";
 	
 	private String getTitle(MktRepo7Request request,MktRepo7 data)
 	{
+		
 		StringBuilder title=new StringBuilder();
+
+		title.append(aristoWebMessageConstant.divisionMap.get(String.valueOf(data.getDiv_code())));
 		title.append(request.getDepoCode()==0?"All India ":mktRepo7Dao.getBranch(request.getDepoCode())+" Branch: ");
 		title.append("EXPIRY/BREAKAGE/SALABLE From  ");
 		title.append(data.getSmname());

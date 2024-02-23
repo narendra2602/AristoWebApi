@@ -8,6 +8,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.aristowebapi.constant.AristoWebMessageConstant;
 import com.aristowebapi.dao.MktRepo3Dao;
 import com.aristowebapi.dto.MktRepo3;
 import com.aristowebapi.dto.MonthDto;
@@ -18,15 +19,23 @@ import com.aristowebapi.service.MktRepo3Service;
 
 @Service
 public class MktRepo3ServiceImpl implements MktRepo3Service {
-	
+
+
+
 	@Autowired
 	private MktRepo3Dao mktRepo3Dao;
+	
+	@Autowired
+	private AristoWebMessageConstant  aristoWebMessageConstant;
 
 	public String lupdate="";
 	
 	private String getTitle(MktRepo3Request request,MktRepo3 data)
 	{
+		
 		StringBuilder title=new StringBuilder();
+
+		title.append(aristoWebMessageConstant.divisionMap.get(String.valueOf(data.getDiv_code())));
 		title.append(request.getDepoCode()==0?"All India ":data.getBrname());
 		title.append(request.getRepType()==1?" Product/ ":" Group/ ");
 		title.append(request.getUv()==1?"Unit Wise ":"Value Wise ");

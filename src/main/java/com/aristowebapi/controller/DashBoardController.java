@@ -40,19 +40,23 @@ public class DashBoardController {
 	public ResponseEntity<DashBoardChartResponse> getDashboardMainChart(@PathVariable("myear") int myear,@PathVariable("divCode") int divCode,@PathVariable("depoCode") int depoCode,HttpServletRequest request)
 	{
 
-		logger.info(AristoWebLogMsgConstant.DASH_BOARD_CONTROLLER,"getDashboardMainChart");
+		
 		int loginId=getLoginIdFromToken(request)[0];
         int uType=getLoginIdFromToken(request)[1];
 
+        logger.info(AristoWebLogMsgConstant.DASH_BOARD_CONTROLLER,"getDashboardMainChart", myear,divCode,depoCode,uType,loginId);
 		return new ResponseEntity<DashBoardChartResponse>(dashBoardService.getDashboardMainChart(myear,divCode,depoCode,loginId,uType), HttpStatus.OK);
 	
 	}
 
 	@GetMapping("${mrc_dashboardcurrentchart_path}")
-	public ResponseEntity<DashBoardChartResponse> getDashboardCurrentMonth(@PathVariable("myear") int myear,@PathVariable("divCode") int divCode,@PathVariable("depoCode") int depoCode,@PathVariable("cmon") int cmon,@PathVariable("loginid") int loginid,@PathVariable("utype") int utype)
+	public ResponseEntity<DashBoardChartResponse> getDashboardCurrentMonth(@PathVariable("myear") int myear,@PathVariable("divCode") int divCode,@PathVariable("depoCode") int depoCode,@PathVariable("cmon") int cmon,@PathVariable("loginid") int loginid,@PathVariable("utype") int utype,HttpServletRequest request)
 	{
+		int loginId=getLoginIdFromToken(request)[0];
+        int uType=getLoginIdFromToken(request)[1];
 
-		logger.info(AristoWebLogMsgConstant.DASH_BOARD_CONTROLLER,"getDashboardCurrentMonth");
+		
+		logger.info(AristoWebLogMsgConstant.DASH_BOARD_CONTROLLER,"getDashboardCurrentMonth", myear,divCode,depoCode,uType,loginId);
 
 		return new ResponseEntity<DashBoardChartResponse>(dashBoardService.getDashboardCurrentMonth(myear,divCode,depoCode,cmon,loginid,utype), HttpStatus.OK);
 	
@@ -63,11 +67,13 @@ public class DashBoardController {
 
 	{
 
-		logger.info(AristoWebLogMsgConstant.DASH_BOARD_CONTROLLER,"getDashboardTop5");
+		
 		
 		int loginId=getLoginIdFromToken(request)[0];
         int uType=getLoginIdFromToken(request)[1];
 
+        logger.info(AristoWebLogMsgConstant.DASH_BOARD_CONTROLLER,"getDashboardTop5", myear,divCode,depoCode,uType,loginId);
+        
 		return new ResponseEntity<ApiResponse<DashBoardDataResponseDouble>>(dashBoardService.getDashboardTop5(myear,divCode,depoCode,cmon,loginId,uType), HttpStatus.OK);
 	
 	}
@@ -77,11 +83,12 @@ public class DashBoardController {
 
 	{
 
-		logger.info(AristoWebLogMsgConstant.DASH_BOARD_CONTROLLER,"getDashboardTop5Products");
+		
 		
 		int loginId=getLoginIdFromToken(request)[0];
         int uType=getLoginIdFromToken(request)[1];
-
+        logger.info(AristoWebLogMsgConstant.DASH_BOARD_CONTROLLER,"getDashboardTop5Products", myear,divCode,depoCode,uType,loginId);
+        
 		return new ResponseEntity<ApiResponse<DashBoardDataResponseDouble>>(dashBoardService.getDashboardTop5Products(myear,divCode,depoCode,cmon,loginId), HttpStatus.OK);
 	
 	}
@@ -90,10 +97,11 @@ public class DashBoardController {
 	public ResponseEntity<ApiResponse<DashBoardDataResponseDouble>> getDashboardThept(@PathVariable("myear") int myear,@PathVariable("divCode") int divCode,@PathVariable("depoCode") int depoCode,@PathVariable("cmon") int cmon,HttpServletRequest request)
 	{
 
-		logger.info(AristoWebLogMsgConstant.DASH_BOARD_CONTROLLER,"getDashboardThept");
 
 		int loginId=getLoginIdFromToken(request)[0];
         int uType=getLoginIdFromToken(request)[1];
+
+		logger.info(AristoWebLogMsgConstant.DASH_BOARD_CONTROLLER,"getDashboardThept", myear,divCode,depoCode,uType,loginId);
 
 		return new ResponseEntity<ApiResponse<DashBoardDataResponseDouble>>(dashBoardService.getDashboardThept(myear,divCode,depoCode,cmon,loginId,uType), HttpStatus.OK);
 	
@@ -103,10 +111,11 @@ public class DashBoardController {
 	public ResponseEntity<ApiResponse<DashBoardDataResponseDouble>> getDashboardPendingPI(@PathVariable("myear") int myear,@PathVariable("divCode") int divCode,@PathVariable("depoCode") int depoCode,@PathVariable("cmon") int cmon,HttpServletRequest request)
 	{
 
-		logger.info(AristoWebLogMsgConstant.DASH_BOARD_CONTROLLER,"getDashboardPendingPI");
 
 		int loginId=getLoginIdFromToken(request)[0];
         int uType=getLoginIdFromToken(request)[1];
+
+		logger.info(AristoWebLogMsgConstant.DASH_BOARD_CONTROLLER,"getDashboardPendingPI", myear,divCode,depoCode,uType,loginId);
 
 		return new ResponseEntity<ApiResponse<DashBoardDataResponseDouble>>(dashBoardService.getDashboardPendingPI(myear,divCode,depoCode,cmon,loginId,uType), HttpStatus.OK);
 	
@@ -116,10 +125,10 @@ public class DashBoardController {
 	public ResponseEntity<ApiResponse<DashBoardPanelDataResponse>> getDashboardPanelData(@PathVariable("myear") int myear,@PathVariable("divCode") int divCode,@PathVariable("depoCode") int depoCode,@PathVariable("cmon") int cmon,HttpServletRequest request)
 	{
 
-		logger.info(AristoWebLogMsgConstant.DASH_BOARD_CONTROLLER,"getDashboardPanelData");
 		int loginId=getLoginIdFromToken(request)[0];
         int uType=getLoginIdFromToken(request)[1];
 
+		logger.info(AristoWebLogMsgConstant.DASH_BOARD_CONTROLLER,"getDashboardPanelData", myear,divCode,depoCode,uType,loginId);
 		
 		return new ResponseEntity<ApiResponse<DashBoardPanelDataResponse>>(dashBoardService.getDashboardPanelData(myear,divCode,depoCode,cmon,loginId,uType), HttpStatus.OK);
 	
@@ -129,11 +138,13 @@ public class DashBoardController {
 	public ResponseEntity<ApiResponse<DashBoardDataResponseDouble>> getDashboardGroupwiseAch(@PathVariable("myear") int myear,@PathVariable("divCode") int divCode,@PathVariable("depoCode") int depoCode,@PathVariable("cmon") int cmon,HttpServletRequest request)
 	{
 
-		logger.info(AristoWebLogMsgConstant.DASH_BOARD_CONTROLLER,"getDashboardGroupwiseAch");
 
 		int loginId=getLoginIdFromToken(request)[0];
         int uType=getLoginIdFromToken(request)[1];
 
+		logger.info(AristoWebLogMsgConstant.DASH_BOARD_CONTROLLER,"getDashboardGroupwiseAch", myear,divCode,depoCode,uType,loginId);
+
+        
 		return new ResponseEntity<ApiResponse<DashBoardDataResponseDouble>>(dashBoardService.getDashboardGroupwiseAch(myear,divCode,depoCode,cmon,loginId,uType), HttpStatus.OK);
 	
 	}
@@ -142,11 +153,11 @@ public class DashBoardController {
 	public ResponseEntity<ApiResponse<DashBoardDataResponseDouble>> getDashboardBranchAch(@PathVariable("myear") int myear,@PathVariable("divCode") int divCode,@PathVariable("depoCode") int depoCode,@PathVariable("cmon") int cmon,HttpServletRequest request)
 	{
 
-		logger.info(AristoWebLogMsgConstant.DASH_BOARD_CONTROLLER,"getDashboardBranchAch");
 
 		int loginId=getLoginIdFromToken(request)[0];
         int uType=getLoginIdFromToken(request)[1];
 
+		logger.info(AristoWebLogMsgConstant.DASH_BOARD_CONTROLLER,"getDashboardBranchAch", myear,divCode,depoCode,uType,loginId);
 		
 		return new ResponseEntity<ApiResponse<DashBoardDataResponseDouble>>(dashBoardService.getDashboardBranchAch(myear,divCode,depoCode,cmon,loginId,uType), HttpStatus.OK);
 	
@@ -156,11 +167,13 @@ public class DashBoardController {
 	public ResponseEntity<ApiResponse<DashBoardDataResponseDouble>> getDashboardHqwiseAch(@PathVariable("myear") int myear,@PathVariable("divCode") int divCode,@PathVariable("depoCode") int depoCode,@PathVariable("cmon") int cmon,HttpServletRequest request)
 	{
 
-		logger.info(AristoWebLogMsgConstant.DASH_BOARD_CONTROLLER,"getDashboardHqwiseAch");
 
 		int loginId=getLoginIdFromToken(request)[0];
         int uType=getLoginIdFromToken(request)[1];
 
+        logger.info(AristoWebLogMsgConstant.DASH_BOARD_CONTROLLER,"getDashboardHqwiseAch", myear,divCode,depoCode,uType,loginId);
+
+        
 		return new ResponseEntity<ApiResponse<DashBoardDataResponseDouble>>(dashBoardService.getDashboardHqwiseAch(myear,divCode,depoCode,cmon,loginId,uType), HttpStatus.OK);
 	
 	}
@@ -169,11 +182,11 @@ public class DashBoardController {
 	public ResponseEntity<ApiResponse<DashBoardDataResponse>> getDashboardMonthCombo(@PathVariable("myear") int myear,@PathVariable("divCode") int divCode,@PathVariable("depoCode") int depoCode,HttpServletRequest request)
 	{
 
-		logger.info(AristoWebLogMsgConstant.DASH_BOARD_CONTROLLER,"getDashboardMonthCombo");
 
         int loginId=getLoginIdFromToken(request)[0];
         int uType=getLoginIdFromToken(request)[1];
 
+		logger.info(AristoWebLogMsgConstant.DASH_BOARD_CONTROLLER,"getDashboardMonthCombo", myear,divCode,depoCode,uType,loginId);
 		
 		return new ResponseEntity<ApiResponse<DashBoardDataResponse>>(dashBoardService.getDashboardMonthCombo(myear,divCode,depoCode,loginId,uType), HttpStatus.OK);
 	
@@ -192,9 +205,9 @@ public class DashBoardController {
 	@GetMapping("${mrc_dashboardDivCombo_path}")
 	public ResponseEntity<ApiResponse<DashBoardDataResponse>> getDivisionList(HttpServletRequest request)
 	{
-		logger.info(AristoWebLogMsgConstant.DASH_BOARD_CONTROLLER,"authenticateUser");
 
         int loginId=getLoginIdFromToken(request)[0];
+		logger.info(AristoWebLogMsgConstant.DASH_BOARD_CONTROLLER,"getDivisionList");
 
 		
 //		return new ResponseEntity<LoginResponse>(loginService.authenticateUser(request), HttpStatus.OK);
@@ -207,10 +220,10 @@ public class DashBoardController {
 	@GetMapping("${mrc_dashboardDepoCombo_path}")
 	public ResponseEntity<ApiResponse<DashBoardDataResponse>> getBranchList(HttpServletRequest request)
 	{
-		logger.info(AristoWebLogMsgConstant.DASH_BOARD_CONTROLLER,"authenticateUser");
 
         int loginId=getLoginIdFromToken(request)[0];
 
+		logger.info(AristoWebLogMsgConstant.DASH_BOARD_CONTROLLER,"getBranchList");
         
 		return new ResponseEntity<ApiResponse<DashBoardDataResponse>>(dashBoardService.getBranchList(loginId), HttpStatus.OK);
 
@@ -220,11 +233,11 @@ public class DashBoardController {
 	@GetMapping("${mrc_dashboardHqCombo_path}")
 	public ResponseEntity<ApiResponse<DashBoardDataResponse>> getHqList(@PathVariable("myear") int myear,@PathVariable("divCode") int divCode,@PathVariable("depoCode") int depoCode,HttpServletRequest request)
 	{
-		logger.info(AristoWebLogMsgConstant.DASH_BOARD_CONTROLLER,"authenticateUser");
 
         int loginId=getLoginIdFromToken(request)[0];
         int uType=getLoginIdFromToken(request)[1];
 
+		logger.info(AristoWebLogMsgConstant.DASH_BOARD_CONTROLLER,"getHqList", myear,divCode,depoCode,uType,loginId);
         
 		return new ResponseEntity<ApiResponse<DashBoardDataResponse>>(dashBoardService.getHqList(myear,divCode,depoCode,uType,loginId), HttpStatus.OK);
 
@@ -234,11 +247,11 @@ public class DashBoardController {
 	@GetMapping("${mrc_dashboardProductCombo_path}")
 	public ResponseEntity<ApiResponse<DashBoardDataResponse>> getProductList(@PathVariable("divCode") int divCode,HttpServletRequest request)
 	{
-		logger.info(AristoWebLogMsgConstant.DASH_BOARD_CONTROLLER,"authenticateUser");
 
         int loginId=getLoginIdFromToken(request)[0];
         int uType=getLoginIdFromToken(request)[1];
 
+		logger.info(AristoWebLogMsgConstant.DASH_BOARD_CONTROLLER,"getProductList");
         
 		return new ResponseEntity<ApiResponse<DashBoardDataResponse>>(dashBoardService.getProductList(divCode,uType,loginId), HttpStatus.OK);
 
@@ -247,11 +260,12 @@ public class DashBoardController {
 	@GetMapping("${mrc_dashboardGroupCombo_path}")
 	public ResponseEntity<ApiResponse<DashBoardDataResponse>> getGroupList(@PathVariable("divCode") int divCode,HttpServletRequest request)
 	{
-		logger.info(AristoWebLogMsgConstant.DASH_BOARD_CONTROLLER,"authenticateUser");
 
         int loginId=getLoginIdFromToken(request)[0];
         int uType=getLoginIdFromToken(request)[1];
-        
+
+		logger.info(AristoWebLogMsgConstant.DASH_BOARD_CONTROLLER,"getGroupList");
+
 		return new ResponseEntity<ApiResponse<DashBoardDataResponse>>(dashBoardService.getGroupList(divCode,uType,loginId), HttpStatus.OK);
 	
 	}
@@ -259,11 +273,12 @@ public class DashBoardController {
 	@GetMapping("${mrc_dashboardStockiestCombo_path}")
 	public ResponseEntity<ApiResponse<StockiestResponse>> getStockiestList(@PathVariable("myear") int myear,@PathVariable("divCode") int divCode,@PathVariable("depoCode") int depoCode,HttpServletRequest request)
 	{
-		logger.info(AristoWebLogMsgConstant.DASH_BOARD_CONTROLLER,"authenticateUser");
 
         int loginId=getLoginIdFromToken(request)[0];
         int uType=getLoginIdFromToken(request)[1];
-        
+
+		logger.info(AristoWebLogMsgConstant.DASH_BOARD_CONTROLLER,"getStockiestList", myear,divCode,depoCode,uType,loginId);
+
 		return new ResponseEntity<ApiResponse<StockiestResponse>>(dashBoardService.getStockiestList(myear,divCode,depoCode,uType,loginId), HttpStatus.OK);
 	
 	}

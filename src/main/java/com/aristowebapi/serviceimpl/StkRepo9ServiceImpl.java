@@ -9,14 +9,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.aristowebapi.constant.AristoWebLogMsgConstant;
+import com.aristowebapi.constant.AristoWebMessageConstant;
 import com.aristowebapi.dao.StkRepo9Dao;
 import com.aristowebapi.dto.StkRepo9;
 import com.aristowebapi.exception.ApiException;
 import com.aristowebapi.request.StkRepo9Request;
 import com.aristowebapi.response.ApiResponse;
-import com.aristowebapi.response.MktRepo7Response;
 import com.aristowebapi.response.StkRepo9Response;
 import com.aristowebapi.service.StkRepo9Service;
+import com.aristowebapi.utility.AppCalculationUtils;
 @Service
 
 public class StkRepo9ServiceImpl implements StkRepo9Service {
@@ -25,11 +26,16 @@ public class StkRepo9ServiceImpl implements StkRepo9Service {
 	
 	@Autowired
 	private StkRepo9Dao stkRepo9Dao;
+	
+	@Autowired
+	private AristoWebMessageConstant  aristoWebMessageConstant;
+
 	private String lupdate="";
 
 	private String getTitle(StkRepo9Request request,StkRepo9 data)
 	{
 		StringBuilder title=new StringBuilder();
+		title.append(aristoWebMessageConstant.divisionMap.get(String.valueOf(request.getDivCode())));
 		title.append("PRODUCT - > ");
 		title.append(data.getPname());
 		title.append(" STOCKIEST WISE SALES DETAIL FROM ");

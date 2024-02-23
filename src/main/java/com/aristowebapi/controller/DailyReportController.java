@@ -40,11 +40,11 @@ public class DailyReportController {
 	@GetMapping("${mrc_daily_path}")
 	public ResponseEntity<ApiResponse<DailyReportResponse>> getDailyReport(@RequestBody DailyReportRequest request,HttpServletRequest req)
 	{
-		logger.info(AristoWebLogMsgConstant.DAILY_REPORT_CONTROLLER,"getDailyRepo1");
+		
 		int requestValues[]=getRequestData(req);
 		request.setLoginId(requestValues[0]);
 //		request.setUtype(requestValues[1]);
-
+		logger.info(AristoWebLogMsgConstant.DAILY_REPORT_CONTROLLER,"getDailyRepo1", request.getDivCode(),request.getDepoCode(),request.getLoginId());
 		
 		return new ResponseEntity<ApiResponse<DailyReportResponse>>(dailyReportService.getDailyReport(request), HttpStatus.OK);
 	
@@ -54,10 +54,11 @@ public class DailyReportController {
 	@GetMapping("${mrc_daily_path_status}")
 	public ResponseEntity<ApiResponse<DailyStatusResponse>> getDailyEntryStatus(@RequestBody DailyUpdationRequest request,HttpServletRequest req)
 	{
-		logger.info(AristoWebLogMsgConstant.DAILY_REPORT_CONTROLLER,"getDailyEntryStatus");
+		
 		int requestValues[]=getRequestData(req);
 		request.setLoginId(requestValues[0]);
-
+		logger.info(AristoWebLogMsgConstant.DAILY_REPORT_CONTROLLER,"getDailyEntryStatus");
+		
 		return new ResponseEntity<ApiResponse<DailyStatusResponse>>(dailyReportService.getDailyEntryStatus(request), HttpStatus.OK);
 	
 	}

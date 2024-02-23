@@ -9,14 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.aristowebapi.constant.AristoWebLogMsgConstant;
+import com.aristowebapi.constant.AristoWebMessageConstant;
 import com.aristowebapi.dao.MktRepo11Dao;
 import com.aristowebapi.dto.MktRepo11;
-import com.aristowebapi.dto.MktRepo5;
 import com.aristowebapi.exception.ApiException;
 import com.aristowebapi.request.MktRepo11Request;
 import com.aristowebapi.response.ApiResponse;
 import com.aristowebapi.response.MktRepo11Response;
-import com.aristowebapi.response.MktRepo5Response;
 import com.aristowebapi.service.MktRepo11Service;
 import com.aristowebapi.utility.AppCalculationUtils;
 
@@ -29,11 +28,17 @@ public class MktRepo11ServiceImpl implements MktRepo11Service{
 	@Autowired
 	private MktRepo11Dao mktRepo11Dao;
 	
+	@Autowired
+	private AristoWebMessageConstant  aristoWebMessageConstant;
+
+
+	
 	public String lupdate="";
 	
 	private String getTitle(MktRepo11Request request,MktRepo11 data)
 	{
 		StringBuilder title=new StringBuilder();
+		title.append(aristoWebMessageConstant.divisionMap.get(String.valueOf(data.getDiv_code())));
 		title.append(request.getDepoCode()==0?"ALL INDIA":mktRepo11Dao.getBranch(request.getDepoCode())+" Branch: ");
 		title.append(" MONTH WISE DETAIL ");
 		return title.toString();

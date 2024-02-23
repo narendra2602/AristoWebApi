@@ -11,14 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.aristowebapi.constant.AristoWebLogMsgConstant;
+import com.aristowebapi.constant.AristoWebMessageConstant;
 import com.aristowebapi.dao.StkRepo10Dao;
 import com.aristowebapi.dto.MonthDto;
 import com.aristowebapi.dto.StkRepo10;
-import com.aristowebapi.dto.StkRepo2;
 import com.aristowebapi.request.StkRepo10Request;
 import com.aristowebapi.response.ApiResponse;
 import com.aristowebapi.response.StkRepo10Response;
-import com.aristowebapi.response.StkRepo2Response;
 import com.aristowebapi.service.StkRepo10Service;
 @Service
 public class StkRepo10ServiceImpl implements StkRepo10Service {
@@ -27,6 +26,9 @@ public class StkRepo10ServiceImpl implements StkRepo10Service {
 	@Autowired
 	private StkRepo10Dao stkRepo10Dao;
 
+	@Autowired
+	private AristoWebMessageConstant  aristoWebMessageConstant;
+	
 	private String lupdate="";
 	Map<String, Object> grandTotalMap=null;
 	Map<String, Integer> grandTotalIntMap=null;
@@ -42,6 +44,7 @@ public class StkRepo10ServiceImpl implements StkRepo10Service {
 
 		
 		StringBuilder title=new StringBuilder();
+		title.append(aristoWebMessageConstant.divisionMap.get(String.valueOf(request.getDivCode())));
 		title.append(" PRODUCT -> : ");
 		title.append(data.getPname());
 		title.append(" ");

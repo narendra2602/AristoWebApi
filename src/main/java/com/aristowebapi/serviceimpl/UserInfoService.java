@@ -11,7 +11,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.aristowebapi.dao.UserInfoRepository;
-import com.aristowebapi.dto.UserInfo; 
+import com.aristowebapi.dto.UserInfo;
+import com.aristowebapi.request.ChangePasswordRequest; 
   
 @Service
 public class UserInfoService implements UserDetailsService { 
@@ -71,5 +72,21 @@ public class UserInfoService implements UserDetailsService {
         return "User updated Successfully"; 
     } 
 
-  
+     public int changePassword(ChangePasswordRequest request )
+     {
+    		 UserInfo userDetail = repository.findById(request.getUserId());
+    		 int update=0;
+        	 if (userDetail!=null)
+        	 {
+        		 boolean check = encoder.matches(request.getOldPassword(), userDetail.getPassword());
+        		 if(check)
+        		 {
+        			 userDetail.setPassword(encoder.encode(request.getNewPassword().trim()));
+        			 repository.save(userDetail);
+        			 update=1;
+        		 }
+        	 }
+
+    		 return update;
+     }
 } 

@@ -1,9 +1,21 @@
 package com.aristowebapi.utility;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
+
+import com.aristowebapi.constant.AristoWebMessageConstant;
 
 public class AppCalculationUtils {
 
+	
+	@Autowired
+	private static AristoWebMessageConstant aristoWebMessageConstant;
+	
 	public static  double calculateAch(long sale,long target)
 	{
 		double ach=0.00;  
@@ -92,5 +104,21 @@ public class AppCalculationUtils {
 		return number;
 	}
 
-	
+
+/*	public static String getDivName(int div_code) {
+
+		
+		Map<Integer,String> divMap = new HashMap<>();  
+		divMap.put(1, "MF - ");
+		divMap.put(2, "TF - ");
+		divMap.put(3, "GENETICA - ");
+		divMap.put(10, "MF2 - ");
+		divMap.put(20, "MF3 - ");
+		divMap.put(30, "MF4 - ");
+		return divMap.get(div_code);
+	}
+
+*/
+
+
 }

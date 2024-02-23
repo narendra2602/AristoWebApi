@@ -1,6 +1,5 @@
 package com.aristowebapi.serviceimpl;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.aristowebapi.constant.AristoWebLogMsgConstant;
+import com.aristowebapi.constant.AristoWebMessageConstant;
 import com.aristowebapi.dao.HOMarketingRepo1Dao;
 import com.aristowebapi.dto.HOMarketingRepo1;
 import com.aristowebapi.exception.ApiException;
@@ -25,12 +25,15 @@ public class HOMarketingRepo1ServiceImpl implements HOMarketingRepo1Service{
 	Logger logger = LoggerFactory.getLogger(HOMarketingRepo1ServiceImpl.class);
 	@Autowired
 	private HOMarketingRepo1Dao hOMarketingRepo1Dao;
+	@Autowired
+	private AristoWebMessageConstant  aristoWebMessageConstant;
 
 	public String lupdate="";
 	
 	private String getTitle(HOMarketingRepo1Request request,HOMarketingRepo1 data)
 	{
 		StringBuilder title=new StringBuilder();
+		title.append(aristoWebMessageConstant.divisionMap.get(String.valueOf(data.getDiv_code())));
 		if(request.getDataType()<3)
 			title.append(request.getDataType()==1?"Product-> ":"Group-> ");
 		title.append(data.getPname());

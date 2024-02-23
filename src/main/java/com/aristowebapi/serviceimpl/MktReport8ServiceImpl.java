@@ -9,12 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.aristowebapi.constant.AristoWebLogMsgConstant;
+import com.aristowebapi.constant.AristoWebMessageConstant;
 import com.aristowebapi.dao.MktRepo8Dao;
 import com.aristowebapi.dto.MktRepo8;
 import com.aristowebapi.exception.ApiException;
 import com.aristowebapi.request.MktRepo8Request;
 import com.aristowebapi.response.ApiResponse;
-import com.aristowebapi.response.MktRepo7Response;
 import com.aristowebapi.response.MktRepo8Response;
 import com.aristowebapi.service.MktRepo8Service;
 
@@ -26,11 +26,16 @@ public class MktReport8ServiceImpl implements MktRepo8Service{
 	@Autowired
 	private MktRepo8Dao mktRepo8Dao;
 	
+	@Autowired
+	private AristoWebMessageConstant  aristoWebMessageConstant;
+
+	
 	public String lupdate="";
 	
 	private String getTitle(MktRepo8Request request,MktRepo8 data)
 	{
 		StringBuilder title=new StringBuilder();
+		title.append(aristoWebMessageConstant.divisionMap.get(String.valueOf(data.getDiv_code())));
 		title.append(request.getDepoCode()==0?"All India ":mktRepo8Dao.getBranch(request.getDepoCode())+" Branch: ");
 		title.append("EXPIRY RATIO From  ");
 		title.append(data.getSmname());

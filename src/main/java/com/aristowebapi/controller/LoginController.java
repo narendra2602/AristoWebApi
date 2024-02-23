@@ -53,14 +53,14 @@ public class LoginController {
 	@PostMapping("/loginmenu")
 	public ResponseEntity<ApiResponse<ReportTabResponse>> getMenuList(HttpServletRequest request)
 	{
-		logger.info(AristoWebLogMsgConstant.LOGIN_CONTROLLER,"authenticateUser");
-
+		
 		String authHeader = request.getHeader("Authorization");
         String fname=appRequestParameterUtils.getRequestBodyFirstName(authHeader);
 		int requestValues[]=appRequestParameterUtils.getRequestBodyParameters(authHeader);
         int loginId=requestValues[0]; 
 
-       
+        logger.info(AristoWebLogMsgConstant.LOGIN_CONTROLLER,"authenticateUser");
+
 
         ApiResponse<ReportTabResponse> apiResponse = new ApiResponse<>(fname,0,"",loginService.getReportMenuList(loginId));
 

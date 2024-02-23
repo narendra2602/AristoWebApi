@@ -142,7 +142,7 @@ public class DashBoardChartServiceImpl implements DashBoardService {
 		List<DashBoardDataDouble> dataList= dashBoardDao.getDashboardTop5Stockiest(myear,div_code,depo_code,cmon,login_id,utype);
 		
 		List<DashBoardDataResponseDouble> saleList = getResponseDataDouble(dataList);
-		String title=getMonth("Top 5 Stockiest for ",myear,cmon);
+		String title=getMonth("Top 5 Stockiest Sale for ",myear,cmon);
 		
 		int size=dataList.size();
 		
@@ -348,7 +348,7 @@ public class DashBoardChartServiceImpl implements DashBoardService {
 	public ApiResponse<DashBoardDataResponseDouble> getDashboardTop5Products(int myear,int div_code, int depo_code, int cmon,int login_id) {
 		List<DashBoardDataDouble> dataList= dashBoardDao.getDashboardTop5Products(myear,div_code, depo_code,cmon, login_id);
 		List<DashBoardDataResponseDouble> saleList = getResponseDataDouble(dataList);
-		String title=getMonth("Top 5 Products for ",myear,cmon);
+		String title=getMonth("Top 5 Products Sale for ",myear,cmon);
 
 		
 		int size=dataList.size();

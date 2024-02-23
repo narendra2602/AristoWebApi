@@ -1,25 +1,21 @@
-package com.aristowebapi.response;
-
-import java.util.Map;
+package com.aristowebapi.request;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
 @NoArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+public class ChangePasswordRequest {
 
-public class MktRepo1Response {
 	
-	private int code;
-	private String name;
-	private String pack;
-	private int color;
-	private Map<String,Long> branches;
+	private int userId;
+	private String oldPassword;
+	private String newPassword;
 	
-
-
 }

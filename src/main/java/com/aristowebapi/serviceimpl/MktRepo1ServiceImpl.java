@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.aristowebapi.constant.AristoWebLogMsgConstant;
+import com.aristowebapi.constant.AristoWebMessageConstant;
 import com.aristowebapi.dao.MktRepo1Dao;
 import com.aristowebapi.dto.BranchMasterDto;
 import com.aristowebapi.dto.DashBoardData;
@@ -26,9 +27,13 @@ import com.aristowebapi.utility.AppCalculationUtils;
 @Service
 public class MktRepo1ServiceImpl implements MktRepo1Service{
 	
+	
 	Logger logger = LoggerFactory.getLogger(MktRepo1ServiceImpl.class);
 	@Autowired
 	private MktRepo1Dao mktRepo1Dao;
+	
+	@Autowired
+	private AristoWebMessageConstant  aristoWebMessageConstant;
 	
 	public String lupdate="";
 
@@ -82,6 +87,8 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 		
 		
 		StringBuilder title=new StringBuilder();
+		System.out.println(aristoWebMessageConstant.divisionMap.get(String.valueOf(data.getDiv_code())));
+		title.append(aristoWebMessageConstant.divisionMap.get(String.valueOf(data.getDiv_code())));
 		title.append(request.getDepoCode()==0?"All India ":mktRepo1Dao.getBranch(request.getDepoCode())+" Branch: ");
 		title.append(request.getRepType()==1?" Product/ ":" Group/ ");
 		title.append(request.getUv()==1?"Unit Wise ":"Value Wise ");
@@ -143,7 +150,9 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 		}
 		
 		
+		
 		StringBuilder title=new StringBuilder();
+		title.append(aristoWebMessageConstant.divisionMap.get(String.valueOf(data.getDiv_code())));
 		title.append(request.getDepoCode()==0?"All India ":mktRepo1Dao.getBranch(request.getDepoCode())+" Branch: ");
 		title.append(request.getRepType()==1?" Product/ ":" Group/ ");
 		title.append(request.getUv()==1?"Unit Wise ":"Value Wise ");
@@ -259,8 +268,8 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 			}
 			if(pcode!=data.getMcode())
 			{
-				response.setPcode(pcode);
-				response.setPname(pname);
+				response.setCode(pcode);
+				response.setName(pname);
 				response.setPack(pack);
 				z=k;
 				for(int b=k;b<sz;b++)
@@ -288,8 +297,8 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 
 			if(mgrp!=data.getMgrp())
 			{
-				response.setPcode(mgrp);
-				response.setPname(gname);
+				response.setCode(mgrp);
+				response.setName(gname);
 				response.setPack("");
 				for(int b=z;b<sz;b++)
 				{
@@ -387,8 +396,8 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 		
 		
 		response=new MktRepo1Response();
-		response.setPcode(pcode);
-		response.setPname(pname);
+		response.setCode(pcode);
+		response.setName(pname);
 		response.setPack(pack);
 		z=k;
 		for(int b=k;b<sz;b++)
@@ -405,8 +414,8 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 		
 		branches=new LinkedHashMap();
 		response=new MktRepo1Response();
-		response.setPcode(mgrp);
-		response.setPname(gname);
+		response.setCode(mgrp);
+		response.setName(gname);
 		response.setPack("");
 		for(int b=z;b<sz;b++)
 		{
@@ -430,8 +439,8 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 
 		branches.putAll(total);
 		response=new MktRepo1Response();
-		response.setPcode(0);
-		response.setPname("Grand Total");
+		response.setCode(0);
+		response.setName("Grand Total");
 		response.setPack("");
 		response.setBranches(branches);
 		response.setColor(2);
@@ -493,7 +502,7 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 			if(data.getDepo_code()==0)
 				continue;
 			
-			System.out.println("sale val "+data.getSales_val()+" target "+data.getNet_u()+" name "+data.getMname());
+			
 			if(first)
 			{
 				pcode=data.getMcode();
@@ -530,16 +539,16 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 				if(request.getOptType()==8)
 				{
 					if(request.getUv()==1)
-						columnTotal=horizontalTarqty!=0?AppCalculationUtils.calculateAch(horizontalSalqty, horizontalTarqty):0;
+						columnTotal=AppCalculationUtils.calculateAch(horizontalSalqty, horizontalTarqty);
 						else
-						columnTotal=horizontalTarval!=0?AppCalculationUtils.calculateAch(horizontalSalval, horizontalTarval):0;
+						columnTotal=AppCalculationUtils.calculateAch(horizontalSalval, horizontalTarval);
 				}
 				else if(request.getOptType()==9)
 				{
 					if(request.getUv()==1)
-						columnTotal=horizontalTarqty!=0?AppCalculationUtils.calculateGth(horizontalSalqty, horizontalTarqty):0;
+						columnTotal=AppCalculationUtils.calculateGth(horizontalSalqty, horizontalTarqty);
 						else
-						columnTotal=horizontalTarval!=0?AppCalculationUtils.calculateGth(horizontalSalval, horizontalTarval):0;
+						columnTotal=AppCalculationUtils.calculateGth(horizontalSalval, horizontalTarval);
 				}
 				branches.put("TOTAL", columnTotal);
 				response.setBranches(branches);
@@ -577,11 +586,13 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 				for(int b=0;b<sz;b++)
 				{
 					BranchMasterDto bm=branchData.get(b);
-					double sale = grVerticalSalval.get(bm.getDepo_name());
-					double target = grVerticalTarval.get(bm.getDepo_name());
+//					double sale = grVerticalSalval.get(bm.getDepo_name());
+//					double target = grVerticalTarval.get(bm.getDepo_name());
+					double sale = grVerticalSalval.get(bm.getDepo_name())==null?0:grVerticalSalval.get(bm.getDepo_name());
+					double target = grVerticalTarval.get(bm.getDepo_name())==null?0:grVerticalTarval.get(bm.getDepo_name());
 //					System.out.println("sale "+sale+" target "+target+" branch "+bm.getDepo_name()+" group "+gname+" ach "+AppCalculationUtils.calculateAch(sale, target));
-					gsale += grVerticalSalval.get(bm.getDepo_name());
-					gtarget += grVerticalTarval.get(bm.getDepo_name());
+////					gsale += grVerticalSalval.get(bm.getDepo_name());
+////					gtarget += grVerticalTarval.get(bm.getDepo_name());
 					if(request.getOptType()==8)
 						group.put(bm.getDepo_name(), AppCalculationUtils.calculateAch(sale, target));
 					else
@@ -589,8 +600,11 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 
 				}
 
-				groupColumnTotal=gtarget!=0?AppCalculationUtils.calculateAch(gsale, gtarget):0;
-				
+				if(request.getOptType()==8)
+					groupColumnTotal=AppCalculationUtils.calculateAch(gsale, gtarget);
+				else
+					groupColumnTotal=AppCalculationUtils.calculateGth(gsale, gtarget);
+					
 				group.put("TOTAL", groupColumnTotal);
 
 				branches.putAll(group);
@@ -727,17 +741,17 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 		if(request.getOptType()==8)
 		{
 			if(request.getUv()==1)
-					columnTotal=horizontalTarqty!=0?AppCalculationUtils.calculateAch(horizontalSalqty, horizontalTarqty):0;
+					columnTotal=AppCalculationUtils.calculateAch(horizontalSalqty, horizontalTarqty);
 				else
-					columnTotal=horizontalTarval!=0?AppCalculationUtils.calculateAch(horizontalSalval, horizontalTarval):0;
+					columnTotal=AppCalculationUtils.calculateAch(horizontalSalval, horizontalTarval);
 		}
 
 		else if(request.getOptType()==9)
 		{
 			if(request.getUv()==1)
-				columnTotal=horizontalTarqty!=0?AppCalculationUtils.calculateGth(horizontalSalqty, horizontalTarqty):0;
+				columnTotal=AppCalculationUtils.calculateGth(horizontalSalqty, horizontalTarqty);
 				else
-					columnTotal=horizontalTarval!=0?AppCalculationUtils.calculateGth(horizontalSalval, horizontalTarval):0;
+				columnTotal=AppCalculationUtils.calculateGth(horizontalSalval, horizontalTarval);
 		}
 
 		branches.put("TOTAL", columnTotal);
@@ -773,9 +787,9 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 		}
 
 		if(request.getOptType()==8)
-			groupColumnTotal=gtarget!=0?AppCalculationUtils.calculateAch(gsale, gtarget):0;
+			groupColumnTotal=AppCalculationUtils.calculateAch(gsale, gtarget);
 		else	
-			groupColumnTotal=gtarget!=0?AppCalculationUtils.calculateGth(gsale, gtarget):0;
+			groupColumnTotal=AppCalculationUtils.calculateGth(gsale, gtarget);
 
 			group.put("TOTAL", groupColumnTotal);
 
@@ -804,9 +818,9 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 		}
 
 		if(request.getOptType()==8)
-			grandColumnTotal=gtarget!=0?AppCalculationUtils.calculateAch(gsale, gtarget):0;
+			grandColumnTotal=AppCalculationUtils.calculateAch(gsale, gtarget);
 		else	
-			grandColumnTotal=gtarget!=0?AppCalculationUtils.calculateGth(gsale, gtarget):0;
+			grandColumnTotal=AppCalculationUtils.calculateGth(gsale, gtarget);
 
 		
 		
@@ -1000,7 +1014,6 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 				BranchMasterDto bm=branchData.get(b);
 				if(bm.getDepo_code()==data.getDepo_code())
 				{
-						System.out.println("depo name "+bm.getDepo_code()+" "+bm.getDepo_name());
 						fs = fsMap.get(bm.getDepo_name());
 						if(fs!=0)
 						 branches.put(data.getDepo_name(), request.getUv()==2?AppCalculationUtils.calculatePmr(data.getSales_val(),fs):AppCalculationUtils.calculatePmr(data.getSales(),fs));

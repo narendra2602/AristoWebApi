@@ -39,12 +39,13 @@ public class HOMarketingRepo1Controller {
 	@GetMapping("${mrc_homarketingrepo1_path}")
 	public ResponseEntity<ApiResponse<HOMarketingRepo1Response>> getHoMarketingRepo1(@RequestBody HOMarketingRepo1Request request,HttpServletRequest req)
 	{
-		logger.info(AristoWebLogMsgConstant.HO_MARKEING_REPO1_CONTROLLER,"getHoMarketingRepo1");
+		
 
 		int requestValues[]=getRequestData(req);
 		request.setLoginId(requestValues[0]);
 		request.setUtype(requestValues[1]);
 
+		logger.info(AristoWebLogMsgConstant.HO_MARKEING_REPO1_CONTROLLER,"getHoMarketingRepo1", request.getMyear(),request.getDivCode(),request.getDepoCode(),request.getUtype(),request.getLoginId());
 		
 		return new ResponseEntity<ApiResponse<HOMarketingRepo1Response>>(hOMarketingRepo1Service.getHoMarketingRepo1(request), HttpStatus.OK);
 	

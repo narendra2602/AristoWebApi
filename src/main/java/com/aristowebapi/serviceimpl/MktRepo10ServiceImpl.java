@@ -11,9 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.aristowebapi.constant.AristoWebLogMsgConstant;
+import com.aristowebapi.constant.AristoWebMessageConstant;
 import com.aristowebapi.dao.MktRepo10Dao;
 import com.aristowebapi.dto.MktRepo10;
-import com.aristowebapi.dto.MktRepo9;
 import com.aristowebapi.dto.MonthDto;
 import com.aristowebapi.request.ViewRequest;
 import com.aristowebapi.response.ApiResponse;
@@ -29,11 +29,18 @@ Logger logger = LoggerFactory.getLogger(MktRepo9ServiceImpl.class);
 	@Autowired
 	private MktRepo10Dao mktRepo10Dao;
 
+	@Autowired
+	private AristoWebMessageConstant  aristoWebMessageConstant;
+
+
+	
 	public String lupdate="";
 	
 	private String getTitle(ViewRequest request,MktRepo10 data)
 	{
 		StringBuilder title=new StringBuilder();
+
+		title.append(aristoWebMessageConstant.divisionMap.get(String.valueOf(data.getDiv_code())));
 		title.append(request.getDepoCode()==0?"All India":mktRepo10Dao.getBranch(request.getDepoCode())+" Branch: ");
 		title.append(" Rupees Wise Sales Analysis Trend ");
 		return title.toString();

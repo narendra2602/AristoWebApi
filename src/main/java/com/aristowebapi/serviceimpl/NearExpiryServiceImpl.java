@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.aristowebapi.constant.AristoWebLogMsgConstant;
+import com.aristowebapi.constant.AristoWebMessageConstant;
 import com.aristowebapi.dao.NearExpiryDao;
 import com.aristowebapi.dto.NearExpiry;
 import com.aristowebapi.exception.ApiException;
@@ -17,6 +18,7 @@ import com.aristowebapi.request.NearExpiryRequest;
 import com.aristowebapi.response.ApiResponse;
 import com.aristowebapi.response.NearExpiryResponse;
 import com.aristowebapi.service.NearExpiryService;
+import com.aristowebapi.utility.AppCalculationUtils;
 
 @Service
 public class NearExpiryServiceImpl implements NearExpiryService{
@@ -27,13 +29,18 @@ public class NearExpiryServiceImpl implements NearExpiryService{
 	@Autowired
 	private NearExpiryDao nearExpiryDao;
 
+	@Autowired
+	private AristoWebMessageConstant  aristoWebMessageConstant;
+
+	
 	public String lupdate="";
 	
 	private String getTitle(NearExpiryRequest request,NearExpiry data)
 	{
 		StringBuilder title=new StringBuilder();
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-		
+		title.append(aristoWebMessageConstant.divisionMap.get(String.valueOf(request.getDivCode())));
+
 		title.append("[");
 		title.append(data.getPname());
 		title.append("]- NEAR EXPIRY/EXPIRED BATCHWISE STOCK AS ON : ");
