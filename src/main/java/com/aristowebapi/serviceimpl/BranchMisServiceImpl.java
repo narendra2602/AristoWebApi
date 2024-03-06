@@ -65,7 +65,7 @@ public class BranchMisServiceImpl implements BranchMisservice{
 			size = BranchMisRepo5List.size();
 			logger.info("size of the data is {}",size);
 			
-			System.out.println("rep type and code"+request.getRepType()+" "+request.getCode());
+			
 /*			if(size==0)
 				throw new DataNotFoundException(AristoWebLogMsgConstant.MKT_REPORT_SERVICE_022);
 */				
@@ -80,19 +80,19 @@ public class BranchMisServiceImpl implements BranchMisservice{
 		String reg_name="";
 		String area_name="";
 		String name="";
-		double budget=0.00;
-		double gross=0.00;
-		double credit=0.00;
-		double net=0.00;
-		double abudget=0.00;
-		double agross=0.00;
-		double acredit=0.00;
-		double anet=0.00;
+		long budget=0;
+		long gross=0;
+		long credit=0;
+		long net=0;
+		long abudget=0;
+		long agross=0;
+		long acredit=0;
+		long anet=0;
 
-		double gbudget=0.00;
-		double ggross=0.00;
-		double gcredit=0.00;
-		double gnet=0.00;
+		long gbudget=0;
+		long ggross=0;
+		long gcredit=0;
+		long gnet=0;
 		for (int i=0;i<size;i++)
 		{
 			BranchMisRepo5 data = BranchMisRepo5List.get(i);
@@ -115,10 +115,10 @@ public class BranchMisServiceImpl implements BranchMisservice{
 				saleList.add(getResponse(reg_name,budget,gross,credit,net,1));
 				reg_code=data.getReg_cd();
 				reg_name=data.getReg_name();
-				budget=0.00;
-				gross=0.00;
-				credit=0.00;
-				net=0.00;
+				budget=0;
+				gross=0;
+				credit=0;
+				net=0;
 				
 			}
 
@@ -128,10 +128,10 @@ public class BranchMisServiceImpl implements BranchMisservice{
 				saleList.add(getResponse(area_name,abudget,agross,acredit,anet,2));
 				area_code=data.getArea_cd();
 				area_name=data.getArea_name();
-				abudget=0.00;
-				agross=0.00;
-				acredit=0.00;
-				anet=0.00;
+				abudget=0;
+				agross=0;
+				acredit=0;
+				anet=0;
 				
 			}
 
@@ -173,16 +173,24 @@ public class BranchMisServiceImpl implements BranchMisservice{
 	}
 
 
-	private BranchMisRepo5Response getResponse(String name,double budget,double gross,double credit,double net, int color)
+	private BranchMisRepo5Response getResponse(String name,long budget,long gross,long credit,long net, int color)
 	{
 		BranchMisRepo5Response response=new BranchMisRepo5Response();
 		response.setName(name);;
-		response.setBudget(AppCalculationUtils.roundToDecimal2Places(budget));
+
+/*		response.setBudget(AppCalculationUtils.roundToDecimal2Places(budget));
 		response.setGross(AppCalculationUtils.roundToDecimal2Places(gross));
 		response.setCredit(AppCalculationUtils.roundToDecimal2Places(credit));
 		response.setNet(AppCalculationUtils.roundToDecimal2Places(net));
-		response.setAch(AppCalculationUtils.calculateAch(net, budget));
 		response.setSurdef(AppCalculationUtils.roundToDecimal2Places(net-budget));
+*/
+		response.setBudget(budget);
+		response.setGross(gross);
+		response.setCredit(credit);
+		response.setNet(net);
+		response.setAch(AppCalculationUtils.calculateAch(net, budget));
+		response.setSurdef(net-budget);
+
 		response.setColor(color);
 		return response;
 

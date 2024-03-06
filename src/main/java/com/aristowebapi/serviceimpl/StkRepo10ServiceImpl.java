@@ -246,7 +246,10 @@ public class StkRepo10ServiceImpl implements StkRepo10Service {
 				}
 			}
 			
-		}			
+		}		
+		
+			if(!first)
+			{
 			response=new StkRepo10Response();
 			response.setName(name);
 			z=k;
@@ -292,7 +295,10 @@ public class StkRepo10ServiceImpl implements StkRepo10Service {
 			response.setMonths(months);
 			response.setColor(2);
 			saleList.add(response);		
-		return new ApiResponse<StkRepo10Response>(title.toString(),size,lupdate,saleList);
+			return new ApiResponse<StkRepo10Response>(title.toString(),size,lupdate,saleList);
+		}
+			else 
+				return null;
 	}
 
 }

@@ -62,10 +62,15 @@ public class MktRepo6ServiceImpl implements MktRepo6Service  {
 
 		
 		String title=null;
+		List<MktRepo6> mktRepo6SaleList=null;
 		
-		
-		List<MktRepo6> mktRepo6SaleList=mktRepo6Dao.getWebReportHqTrend(request.getMyear(),request.getDivCode(),request.getDepoCode()
+		if(request.getRepType()==1)
+		mktRepo6SaleList=mktRepo6Dao.getWebReportHqSaleTrend(request.getMyear(),request.getDivCode(),request.getDepoCode()
 				,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId(),request.getGpCode());
+		else
+			mktRepo6SaleList=mktRepo6Dao.getWebReportHqTargetTrend(request.getMyear(),request.getDivCode(),request.getDepoCode()
+					,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId(),request.getGpCode());
+			
 		
 		MktRepo6Response response=null;
 		
@@ -82,11 +87,12 @@ public class MktRepo6ServiceImpl implements MktRepo6Service  {
 		String name="";
 		int fs=0;
 		int gfs=0;
+		System.out.println("size is "+size);
 		for (int i=0;i<size;i++)
 		{
 			
 			MktRepo6 data = mktRepo6SaleList.get(i);
-
+			
 			if(data.getDepo_code()==0)
 				continue;
 

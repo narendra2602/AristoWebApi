@@ -1,12 +1,8 @@
 package com.aristowebapi.utility;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Component;
 
 import com.aristowebapi.constant.AristoWebMessageConstant;
 
@@ -51,12 +47,18 @@ public class AppCalculationUtils {
 	{
 		return (value/100000);
 	}
+	
+	public static double valueDivideByLacInDouble(double value)
+	{
+		double val=0.00;  
+		val=Math.round((value/100000)*100.0)/100.0;
+		return  val;
+	}
 
 	public static double valueDivideByLacs(double value)
 	{
 		return (value/100000);
 	}
-
 
 	public static  double calculateAch(double sale,double target)
 	{

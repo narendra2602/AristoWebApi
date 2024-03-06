@@ -79,12 +79,23 @@ public interface DashBoardDao extends JpaRepository<MktDataDto, Integer> {
 	@Query(value="CALL getHqList(:myear,:div_code,:depo_code,:utype,:login_id);", nativeQuery=true)
 	List<DashBoardData> getHqList(@Param("myear") int myear,@Param("div_code") int div_code,
 			@Param("depo_code") int depo_code,@Param("utype") int utype,@Param("login_id") int login_id);
-	
-	@Query(value="CALL getProductList(:div_code,:utype,:login_id);", nativeQuery=true)
-	List<DashBoardData> getProductList(@Param("div_code") int div_code,	@Param("utype") int utype,@Param("login_id") int login_id);
 
-	@Query(value="CALL getGroupList(:div_code,:utype,:login_id);", nativeQuery=true)
-	List<DashBoardData> getGroupList(@Param("div_code") int div_code,	@Param("utype") int utype,@Param("login_id") int login_id);
+	
+	@Query(value="CALL getRegionList(:myear,:div_code,:depo_code,:utype,:login_id);", nativeQuery=true)
+	List<DashBoardData> getRegionList(@Param("myear") int myear,@Param("div_code") int div_code,
+			@Param("depo_code") int depo_code,@Param("utype") int utype,@Param("login_id") int login_id);
+
+	
+	@Query(value="CALL getAreaList(:myear,:div_code,:depo_code,:utype,:login_id);", nativeQuery=true)
+	List<DashBoardData> getAreaList(@Param("myear") int myear,@Param("div_code") int div_code,
+			@Param("depo_code") int depo_code,@Param("utype") int utype,@Param("login_id") int login_id);
+
+	
+	@Query(value="CALL getProductList(:div_code,:utype,:login_id,:myear);", nativeQuery=true)
+	List<DashBoardData> getProductList(@Param("div_code") int div_code,	@Param("utype") int utype,@Param("login_id") int login_id,@Param("myear") int myear);
+
+	@Query(value="CALL getGroupList(:div_code,:utype,:login_id,:myear);", nativeQuery=true)
+	List<DashBoardData> getGroupList(@Param("div_code") int div_code,	@Param("utype") int utype,@Param("login_id") int login_id,@Param("myear") int myear);
 
 	@Query(value="CALL getStockiestList(:myear,:div_code,:depo_code,:utype,:login_id);", nativeQuery=true)
 	List<StockiestMaster> getStockiestList(@Param("myear") int myear,@Param("div_code") int div_code,

@@ -66,7 +66,7 @@ public class DashBoardChartServiceImpl implements DashBoardService {
 
 				DataSetResponse dataSetResponse = new DataSetResponse();
 				dataSetResponse.setValues(dataValue);
-				dataSetResponse.setDatasetLabel(srno==2?"Sales":srno==1?"Target":"Last Year");
+				dataSetResponse.setDatasetLabel(srno==2?"Net Sale":srno==1?"Budget":"Last Year");
 				dataSetResponse.setDataSetColor(srno==2?aristoWebMessageConstant.sale:srno==1?aristoWebMessageConstant.target:aristoWebMessageConstant.lys);
 				dataSetResponseList.add(dataSetResponse);
 				
@@ -460,8 +460,8 @@ public class DashBoardChartServiceImpl implements DashBoardService {
 	}
 
 	@Override
-	public ApiResponse<DashBoardDataResponse> getProductList(int div_code, int utype, int login_id) {
-		List<DashBoardData> dataList= dashBoardDao.getProductList(div_code,utype, login_id);
+	public ApiResponse<DashBoardDataResponse> getProductList(int div_code, int utype, int login_id, int myear) {
+		List<DashBoardData> dataList= dashBoardDao.getProductList(div_code,utype, login_id,myear);
 		List<DashBoardDataResponse> saleList = getResponseData(dataList);
 		String title="Product List ";
 
@@ -475,8 +475,8 @@ public class DashBoardChartServiceImpl implements DashBoardService {
 	}
 
 	@Override
-	public ApiResponse<DashBoardDataResponse> getGroupList(int div_code, int utype, int login_id) {
-		List<DashBoardData> dataList= dashBoardDao.getGroupList(div_code,utype, login_id);
+	public ApiResponse<DashBoardDataResponse> getGroupList(int div_code, int utype, int login_id,int myear) {
+		List<DashBoardData> dataList= dashBoardDao.getGroupList(div_code,utype, login_id, myear);
 		List<DashBoardDataResponse> saleList = getResponseData(dataList);
 		String title="Group List ";
 
@@ -498,6 +498,36 @@ public class DashBoardChartServiceImpl implements DashBoardService {
 		
 		ApiResponse<StockiestResponse> apiResponse = new ApiResponse<>(title!=null?title.toString():"", size,saleList);
 		return apiResponse;
+	}
+
+	@Override
+	public ApiResponse<DashBoardDataResponse> getRegionList(int myear, int div_code, int depo_code, int utype,int login_id) {
+		List<DashBoardData> dataList= dashBoardDao.getRegionList(myear,div_code, depo_code,utype, login_id);
+		List<DashBoardDataResponse> saleList = getResponseData(dataList);
+		String title="Region List ";
+
+		
+		int size=dataList.size();
+		
+		ApiResponse<DashBoardDataResponse> apiResponse = new ApiResponse<>(title!=null?title.toString():"", size,saleList);
+		return apiResponse;
+
+	}
+
+	@Override
+	public ApiResponse<DashBoardDataResponse> getAreaList(int myear, int div_code, int depo_code, int utype,int login_id) {
+		List<DashBoardData> dataList= dashBoardDao.getAreaList(myear,div_code, depo_code,utype, login_id);
+		List<DashBoardDataResponse> saleList = getResponseData(dataList);
+		String title="Area List ";
+
+		
+		int size=dataList.size();
+		
+		ApiResponse<DashBoardDataResponse> apiResponse = new ApiResponse<>(title!=null?title.toString():"", size,saleList);
+		return apiResponse;
+
+
+		
 	}
 
 }

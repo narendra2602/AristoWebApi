@@ -79,6 +79,7 @@ public class UserInfoService implements UserDetailsService {
         	 if (userDetail!=null)
         	 {
         		 boolean check = encoder.matches(request.getOldPassword(), userDetail.getPassword());
+        		 //boolean check=true;
         		 if(check)
         		 {
         			 userDetail.setPassword(encoder.encode(request.getNewPassword().trim()));

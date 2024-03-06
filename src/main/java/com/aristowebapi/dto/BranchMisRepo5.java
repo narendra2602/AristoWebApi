@@ -12,15 +12,15 @@ public interface BranchMisRepo5 {
 	public String getArea_name();
 	public int getReg_cd();
 	public String getReg_name();
-	public double getBudget();
-	public double getGross();
-	public double getCredit();
-	public double getNet();
+	public long getBudget();
+	public long getGross();
+	public long getCredit();
+	public long getNet();
 	public double getAch();
-	public double getSurdef();
-	public double getLysval();
+	public long getSurdef();
+	public long getLysval();
 	public int getFs();
-	public double getPisale();
+	public long getPisale();
 	public String getSmname();
 	public String getEmname();
 

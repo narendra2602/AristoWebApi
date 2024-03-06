@@ -72,6 +72,8 @@ public class MktRepo4ServiceImpl implements MktRepo4Service{
 		
 		MktRepo4Response response=null;
 		
+		
+		
 		List<MktRepo4Response> saleList = new ArrayList();
 
 		Map<String, Long> sales=null;

@@ -43,7 +43,8 @@ public class MktRepo5ServiceImpl  implements MktRepo5Service  {
 
 		title.append(aristoWebMessageConstant.divisionMap.get(String.valueOf(data.getDiv_code())));
 		title.append(request.getDepoCode()==0?"All India":mktRepo5Dao.getBranch(request.getDepoCode())+" Branch: ");
-		title.append("GROSS/CREDIT/NET SALE From  ");
+		title.append(request.getGpCode()>0?data.getGp_name():"");
+		title.append(" GROSS/CREDIT/NET SALE From  ");
 		title.append(data.getSmname());
 		title.append(" To ");
 		title.append(data.getEmname());
@@ -61,7 +62,7 @@ public class MktRepo5ServiceImpl  implements MktRepo5Service  {
 
 		try {
 			MktRepo5List=mktRepo5Dao.getWebReport24(request.getMyear(),request.getDivCode(),request.getDepoCode()
-					,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId(),request.getRepType());
+					,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId(),request.getGpCode());
 			size = MktRepo5List.size();
 			logger.info("size of the data is {}",size);
 		
@@ -130,7 +131,7 @@ public class MktRepo5ServiceImpl  implements MktRepo5Service  {
 		return apiResponse;
 		
 		} catch (Exception e) {
-			logger.error(AristoWebLogMsgConstant.MKT_REPORT_SERVICE_021,"getMktRepo2");
+			logger.error(AristoWebLogMsgConstant.MKT_REPORT_SERVICE_052,"getMktRepo5");
 			throw new ApiException(e.getMessage());
 		}
 		

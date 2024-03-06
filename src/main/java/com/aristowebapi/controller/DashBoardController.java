@@ -244,21 +244,50 @@ public class DashBoardController {
 	
 	}
 
+	@GetMapping("${mrc_dashboardRegionCombo_path}")
+	public ResponseEntity<ApiResponse<DashBoardDataResponse>> getRegionList(@PathVariable("myear") int myear,@PathVariable("divCode") int divCode,@PathVariable("depoCode") int depoCode,HttpServletRequest request)
+	{
+
+        int loginId=getLoginIdFromToken(request)[0];
+        int uType=getLoginIdFromToken(request)[1];
+
+		logger.info(AristoWebLogMsgConstant.DASH_BOARD_CONTROLLER,"getRegionList", myear,divCode,depoCode,uType,loginId);
+        
+		return new ResponseEntity<ApiResponse<DashBoardDataResponse>>(dashBoardService.getRegionList(myear,divCode,depoCode,uType,loginId), HttpStatus.OK);
+
+	
+	}
+
+	@GetMapping("${mrc_dashboardAreaCombo_path}")
+	public ResponseEntity<ApiResponse<DashBoardDataResponse>> getAreaList(@PathVariable("myear") int myear,@PathVariable("divCode") int divCode,@PathVariable("depoCode") int depoCode,HttpServletRequest request)
+	{
+
+        int loginId=getLoginIdFromToken(request)[0];
+        int uType=getLoginIdFromToken(request)[1];
+
+		logger.info(AristoWebLogMsgConstant.DASH_BOARD_CONTROLLER,"getAreaList", myear,divCode,depoCode,uType,loginId);
+        
+		return new ResponseEntity<ApiResponse<DashBoardDataResponse>>(dashBoardService.getAreaList(myear,divCode,depoCode,uType,loginId), HttpStatus.OK);
+
+	
+	}
+
+	
 	@GetMapping("${mrc_dashboardProductCombo_path}")
-	public ResponseEntity<ApiResponse<DashBoardDataResponse>> getProductList(@PathVariable("divCode") int divCode,HttpServletRequest request)
+	public ResponseEntity<ApiResponse<DashBoardDataResponse>> getProductList(@PathVariable("divCode") int divCode,@PathVariable("myear") int myear,HttpServletRequest request)
 	{
 
         int loginId=getLoginIdFromToken(request)[0];
         int uType=getLoginIdFromToken(request)[1];
 
 		logger.info(AristoWebLogMsgConstant.DASH_BOARD_CONTROLLER,"getProductList");
-        
-		return new ResponseEntity<ApiResponse<DashBoardDataResponse>>(dashBoardService.getProductList(divCode,uType,loginId), HttpStatus.OK);
+        System.out.println("product list parameteres "+divCode+","+uType+","+loginId+","+myear);
+		return new ResponseEntity<ApiResponse<DashBoardDataResponse>>(dashBoardService.getProductList(divCode,uType,loginId,myear), HttpStatus.OK);
 
 	}
 
 	@GetMapping("${mrc_dashboardGroupCombo_path}")
-	public ResponseEntity<ApiResponse<DashBoardDataResponse>> getGroupList(@PathVariable("divCode") int divCode,HttpServletRequest request)
+	public ResponseEntity<ApiResponse<DashBoardDataResponse>> getGroupList(@PathVariable("divCode") int divCode,@PathVariable("myear") int myear,HttpServletRequest request)
 	{
 
         int loginId=getLoginIdFromToken(request)[0];
@@ -266,7 +295,7 @@ public class DashBoardController {
 
 		logger.info(AristoWebLogMsgConstant.DASH_BOARD_CONTROLLER,"getGroupList");
 
-		return new ResponseEntity<ApiResponse<DashBoardDataResponse>>(dashBoardService.getGroupList(divCode,uType,loginId), HttpStatus.OK);
+		return new ResponseEntity<ApiResponse<DashBoardDataResponse>>(dashBoardService.getGroupList(divCode,uType,loginId,myear), HttpStatus.OK);
 	
 	}
 	

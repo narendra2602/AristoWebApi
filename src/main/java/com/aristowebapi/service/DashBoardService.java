@@ -32,10 +32,14 @@ public interface DashBoardService {
 
 	ApiResponse<DashBoardDataResponse> getBranchList(int loginId);
 	ApiResponse<DashBoardDataResponse> getHqList(int myear,int div_code, int depo_code,int utype,int login_id);
+	ApiResponse<DashBoardDataResponse> getRegionList(int myear,int div_code, int depo_code,int utype,int login_id);
+	ApiResponse<DashBoardDataResponse> getAreaList(int myear,int div_code, int depo_code,int utype,int login_id);
+
 	
-	ApiResponse<DashBoardDataResponse> getProductList(int div_code,int utype,int login_id);
 	
-	ApiResponse<DashBoardDataResponse> getGroupList(int div_code,int utype,int login_id);
+	ApiResponse<DashBoardDataResponse> getProductList(int div_code,int utype,int login_id,int myear);
+	
+	ApiResponse<DashBoardDataResponse> getGroupList(int div_code,int utype,int login_id,int myear);
 
 	ApiResponse<StockiestResponse> getStockiestList(int myear,int div_code, int depo_code,int utype,int login_id);
 	

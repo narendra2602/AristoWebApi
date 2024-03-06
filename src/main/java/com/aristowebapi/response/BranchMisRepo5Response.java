@@ -14,12 +14,12 @@ import lombok.NoArgsConstructor;
 public class BranchMisRepo5Response {
 	
 	private String name;
-	private double budget;
-	private double gross;
-	private double credit;
-	private double net;
+	private long budget;
+	private long gross;
+	private long credit;
+	private long net;
 	private double ach;
-	private double surdef;
+	private long surdef;
 	private int color;
 
 }

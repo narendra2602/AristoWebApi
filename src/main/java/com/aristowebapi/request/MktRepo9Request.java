@@ -14,5 +14,6 @@ import lombok.NoArgsConstructor;
 public class MktRepo9Request extends ViewRequest{
 	private int gpCode;
 	private int hqCode;
+	private int uv;
 
 }

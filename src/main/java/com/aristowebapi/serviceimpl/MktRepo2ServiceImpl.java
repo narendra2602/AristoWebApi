@@ -61,7 +61,7 @@ public class MktRepo2ServiceImpl implements MktRepo2Service {
 		int size = 0;
 
 		try {
-			System.out.println("utype kya hai "+request.getUtype()+" depo "+request.getDepoCode());
+			
 			
 			if(request.getUtype()==2 && request.getDepoCode()==0)
 				{

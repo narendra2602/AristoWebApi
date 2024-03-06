@@ -40,6 +40,11 @@ public class MktRepo7ServiceImpl implements  MktRepo7Service{
 
 		title.append(aristoWebMessageConstant.divisionMap.get(String.valueOf(data.getDiv_code())));
 		title.append(request.getDepoCode()==0?"All India ":mktRepo7Dao.getBranch(request.getDepoCode())+" Branch: ");
+		if(request.getDepoCode()>0)
+			title.append(request.getRepType()==0?" H.Q WISE ":request.getRepType()==1?" REGION WISE ":request.getRepType()==2?" AREA WISE ":" ");
+		else
+			title.append("BRANCH WISE ");
+			
 		title.append("EXPIRY/BREAKAGE/SALABLE From  ");
 		title.append(data.getSmname());
 		title.append(" To ");

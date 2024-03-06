@@ -26,12 +26,13 @@ public class AristoWebLogMsgConstant {
 	public static final String MKT_REPORT_SERVICE_032="MktRepo3ServiceImpl:: {} No data available. Kindly check parameters of the stored procedure ::web_mkt_2all";
 
 
-	public static final String MKT_REPORT_CONTROLLER_04="MktRepo4Controller:: {} method execution started, myear : {} , div_code: {} , depo_code: {} , user_type: {} , login_id: {}";
+	public static final String MKT_REPORT_CONTROLLER_04="MktRepo4Controller:: {} method execution started, myear : {} , div_code: {} , depo_code: {} , user_type: {} , login_id: {}, gp_code: {}";
 	public static final String MKT_REPORT_SERVICE_04="MktRepo4ServiceImpl:: {} method execution started";
 
 	
-	public static final String MKT_REPORT_CONTROLLER_05="MktRepo5Controller:: {} method execution started, myear : {} , div_code: {} , depo_code: {} , user_type: {} , login_id: {}";
+	public static final String MKT_REPORT_CONTROLLER_05="MktRepo5Controller:: {} method execution started, myear : {} , div_code: {} , depo_code: {} , user_type: {} , login_id: {}, gp_code: {}";
 	public static final String MKT_REPORT_SERVICE_05="MktRepo5ServiceImpl:: {} method execution started";
+	public static final String MKT_REPORT_SERVICE_052="MktRepo5ServiceImpl:: {} No data available. Kindly check parameters of the stored procedure ::web_mkt_24new";
 
 	
 	public static final String MKT_REPORT_CONTROLLER_06="MktRepo6Controller:: {} method execution started, myear : {} , div_code: {} , depo_code: {} , user_type: {} , login_id: {}";

@@ -50,7 +50,7 @@ public class LoginController {
 	}
 
 	
-	@PostMapping("/loginmenu")
+	@GetMapping("/loginmenu")
 	public ResponseEntity<ApiResponse<ReportTabResponse>> getMenuList(HttpServletRequest request)
 	{
 		

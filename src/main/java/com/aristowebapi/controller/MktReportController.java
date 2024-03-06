@@ -180,7 +180,8 @@ public class MktReportController {
 		request.setLoginId(requestValues[0]);
 		request.setUtype(requestValues[1]);
 
-		logger.info(AristoWebLogMsgConstant.MKT_REPORT_CONTROLLER_04,"getMktRepo4", request.getMyear(),request.getDivCode(),request.getDepoCode(),request.getUtype(),request.getLoginId());
+		System.out.println("in report 4 gp code "+request.getGpCode());
+		logger.info(AristoWebLogMsgConstant.MKT_REPORT_CONTROLLER_04,"getMktRepo4", request.getMyear(),request.getDivCode(),request.getDepoCode(),request.getUtype(),request.getLoginId(),request.getGpCode());
 		
 		return new ResponseEntity<ApiResponse<MktRepo4Response>>(mktRepo4Service.getMktRepo4(request), HttpStatus.OK);
 	
@@ -192,7 +193,9 @@ public class MktReportController {
 		int requestValues[]=getRequestData(req);
 		request.setLoginId(requestValues[0]);
 		request.setUtype(requestValues[1]);
-		logger.info(AristoWebLogMsgConstant.MKT_REPORT_CONTROLLER_05,"getMktRepo5", request.getMyear(),request.getDivCode(),request.getDepoCode(),request.getUtype(),request.getLoginId());
+		logger.info(AristoWebLogMsgConstant.MKT_REPORT_CONTROLLER_05,"getMktRepo5", request.getMyear(),request.getDivCode(),request.getDepoCode(),request.getUtype(),request.getLoginId(),request.getGpCode());
+
+		System.out.println("in report 5 gp code "+request.getGpCode());
 
 		
 		return new ResponseEntity<ApiResponse<MktRepo5Response>>(mktRepo5Service.getMktRepo5(request), HttpStatus.OK);

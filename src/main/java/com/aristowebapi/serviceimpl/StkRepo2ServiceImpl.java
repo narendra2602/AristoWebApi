@@ -247,7 +247,10 @@ public class StkRepo2ServiceImpl implements StkRepo2Service{
 				}
 			}
 			
-		}			
+		}		
+		
+			if(!first)
+			{
 			response=new StkRepo2Response();
 			response.setName("");
 			z=k;
@@ -294,7 +297,10 @@ public class StkRepo2ServiceImpl implements StkRepo2Service{
 			response.setMonths(months);
 			response.setColor(2);
 			saleList.add(response);		
-		return new ApiResponse<StkRepo2Response>(title.toString(),size,lupdate,saleList);
+			return new ApiResponse<StkRepo2Response>(title.toString(),size,lupdate,saleList);
+			}
+			else 
+			return null;
 
 	}
 	

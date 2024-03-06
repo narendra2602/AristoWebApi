@@ -138,11 +138,12 @@ public class StkRepo9ServiceImpl implements StkRepo9Service {
 			response.setColor(2);
 
 			saleList.add(response);
+			ApiResponse<StkRepo9Response> apiResponse = new ApiResponse<>(title!=null?title.toString():"",size,lupdate,saleList);
+			return apiResponse;
 		}
-
+		else 
+			return null;
 		
-		ApiResponse<StkRepo9Response> apiResponse = new ApiResponse<>(title!=null?title.toString():"",size,lupdate,saleList);
-		return apiResponse;
 		
 		} catch (Exception e) {
 			logger.error(AristoWebLogMsgConstant.STK_REPO2_SERVICE_01,"getStkRepo9");

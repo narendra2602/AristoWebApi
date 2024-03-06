@@ -42,7 +42,9 @@ public class NearExpiryController {
         int loginId=getLoginIdFromToken(req)[0];
         int uType=getLoginIdFromToken(req)[1];
 
-        logger.info(AristoWebLogMsgConstant.NEAR_EXPIRY_CONTROLLER,"getExpiryReport", request.getDivCode(),request.getLoginId());
+        request.setLoginId(loginId);
+        
+        logger.info(AristoWebLogMsgConstant.NEAR_EXPIRY_CONTROLLER,"getExpiryReport", request.getDivCode(),loginId);
 		return new ResponseEntity<ApiResponse<NearExpiryResponse>>(nearExpiryService.getExpiryReport(request), HttpStatus.OK);
 	
 	}

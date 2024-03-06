@@ -7,12 +7,12 @@ public interface MktRepo11 {
 	public int getSdepo_code();
 	public int getMnth_code();
 	public String getMnth_abbr();
-	public long getSales_val();
-	public long getTgt_val();
-	public long getLys_val();
+	public double getSales_val();
+	public double getTgt_val();
+	public double getLys_val();
 	public double getAch();
 	public double getGth();
-	public long getSurdef();
+	public double getSurdef();
 	public int getFs();
 
 

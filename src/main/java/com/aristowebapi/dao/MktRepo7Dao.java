@@ -16,6 +16,7 @@ public interface MktRepo7Dao extends JpaRepository<MktDataDto, Integer>{
 			@Param("smon") int smon,@Param("emon") int emon,@Param("utype") int utype,@Param("login_id") int login_id,
 			@Param("rep_type") int rep_type);
 
+	
 	@Query(value = "SELECT depo_name FROM branch_comp where depo_code=:depo", nativeQuery = true)
 	String getBranch(@Param("depo") int depo);
 }

@@ -19,11 +19,14 @@ import org.springframework.web.bind.annotation.RestController;
 import com.aristowebapi.dto.UserInfo;
 import com.aristowebapi.request.ChangePasswordRequest;
 import com.aristowebapi.request.LoginRequest;
+import com.aristowebapi.response.ApiResponse;
+import com.aristowebapi.response.MktRepo11Response;
 import com.aristowebapi.response.TokenResponse;
 import com.aristowebapi.service.TokenBlacklist;
 import com.aristowebapi.serviceimpl.JwtService;
 import com.aristowebapi.serviceimpl.UserInfoDetails;
 import com.aristowebapi.serviceimpl.UserInfoService;
+import com.aristowebapi.utility.AppRequestParameterUtils;
 
 
 @CrossOrigin
@@ -42,6 +45,10 @@ public class UserController {
 
     @Autowired
     private TokenBlacklist tokenBlacklist;
+    
+	@Autowired
+	private AppRequestParameterUtils appRequestParameterUtils;
+
     
     @GetMapping("/welcome") 
     public String welcome() { 
@@ -69,12 +76,18 @@ public class UserController {
 
     
     @PostMapping("/changePassword") 
-    public ResponseEntity<String> changePassword(@RequestBody ChangePasswordRequest request) { 
-        if(service.changePassword(request)==1)
+    public ResponseEntity<String> changePassword(@RequestBody ChangePasswordRequest request,HttpServletRequest req) { 
+
+    	int requestValues[]=getRequestData(req);
+        int loginId=requestValues[0]; 
+
+        request.setUserId(loginId);
+        //request.setUserId(5157);
+
+    	if(service.changePassword(request)==1)
         	return ResponseEntity.ok("Password Changes successfully");
         else
         	return ResponseEntity.ok("Error while Password Changed");
-        	 
     } 
     
     @GetMapping("/user/userProfile") 
@@ -132,4 +145,13 @@ public class UserController {
         // If the Authorization header is not valid, return null
         return null;
     }
+    
+    
+	private int[] getRequestData(HttpServletRequest req)
+	{
+		String authHeader = req.getHeader("Authorization");
+		int requestValues[]=appRequestParameterUtils.getRequestBodyParameters(authHeader);
+		return requestValues;
+	}
+
 } 

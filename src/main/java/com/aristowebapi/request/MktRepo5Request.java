@@ -13,6 +13,6 @@ import lombok.NoArgsConstructor;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 
 public class MktRepo5Request extends ViewRequest {
-	private int repType;
+	private int gpCode;
 
 }

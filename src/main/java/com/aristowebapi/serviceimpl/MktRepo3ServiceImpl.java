@@ -67,6 +67,7 @@ public class MktRepo3ServiceImpl implements MktRepo3Service {
 		 mktRepo3List=mktRepo3Dao.getWebReportTargetTrend(request.getMyear(),request.getDivCode(),request.getDepoCode()
 				,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId(),request.getRepType(),request.getHqCode());
 		}
+		System.out.println("value of uv in repor 3"+request.getUv());
 		
 		MktRepo3Response response=null;
 		List<MktRepo3Response> saleList = new ArrayList();

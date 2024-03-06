@@ -21,9 +21,10 @@ public interface MktRepo9 {
 	public String getEmname();
 	public String getGp_name();
 	public long getIncr_val();
-	public int getSqty();
-	public int getTqty();
-	public int getLqty();
-	public int getIncr_qty();
+	public long getSqty();
+	public long getTqty();
+	public long getLqty();
+	public long getIncr_qty();
+	public String getBrname();
 
 }

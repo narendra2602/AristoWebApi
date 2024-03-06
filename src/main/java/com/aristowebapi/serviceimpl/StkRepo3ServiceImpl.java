@@ -86,7 +86,7 @@ public class StkRepo3ServiceImpl implements StkRepo3Service{
 		
 		List<StkRepo3> stkRepo3SaleList=stkRepo3Dao.getStockiestRepo3(request.getMyear(),request.getDivCode(),request.getDepoCode()
 				,request.getSmon(),request.getEmon(),request.getRepType(),request.getLoginId());
-		System.out.println("depo code "+request.getDepoCode());
+		
 		
 		StkRepo3Response response=null;
 		
@@ -109,7 +109,7 @@ public class StkRepo3ServiceImpl implements StkRepo3Service{
 			{
 				response=new StkRepo3Response();
 				partyCode=data.getSprt_cd();
-				partyName=data.getMac_name();
+				partyName=data.getMac_name()+","+data.getMcity();
 				terr_code=data.getTerr_cd();
 				ter_name=data.getTer_name();
 				months=new LinkedHashMap();
@@ -136,7 +136,7 @@ public class StkRepo3ServiceImpl implements StkRepo3Service{
 				
 				saleList.add(response);
 				partyCode=data.getSprt_cd();
-				partyName=data.getMac_name();
+				partyName=data.getMac_name()+","+data.getMcity();
 				columnTotal=0;
 				
 				k=0;
@@ -241,7 +241,9 @@ public class StkRepo3ServiceImpl implements StkRepo3Service{
 				}
 			}
 			
-		}			
+		}		
+			if(!first)
+			{
 			response=new StkRepo3Response();
 			response.setName("");
 			z=k;
@@ -259,12 +261,12 @@ public class StkRepo3ServiceImpl implements StkRepo3Service{
 			
 			months=new LinkedHashMap();
 			response=new StkRepo3Response();
-			response.setName("");
+			response.setName(ter_name);
 			for(int b=z;b<sz;b++)
 			{
 				MonthDto mn=monthData.get(b);
 				group.put(mn.getMnth_abbr(), 0L);
-				total.put(mn.getMnth_abbr(), 0L);
+//				total.put(mn.getMnth_abbr(), 0L);
 				z++;
 			}
 
@@ -279,17 +281,19 @@ public class StkRepo3ServiceImpl implements StkRepo3Service{
 			grandColumnTotal = total.values().stream().mapToLong(d -> d).sum();
 			
 			months=new LinkedHashMap();
-			total.put("GRAND TOTAL", grandColumnTotal);
+			total.put("TOTAL", grandColumnTotal);
 
 
 			months.putAll(total);
 			response=new StkRepo3Response();
-			response.setName("Total");
+			response.setName("Grand Total");
 			response.setMonths(months);
 			response.setColor(2);
 			saleList.add(response);		
-		return new ApiResponse<StkRepo3Response>(title.toString(),size,lupdate,saleList);
-
+			return new ApiResponse<StkRepo3Response>(title.toString(),size,lupdate,saleList);
+			}
+			else
+			return null;	
 	}
 	
 	

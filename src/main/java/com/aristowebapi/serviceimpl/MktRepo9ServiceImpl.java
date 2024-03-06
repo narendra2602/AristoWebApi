@@ -40,9 +40,16 @@ public class MktRepo9ServiceImpl  implements MktRepo9Service{
 	{
 		StringBuilder title=new StringBuilder();
 		title.append(aristoWebMessageConstant.divisionMap.get(String.valueOf(data.getDiv_code())));
-		title.append(request.getDepoCode()==0?"All India":mktRepo9Dao.getBranch(request.getDepoCode())+" Branch: ");
+		if(request.getHqCode()==0)
+			title.append(request.getDepoCode()==0?"All India":mktRepo9Dao.getBranch(request.getDepoCode())+" Branch: ");
+		else
+		{
+			title.append(mktRepo9Dao.getBranch(request.getDepoCode())+" Branch: ");
+			title.append(" ");
+			title.append(data.getBrname());
+		}	
 		title.append(request.getGpCode()!=0?" Group -> "+data.getGp_name():"");
-		title.append(" Trend ");
+		title.append(request.getUv()==1?" Unit Wise Trend ":" Value Wise Trend ");
 		return title.toString();
 
 	}
@@ -205,16 +212,31 @@ public class MktRepo9ServiceImpl  implements MktRepo9Service{
 				MonthDto mn=monthData.get(b);
 				if(mn.getMnth_code()==data.getMnth_code())
 				{
-					fs.put(data.getMnth_abbr(), data.getFs());
-					tgt.put(data.getMnth_abbr(), data.getTgt_val());
-					sales.put(data.getMnth_abbr(), data.getSales_val());
-					lys.put(data.getMnth_abbr(), data.getLys_val());
-					incr.put(data.getMnth_abbr(), data.getIncr_val());
-					ach.put(data.getMnth_abbr(), AppCalculationUtils.calculateAch(data.getSales_val(), data.getTgt_val()));
-					gth.put(data.getMnth_abbr(), AppCalculationUtils.calculateGth(data.getSales_val(), data.getLys_val()));
-					pmr.put(data.getMnth_abbr(), AppCalculationUtils.calculatePmr(data.getSales_val(), data.getFs()));
-					sd.put(data.getMnth_abbr(), data.getSales_val()-data.getTgt_val());
-
+					if(request.getUv()==1)
+					{
+						fs.put(data.getMnth_abbr(), data.getFs());
+						tgt.put(data.getMnth_abbr(), data.getTqty());
+						sales.put(data.getMnth_abbr(), data.getSqty());
+						lys.put(data.getMnth_abbr(), data.getLqty());
+						incr.put(data.getMnth_abbr(), data.getIncr_qty());
+						ach.put(data.getMnth_abbr(), AppCalculationUtils.calculateAch(data.getSqty(), data.getTqty()));
+						gth.put(data.getMnth_abbr(), AppCalculationUtils.calculateGth(data.getSqty(), data.getTqty()));
+						pmr.put(data.getMnth_abbr(), AppCalculationUtils.calculatePmr(data.getSqty(), data.getFs()));
+						sd.put(data.getMnth_abbr(), data.getSqty()-data.getTqty());
+					}
+					else
+					{	
+						fs.put(data.getMnth_abbr(), data.getFs());
+						tgt.put(data.getMnth_abbr(), data.getTgt_val());
+						sales.put(data.getMnth_abbr(), data.getSales_val());
+						lys.put(data.getMnth_abbr(), data.getLys_val());
+						incr.put(data.getMnth_abbr(), data.getIncr_val());
+						ach.put(data.getMnth_abbr(), AppCalculationUtils.calculateAch(data.getSales_val(), data.getTgt_val()));
+						gth.put(data.getMnth_abbr(), AppCalculationUtils.calculateGth(data.getSales_val(), data.getLys_val()));
+						pmr.put(data.getMnth_abbr(), AppCalculationUtils.calculatePmr(data.getSales_val(), data.getFs()));
+						sd.put(data.getMnth_abbr(), data.getSales_val()-data.getTgt_val());
+					}	
+					
 					
 					if(total.containsKey(data.getMnth_abbr()))
 					{

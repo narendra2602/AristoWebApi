@@ -178,7 +178,10 @@ public class LoginServiceImpl implements LoginService {
 			}
 			
 			  reportMenuResponse = new ReportMenuResponse();
-			  reportMenuResponse.setRepoId(reportMenuDto.getRepo_id());
+			  if(tabId == 12 || tabId == 13 || tabId == 14 )
+				  reportMenuResponse.setRepoId(reportMenuDto.getRepo_id().substring(1));
+			  else
+				  reportMenuResponse.setRepoId(reportMenuDto.getRepo_id());
 			  reportMenuResponse.setRepoName(reportMenuDto.getRepo_name());
 			  reportResponseList.add(reportMenuResponse);
 			  

@@ -14,5 +14,6 @@ import lombok.NoArgsConstructor;
 public class MktRepo6Request extends ViewRequest{
 	
 	private int gpCode;
+	private int repType;
 
 }
