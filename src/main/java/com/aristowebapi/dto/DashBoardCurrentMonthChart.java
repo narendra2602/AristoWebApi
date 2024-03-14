@@ -1,6 +1,6 @@
 package com.aristowebapi.dto;
 
-public interface DashBoardCurrentMonthChart {
+public interface DashBoardCurrentMonthChart { 
 	
 	public double getSaleval();
 	public double getTargetval();

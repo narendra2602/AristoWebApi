@@ -11,10 +11,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class MktRepo3Response {
+public class MktRepo3Response { 
 	
-	private int pcode;
-	private String pname;
+	private int code;
+	private String name;
 	private String pack;
 	private int color;
 	private Map<String,Long> months;

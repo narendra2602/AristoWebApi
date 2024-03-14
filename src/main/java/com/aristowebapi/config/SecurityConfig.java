@@ -22,7 +22,7 @@ import com.aristowebapi.serviceimpl.UserInfoService;
   
 @Configuration
 @EnableWebSecurity
-
+ 
 public class SecurityConfig { 
   
     @Autowired

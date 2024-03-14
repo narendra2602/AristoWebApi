@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 
-public class DailyReportResponse {
+public class DailyReportResponse {  
 	
 	private int br;
 	private String branch;

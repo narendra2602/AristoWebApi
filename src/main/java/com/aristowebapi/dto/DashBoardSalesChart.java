@@ -1,6 +1,6 @@
 package com.aristowebapi.dto;
 
-public interface DashBoardSalesChart {
+public interface DashBoardSalesChart { 
 
 	
 	public String getMnth_abbr();

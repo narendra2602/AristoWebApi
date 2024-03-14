@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 
-public class MktRepo11Request extends ViewRequest{
+public class MktRepo11Request extends ViewRequest{ 
 
 	private int hqCode;
 	

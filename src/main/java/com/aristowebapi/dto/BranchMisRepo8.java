@@ -1,6 +1,6 @@
 package com.aristowebapi.dto;
 
-public interface BranchMisRepo8 {
+public interface BranchMisRepo8 { 
 	
 	public int getMnth_code();
 	public String getMnth_abbr();

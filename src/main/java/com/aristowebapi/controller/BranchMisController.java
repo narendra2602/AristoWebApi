@@ -25,7 +25,7 @@ import com.aristowebapi.service.BranchMisservice;
 import com.aristowebapi.utility.AppRequestParameterUtils;
 
 @RestController
-@CrossOrigin
+@CrossOrigin 
 @RequestMapping("${mrc_base_path}")
 public class BranchMisController {
 	

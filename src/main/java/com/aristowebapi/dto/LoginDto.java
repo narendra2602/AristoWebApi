@@ -1,6 +1,6 @@
 package com.aristowebapi.dto;
 
-public interface LoginDto {
+public interface LoginDto { 
 	public int getId();
 	public String getF_name();
 	public int getOpt();

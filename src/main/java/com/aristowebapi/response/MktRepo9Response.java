@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 
-public class MktRepo9Response {
+public class MktRepo9Response { 
 	
 	private String name;
 	private Map<String,Integer> fs;

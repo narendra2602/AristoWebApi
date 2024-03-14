@@ -1,7 +1,7 @@
 package com.aristowebapi.dto;
 
 import java.sql.Time;
-
+ 
 public interface DailyEntryStatus {
 	
 	public int getDepo_code();

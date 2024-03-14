@@ -1,7 +1,7 @@
 package com.aristowebapi.dto;
 
 public interface MktRepo9 {
-	
+	 
 	
 	public int getUtype();
 	public int getDiv_code();

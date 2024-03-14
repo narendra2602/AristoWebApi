@@ -1,7 +1,7 @@
 package com.aristowebapi.dto;
 
 public interface BranchMisRepo5 {
-	
+	 
 	public int getUtype();
 	public int getDiv_code();
 	public int getSdepo_code();

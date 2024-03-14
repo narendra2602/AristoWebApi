@@ -1,5 +1,5 @@
 package com.aristowebapi.constant;
-
+ 
 public class AristoWebLogMsgConstant {
 	
 	private AristoWebLogMsgConstant()
@@ -61,8 +61,8 @@ public class AristoWebLogMsgConstant {
 	public static final String MKT_REPORT_SERVICE_111="MktRepo11ServiceImpl:: {} method occurred exception while fetching data from the database, kindly check store procedure ::web_salesreview_spl";
 
 
-	public static final String DAILY_REPORT_CONTROLLER="DailyReportController {} method execution started, div_code: {} , depo_code: {} , login_id: {}";
-	public static final String DAILY_REPORT_SERVICE="DailyReporterviceImpl:: {} method execution started, div_code: {} , depo_code: {} , login_id: {}";
+	public static final String DAILY_REPORT_CONTROLLER="DailyReportController {} method execution started, div_code: {} , login_id: {}";
+	public static final String DAILY_REPORT_SERVICE="DailyReporterviceImpl:: {} method execution started, div_code: {}  , login_id: {}";
 
 	
 	public static final String BRANCH_MIS_REPORT_5_CONTROLLER="BranchMisRepo5Controller:: {} method execution started, myear : {} , div_code: {} , depo_code: {} , user_type: {} , login_id: {}";
@@ -73,6 +73,11 @@ public class AristoWebLogMsgConstant {
 	public static final String BRANCH_MIS_REPORT_6_SERVICE="BranchMisRepo6ServiceImpl:: {} method execution started";
 	public static final String BRANCH_MIS_REPORT_6_SERVICE_021="BranchMisRepo6ServiceImpl:: {} method occurred exception while fetching data from the database, kindly check store procedure ::getBranchMisRepo6";
 
+	
+	public static final String BRANCH_MKT_REPORT_5_CONTROLLER="BranchMktRepo5Controller:: {} method execution started, myear : {} , div_code: {} , depo_code: {} , user_type: {} , login_id: {}";
+	public static final String BRANCH_MKT_REPORT_5_SERVICE="BranchMktRepo5ServiceImpl:: {} method execution started";
+
+	
 	public static final String BRANCH_MIS_REPORT_8_CONTROLLER="BranchMisRepo8Controller:: {} method execution started, myear : {} , div_code: {} , depo_code: {} , user_type: {} , login_id: {}";
 	public static final String BRANCH_MIS_REPORT_8_SERVICE="BranchMisRepo8ServiceImpl:: {} method execution started";
 	public static final String BRANCH_MIS_REPORT_8_SERVICE_021="BranchMisRepo8ServiceImpl:: {} method occurred exception while fetching data from the database, kindly check store procedure ::getBranchMisRepo8";

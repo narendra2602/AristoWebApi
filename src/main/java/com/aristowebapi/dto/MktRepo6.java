@@ -1,6 +1,6 @@
 package com.aristowebapi.dto;
 
-public interface MktRepo6 {
+public interface MktRepo6 { 
 
 	
 	public int getUtype();

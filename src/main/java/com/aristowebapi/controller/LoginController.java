@@ -71,13 +71,13 @@ public class LoginController {
 	}
 
 	
-	@GetMapping("/loginmessage/{depoCode}")
-	public ResponseEntity<DataUploadMessageResponse> getDataUploadMessage(@PathVariable("depoCode") int depoCode)
+	@GetMapping("/loginmessage")
+	public ResponseEntity<DataUploadMessageResponse> getDataUploadMessage()
 	{
 
 		logger.info(AristoWebLogMsgConstant.LOGIN_CONTROLLER,"getMessage");
 
-		return new ResponseEntity<DataUploadMessageResponse>(loginService.getMessage(depoCode), HttpStatus.OK);
+		return new ResponseEntity<DataUploadMessageResponse>(loginService.getMessage(), HttpStatus.OK);
 	
 	}
 

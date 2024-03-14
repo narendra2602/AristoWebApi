@@ -1,6 +1,6 @@
 package com.aristowebapi.dto;
 
-public interface DashBoardDataDouble {
+public interface DashBoardDataDouble { 
 
 	
 	public String getName();

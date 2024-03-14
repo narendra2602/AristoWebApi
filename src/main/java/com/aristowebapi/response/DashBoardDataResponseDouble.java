@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class DashBoardDataResponseDouble {
+public class DashBoardDataResponseDouble { 
 	
 	
 	private String name;

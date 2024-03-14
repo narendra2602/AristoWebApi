@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class MktRepo8Response {
+public class MktRepo8Response { 
 	private String name;
 	private long gross;
 	private long expiry;

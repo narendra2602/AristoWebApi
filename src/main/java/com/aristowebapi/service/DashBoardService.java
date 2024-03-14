@@ -8,7 +8,7 @@ import com.aristowebapi.response.DashBoardPanelDataResponse;
 import com.aristowebapi.response.StockiestResponse;
 
 public interface DashBoardService {
-	
+	 
 	DashBoardChartResponse getDashboardMainChart(int myear,int div_code, int depo_code,int login_id,int utype);
 	
 	DashBoardChartResponse getDashboardCurrentMonth(int myear,int div_code, int depo_code,int cmon,int login_id,int utype);

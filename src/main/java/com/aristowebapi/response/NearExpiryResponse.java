@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class NearExpiryResponse {
+public class NearExpiryResponse { 
 	
 	private String branchName;
 	private String batchNo;

@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class MktRepo4Response {
+public class MktRepo4Response { 
 
 	private Map<String,Integer> fs;
 	private Map<String,Long> sales;

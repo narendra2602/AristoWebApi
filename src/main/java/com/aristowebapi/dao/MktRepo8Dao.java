@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 import com.aristowebapi.dto.MktDataDto;
 import com.aristowebapi.dto.MktRepo8;
 
-public interface MktRepo8Dao extends JpaRepository<MktDataDto, Integer>{
+public interface MktRepo8Dao extends JpaRepository<MktDataDto, Integer>{ 
 
 	@Query(value="CALL web_report_hqwise_expiry_ratio(:myear,:div_code,:depo_code,:smon,:emon,:utype,:login_id,:rep_type);", nativeQuery=true)
 	List<MktRepo8> getWebReportHqwiseExpiryRatio(@Param("myear") int myear,@Param("div_code") int div_code,@Param("depo_code") int depo_code,

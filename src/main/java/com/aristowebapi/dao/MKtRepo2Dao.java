@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 import com.aristowebapi.dto.MktDataDto;
 import com.aristowebapi.dto.MktRepo2;
 
-public interface MKtRepo2Dao extends JpaRepository<MktDataDto, Integer> {
+public interface MKtRepo2Dao extends JpaRepository<MktDataDto, Integer> { 
 	
 // user type2 for all depo	
 	@Query(value="CALL web_mkt_2all(:myear,:div_code,:depo_code,:smon,:emon,:utype,:login_id,:rep_type);", nativeQuery=true)

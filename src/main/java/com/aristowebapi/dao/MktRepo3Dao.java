@@ -10,7 +10,7 @@ import com.aristowebapi.dto.MktDataDto;
 import com.aristowebapi.dto.MktRepo3;
 import com.aristowebapi.dto.MonthDto;
 
-public interface MktRepo3Dao extends JpaRepository<MktDataDto, Integer> {
+public interface MktRepo3Dao extends JpaRepository<MktDataDto, Integer> { 
 	
 	@Query(value="CALL web_report_net_trend(:myear,:div_code,:depo_code,:smon,:emon,:utype,:login_id,:rep_type,:hq_code);", nativeQuery=true)
 	List<MktRepo3> getWebReportNetTrend(@Param("myear") int myear,@Param("div_code") int div_code,@Param("depo_code") int depo_code,

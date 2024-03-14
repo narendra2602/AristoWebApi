@@ -7,7 +7,7 @@ import com.aristowebapi.serviceimpl.JwtService;
 
 @Component
 public class AppRequestParameterUtils {
-	
+	 
 	@Autowired
 	private  JwtService jwtService;
 	

@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.hibernate.cache.spi.support.RegionNameQualifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +27,8 @@ import com.aristowebapi.response.DailyStatusResponse;
 import com.aristowebapi.service.DailyReportService;
 import com.aristowebapi.utility.AppCalculationUtils;
 
+
+
 @Service
 public class DailyReportServiceImpl  implements DailyReportService{
 
@@ -44,10 +45,11 @@ public class DailyReportServiceImpl  implements DailyReportService{
 		StringBuilder title=new StringBuilder();
 		title.append(aristoWebMessageConstant.divisionMap.get(String.valueOf(data.getDiv_code())));
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat sdf1 = new SimpleDateFormat("dd-MM-yyyy");
 		title.append(" BILLING MONTH ");
 		title.append(getDayMonthYear(sdf.format(request.getEntryDate())));
 		title.append(" AS ON ");
-		title.append(data.getEnt_Date());
+		title.append(sdf1.format(request.getEntryDate()));
 		title.append(" (In Lakhs)");
 		
 		return title.toString();
@@ -98,9 +100,9 @@ public class DailyReportServiceImpl  implements DailyReportService{
 		try {
 
 		if(request.getRepType()==1)	
-			DailyReportList=dailyReportDao.getDailyBillDetail(request.getDivCode(),request.getDepoCode(),request.getLoginId(),new java.sql.Date(request.getEntryDate().getTime()),request.getMonth());
+			DailyReportList=dailyReportDao.getDailyBillDetail(request.getDivCode(),request.getLoginId(),new java.sql.Date(request.getEntryDate().getTime()),request.getMonth());
 		else if(request.getRepType()==2)	
-			DailyReportList=dailyReportDao.getDailyBillDetailBranch(request.getDivCode(),request.getDepoCode(),request.getLoginId(),new java.sql.Date(request.getEntryDate().getTime()),request.getMonth());
+			DailyReportList=dailyReportDao.getDailyBillDetailBranch(request.getDivCode(),request.getLoginId(),new java.sql.Date(request.getEntryDate().getTime()),request.getMonth());
 		size=DailyReportList.size();
 		logger.info("size of the data is {}",size);
 
@@ -154,6 +156,15 @@ public class DailyReportServiceImpl  implements DailyReportService{
 			
 			response=new DailyReportResponse();
 			response.setBr(data.getDepo_code());
+			if(data.getBr_name().equalsIgnoreCase("ALL INDIA") && data.getTp()<99)
+				response.setBr(0);
+			else if(data.getBr_name().contains("TOTAL") && data.getTp()<99)
+				response.setBr(0);
+			else if(data.getBr_name().contains("CORP") && data.getTp()==98)
+				response.setBr(0);
+			else if(data.getBr_name().equalsIgnoreCase("ALL INDIA") && data.getTp()==99)
+				response.setBr(0);
+
 			response.setBranch(data.getBr_name());
 			response.setDivision(data.getDiv_name());
 			response.setBudget(data.getBudget());

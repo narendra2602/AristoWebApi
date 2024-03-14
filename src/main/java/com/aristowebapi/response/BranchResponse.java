@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class BranchResponse {
-	private int depoCode;
+	private int depoCode; 
 	private  String depoName;
 
 }

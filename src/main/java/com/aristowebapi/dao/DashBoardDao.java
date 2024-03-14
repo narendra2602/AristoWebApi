@@ -13,7 +13,7 @@ import com.aristowebapi.dto.DashBoardSalesChart;
 import com.aristowebapi.dto.MktDataDto;
 import com.aristowebapi.dto.StockiestMaster;
 
-public interface DashBoardDao extends JpaRepository<MktDataDto, Integer> {
+public interface DashBoardDao extends JpaRepository<MktDataDto, Integer> { 
 	
 	
 	@Query(value="CALL getDashboardMainChart(:myear,:div_code,:depo_code,:login_id,:utype);", nativeQuery=true)

@@ -10,7 +10,7 @@ import com.aristowebapi.dto.MktDataDto;
 import com.aristowebapi.dto.MktRepo9;
 import com.aristowebapi.dto.MonthDto;
 
-public interface MktRepo9Dao  extends JpaRepository<MktDataDto, Integer>{
+public interface MktRepo9Dao  extends JpaRepository<MktDataDto, Integer>{ 
 	
 	@Query(value="CALL web_report_group_product_summary(:myear,:div_code,:depo_code,:smon,:emon,:utype,:login_id,:gp_code,:hq_code);", nativeQuery=true)
 	List<MktRepo9> getWebReportGroupProductSummary(@Param("myear") int myear,@Param("div_code") int div_code,@Param("depo_code") int depo_code,

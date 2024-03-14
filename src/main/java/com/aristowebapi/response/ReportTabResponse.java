@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class ReportTabResponse {
-
+ 
 	private String tabName;
 	private List<ReportMenuResponse> menuList;
 }

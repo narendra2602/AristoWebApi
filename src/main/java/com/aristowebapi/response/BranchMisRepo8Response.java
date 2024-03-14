@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class BranchMisRepo8Response extends StkRepo10Response{
+public class BranchMisRepo8Response extends StkRepo10Response{ 
 	
 	private int fs;
 

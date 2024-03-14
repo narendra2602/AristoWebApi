@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class HOMarketingRepo1Request extends ViewRequest {
 

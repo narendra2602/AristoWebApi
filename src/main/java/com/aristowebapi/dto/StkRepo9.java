@@ -1,6 +1,6 @@
 package com.aristowebapi.dto;
 
-public interface StkRepo9 {
+public interface StkRepo9 { 
 	
     public String getName();
     public int getSaleqty();

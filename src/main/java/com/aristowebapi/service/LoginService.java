@@ -11,10 +11,10 @@ import com.aristowebapi.response.LoginResponse;
 import com.aristowebapi.response.ReportTabResponse;
 
 public interface LoginService {
-	
+	 
 	LoginResponse authenticateUser(LoginRequest request);
 	
-	DataUploadMessageResponse getMessage(int depoCode);
+	DataUploadMessageResponse getMessage();
 	
 	
 	List<ReportTabResponse> getReportMenuList(int loginId);

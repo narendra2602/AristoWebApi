@@ -12,7 +12,7 @@ import com.aristowebapi.dto.BranchMisRepo8;
 import com.aristowebapi.dto.MktDataDto;
 import com.aristowebapi.dto.MonthDto;
 
-public interface BranchMisDao extends JpaRepository<MktDataDto, Integer> {
+public interface BranchMisDao extends JpaRepository<MktDataDto, Integer> { 
 	
 	@Query(value="CALL aristo_web.web_branch_mis_repo5(:myear,:div_code,:depo_code,:smon,:emon,:rep_type,:login_id,:utype,:code);", nativeQuery=true)
 	List<BranchMisRepo5> getBranchMisRepo5(@Param("myear") int myear,@Param("div_code") int div_code,@Param("depo_code") int depo_code,

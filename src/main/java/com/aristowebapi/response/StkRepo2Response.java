@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class StkRepo2Response {
+public class StkRepo2Response { 
 
 	private String name;
 	private Map<String,Long> months;

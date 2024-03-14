@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class MktRepo11Response {
-	
+	 
 	private String month;
 	private int fs;
 	private double monthTgt;

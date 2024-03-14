@@ -177,7 +177,7 @@ public class MktReportController {
 	    
 	    
 		int requestValues[]=getRequestData(req);
-		request.setLoginId(requestValues[0]);
+		request.setLoginId(requestValues[0]); 
 		request.setUtype(requestValues[1]);
 
 		System.out.println("in report 4 gp code "+request.getGpCode());

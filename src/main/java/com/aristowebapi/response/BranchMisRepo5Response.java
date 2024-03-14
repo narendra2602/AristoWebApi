@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class BranchMisRepo5Response {
-	
+public class BranchMisRepo5Response {  
+	 
 	private String name;
 	private long budget;
 	private long gross;

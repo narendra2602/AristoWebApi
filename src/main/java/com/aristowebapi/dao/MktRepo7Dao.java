@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 import com.aristowebapi.dto.MktDataDto;
 import com.aristowebapi.dto.MktRepo7;
 
-public interface MktRepo7Dao extends JpaRepository<MktDataDto, Integer>{
+public interface MktRepo7Dao extends JpaRepository<MktDataDto, Integer>{ 
 	
 	@Query(value="CALL web_report_hqwise_salable_exp_brk(:myear,:div_code,:depo_code,:smon,:emon,:utype,:login_id,:rep_type);", nativeQuery=true)
 	List<MktRepo7> getWebReportHqwiseSalableExpiryBreakage(@Param("myear") int myear,@Param("div_code") int div_code,@Param("depo_code") int depo_code,

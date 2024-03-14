@@ -17,7 +17,7 @@ import com.aristowebapi.request.ChangePasswordRequest;
 @Service
 public class UserInfoService implements UserDetailsService { 
   
-    @Autowired
+    @Autowired 
     private UserInfoRepository repository; 
   
     @Autowired

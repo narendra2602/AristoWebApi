@@ -1,6 +1,6 @@
 package com.aristowebapi.dto;
 
-public interface StkRepo3 {
+public interface StkRepo3 { 
 	
 	public int getMnth_code();
 	public String getMnth_abbr();

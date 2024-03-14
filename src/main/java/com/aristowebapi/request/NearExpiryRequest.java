@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class NearExpiryRequest {
+public class NearExpiryRequest { 
 	
 	private int divCode;
 	private int loginId;

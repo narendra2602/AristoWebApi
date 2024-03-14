@@ -128,11 +128,11 @@ public class LoginServiceImpl implements LoginService {
 	}
 
 	@Override
-	public DataUploadMessageResponse getMessage(int depoCode) {
+	public DataUploadMessageResponse getMessage() {
 		
 		logger.info(AristoWebLogMsgConstant.LOGIN_SERVICE,"getMessage");
 		
-		String message=aristoWebMessageConstant.message+" "+loginDao.getMessage(depoCode);
+		String message=aristoWebMessageConstant.message+" "+loginDao.getMessage();
 		DataUploadMessageResponse response = new DataUploadMessageResponse();
 		response.setMessage(message);
 		return response;

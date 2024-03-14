@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 
-public class MktRepo2Response {
+public class MktRepo2Response { 
 
 	private int code;
 	private String name;

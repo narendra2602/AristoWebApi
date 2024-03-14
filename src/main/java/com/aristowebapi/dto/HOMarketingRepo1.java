@@ -1,6 +1,6 @@
 package com.aristowebapi.dto;
 
-public interface HOMarketingRepo1 {
+public interface HOMarketingRepo1 { 
 	
 	public int getUtype();
 	public int getDiv_code();

@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class MktRepo4Request extends ViewRequest{
+public class MktRepo4Request extends ViewRequest{ 
 	private int gpCode;
 }

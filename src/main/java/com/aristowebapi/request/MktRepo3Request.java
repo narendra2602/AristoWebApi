@@ -8,7 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
+@AllArgsConstructor 
 @NoArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class MktRepo3Request extends ViewRequest{
@@ -16,7 +16,6 @@ public class MktRepo3Request extends ViewRequest{
 	private int repType;
 	private int hqCode;
 	private int uv;
-	private String depoName;
 	private int option;
 
 }

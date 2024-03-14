@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 
-public class MktRepo1AchResponse {
+public class MktRepo1AchResponse { 
 	
 	private int pcode;
 	private String pname;

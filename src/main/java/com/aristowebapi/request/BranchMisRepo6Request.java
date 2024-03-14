@@ -11,8 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class BranchMisRepo6Request extends ViewRequest {
-	
+public class BranchMisRepo6Request extends ViewRequest { 
 	private int repType;
 	private int code;
 

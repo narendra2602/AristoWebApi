@@ -1,6 +1,6 @@
 package com.aristowebapi.dto;
 
-public interface ReportMenuDto {
+public interface ReportMenuDto { 
 	
 	public int getTab_id();
 	public String getTab_name();

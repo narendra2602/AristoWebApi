@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 import com.aristowebapi.dto.HOMarketingRepo1;
 import com.aristowebapi.dto.MktDataDto;
 
-public interface HOMarketingRepo1Dao extends JpaRepository<MktDataDto, Integer> {
+public interface HOMarketingRepo1Dao extends JpaRepository<MktDataDto, Integer> { 
 	
 	@Query(value="CALL aristo_web.HoMarketingRepo1Product(:myear,:div_code,:code,:smon,:emon,:utype,:login_id,:rep_type);", nativeQuery=true)
 	List<HOMarketingRepo1> getHoMarketingRepo1Product (@Param("myear") int myear,@Param("div_code") int div_code,@Param("code") int code,

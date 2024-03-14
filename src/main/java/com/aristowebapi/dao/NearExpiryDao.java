@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 import com.aristowebapi.dto.MktDataDto;
 import com.aristowebapi.dto.NearExpiry;
 
-public interface NearExpiryDao extends JpaRepository<MktDataDto, Integer> {
+public interface NearExpiryDao extends JpaRepository<MktDataDto, Integer> { 
 	
 	
 	@Query(value="CALL aristo.near_expiry_report(:year,:code,:login_id,:curr_date,:div_code);", nativeQuery=true)

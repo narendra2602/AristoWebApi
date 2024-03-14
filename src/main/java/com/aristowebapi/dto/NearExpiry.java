@@ -1,6 +1,6 @@
 package com.aristowebapi.dto;
 
-public interface NearExpiry {
+public interface NearExpiry { 
 	
 	public String getBranch_name();
 	public String getBatch_no();

@@ -23,7 +23,7 @@ import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException; 
 
 @Component
-public class JwtService { 
+public class JwtService {  
 
 	public String generateToken(String userName, int loginId,int userType,String fname) { 
 		Map<String, Object> claims = new HashMap<>(); 

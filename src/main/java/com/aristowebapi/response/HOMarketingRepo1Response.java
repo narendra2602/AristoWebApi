@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class HOMarketingRepo1Response {
+public class HOMarketingRepo1Response { 
 	
 	private String name;
 	private double monTgt;

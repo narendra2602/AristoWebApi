@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class ReportMenuResponse {
-
+ 
 	private String repoId;
 	private String repoName;
 }

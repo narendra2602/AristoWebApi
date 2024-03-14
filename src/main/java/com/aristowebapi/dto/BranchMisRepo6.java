@@ -1,7 +1,7 @@
 package com.aristowebapi.dto;
 
 public interface BranchMisRepo6 {
-	
+	 
     public String getName();
     public int getSaleqty();
     public double getSalesval();

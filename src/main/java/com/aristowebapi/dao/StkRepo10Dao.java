@@ -10,7 +10,7 @@ import com.aristowebapi.dto.MktDataDto;
 import com.aristowebapi.dto.MonthDto;
 import com.aristowebapi.dto.StkRepo10;
 
-public interface StkRepo10Dao extends JpaRepository<MktDataDto, Integer> {
+public interface StkRepo10Dao extends JpaRepository<MktDataDto, Integer> { 
 
 	@Query(value="CALL aristo_web.web_stockiest_repo10(:myear,:div_code,:depo_code,:smon,:emon,:rep_type,:code,:login_id);", nativeQuery=true)
 	List<StkRepo10> getStockiestRepo10(@Param("myear") int myear,@Param("div_code") int div_code,@Param("depo_code") int depo_code,

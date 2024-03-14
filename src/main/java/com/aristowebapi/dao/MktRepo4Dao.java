@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 import com.aristowebapi.dto.MktDataDto;
 import com.aristowebapi.dto.MktRepo4;
 
-public interface MktRepo4Dao extends JpaRepository<MktDataDto, Integer>{
+public interface MktRepo4Dao extends JpaRepository<MktDataDto, Integer>{ 
 	
 	@Query(value="CALL web_report_allgroupvalue(:myear,:div_code,:depo_code,:smon,:emon,:utype,:login_id,:gp_code);", nativeQuery=true)
 	List<MktRepo4> getWebReportAllGroupValue(@Param("myear") int myear,@Param("div_code") int div_code,@Param("depo_code") int depo_code,

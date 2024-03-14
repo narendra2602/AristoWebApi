@@ -28,7 +28,7 @@ public class MktRepo3ServiceImpl implements MktRepo3Service {
 	@Autowired
 	private AristoWebMessageConstant  aristoWebMessageConstant;
 
-	public String lupdate="";
+	
 	
 	private String getTitle(MktRepo3Request request,MktRepo3 data)
 	{
@@ -109,8 +109,8 @@ public class MktRepo3ServiceImpl implements MktRepo3Service {
 
 			if(pcode!=data.getMcode())
 			{
-				response.setPcode(pcode);
-				response.setPname(pname);
+				response.setCode(pcode);
+				response.setName(pname);
 				response.setPack(pack);
 				z=k;
 				for(int b=k;b<sz;b++)
@@ -136,8 +136,8 @@ public class MktRepo3ServiceImpl implements MktRepo3Service {
 			}
 			if(mgrp!=data.getMgrp())
 			{
-				response.setPcode(mgrp);
-				response.setPname(gname);
+				response.setCode(mgrp);
+				response.setName(gname);
 				response.setPack("");
 				for(int b=z;b<sz;b++)
 				{
@@ -231,8 +231,8 @@ public class MktRepo3ServiceImpl implements MktRepo3Service {
 			
 		}			
 			response=new MktRepo3Response();
-			response.setPcode(pcode);
-			response.setPname(pname);
+			response.setCode(pcode);
+			response.setName(pname);
 			response.setPack(pack);
 			z=k;
 			for(int b=k;b<sz;b++)
@@ -249,8 +249,8 @@ public class MktRepo3ServiceImpl implements MktRepo3Service {
 			
 			months=new LinkedHashMap();
 			response=new MktRepo3Response();
-			response.setPcode(mgrp);
-			response.setPname(gname);
+			response.setCode(mgrp);
+			response.setName(gname);
 			response.setPack("");
 			for(int b=z;b<sz;b++)
 			{
@@ -276,14 +276,14 @@ public class MktRepo3ServiceImpl implements MktRepo3Service {
 
 			months.putAll(total);
 			response=new MktRepo3Response();
-			response.setPcode(0);
-			response.setPname("Grand Total");
+			response.setCode(0);
+			response.setName("Grand Total");
 			response.setPack("");
 			response.setMonths(months);
 			response.setColor(2);
 			saleList.add(response);
 
-			return new ApiResponse<MktRepo3Response>(title.toString(),size,lupdate,saleList);
+			return new ApiResponse<MktRepo3Response>(title.toString(),size,saleList);
 
 
 			
