@@ -8,7 +8,7 @@ public interface StkRepo10 {
 	public String getMname();
 	public int getTerr_cd();
 	public String getTer_name();
-	public int getSales();
+	public long getSales();
 	public long getSales_val();
 	public String getPname();
     public String getSmname();

@@ -98,14 +98,20 @@ public class MktRepo5ServiceImpl  implements MktRepo5Service  {
 	    	response.setAch(data.getTargetval()!=0?AppCalculationUtils.calculateAch(response.getNet(), data.getTargetval()):0);
 	    	response.setSd(response.getNet()-data.getTargetval());
 	    	response.setPisale(data.getPisale());
-
+	    	response.setColor(0);
+	    	if(data.getDepo_code()==9996)
+		    	response.setColor(1);
+	    	if(data.getDepo_code()==9997)
+		    	response.setColor(2);
 
 	    	saleList.add(response);
-
-	    	tval+=data.getTargetval();
-	    	sval+=data.getSaleval();
-	    	cval+=data.getCrval();
-	    	pval+=data.getPisale();
+	    	if(data.getDepo_code()<9996)
+	    	{
+	    		tval+=data.getTargetval();
+	    		sval+=data.getSaleval();
+	    		cval+=data.getCrval();
+	    		pval+=data.getPisale();
+	    	}
 
 		} //end of for loop
 
@@ -121,7 +127,7 @@ public class MktRepo5ServiceImpl  implements MktRepo5Service  {
 			response.setAch(tval!=0?AppCalculationUtils.calculateAch((sval-cval), tval):0);
 			response.setSd((sval-cval)-tval);
 			response.setPisale(pval);
-			response.setColor(2);
+			response.setColor(3);
 
 			saleList.add(response);
 		}

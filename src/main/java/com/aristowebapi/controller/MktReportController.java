@@ -62,9 +62,9 @@ public class MktReportController {
 	@Autowired
 	private AppRequestParameterUtils appRequestParameterUtils;
 
-	
-	@Autowired
-	private JwtService jwtService;
+	  
+/*	@Autowired
+	private JwtService jwtService; */
 	
 	@Autowired
 	private MktRepo1Service mktRepo1Service;
@@ -185,7 +185,7 @@ public class MktReportController {
 		
 		return new ResponseEntity<ApiResponse<MktRepo4Response>>(mktRepo4Service.getMktRepo4(request), HttpStatus.OK);
 	
-	}
+	} 
 
 	@GetMapping("${mrc_repo5_path}")
 	public ResponseEntity<ApiResponse<MktRepo5Response>> getMktRepo5(@RequestBody MktRepo5Request request ,HttpServletRequest req)

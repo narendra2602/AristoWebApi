@@ -8,7 +8,7 @@ import com.aristowebapi.serviceimpl.JwtService;
 @Component
 public class AppRequestParameterUtils {
 	 
-	@Autowired
+	@Autowired 
 	private  JwtService jwtService;
 	
 	public  int[] getRequestBodyParameters(String authHeader)

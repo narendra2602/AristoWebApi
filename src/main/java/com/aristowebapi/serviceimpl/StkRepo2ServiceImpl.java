@@ -62,7 +62,7 @@ public class StkRepo2ServiceImpl implements StkRepo2Service{
 
 		}
 		title.append(" - PRODUCT WISE ");
-		title.append(request.getUv()==1?" UNIT TREND ":" VALUE TREND FROM ");
+		title.append(request.getUv()==1?" UNIT TREND ":request.getUv()==2?" VALUE TREND ":" UNIT/VALUE TREND FROM ");
 		title.append(data.getSmname());
 		title.append(" To ");
 		title.append(data.getEmname());
@@ -139,13 +139,13 @@ public class StkRepo2ServiceImpl implements StkRepo2Service{
 				{
 					MonthDto mn=monthData.get(b);
 					if(request.getUv()==1)
-					months.put((mn.getMnth_abbr()+" UNITS)"), 0L);
+					months.put((mn.getMnth_abbr()+" UNITS"), 0L);
 					else if(request.getUv()==2)
-					months.put((mn.getMnth_abbr()+" VALUE)"), 0L);
+					months.put((mn.getMnth_abbr()+" VALUE"), 0L);
 					else
 					{
-						months.put((mn.getMnth_abbr()+" UNITS)"), 0L);
-						months.put((mn.getMnth_abbr()+" VALUE)"), 0L);
+						months.put((mn.getMnth_abbr()+" UNITS"), 0L);
+						months.put((mn.getMnth_abbr()+" VALUE"), 0L);
 					}
 					k++;
 				}
@@ -339,13 +339,13 @@ public class StkRepo2ServiceImpl implements StkRepo2Service{
 			{
 				MonthDto mn=monthData.get(b);
 				if(request.getUv()==1)
-				months.put((mn.getMnth_abbr()+" UNITS)"), 0L);
+				months.put((mn.getMnth_abbr()+" UNITS"), 0L);
 				else if(request.getUv()==2)
-				months.put((mn.getMnth_abbr()+" VALUE)"), 0L);
+				months.put((mn.getMnth_abbr()+" VALUE"), 0L);
 				else
 				{
-					months.put((mn.getMnth_abbr()+" UNITS)"), 0L);
-					months.put((mn.getMnth_abbr()+" VALUE)"), 0L);
+					months.put((mn.getMnth_abbr()+" UNITS"), 0L);
+					months.put((mn.getMnth_abbr()+" VALUE"), 0L);
 				}
 				k++;
 			}

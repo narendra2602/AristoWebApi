@@ -132,7 +132,9 @@ public class LoginServiceImpl implements LoginService {
 		
 		logger.info(AristoWebLogMsgConstant.LOGIN_SERVICE,"getMessage");
 		
-		String message=aristoWebMessageConstant.message+" "+loginDao.getMessage();
+//		String message=aristoWebMessageConstant.message+" "+loginDao.getMessage();
+		String message=loginDao.getMessage();
+		logger.info(AristoWebLogMsgConstant.LOGIN_SERVICE,message);
 		DataUploadMessageResponse response = new DataUploadMessageResponse();
 		response.setMessage(message);
 		return response;
