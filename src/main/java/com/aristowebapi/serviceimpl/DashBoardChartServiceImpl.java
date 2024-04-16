@@ -156,7 +156,7 @@ public class DashBoardChartServiceImpl implements DashBoardService {
 		List<DashBoardDataDouble> dataList= dashBoardDao.getDashboardTheraputicSales(myear,div_code,depo_code,cmon,login_id,utype);
 		List<DashBoardDataResponseDouble> saleList = getResponseDataDouble(dataList);
 		
-		String title=getMonth("Theraputic Sales for ",myear,cmon);
+		String title=getMonth("Therapeutic Sales for ",myear,cmon);
 		
 		int size=dataList.size();
 		

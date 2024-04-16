@@ -97,6 +97,8 @@ public class DailyReportServiceImpl  implements DailyReportService{
 		List<DailyReport> DailyReportList=null;
 		int size = 0;
 		Map<Integer,String> branchMap = new HashMap<Integer,String>();
+		Map<Integer,String> divMap = new HashMap<Integer,String>();
+		Map<Integer,String> corpMap = new HashMap<Integer,String>();
 		try {
 
 		if(request.getRepType()==1)	
@@ -112,8 +114,9 @@ public class DailyReportServiceImpl  implements DailyReportService{
 		boolean first=true;
 		String title=null;
 		boolean status=true;	
+		boolean status1=false;	
 		boolean groupStatus=false;	
-		
+	
 		for (int i=0;i<size;i++)
 		{
 			DailyReport data = DailyReportList.get(i);
@@ -125,77 +128,189 @@ public class DailyReportServiceImpl  implements DailyReportService{
 				first=false;
 			}
 			
-			
-			if(data.getTp()<50)
-			{
-				if(branchMap.containsKey(data.getDepo_code()))
+			if(request.getRepType()==1)	
+			{		
+
+				if(data.getTp()<50)
 				{
-					if(!branchMap.get(data.getDepo_code()).contains("Open"))
+					if(branchMap.containsKey(data.getDepo_code()))
+					{
+
+						if(!branchMap.get(data.getDepo_code()).contains("Open"))
+						{
+							branchMap.put(data.getDepo_code(), data.getStatus());
+							status=false;
+						}
+
+						if(!corpMap.get(data.getDepo_code()).contains("Open"))
+						{
+							corpMap.put(data.getDepo_code(), data.getStatus());
+						}
+
+					}
+					else
 					{
 						branchMap.put(data.getDepo_code(), data.getStatus());
-						status=false;
+						corpMap.put(data.getDepo_code(), data.getStatus());
 					}
+
 				}
-				else
+
+				if(data.getTp()==50 || data.getTp()==98)
 				{
-					branchMap.put(data.getDepo_code(), data.getStatus());
-					if(data.getStatus().contains("Open"))
+					branchMap.put(data.getDepo_code(), corpMap.get(data.getDepo_code()));
+					//					branchMap.put(data.getDepo_code(), groupStatus?"Open":"Close");
+					//					groupStatus=false;
+
+				}
+
+				response=new DailyReportResponse();
+				response.setBr(data.getDepo_code());
+				if(data.getBr_name().equalsIgnoreCase("ALL INDIA") && data.getTp()<99)
+					response.setBr(0);
+				else if(data.getBr_name().contains("TOTAL") && data.getTp()<99)
+					response.setBr(0);
+				else if(data.getBr_name().contains("CORP") && data.getTp()==98)
+					response.setBr(0);
+				else if(data.getBr_name().equalsIgnoreCase("ALL INDIA") && data.getTp()==99)
+					response.setBr(0);
+
+				response.setBranch(data.getBr_name());
+				response.setDivision(data.getDiv_name());
+				response.setBudget(data.getBudget());
+				response.setSales(data.getSales_trade());
+				response.setAchPer(AppCalculationUtils.calculateAch(data.getSales_trade(),data.getBudget()));
+				response.setSurDef(Math.round((data.getSales_trade()-data.getBudget())*100.00)/100.00);
+				response.setCn100(data.getCn100());
+				response.setTodaySales(data.getSales_today());
+				response.setLmSale(data.getLast_month());
+				response.setLySale(data.getLast_year());
+				response.setCollCumm(data.getCollection_cumm());
+				response.setRemiitToday(data.getRemit());
+				response.setRemitCumm(data.getRemit_cumm());
+				response.setOsAsOn(data.getOutstand());
+				if(data.getTp()<50)
+					response.setStatus(data.getStatus());
+				else if(data.getTp()==98 || data.getTp()==50 )
+					response.setStatus(branchMap.get(data.getDepo_code()));
+				else 
+					response.setStatus(status?"Open":"Close");
+				response.setEntryDate(data.getEnt_Date());
+				response.setTime(data.getEnt_time());
+				if(data.getBr_name().equalsIgnoreCase("ALL INDIA") && data.getTp()<99)
+					response.setColor(1);
+				else if(data.getBr_name().contains("TOTAL") && data.getTp()<99)
+					response.setColor(1);
+				else if(data.getBr_name().contains("CORP") && data.getTp()==98)
+					response.setColor(1);
+				else if(data.getBr_name().equalsIgnoreCase("ALL INDIA") && data.getTp()==99)
+					response.setColor(2);
+				saleList.add(response);
+			} // eof rep_type 1 
+			else if(request.getRepType()==2)	
+			{		
+
+				if(data.getTp()<50)
+				{
+					if(divMap.containsKey(data.getDiv_code()))
 					{
-						groupStatus=true;
+
+						if(!divMap.get(data.getDiv_code()).contains("Open"))
+						{
+							divMap.put(data.getDiv_code(), data.getStatus());
+
+						}
+
+						if(!corpMap.get(data.getDiv_code()).contains("Open"))
+						{
+							corpMap.put(data.getDiv_code(), data.getStatus());
+						}
+
+					}
+					else
+					{
+						divMap.put(data.getDiv_code(), data.getStatus());
+						corpMap.put(data.getDiv_code(), data.getStatus());
 					}
 
 				}
 
-			}
-			if(data.getTp()==50 || data.getTp()==98)
-			{
-					branchMap.put(data.getDepo_code(), groupStatus?"Open":"Close");
-					groupStatus=false;
-				
-			}
-			
-			response=new DailyReportResponse();
-			response.setBr(data.getDepo_code());
-			if(data.getBr_name().equalsIgnoreCase("ALL INDIA") && data.getTp()<99)
-				response.setBr(0);
-			else if(data.getBr_name().contains("TOTAL") && data.getTp()<99)
-				response.setBr(0);
-			else if(data.getBr_name().contains("CORP") && data.getTp()==98)
-				response.setBr(0);
-			else if(data.getBr_name().equalsIgnoreCase("ALL INDIA") && data.getTp()==99)
-				response.setBr(0);
+				if(data.getTp()<50)
+				{
+					if(branchMap.containsKey(data.getDepo_code()))
+					{
 
-			response.setBranch(data.getBr_name());
-			response.setDivision(data.getDiv_name());
-			response.setBudget(data.getBudget());
-			response.setSales(data.getSales_trade());
-			response.setAchPer(AppCalculationUtils.calculateAch(data.getSales_trade(),data.getBudget()));
-			response.setSurDef(Math.round((data.getSales_trade()-data.getBudget())*100.00)/100.00);
-			response.setCn100(data.getCn100());
-			response.setTodaySales(data.getSales_today());
-			response.setLmSale(data.getLast_month());
-			response.setLySale(data.getLast_year());
-			response.setCollCumm(data.getCollection_cumm());
-			response.setRemiitToday(data.getRemit());
-			response.setRemitCumm(data.getRemit_cumm());
-			response.setOsAsOn(data.getOutstand());
-			if(data.getTp()<50)
-				response.setStatus(data.getStatus());
-			else if(data.getTp()==98 || data.getTp()==50 )
-				response.setStatus(branchMap.get(data.getDepo_code()));
-			else 
-				response.setStatus(status?"Open":"Close");
-			response.setEntryDate(data.getEnt_Date());
-			response.setTime(data.getEnt_time());
-			if(data.getBr_name().equalsIgnoreCase("ALL INDIA") && data.getTp()<99)
-				response.setColor(1);
-			else if(data.getBr_name().contains("TOTAL") && data.getTp()<99)
-				response.setColor(1);
-			else if(data.getBr_name().contains("CORP") && data.getTp()==98)
-				response.setColor(1);
-			else if(data.getBr_name().equalsIgnoreCase("ALL INDIA") && data.getTp()==99)
-				response.setColor(2);
-	    	saleList.add(response);
+						if(!branchMap.get(data.getDepo_code()).contains("Open"))
+						{
+							branchMap.put(data.getDepo_code(), data.getStatus());
+							status1=true;
+						}
+
+
+					}
+					else
+					{
+						branchMap.put(data.getDepo_code(), data.getStatus());
+					}
+
+				}
+
+				if(data.getTp()==97)
+				{
+					branchMap.put(data.getDepo_code(), status1?"Open":"Close");
+
+				}
+				if(data.getTp()==98)
+				{
+					divMap.put(data.getDiv_code(), corpMap.get(data.getDiv_code()));
+
+				}
+
+				response=new DailyReportResponse();
+				response.setBr(data.getDepo_code());
+				if(data.getBr_name().equalsIgnoreCase("ALL INDIA") && data.getTp()<99)
+					response.setBr(0);
+				else if(data.getBr_name().contains("TOTAL") && data.getTp()<99)
+					response.setBr(0);
+				else if(data.getBr_name().contains("CORP") && data.getTp()==98)
+					response.setBr(0);
+				else if(data.getBr_name().equalsIgnoreCase("ALL INDIA") && data.getTp()==99)
+					response.setBr(0);
+
+				response.setBranch(data.getBr_name());
+				response.setDivision(data.getDiv_name());
+				response.setBudget(data.getBudget());
+				response.setSales(data.getSales_trade());
+				response.setAchPer(AppCalculationUtils.calculateAch(data.getSales_trade(),data.getBudget()));
+				response.setSurDef(Math.round((data.getSales_trade()-data.getBudget())*100.00)/100.00);
+				response.setCn100(data.getCn100());
+				response.setTodaySales(data.getSales_today());
+				response.setLmSale(data.getLast_month());
+				response.setLySale(data.getLast_year());
+				response.setCollCumm(data.getCollection_cumm());
+				response.setRemiitToday(data.getRemit());
+				response.setRemitCumm(data.getRemit_cumm());
+				response.setOsAsOn(data.getOutstand());
+				if(data.getTp()<50)
+					response.setStatus(data.getStatus());
+				else if(data.getTp()==97)
+					response.setStatus(branchMap.get(data.getDepo_code()));
+				else if(data.getTp()==98)
+					response.setStatus(divMap.get(data.getDiv_code()));
+				else 
+					response.setStatus(status1?"Open":"Close");
+				response.setEntryDate(data.getEnt_Date());
+				response.setTime(data.getEnt_time());
+				if(data.getBr_name().equalsIgnoreCase("ALL INDIA") && data.getTp()<99)
+					response.setColor(1);
+				else if(data.getBr_name().contains("TOTAL") && data.getTp()<99)
+					response.setColor(1);
+				else if(data.getBr_name().contains("CORP") && data.getTp()==98)
+					response.setColor(1);
+				else if(data.getBr_name().equalsIgnoreCase("ALL INDIA") && data.getTp()==99)
+					response.setColor(2);
+				saleList.add(response);
+			} // eof rep_type 2 
 
 		} //end of for loop
 
