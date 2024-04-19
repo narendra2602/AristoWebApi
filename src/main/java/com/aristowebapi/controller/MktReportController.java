@@ -205,6 +205,7 @@ public class MktReportController {
 	@GetMapping("${mrc_repo6_path}")
 	public ResponseEntity<ApiResponse<MktRepo6Response>> getMktRepo6(@RequestBody MktRepo6Request request ,HttpServletRequest req)
 	{
+		System.out.println("yeha per aaya kya");
 		int requestValues[]=getRequestData(req);
 		request.setLoginId(requestValues[0]);
 		request.setUtype(requestValues[1]);

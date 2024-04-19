@@ -12,7 +12,7 @@ public interface MktRepo6 {
 	public String getDepo_name();
 	public int getSprd_cd();
 	public int  getFs();
-	public long getSales_val();
+	public double getSales_val();
 	public String getGp_name();
 
 }

@@ -43,6 +43,7 @@ public class AppCalculationUtils {
 	}
 
 	
+	
 	public static long valueDivideByLacs(long value)
 	{
 		return (value/100000);
@@ -76,8 +77,17 @@ public class AppCalculationUtils {
 		return gth;
 	}
 
+	public static double calculateSdf(double sale,double target)
+	{
+		double sdf=0.00;  
+		sdf=Math.round((sale*1.0-target)*100)/100.0;
+		return sdf;
+	}
+
+	
 	public static double calculatePmr(double sale,int fs)
 	{
+		
 		double pmr=0.00;  
 		pmr=fs!=0?Math.round(((sale*1.0)/fs)*100.0)/100.0:0;
 		return  pmr;
@@ -96,7 +106,7 @@ public class AppCalculationUtils {
 				?doubleVal2
 				:(doubleVal2==0)
 				?doubleVal1
-				:((new BigDecimal(doubleVal1)).add(new BigDecimal(doubleVal2))).doubleValue();
+				:Math.round(((new BigDecimal(doubleVal1)).add(new BigDecimal(doubleVal2))).doubleValue()*100.0)/100.00;
 	}
 
 	public static double roundToDecimal2Places(double number)

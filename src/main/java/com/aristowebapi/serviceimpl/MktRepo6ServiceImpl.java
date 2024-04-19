@@ -76,12 +76,12 @@ public class MktRepo6ServiceImpl implements MktRepo6Service  {
 		
 		List<MktRepo6Response> saleList = new ArrayList();
 
-		Map<String, Long> months=null;
-		Map<String, Long> total=null;
+		Map<String, Double> months=null;
+		Map<String, Double> total=null;
 		
 		int size = mktRepo6SaleList.size();
-		long columnTotal=0;
-		long grandColumnTotal=0;
+		double columnTotal=0;
+		double grandColumnTotal=0;
 		boolean first=true;
 		int depo_code=0;
 		String name="";
@@ -115,10 +115,11 @@ public class MktRepo6ServiceImpl implements MktRepo6Service  {
 				for(int b=k;b<sz;b++)
 				{
 					MonthDto mn=monthData.get(b);
-					months.put(mn.getMnth_abbr(), 0L);
+					months.put(mn.getMnth_abbr(), 0.0);
 					k++;
 				}
 
+				columnTotal=Math.round(columnTotal*100.0)/100.00;
 				months.put("TOTAL", columnTotal);
 				response.setMonths(months);
 				
@@ -141,12 +142,16 @@ public class MktRepo6ServiceImpl implements MktRepo6Service  {
 				if(mn.getMnth_code()==data.getMnth_code())
 				{
 					months.put(data.getMnth_abbr(), data.getSales_val());
-					columnTotal+=data.getSales_val();
+//					columnTotal+=data.getSales_val();
+					columnTotal = AppCalculationUtils.addDouble(columnTotal, data.getSales_val());
 					gfs+=data.getFs();
 					fs+=data.getFs();
 					if(total.containsKey(data.getMnth_abbr()))
 					{
-						long ggval = total.get(data.getMnth_abbr())+data.getSales_val();
+						//double ggval = total.get(data.getMnth_abbr())+data.getSales_val();
+						double ggval = AppCalculationUtils.addDouble(total.get(data.getMnth_abbr()), data.getSales_val());
+
+						//ggval=Math.round(ggval*100.0)/100.00;
 						total.put(data.getMnth_abbr(), ggval);
 					}
 					else
@@ -159,7 +164,7 @@ public class MktRepo6ServiceImpl implements MktRepo6Service  {
 				}
 				else
 				{
-					months.put(mn.getMnth_abbr(), 0L);
+					months.put(mn.getMnth_abbr(), 0.0);
 
 					if(total.containsKey(mn.getMnth_abbr()))
 					{
@@ -167,7 +172,7 @@ public class MktRepo6ServiceImpl implements MktRepo6Service  {
 					}
 					else
 					{
-						total.put(mn.getMnth_abbr(), 0L);
+						total.put(mn.getMnth_abbr(), 0.0);
 
 					}
 
@@ -185,10 +190,11 @@ public class MktRepo6ServiceImpl implements MktRepo6Service  {
 		for(int b=k;b<sz;b++)
 		{
 			MonthDto mn=monthData.get(b);
-			months.put(mn.getMnth_abbr(), 0L);
-			total.put(mn.getMnth_abbr(), 0L);
+			months.put(mn.getMnth_abbr(), 0.0);
+			total.put(mn.getMnth_abbr(), 0.0);
 			k++;
 		}
+		columnTotal=Math.round(columnTotal*100.0)/100.00;
 		months.put("TOTAL", columnTotal);
 
 		response.setMonths(months);
@@ -196,8 +202,8 @@ public class MktRepo6ServiceImpl implements MktRepo6Service  {
 
 		
 		
-		grandColumnTotal = total.values().stream().mapToLong(d -> d).sum();
-		
+		grandColumnTotal = total.values().stream().mapToDouble(d -> d).sum();
+		grandColumnTotal=Math.round(grandColumnTotal*100.0)/100.00;
 		months=new LinkedHashMap();
 		total.put("TOTAL", grandColumnTotal);
 		total.keySet().stream().forEach(d->System.out.print(d));

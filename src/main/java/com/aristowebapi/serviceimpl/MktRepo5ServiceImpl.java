@@ -71,10 +71,12 @@ public class MktRepo5ServiceImpl  implements MktRepo5Service  {
 
 		boolean first=true;
 		String title=null;
-		long tval=0;
-		long  sval=0;
-		long cval=0;
-		long pval=0;
+		double tval=0;
+		double  sval=0;
+		double cval=0;
+		double pval=0;
+		double lval=0;
+		int fs=0;
 		for (int i=0;i<size;i++)
 		{
 			MktRepo5 data = MktRepo5List.get(i);
@@ -91,13 +93,19 @@ public class MktRepo5ServiceImpl  implements MktRepo5Service  {
 			response=new MktRepo5Response();
 
 			response.setName(data.getDepo_name());
+			response.setFs(data.getfs());
 	    	response.setBudget(data.getTargetval());
 	    	response.setGross(data.getSaleval());
 	    	response.setCredit(data.getCrval());
-	    	response.setNet(data.getSaleval()-data.getCrval());
+	    	response.setNet(AppCalculationUtils.calculateSdf(data.getSaleval(), data.getCrval()));
 	    	response.setAch(data.getTargetval()!=0?AppCalculationUtils.calculateAch(response.getNet(), data.getTargetval()):0);
-	    	response.setSd(response.getNet()-data.getTargetval());
-	    	response.setPisale(data.getPisale());
+
+	    	response.setSd(AppCalculationUtils.calculateSdf(response.getNet(), data.getTargetval()));
+	    	response.setLys(data.getLysval());
+	    	response.setGth(data.getLysval()!=0?AppCalculationUtils.calculateGth(response.getNet(), data.getLysval()):0);
+	    	response.setIncrSls(AppCalculationUtils.calculateSdf(response.getNet(), data.getLysval()));
+	    	response.setPmr(AppCalculationUtils.calculatePmr(response.getNet(), data.getfs()));
+	    	response.setPendingPi(data.getPisale());
 	    	response.setColor(0);
 	    	if(data.getDepo_code()==9996)
 		    	response.setColor(1);
@@ -107,10 +115,12 @@ public class MktRepo5ServiceImpl  implements MktRepo5Service  {
 	    	saleList.add(response);
 	    	if(data.getDepo_code()<9996)
 	    	{
-	    		tval+=data.getTargetval();
-	    		sval+=data.getSaleval();
-	    		cval+=data.getCrval();
-	    		pval+=data.getPisale();
+	    		tval = AppCalculationUtils.addDouble(tval, data.getTargetval());
+	    		sval = AppCalculationUtils.addDouble(sval, data.getSaleval());
+	    		cval = AppCalculationUtils.addDouble(cval, data.getCrval());
+	    		pval = AppCalculationUtils.addDouble(pval, data.getPisale());
+	    		lval = AppCalculationUtils.addDouble(lval, data.getLysval());
+	    		fs+=data.getfs();
 	    	}
 
 		} //end of for loop
@@ -120,13 +130,18 @@ public class MktRepo5ServiceImpl  implements MktRepo5Service  {
 
 			response=new MktRepo5Response();
 			response.setName("GRAND TOTAL");
+			response.setFs(fs);
 			response.setBudget(tval);
 			response.setGross(sval);
 			response.setCredit(cval);
-			response.setNet(sval-cval);
-			response.setAch(tval!=0?AppCalculationUtils.calculateAch((sval-cval), tval):0);
-			response.setSd((sval-cval)-tval);
-			response.setPisale(pval);
+	    	response.setNet(AppCalculationUtils.calculateSdf(sval, cval));
+			response.setAch(tval!=0?AppCalculationUtils.calculateAch(response.getNet(), tval):0);
+	    	response.setSd(AppCalculationUtils.calculateSdf(response.getNet(), tval));
+	    	response.setLys(lval);
+	    	response.setGth(lval!=0?AppCalculationUtils.calculateGth(response.getNet(), lval):0);
+	    	response.setIncrSls(AppCalculationUtils.calculateSdf(response.getNet(), lval));
+	    	response.setPmr(AppCalculationUtils.calculatePmr(response.getNet(), fs));
+			response.setPendingPi(pval);
 			response.setColor(3);
 
 			saleList.add(response);

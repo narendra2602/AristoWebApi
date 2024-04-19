@@ -12,12 +12,17 @@ import lombok.NoArgsConstructor;
 public class MktRepo5Response { 
 	
 	private String name;
-	private long budget;
-	private long gross;
-	private long credit;
-	private long net;
+	private int fs;
+	private double budget;
+	private double gross;
+	private double credit;
+	private double net;
 	private double ach;
-	private long sd;
-	private long pisale;
+	private double lys;
+	private double gth;
+	private double pmr;
+	private double sd;
+	private double incrSls;
+	private double pendingPi;
 	private int color;
 }

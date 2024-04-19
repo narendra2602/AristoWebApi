@@ -16,7 +16,7 @@ public class MktRepo6Response {
 	private String name;
 	private int fs;
 	private int color;
-	private Map<String,Long> months;
+	private Map<String,Double> months;
 
 
 }
