@@ -65,12 +65,19 @@ public class MktRepo6ServiceImpl implements MktRepo6Service  {
 		List<MktRepo6> mktRepo6SaleList=null;
 		
 		if(request.getRepType()==1)
-		mktRepo6SaleList=mktRepo6Dao.getWebReportHqSaleTrend(request.getMyear(),request.getDivCode(),request.getDepoCode()
-				,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId(),request.getGpCode());
+		{
+			if(request.getPackCheckBox()==1)
+				mktRepo6SaleList=mktRepo6Dao.getWebReportHqSaleTrendPack(request.getMyear(),request.getDivCode(),request.getDepoCode()
+						,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId(),request.getGpCode());
+			else
+			mktRepo6SaleList=mktRepo6Dao.getWebReportHqSaleTrend(request.getMyear(),request.getDivCode(),request.getDepoCode()
+					,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId(),request.getGpCode());
+		}
 		else
+		{
 			mktRepo6SaleList=mktRepo6Dao.getWebReportHqTargetTrend(request.getMyear(),request.getDivCode(),request.getDepoCode()
 					,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId(),request.getGpCode());
-			
+		}	
 		
 		MktRepo6Response response=null;
 		
@@ -141,6 +148,7 @@ public class MktRepo6ServiceImpl implements MktRepo6Service  {
 				MonthDto mn=monthData.get(b);
 				if(mn.getMnth_code()==data.getMnth_code())
 				{
+					
 					months.put(data.getMnth_abbr(), data.getSales_val());
 //					columnTotal+=data.getSales_val();
 					columnTotal = AppCalculationUtils.addDouble(columnTotal, data.getSales_val());

@@ -20,8 +20,10 @@ public class StkRepo9Response {
 	private double saleVal;
 	private int salableQty;
 	private double salableVal;
-	private int ebspdQty;
-	private double ebspdVal;
+	private int expQty;
+	private double expVal;
+	private int brksppdltQty;
+	private double brksppdltVal;
 	private int netQty;
 	private double netVal;
 	private int color;

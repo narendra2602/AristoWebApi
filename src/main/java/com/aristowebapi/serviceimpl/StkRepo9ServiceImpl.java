@@ -15,6 +15,7 @@ import com.aristowebapi.dto.StkRepo9;
 import com.aristowebapi.exception.ApiException;
 import com.aristowebapi.request.StkRepo9Request;
 import com.aristowebapi.response.ApiResponse;
+import com.aristowebapi.response.StkRepo2Response;
 import com.aristowebapi.response.StkRepo9Response;
 import com.aristowebapi.service.StkRepo9Service;
 import com.aristowebapi.utility.AppCalculationUtils;
@@ -62,6 +63,10 @@ public class StkRepo9ServiceImpl implements StkRepo9Service {
 			
 			logger.info("size of the data is {}",size);
 		
+			String pname="";
+			if(size==0)
+				pname=stkRepo9Dao.getPname(request.getDivCode(), request.getCode());
+			
 			StkRepo9Response response=null;
 		List<StkRepo9Response> saleList = new ArrayList();
 
@@ -97,53 +102,32 @@ public class StkRepo9ServiceImpl implements StkRepo9Service {
 	    	response.setSalableQty(data.getSalableqty());
 	    	response.setSalableVal(data.getSalableval());
 
-	    	response.setEbspdQty(data.getExpbrkqty());
-	    	response.setEbspdVal(data.getExpbrkval());
+	    	response.setExpQty(data.getExpqty());
+	    	response.setExpVal(data.getExpval());
+
+	    	
+	    	response.setBrksppdltQty(data.getBrkspqty());
+	    	response.setBrksppdltVal(data.getBrkspval());
 
 	    	
 	    	response.setNetQty(data.getNetqty());
 	    	response.setNetVal(data.getNetval());
+	    	
+	    	response.setColor(data.getTp());
 
 	    	saleList.add(response);
 
-	    	gsaleqty+=data.getSaleqty();
-	    	gsaleval+=data.getSalesval();
-	    	gsalableqty+=data.getSalableqty();
-	    	gsalableval+=data.getSalableval();
-	    	gexpbrkqty+=data.getExpbrkqty();
-	    	gexbrkval+=data.getExpbrkval();
-	    	gnetqty+=data.getNetqty();
-	    	gnetval+=data.getNetval();
 
 		} //end of for loop
 
 		if(!first)
 		{
 
-			response=new StkRepo9Response();
-			response.setName("GRAND TOTAL");
-	    	response.setSaleQty(gsaleqty);
-	    	response.setSaleVal(Math.round(gsaleval));
-
-	    	response.setSalableQty(gsalableqty);
-	    	response.setSalableVal(Math.round(gsalableval));
-
-	    	response.setEbspdQty(gexpbrkqty);
-	    	response.setEbspdVal(Math.round(gexbrkval));
-
-	    	
-	    	response.setNetQty(gnetqty);
-	    	response.setNetVal(Math.round(gnetval));
-
-			response.setColor(2);
-
-			saleList.add(response);
 			ApiResponse<StkRepo9Response> apiResponse = new ApiResponse<>(title!=null?title.toString():"",size,lupdate,saleList);
 			return apiResponse;
 		}
 		else 
-			return null;
-		
+			return new ApiResponse<StkRepo9Response>(pname!=null?pname.toString():"",size,lupdate,saleList);		
 		
 		} catch (Exception e) {
 			logger.error(AristoWebLogMsgConstant.STK_REPO2_SERVICE_01,"getStkRepo9");

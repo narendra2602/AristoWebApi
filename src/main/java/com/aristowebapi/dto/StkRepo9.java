@@ -7,13 +7,17 @@ public interface StkRepo9 {
     public double getSalesval();
     public int getSalableqty();
     public double getSalableval();
-    public int getExpbrkqty();
-    public double getExpbrkval();
+    public int getExpqty();
+    public double getExpval();
+    public int getBrkspqty();
+    public double getBrkspval();
     public int getNetqty();
     public double getNetval();
     public String getPname();
     public String getSmname();
     public String getEmname();
+    public String getTer_name();
+    public int getTp();
 
 
 }

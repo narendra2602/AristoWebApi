@@ -59,10 +59,25 @@ public class MktRepo5ServiceImpl  implements MktRepo5Service  {
 		logger.info(AristoWebLogMsgConstant.MKT_REPORT_SERVICE_05,"getMktRepo5");
 		List<MktRepo5> MktRepo5List=null;
 		int size = 0;
-
+		System.out.println("option "+request.getOption());
 		try {
-			MktRepo5List=mktRepo5Dao.getWebReport24(request.getMyear(),request.getDivCode(),request.getDepoCode()
-					,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId(),request.getGpCode());
+			if(request.getOption()==2)
+			{
+				MktRepo5List=mktRepo5Dao.getWebReport24all(request.getMyear(),request.getDivCode(),request.getDepoCode()
+						,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId(),request.getGpCode());
+				
+			}
+			else
+			{
+				if(request.getPackCheckBox()==1)
+					MktRepo5List=mktRepo5Dao.getWebReport24Pack(request.getMyear(),request.getDivCode(),request.getDepoCode()
+							,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId(),request.getGpCode());
+				else
+					MktRepo5List=mktRepo5Dao.getWebReport24(request.getMyear(),request.getDivCode(),request.getDepoCode()
+							,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId(),request.getGpCode());
+
+			
+			}
 			size = MktRepo5List.size();
 			logger.info("size of the data is {}",size);
 		

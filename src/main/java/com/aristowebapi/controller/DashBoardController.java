@@ -274,15 +274,15 @@ public class DashBoardController {
 
 	
 	@GetMapping("${mrc_dashboardProductCombo_path}")
-	public ResponseEntity<ApiResponse<DashBoardDataResponse>> getProductList(@PathVariable("divCode") int divCode,@PathVariable("myear") int myear,HttpServletRequest request)
+	public ResponseEntity<ApiResponse<DashBoardDataResponse>> getProductList(@PathVariable("divCode") int divCode,@PathVariable("myear") int myear,@PathVariable("gpCode") int gpCode,HttpServletRequest request)
 	{
 
         int loginId=getLoginIdFromToken(request)[0];
         int uType=getLoginIdFromToken(request)[1];
 
 		logger.info(AristoWebLogMsgConstant.DASH_BOARD_CONTROLLER,"getProductList");
-        System.out.println("product list parameteres "+divCode+","+uType+","+loginId+","+myear);
-		return new ResponseEntity<ApiResponse<DashBoardDataResponse>>(dashBoardService.getProductList(divCode,uType,loginId,myear), HttpStatus.OK);
+        System.out.println("product list parameteres "+divCode+","+uType+","+loginId+","+myear+","+gpCode);
+		return new ResponseEntity<ApiResponse<DashBoardDataResponse>>(dashBoardService.getProductList(divCode,uType,loginId,myear,gpCode), HttpStatus.OK);
 
 	}
 

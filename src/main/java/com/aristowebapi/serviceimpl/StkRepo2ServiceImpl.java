@@ -99,7 +99,10 @@ public class StkRepo2ServiceImpl implements StkRepo2Service{
 		List<StkRepo2Response> saleList = new ArrayList();
 
 		int size = stkRepo2SaleList.size();
-		
+		System.out.println("size is "+size);
+		String mname="";
+		if(size==0)
+			mname=stkRepo2Dao.getPartyName(request.getDivCode(), request.getDepoCode(), request.getStkCode());
 		
 		long columnTotal=0;
 		long columnTotalVal=0;
@@ -398,7 +401,7 @@ public class StkRepo2ServiceImpl implements StkRepo2Service{
 			return new ApiResponse<StkRepo2Response>(title.toString(),size,lupdate,saleList);
 			}
 			else 
-			return null;
+				return new ApiResponse<StkRepo2Response>(mname.toString(),size,lupdate,saleList);
 
 	}
 	

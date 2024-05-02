@@ -37,7 +37,7 @@ public interface DashBoardService {
 
 	
 	
-	ApiResponse<DashBoardDataResponse> getProductList(int div_code,int utype,int login_id,int myear);
+	ApiResponse<DashBoardDataResponse> getProductList(int div_code,int utype,int login_id,int myear,int gp_code);
 	
 	ApiResponse<DashBoardDataResponse> getGroupList(int div_code,int utype,int login_id,int myear);
 

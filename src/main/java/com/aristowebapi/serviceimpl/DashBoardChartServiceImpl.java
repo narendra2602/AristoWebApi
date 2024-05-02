@@ -460,8 +460,8 @@ public class DashBoardChartServiceImpl implements DashBoardService {
 	}
 
 	@Override
-	public ApiResponse<DashBoardDataResponse> getProductList(int div_code, int utype, int login_id, int myear) {
-		List<DashBoardData> dataList= dashBoardDao.getProductList(div_code,utype, login_id,myear);
+	public ApiResponse<DashBoardDataResponse> getProductList(int div_code, int utype, int login_id, int myear,int gp_code) {
+		List<DashBoardData> dataList= dashBoardDao.getProductList(div_code,utype, login_id,myear,gp_code);
 		List<DashBoardDataResponse> saleList = getResponseData(dataList);
 		String title="Product List ";
 

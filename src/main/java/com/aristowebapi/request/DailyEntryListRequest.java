@@ -1,5 +1,7 @@
 package com.aristowebapi.request;
 
+import java.util.Date;
+
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
@@ -11,9 +13,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+public class DailyEntryListRequest {
+	
+	
+	private int divCode;
+	private int depoCode;
+	private int myear;
+	private int month;
 
-public class MktRepo5Request extends ViewRequest { 
-	private int gpCode;
-	private int option;
-	private int packCheckBox;
+
 }

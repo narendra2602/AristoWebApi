@@ -16,9 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.aristowebapi.constant.AristoWebLogMsgConstant;
 import com.aristowebapi.dto.DailyEntry;
+import com.aristowebapi.request.DailyEntryListRequest;
 import com.aristowebapi.request.DailyReportRequest;
 import com.aristowebapi.request.DailyUpdationRequest;
 import com.aristowebapi.response.ApiResponse;
+import com.aristowebapi.response.DailyEntryListResponse;
 import com.aristowebapi.response.DailyReportResponse;
 import com.aristowebapi.response.DailyStatusResponse;
 import com.aristowebapi.service.DailyEntryService;
@@ -49,6 +51,15 @@ public class DailyController {
 		
 		return new ResponseEntity<DailyEntry>(dailyentryService.saveDailyEntry(dailyentry),HttpStatus.CREATED);
 		
+	}
+
+	@GetMapping("${mrc_daily_entry_list_path}")
+	public ResponseEntity<ApiResponse<DailyEntryListResponse>> getDailyEntryList(@RequestBody DailyEntryListRequest request,HttpServletRequest req)
+	{
+		
+		
+		return new ResponseEntity<ApiResponse<DailyEntryListResponse>>(dailyentryService.getDailyEntryList(request), HttpStatus.OK);
+	
 	}
 
 	
