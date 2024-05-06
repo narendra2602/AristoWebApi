@@ -61,6 +61,8 @@ public class MktRepo5ServiceImpl  implements MktRepo5Service  {
 		int size = 0;
 		System.out.println("option "+request.getOption());
 		try {
+
+			
 			if(request.getOption()==2)
 			{
 				MktRepo5List=mktRepo5Dao.getWebReport24all(request.getMyear(),request.getDivCode(),request.getDepoCode()
@@ -79,19 +81,28 @@ public class MktRepo5ServiceImpl  implements MktRepo5Service  {
 			
 			}
 			size = MktRepo5List.size();
-			logger.info("size of the data is {}",size);
+			logger.info("size of the data is {} ***** ",size);
 		
 		MktRepo5Response response=null;
 		List<MktRepo5Response> saleList = new ArrayList();
 
 		boolean first=true;
 		String title=null;
+		double mtval=0;
+		double  msval=0;
+		double mcval=0;
+		double mpval=0;
+		double mlval=0;
+		int mfs=0;
+
 		double tval=0;
 		double  sval=0;
 		double cval=0;
 		double pval=0;
 		double lval=0;
 		int fs=0;
+
+		
 		for (int i=0;i<size;i++)
 		{
 			MktRepo5 data = MktRepo5List.get(i);
@@ -108,6 +119,20 @@ public class MktRepo5ServiceImpl  implements MktRepo5Service  {
 			response=new MktRepo5Response();
 
 			response.setName(data.getDepo_name());
+			
+			response.setMthFs(data.getMfs());
+	    	response.setMthBudget(data.getMtargetval());
+	    	response.setMthGross(data.getMsaleval());
+	    	response.setMthCredit(data.getMcrval());
+	    	response.setMthNet(AppCalculationUtils.calculateSdf(data.getMsaleval(), data.getMcrval()));
+	    	response.setMthAch(data.getMtargetval()!=0?AppCalculationUtils.calculateAch(response.getMthNet(), data.getMtargetval()):0);
+	    	response.setMthSd(AppCalculationUtils.calculateSdf(response.getMthNet(), data.getMtargetval()));
+	    	response.setMthLys(data.getMlysval());
+	    	response.setMthGth(data.getMlysval()!=0?AppCalculationUtils.calculateGth(response.getMthNet(), data.getMlysval()):0);
+	    	response.setMthIncrSls(AppCalculationUtils.calculateSdf(response.getMthNet(), data.getMlysval()));
+	    	response.setMthPmr(AppCalculationUtils.calculatePmr(response.getMthNet(), data.getMfs()));
+	    	response.setMthPendingPi(data.getMpisale());
+
 			response.setFs(data.getfs());
 	    	response.setBudget(data.getTargetval());
 	    	response.setGross(data.getSaleval());
@@ -130,6 +155,16 @@ public class MktRepo5ServiceImpl  implements MktRepo5Service  {
 	    	saleList.add(response);
 	    	if(data.getDepo_code()<9996)
 	    	{
+	    		
+	    		mtval = AppCalculationUtils.addDouble(mtval, data.getMtargetval());
+	    		msval = AppCalculationUtils.addDouble(msval, data.getMsaleval());
+	    		mcval = AppCalculationUtils.addDouble(mcval, data.getMcrval());
+	    		mpval = AppCalculationUtils.addDouble(mpval, data.getMpisale());
+	    		mlval = AppCalculationUtils.addDouble(mlval, data.getMlysval());
+	    		fs+=data.getfs();
+
+	    		
+	    		
 	    		tval = AppCalculationUtils.addDouble(tval, data.getTargetval());
 	    		sval = AppCalculationUtils.addDouble(sval, data.getSaleval());
 	    		cval = AppCalculationUtils.addDouble(cval, data.getCrval());
@@ -145,6 +180,21 @@ public class MktRepo5ServiceImpl  implements MktRepo5Service  {
 
 			response=new MktRepo5Response();
 			response.setName("GRAND TOTAL");
+
+			response.setMthFs(mfs);
+			response.setMthBudget(mtval);
+			response.setMthGross(msval);
+			response.setMthCredit(mcval);
+	    	response.setMthNet(AppCalculationUtils.calculateSdf(msval, mcval));
+			response.setMthAch(tval!=0?AppCalculationUtils.calculateAch(response.getMthNet(), mtval):0);
+	    	response.setMthSd(AppCalculationUtils.calculateSdf(response.getMthNet(), mtval));
+	    	response.setMthLys(mlval);
+	    	response.setMthGth(mlval!=0?AppCalculationUtils.calculateGth(response.getMthNet(), mlval):0);
+	    	response.setMthIncrSls(AppCalculationUtils.calculateSdf(response.getMthNet(), mlval));
+	    	response.setMthPmr(AppCalculationUtils.calculatePmr(response.getMthNet(), mfs));
+			response.setMthPendingPi(mpval);
+
+			
 			response.setFs(fs);
 			response.setBudget(tval);
 			response.setGross(sval);

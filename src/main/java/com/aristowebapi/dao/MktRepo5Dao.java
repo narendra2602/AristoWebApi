@@ -22,7 +22,7 @@ public interface MktRepo5Dao extends JpaRepository<MktDataDto, Integer> {
 			@Param("pcode") int pcode);
 
 	
-	@Query(value="CALL web_report_24newallhq(:myear,:div_code,:depo_code,:smon,:emon,:utype,:login_id,:gp_code);", nativeQuery=true)
+	@Query(value="CALL web_report_24newallhqfinal(:myear,:div_code,:depo_code,:smon,:emon,:utype,:login_id,:gp_code);", nativeQuery=true)
 	List<MktRepo5> getWebReport24all(@Param("myear") int myear,@Param("div_code") int div_code,@Param("depo_code") int depo_code,
 			@Param("smon") int smon,@Param("emon") int emon,@Param("utype") int utype,@Param("login_id") int login_id,
 			@Param("gp_code") int gp_code);

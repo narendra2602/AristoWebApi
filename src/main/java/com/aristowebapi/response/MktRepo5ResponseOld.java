@@ -9,22 +9,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class MktRepo5Response { 
+public class MktRepo5ResponseOld { 
 	
 	private String name;
-	private int mthFs;
-	private double mthBudget;
-	private double mthGross;
-	private double mthCredit;
-	private double mthNet;
-	private double mthAch;
-	private double mthLys;
-	private double mthGth;
-	private double mthPmr;
-	private double mthSd;
-	private double mthIncrSls;
-	private double mthPendingPi;
-	
 	private int fs;
 	private double budget;
 	private double gross;
