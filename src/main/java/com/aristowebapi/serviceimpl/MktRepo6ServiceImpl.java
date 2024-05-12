@@ -66,7 +66,14 @@ public class MktRepo6ServiceImpl implements MktRepo6Service  {
 		
 		if(request.getRepType()==1)
 		{
-			if(request.getPackCheckBox()==1)
+			if(request.getOption()==2 && request.getPackCheckBox()==1)
+				mktRepo6SaleList=mktRepo6Dao.getWebReportHqSaleTrendPackAll(request.getMyear(),request.getDivCode(),request.getDepoCode()
+						,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId(),request.getGpCode());
+
+			else if(request.getOption()==2 && request.getPackCheckBox()!=1)
+				mktRepo6SaleList=mktRepo6Dao.getWebReportHqSaleTrendAll(request.getMyear(),request.getDivCode(),request.getDepoCode()
+						,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId(),request.getGpCode());
+			else if(request.getPackCheckBox()==1)
 				mktRepo6SaleList=mktRepo6Dao.getWebReportHqSaleTrendPack(request.getMyear(),request.getDivCode(),request.getDepoCode()
 						,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId(),request.getGpCode());
 			else

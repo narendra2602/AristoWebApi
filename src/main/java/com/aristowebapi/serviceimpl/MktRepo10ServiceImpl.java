@@ -15,7 +15,7 @@ import com.aristowebapi.constant.AristoWebMessageConstant;
 import com.aristowebapi.dao.MktRepo10Dao;
 import com.aristowebapi.dto.MktRepo10;
 import com.aristowebapi.dto.MonthDto;
-import com.aristowebapi.request.ViewRequest;
+import com.aristowebapi.request.MktRepo10Request;
 import com.aristowebapi.response.ApiResponse;
 import com.aristowebapi.response.MktRepo9Response;
 import com.aristowebapi.service.MktRepo10Service;
@@ -36,7 +36,7 @@ Logger logger = LoggerFactory.getLogger(MktRepo9ServiceImpl.class);
 	
 	public String lupdate="";
 	
-	private String getTitle(ViewRequest request,MktRepo10 data)
+	private String getTitle(MktRepo10Request request,MktRepo10 data)
 	{
 		StringBuilder title=new StringBuilder();
 
@@ -51,7 +51,7 @@ Logger logger = LoggerFactory.getLogger(MktRepo9ServiceImpl.class);
 	
 	
 	@Override
-	public ApiResponse<MktRepo9Response> getMktRepo10(ViewRequest request) {
+	public ApiResponse<MktRepo9Response> getMktRepo10(MktRepo10Request request) {
 
 		logger.info(AristoWebLogMsgConstant.MKT_REPORT_SERVICE_10,"getMktRepo10");
 		String title=null;

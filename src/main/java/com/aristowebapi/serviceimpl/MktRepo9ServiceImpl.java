@@ -69,9 +69,15 @@ public class MktRepo9ServiceImpl  implements MktRepo9Service{
 
 		List<MktRepo9> MktRepo9SaleList=null;
 
+			System.out.println("request type "+request.getRepType());
+			if(request.getRepType()==2)
 			MktRepo9SaleList=mktRepo9Dao.getWebReportGroupProductSummary(request.getMyear(),request.getDivCode(),request.getDepoCode()
 					,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId(),request.getGpCode(),request.getHqCode());
-		
+			else
+				MktRepo9SaleList=mktRepo9Dao.getWebReportGroupSummary(request.getMyear(),request.getDivCode(),request.getDepoCode()
+						,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId(),request.getGpCode(),request.getHqCode());
+				
+			
 		MktRepo9Response response=null;
 		
 		List<MktRepo9Response> saleList = new ArrayList();
@@ -98,6 +104,7 @@ public class MktRepo9ServiceImpl  implements MktRepo9Service{
 		int i=0;
 		int pcode=0;
 		String mname="";
+		String gpname="";
 		for (i=0;i<size;i++)
 		{
 			MktRepo9 data = MktRepo9SaleList.get(i);
@@ -105,7 +112,11 @@ public class MktRepo9ServiceImpl  implements MktRepo9Service{
 			{
 				response=new MktRepo9Response();
 				pcode=data.getSprd_cd();
-				mname=data.getMname()+","+data.getPack();
+				if(request.getRepType()==1)
+					mname=data.getGp_name();
+				else
+					mname=data.getMname()+","+data.getPack();
+				gpname=data.getGp_name();	
 				sales=new LinkedHashMap();
 				tgt=new LinkedHashMap();
 				lys=new LinkedHashMap();
@@ -312,42 +323,49 @@ public class MktRepo9ServiceImpl  implements MktRepo9Service{
 		response.setSd(sd);
 		saleList.add(response);
 
-		
-		int fsColumnTotal = fs.values().stream().mapToInt(d -> d).sum();
-		fs.put("TOTAL",fsColumnTotal);
-		response.setFs(fs);
+/*		if(request.getRepType()==2)
+		{
 
-		long tgtColumnTotal = tgt.values().stream().mapToLong(d -> d).sum();
-		tgt.put("TOTAL",tgtColumnTotal);
-		response.setTarget(tgt);
+			response.setName(gpname);
 
-		
-		long salesColumnTotal = sales.values().stream().mapToLong(d -> d).sum();
-		sales.put("TOTAL",salesColumnTotal);
-		response.setSales(sales);
+			int fsColumnTotal = fs.values().stream().mapToInt(d -> d).sum();
+			fs.put("TOTAL",fsColumnTotal);
+			response.setFs(fs);
 
-		long lysColumnTotal = lys.values().stream().mapToLong(d -> d).sum();
-		lys.put("TOTAL",lysColumnTotal);
-		response.setLys(lys);
+			long tgtColumnTotal = tgt.values().stream().mapToLong(d -> d).sum();
+			tgt.put("TOTAL",tgtColumnTotal);
+			response.setTarget(tgt);
 
-		long incrColumnTotal = incr.values().stream().mapToLong(d -> d).sum();
-		incr.put("TOTAL",incrColumnTotal);
-		response.setIncr(incr);
 
-		
-		ach.put("TOTAL", AppCalculationUtils.calculateAch(salesColumnTotal, tgtColumnTotal));
-		response.setAch(ach);
+			long salesColumnTotal = sales.values().stream().mapToLong(d -> d).sum();
+			sales.put("TOTAL",salesColumnTotal);
+			response.setSales(sales);
 
-		gth.put("TOTAL",AppCalculationUtils.calculateGth(salesColumnTotal, lysColumnTotal));
-		response.setGth(gth);
+			long lysColumnTotal = lys.values().stream().mapToLong(d -> d).sum();
+			lys.put("TOTAL",lysColumnTotal);
+			response.setLys(lys);
 
-		pmr.put("TOTAL", AppCalculationUtils.calculatePmr(salesColumnTotal,fsColumnTotal));
-		response.setPmr(pmr);
-		
-		sd.put("TOTAL", salesColumnTotal-tgtColumnTotal);
-		response.setSd(sd);
+			long incrColumnTotal = incr.values().stream().mapToLong(d -> d).sum();
+			incr.put("TOTAL",incrColumnTotal);
+			response.setIncr(incr);
 
-		saleList.add(response);
+
+			ach.put("TOTAL", AppCalculationUtils.calculateAch(salesColumnTotal, tgtColumnTotal));
+			response.setAch(ach);
+
+			gth.put("TOTAL",AppCalculationUtils.calculateGth(salesColumnTotal, lysColumnTotal));
+			response.setGth(gth);
+
+			pmr.put("TOTAL", AppCalculationUtils.calculatePmr(salesColumnTotal,fsColumnTotal));
+			response.setPmr(pmr);
+
+			sd.put("TOTAL", salesColumnTotal-tgtColumnTotal);
+			response.setSd(sd);
+			response.setColor(1);
+
+			saleList.add(response);
+		}
+*/		
 		return new ApiResponse<MktRepo9Response>(title.toString(),size,lupdate,saleList);
 	}
 

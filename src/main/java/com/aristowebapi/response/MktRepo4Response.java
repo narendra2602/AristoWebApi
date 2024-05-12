@@ -14,14 +14,16 @@ import lombok.NoArgsConstructor;
 public class MktRepo4Response { 
 
 	private Map<String,Integer> fs;
-	private Map<String,Long> sales;
 	private Map<String,Long> target;
+	private Map<String,Long> sales;
 	private Map<String,Long> lys;
-	private Map<String,Long> incr;
 	private Map<String,Double> ach;
 	private Map<String,Double> gth;
-	private Map<String,Double> pmr;
+	private Map<String,Integer> pmr;
 	private Map<String,Double> sd;
+	private Map<String,Long> incr;
+	private Map<String,Integer> rankAch;
+	private Map<String,Integer> rankPmr;
 	private int color;
 	
 

@@ -17,5 +17,6 @@ public class BranchMktRepo5Response {
 	private String pack;
 	private int color;
 	private Map<String,Long> Months;
+	private String dataType;
 	
 }

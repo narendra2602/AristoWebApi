@@ -16,14 +16,14 @@ public class MktRepo9Response {
 	
 	private String name;
 	private Map<String,Integer> fs;
-	private Map<String,Long> sales;
 	private Map<String,Long> target;
+	private Map<String,Long> sales;
 	private Map<String,Long> lys;
-	private Map<String,Long> incr;
 	private Map<String,Double> ach;
 	private Map<String,Double> gth;
 	private Map<String,Integer> pmr;
 	private Map<String,Long> sd;
+	private Map<String,Long> incr;
 	private int color;
 
 }

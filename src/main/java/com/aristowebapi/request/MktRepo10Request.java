@@ -8,14 +8,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
+
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class MktRepo6Request extends ViewRequest{ 
+public class MktRepo10Request extends ViewRequest {
 	
-	private int gpCode;
-	private int repType;
-	private int option;
-	private int packCheckBox;
+	
 
 }

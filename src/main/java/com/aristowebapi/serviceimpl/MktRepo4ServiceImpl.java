@@ -1,9 +1,12 @@
-     package com.aristowebapi.serviceimpl;
+package com.aristowebapi.serviceimpl;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +21,9 @@ import com.aristowebapi.response.ApiResponse;
 import com.aristowebapi.response.MktRepo4Response;
 import com.aristowebapi.service.MktRepo4Service;
 import com.aristowebapi.utility.AppCalculationUtils;
+
+import static java.util.stream.Collectors.*;
+import static java.util.Map.Entry.*;
 
 @Service
 public class MktRepo4ServiceImpl implements MktRepo4Service{
@@ -83,8 +89,10 @@ public class MktRepo4ServiceImpl implements MktRepo4Service{
 		Map<String, Long> incr=null;
 		Map<String, Double> ach=null;
 		Map<String, Double> gth=null;
-		Map<String, Double> pmr=null;
+		Map<String, Integer> pmr=null;
 		Map<String, Double> sd=null;
+		Map<String, Integer> rankach=null;
+		Map<String, Integer> rankpmr=null;
 
 		boolean first=true;
 		int size = MktRepo4SaleList.size();
@@ -100,6 +108,8 @@ public class MktRepo4ServiceImpl implements MktRepo4Service{
 			if(first)
 			{
 				response=new MktRepo4Response();
+				rankach=new LinkedHashMap();
+				rankpmr=new LinkedHashMap();
 				sales=new LinkedHashMap();
 				tgt=new LinkedHashMap();
 				lys=new LinkedHashMap();
@@ -113,6 +123,8 @@ public class MktRepo4ServiceImpl implements MktRepo4Service{
 				title = getTitle(request, data); 
 			}
 
+			rankach.put(data.getDepo_name(), 0);
+			rankpmr.put(data.getDepo_name(), 0);
 			fs.put(data.getDepo_name(), data.getFs());
 			tgt.put(data.getDepo_name(), data.getTgt_val());
 			sales.put(data.getDepo_name(), data.getSales_val());
@@ -120,10 +132,16 @@ public class MktRepo4ServiceImpl implements MktRepo4Service{
 			incr.put(data.getDepo_name(), data.getIncr_val());
 			ach.put(data.getDepo_name(), data.getTgt_val()!=0?Math.round(((data.getSales_val()*1.0/data.getTgt_val())*100)*100.0)/100.0:0.00);
 			gth.put(data.getDepo_name(), data.getLys_val()!=0?Math.round((((data.getSales_val()*1.0/data.getLys_val())*100)-100)*100.0)/100.0:0.00);
-			pmr.put(data.getDepo_name(), data.getFs()!=0?Math.round((data.getSales_val()*1.0/data.getFs())*100.0)/100.0:0.00);
+			pmr.put(data.getDepo_name(), data.getFs()!=0?Math.round((data.getSales_val()/data.getFs())):0);
 			sd.put(data.getDepo_name(), Math.round(data.getSales_val()*1.0-data.getTgt_val())*100.00/100.00);
 		}		
 
+		
+		
+
+		rankach=getRank(ach, rankach);
+		rankpmr=getRankPmr(pmr, rankpmr);
+	
 		int fsColumnTotal = fs.values().stream().mapToInt(d -> d).sum();
 		fs.put("TOTAL",fsColumnTotal);
 		response.setFs(fs);
@@ -151,14 +169,74 @@ public class MktRepo4ServiceImpl implements MktRepo4Service{
 		gth.put("TOTAL", Math.round((((salesColumnTotal*1.0/lysColumnTotal)*100)-100)*100.0)/100.0);
 		response.setGth(gth);
 
-		pmr.put("TOTAL", fsColumnTotal!=0?Math.round((salesColumnTotal*1.0/fsColumnTotal)*100.0)/100.0:0.00);
+		pmr.put("TOTAL", fsColumnTotal!=0?Math.round((salesColumnTotal/fsColumnTotal)):0);
 		response.setPmr(pmr);
 
 		sd.put("TOTAL", Math.round(salesColumnTotal*1.0-tgtColumnTotal)*100.00/100.00);
 		response.setSd(sd);
 
+		rankach.put("TOTAL",0);
+		response.setRankAch(rankach);
+		
+		rankpmr.put("TOTAL",0);
+		response.setRankPmr(rankpmr);
+		
 		saleList.add(response);
 		return new ApiResponse<MktRepo4Response>(title.toString(),size,lupdate,saleList);
 	}
+	
+	
+	private Map<String,Integer> getRank(Map<String,Double> rank,Map rankMap)
+	{
+		// let's sort this map by values first 
+		//Map<String, Double> sorted = ach.entrySet().stream().sorted(comparingByValue()).collect(toMap(e -> e.getKey(), e -> e.getValue(), (e1, e2) -> e2, LinkedHashMap::new));
+		Map<String, Double> sorted  = rank.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).collect(toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
 
+		 // get all entries from the LinkedHashMap
+        Set<Map.Entry<String, Double> > entrySet  = sorted.entrySet();
+ 
+        // create an iterator
+        Iterator<Map.Entry<String, Double> > iterator = entrySet.iterator();
+ 
+        int index = 1;
+        String key = null;
+ 
+        while (iterator.hasNext()) {
+ 
+        	key = (String) iterator.next().getKey();
+        	rankMap.put(key, index);
+ 
+            //iterator.next();
+            index++;
+        }
+        return rankMap;
+	}
+
+	private Map<String,Integer> getRankPmr(Map<String,Integer> rank,Map rankMap)
+	{
+		// let's sort this map by values first 
+		//Map<String, Double> sorted = ach.entrySet().stream().sorted(comparingByValue()).collect(toMap(e -> e.getKey(), e -> e.getValue(), (e1, e2) -> e2, LinkedHashMap::new));
+		Map<String, Integer> sorted  = rank.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).collect(toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
+
+		 // get all entries from the LinkedHashMap
+        Set<Map.Entry<String, Integer> > entrySet  = sorted.entrySet();
+ 
+        // create an iterator
+        Iterator<Map.Entry<String, Integer> > iterator = entrySet.iterator();
+ 
+        int index = 1;
+        String key = null;
+ 
+        while (iterator.hasNext()) {
+ 
+        	key = (String) iterator.next().getKey();
+        	rankMap.put(key, index);
+ 
+            //iterator.next();
+            index++;
+        }
+        return rankMap;
+	}
+
+	
 }

@@ -1,7 +1,15 @@
 package com.aristowebapi.serviceimpl;
 
+import static java.util.stream.Collectors.toMap;
+
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -138,8 +146,13 @@ public class MktRepo2ServiceImpl implements MktRepo2Service {
 			logger.info("size of the data is {}",size);
 /*			if(size==0)
 				throw new DataNotFoundException(AristoWebLogMsgConstant.MKT_REPORT_SERVICE_022);
-*/				
+*/		
+			
+		Map<Integer,Double> rankAchMap =null;
+		Map<Integer,Integer> rankPmrMap =null;
 		
+		Map<Integer,Integer> rankMap =null;
+		Map<Integer,Integer> rankMapPmr =null;
 		MktRepo2Response response=null;
 		List<MktRepo2Response> saleList = new ArrayList();
 
@@ -169,6 +182,10 @@ public class MktRepo2ServiceImpl implements MktRepo2Service {
 				mgrp=data.getMgrp();
 				gpname=data.getGp_name();
 				nrep=data.getnrep();
+				rankAchMap = new LinkedHashMap<Integer, Double>();
+				rankPmrMap = new LinkedHashMap<Integer, Integer>();
+				rankMap = new LinkedHashMap<Integer, Integer>();
+				rankMapPmr = new LinkedHashMap<Integer, Integer>();
 				first=false;
 			}
 			
@@ -222,6 +239,8 @@ public class MktRepo2ServiceImpl implements MktRepo2Service {
 		    	response.setLyr(data.getCumlysqty());
 		    	response.setGrowth(data.getCumlysqty()!=0?AppCalculationUtils.calculateGth(data.getCummsaleqty(), data.getCumlysqty()):0.0);
 		    	response.setPmr(data.getnrep()!=0?AppCalculationUtils.calculatePmr(data.getCummsaleqty(), data.getnrep()):0);
+		    	rankAchMap.put(data.getMcode(),response.getCummAch());
+		    	rankPmrMap.put(data.getMcode(),response.getPmr());
 		    }
 		    else if (request.getUv()==2)
 		    {
@@ -250,7 +269,23 @@ public class MktRepo2ServiceImpl implements MktRepo2Service {
 	    	gcumsval+=data.getCummsaleval();
 	    	gcumlysval+=data.getCumlysval();
 		} //end of for loop
+		
+		
 
+        
+        rankMap=getRankMap(rankAchMap,rankMap);
+        rankMapPmr=getRankMapPmr(rankPmrMap,rankMapPmr);
+
+	        size=saleList.size();
+	       
+			for (int i=0;i<size;i++)
+			{
+				MktRepo2Response mkt = saleList.get(i);
+				mkt.setRankAch(mkt.getColor()==0?rankMap.get(mkt.getCode()):0);
+				mkt.setRankPmr(mkt.getColor()==0?rankMapPmr.get(mkt.getCode()):0);
+				saleList.set(i,mkt);
+			}		
+        
 		if(!first)
 		{
 			response=new MktRepo2Response();
@@ -305,5 +340,55 @@ public class MktRepo2ServiceImpl implements MktRepo2Service {
 
 	}
 
+
+	private Map<Integer,Integer> getRankMap(Map<Integer,Double> rankAchMap,Map<Integer,Integer> rankMap)
+	{
+		// let's sort this map by values first 
+		Map<Integer, Double> sorted  = rankAchMap.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).collect(toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
+		
+		// get all entries from the LinkedHashMap
+        Set<Map.Entry<Integer, Double> > entrySet  = sorted.entrySet();
+ 
+        // create an iterator
+        Iterator<Map.Entry<Integer, Double> > iterator = entrySet.iterator();
+ 
+        int index = 1;
+        Integer key = null;
+ 
+        while (iterator.hasNext()) {
+ 
+        	key = (Integer) iterator.next().getKey();
+        	rankMap.put(key, index);
+            index++;
+        }
+        
+        return rankMap;
+
+	}
+	
+	private Map<Integer,Integer> getRankMapPmr(Map<Integer,Integer> rankPmrMap,Map<Integer,Integer> rankMap)
+	{
+		// let's sort this map by values first 
+		Map<Integer, Integer> sorted  = rankPmrMap.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).collect(toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
+		
+		// get all entries from the LinkedHashMap
+        Set<Map.Entry<Integer, Integer> > entrySet  = sorted.entrySet();
+ 
+        // create an iterator
+        Iterator<Map.Entry<Integer, Integer> > iterator = entrySet.iterator();
+ 
+        int index = 1;
+        Integer key = null;
+ 
+        while (iterator.hasNext()) {
+ 
+        	key = (Integer) iterator.next().getKey();
+        	rankMap.put(key, index);
+            index++;
+        }
+        
+        return rankMap;
+
+	}
 
 }

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.aristowebapi.constant.AristoWebLogMsgConstant;
+import com.aristowebapi.request.MktRepo10Request;
 import com.aristowebapi.request.MktRepo11Request;
 import com.aristowebapi.request.MktRepo1Request;
 import com.aristowebapi.request.MktRepo2Request;
@@ -24,7 +25,6 @@ import com.aristowebapi.request.MktRepo6Request;
 import com.aristowebapi.request.MktRepo7Request;
 import com.aristowebapi.request.MktRepo8Request;
 import com.aristowebapi.request.MktRepo9Request;
-import com.aristowebapi.request.ViewRequest;
 import com.aristowebapi.response.ApiResponse;
 import com.aristowebapi.response.MktRepo11Response;
 import com.aristowebapi.response.MktRepo1AchResponse;
@@ -39,6 +39,7 @@ import com.aristowebapi.response.MktRepo8Response;
 import com.aristowebapi.response.MktRepo9Response;
 import com.aristowebapi.service.MktRepo10Service;
 import com.aristowebapi.service.MktRepo11Service;
+import com.aristowebapi.service.MktRepo1Service;
 import com.aristowebapi.service.MktRepo2Service;
 import com.aristowebapi.service.MktRepo3Service;
 import com.aristowebapi.service.MktRepo4Service;
@@ -47,8 +48,6 @@ import com.aristowebapi.service.MktRepo6Service;
 import com.aristowebapi.service.MktRepo7Service;
 import com.aristowebapi.service.MktRepo8Service;
 import com.aristowebapi.service.MktRepo9Service;
-import com.aristowebapi.service.MktRepo1Service;
-import com.aristowebapi.serviceimpl.JwtService;
 import com.aristowebapi.utility.AppRequestParameterUtils;
 
 @RestController
@@ -254,7 +253,7 @@ public class MktReportController {
 	}
 
 	@GetMapping("${mrc_repo10_path}")
-	public ResponseEntity<ApiResponse<MktRepo9Response>> getMktRepo10(@RequestBody ViewRequest request,HttpServletRequest req)
+	public ResponseEntity<ApiResponse<MktRepo9Response>> getMktRepo10(@RequestBody MktRepo10Request request,HttpServletRequest req)
 	{
 		int requestValues[]=getRequestData(req);
 		request.setLoginId(requestValues[0]);

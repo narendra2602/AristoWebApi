@@ -59,22 +59,32 @@ public class MktRepo5ServiceImpl  implements MktRepo5Service  {
 		logger.info(AristoWebLogMsgConstant.MKT_REPORT_SERVICE_05,"getMktRepo5");
 		List<MktRepo5> MktRepo5List=null;
 		int size = 0;
-		System.out.println("option "+request.getOption());
+		System.out.println("option "+request.getOption()+" value of code "+request.getGpCode()+" checkbox "+request.getPackCheckBox());
 		try {
 
 			
-			if(request.getOption()==2)
+			if(request.getOption()==2 && request.getPackCheckBox()!=1)
 			{
 				MktRepo5List=mktRepo5Dao.getWebReport24all(request.getMyear(),request.getDivCode(),request.getDepoCode()
 						,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId(),request.getGpCode());
 				
 			}
+			else if(request.getOption()==2 && request.getPackCheckBox()==1)
+			{
+				MktRepo5List=mktRepo5Dao.getWebReport24Packallhq(request.getMyear(),request.getDivCode(),request.getDepoCode()
+						,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId(),request.getGpCode());
+				
+			}
+
+			else if(request.getPackCheckBox()==1)
+			{
+				MktRepo5List=mktRepo5Dao.getWebReport24Pack(request.getMyear(),request.getDivCode(),request.getDepoCode()
+						,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId(),request.getGpCode());
+				
+			}
+
 			else
 			{
-				if(request.getPackCheckBox()==1)
-					MktRepo5List=mktRepo5Dao.getWebReport24Pack(request.getMyear(),request.getDivCode(),request.getDepoCode()
-							,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId(),request.getGpCode());
-				else
 					MktRepo5List=mktRepo5Dao.getWebReport24(request.getMyear(),request.getDivCode(),request.getDepoCode()
 							,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId(),request.getGpCode());
 
