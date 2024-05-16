@@ -16,4 +16,5 @@ public class MktRepo5Request extends ViewRequest {
 	private int gpCode;
 	private int option;
 	private int packCheckBox;
+	private int uv;
 }

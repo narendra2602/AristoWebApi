@@ -43,6 +43,7 @@ public class MktRepo6ServiceImpl implements MktRepo6Service  {
 
 		title.append(aristoWebMessageConstant.divisionMap.get(String.valueOf(data.getDiv_code())));
 		title.append(request.getDepoCode()==0?"All India ":mktRepo6Dao.getBranch(request.getDepoCode())+" Branch: " );
+		title.append(request.getUv()==1?" Unit Wise ":" Value Wise ");
 		title.append(request.getGpCode()==0?" All Groups ": data.getGp_name());
 		title.append(" Branch Wise Sales Trend ");
 		return title.toString();
@@ -91,16 +92,20 @@ public class MktRepo6ServiceImpl implements MktRepo6Service  {
 		List<MktRepo6Response> saleList = new ArrayList();
 
 		Map<String, Double> months=null;
+		Map<String, Double> branchtotal=null;
 		Map<String, Double> total=null;
 		
 		int size = mktRepo6SaleList.size();
 		double columnTotal=0;
+		double branchcolumnTotal=0;
 		double grandColumnTotal=0;
 		boolean first=true;
 		int depo_code=0;
+		int sdepo_code=0;
 		String name="";
 		int fs=0;
 		int gfs=0;
+		int bfs=0;
 		System.out.println("size is "+size);
 		for (int i=0;i<size;i++)
 		{
@@ -114,8 +119,10 @@ public class MktRepo6ServiceImpl implements MktRepo6Service  {
 			{
 				response=new MktRepo6Response();
 				depo_code=data.getDepo_code();
+				sdepo_code=data.getSdepo_code();
 				name=data.getDepo_name();
 				months=new LinkedHashMap();
+				branchtotal=new LinkedHashMap();
 				total=new LinkedHashMap();
 				first=false;
 				title = getTitle(request, data); 
@@ -149,37 +156,104 @@ public class MktRepo6ServiceImpl implements MktRepo6Service  {
 
 			}
 
+			if(sdepo_code!=data.getSdepo_code())
+			{
+				response.setName("Branch Total");
+				response.setFs(bfs);
+
+				
+				branchcolumnTotal = branchtotal.values().stream().mapToDouble(d -> d).sum();
+				branchcolumnTotal=Math.round(branchcolumnTotal*100.0)/100.00;
+
+				branchtotal.put("TOTAL", branchcolumnTotal);
+				response.setMonths(branchtotal);
+				response.setColor(1);
+				saleList.add(response);
+				
+				sdepo_code=data.getSdepo_code();
+				bfs=0;
+				branchcolumnTotal=0;
+				response=new MktRepo6Response();
+				branchtotal=new LinkedHashMap();
+
+				
+
+
+			}
+
+			
 			// before put please check depo code in branch list if not found put 0 value in map otherwise actual zero
 			for(int b=k;b<sz;b++)
 			{
 				MonthDto mn=monthData.get(b);
 				if(mn.getMnth_code()==data.getMnth_code())
 				{
-					
-					months.put(data.getMnth_abbr(), data.getSales_val());
-//					columnTotal+=data.getSales_val();
-					columnTotal = AppCalculationUtils.addDouble(columnTotal, data.getSales_val());
+					if(request.getUv()==1)
+					{
+						months.put(data.getMnth_abbr(), data.getSales_qty());
+						columnTotal = AppCalculationUtils.addDouble(columnTotal, data.getSales_qty());
+
+					}
+					else
+					{
+						months.put(data.getMnth_abbr(), data.getSales_val());
+						columnTotal = AppCalculationUtils.addDouble(columnTotal, data.getSales_val());
+
+					}
 					gfs+=data.getFs();
 					fs+=data.getFs();
+					bfs+=data.getFs();
+					if(branchtotal.containsKey(data.getMnth_abbr()))
+					{
+						double ggval =0;
+						if (request.getUv()==1)
+							ggval = AppCalculationUtils.addDouble(branchtotal.get(data.getMnth_abbr()), data.getSales_qty());
+						else
+							ggval = AppCalculationUtils.addDouble(branchtotal.get(data.getMnth_abbr()), data.getSales_val());
+						branchtotal.put(data.getMnth_abbr(), ggval);
+					}
+					else
+					{
+						if (request.getUv()==1)
+							branchtotal.put(data.getMnth_abbr(), data.getSales_qty());
+						else
+							branchtotal.put(data.getMnth_abbr(), data.getSales_val());
+					}
+
 					if(total.containsKey(data.getMnth_abbr()))
 					{
-						//double ggval = total.get(data.getMnth_abbr())+data.getSales_val();
-						double ggval = AppCalculationUtils.addDouble(total.get(data.getMnth_abbr()), data.getSales_val());
-
-						//ggval=Math.round(ggval*100.0)/100.00;
+						double ggval =0;
+						if (request.getUv()==1)
+							ggval = AppCalculationUtils.addDouble(total.get(data.getMnth_abbr()), data.getSales_qty());
+						else
+							ggval = AppCalculationUtils.addDouble(total.get(data.getMnth_abbr()), data.getSales_val());
 						total.put(data.getMnth_abbr(), ggval);
 					}
 					else
 					{
-						total.put(data.getMnth_abbr(), data.getSales_val());
+						if (request.getUv()==1)
+							total.put(data.getMnth_abbr(), data.getSales_qty());
+						else
+							total.put(data.getMnth_abbr(), data.getSales_val());
 					}
 
+					
 					k++;
 					break;
 				}
 				else
 				{
 					months.put(mn.getMnth_abbr(), 0.0);
+
+					if(branchtotal.containsKey(mn.getMnth_abbr()))
+					{
+						// do nothing
+					}
+					else
+					{
+						branchtotal.put(mn.getMnth_abbr(), 0.0);
+
+					}
 
 					if(total.containsKey(mn.getMnth_abbr()))
 					{
@@ -190,8 +264,7 @@ public class MktRepo6ServiceImpl implements MktRepo6Service  {
 						total.put(mn.getMnth_abbr(), 0.0);
 
 					}
-
-					
+				
 					k++;
 				}
 			}
@@ -213,6 +286,17 @@ public class MktRepo6ServiceImpl implements MktRepo6Service  {
 		months.put("TOTAL", columnTotal);
 
 		response.setMonths(months);
+		saleList.add(response);
+
+		response=new MktRepo6Response();
+		response.setName("Branch Total");
+		response.setFs(bfs);
+		branchcolumnTotal = branchtotal.values().stream().mapToDouble(d -> d).sum();
+		branchcolumnTotal=Math.round(branchcolumnTotal*100.0)/100.00;
+
+		branchtotal.put("TOTAL", branchcolumnTotal);
+		response.setMonths(branchtotal);
+		response.setColor(1);
 		saleList.add(response);
 
 		

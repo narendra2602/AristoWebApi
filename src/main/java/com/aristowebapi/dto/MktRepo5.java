@@ -24,6 +24,19 @@ public interface MktRepo5 {
 	public String getGp_name();
 	public double getCrval();
 	public double getPisale();
+	
+	public double getMsaleqty();
+	public double getMtargetqty();
+	public double getMlysqty();
+	public double getMcrqty();
+	public double getMpisaleqty();
+	public double getSaleqty();
+	public double getTargetqty();
+	public double getLysqty();
+	public double getCrqty();
+	public double getPisaleqty();
+
+	
 
 
 }

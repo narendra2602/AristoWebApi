@@ -108,24 +108,7 @@ public class BranchMktRepo5ServiceImpl implements BranchMktService {
 					response.setCode(pcode);
 					response.setName(pname);
 					response.setPack(pack);
-					response.setDataType(request.getOption()==1?"TGT":"LYS");
-					z=k;
-					for(int b=k;b<sz;b++)
-					{
-						MonthDto mn=monthData.get(b);
-						months.put(mn.getMnth_abbr(), 0L);
-						k++;
-					}
-
-					response.setMonths(months);
-					
-					saleList.add(response);
-
-					response=new BranchMktRepo5Response();
-					response.setCode(pcode);
-					response.setName(pname);
-					response.setPack(pack);
-					response.setDataType("SALE");
+					response.setDataType("SALE-"+(request.getMyear()));
 					z=k;
 					for(int b=k;b<sz;b++)
 					{
@@ -133,19 +116,29 @@ public class BranchMktRepo5ServiceImpl implements BranchMktService {
 						monthsale.put(mn.getMnth_abbr(), 0L);
 						k++;
 					}
-
-
 					response.setMonths(monthsale);
-					
 					saleList.add(response);
 					
-
 					
+					response=new BranchMktRepo5Response();
+					response.setCode(0);
+					response.setName("");
+					response.setPack("");
+					response.setDataType(request.getOption()==1?"TGT&nbsp;-"+(request.getMyear()):"LYS&nbsp;-"+(request.getMyear()-1));
+					z=k;
+					for(int b=k;b<sz;b++)
+					{
+						MonthDto mn=monthData.get(b);
+						months.put(mn.getMnth_abbr(), 0L);
+						k++;
+					}
+					response.setMonths(months);
+					saleList.add(response);
+
 					pcode=data.getMcode();
 					pname=data.getMname();
 					pack=data.getPack();
 					columnTotal=0;
-					
 					k=0;
 					response=new BranchMktRepo5Response();
 					months=new LinkedHashMap();
@@ -154,47 +147,41 @@ public class BranchMktRepo5ServiceImpl implements BranchMktService {
 				}
 				if(mgrp!=data.getMgrp())
 				{
-					response.setCode(mgrp);
-					response.setName(gname);
-					response.setPack("");
-					response.setDataType(request.getOption()==1?"TGT":"LYS");
-					for(int b=z;b<sz;b++)
-					{
-						MonthDto mn=monthData.get(b);
-						group.put(mn.getMnth_abbr(), 0L);
-						z++;
-					}
-
-
-
-					months.putAll(group);
-
 					
-					response.setMonths(months);
-					response.setColor(1);
-					saleList.add(response);
-
-					months=new LinkedHashMap();
-					response=new BranchMktRepo5Response();
 					response.setCode(mgrp);
 					response.setName(gname);
 					response.setPack("");
-					response.setDataType("SALE");
+					response.setDataType("SALE-"+(request.getMyear()));
 					for(int b=z;b<sz;b++)
 					{
 						MonthDto mn=monthData.get(b);
 						groupsale.put(mn.getMnth_abbr(), 0L);
 						z++;
 					}
-
-
-
 					months.putAll(groupsale);
-
-					
 					response.setMonths(months);
 					response.setColor(1);
 					saleList.add(response);
+
+
+					months=new LinkedHashMap();
+					response=new BranchMktRepo5Response();
+
+					response.setCode(mgrp);
+					response.setName(gname);
+					response.setPack("");
+					response.setDataType(request.getOption()==1?"TGT&nbsp;-"+(request.getMyear()):"LYS&nbsp;-"+(request.getMyear()-1));
+					for(int b=z;b<sz;b++)
+					{
+						MonthDto mn=monthData.get(b);
+						group.put(mn.getMnth_abbr(), 0L);
+						z++;
+					}
+					months.putAll(group);
+					response.setMonths(months);
+					response.setColor(1);
+					saleList.add(response);
+
 
 					
 					mgrp=data.getMgrp();
@@ -381,91 +368,75 @@ public class BranchMktRepo5ServiceImpl implements BranchMktService {
 				}
 				
 			}			
-				response=new BranchMktRepo5Response();
-				response.setCode(pcode);
-				response.setName(pname);
-				response.setPack(pack);
-				response.setDataType(request.getOption()==1?"TGT":"LYS");
-				z=k;
-				for(int b=k;b<sz;b++)
-				{
-					MonthDto mn=monthData.get(b);
-					months.put(mn.getMnth_abbr(), 0L);
-					k++;
-				}
-				response.setMonths(months);
-				saleList.add(response);
-
-				response=new BranchMktRepo5Response();
-				response.setCode(pcode);
-				response.setName(pname);
-				response.setPack(pack);
-				response.setDataType("SALE");
-				z=k;
-				for(int b=k;b<sz;b++)
-				{
-					MonthDto mn=monthData.get(b);
-					monthsale.put(mn.getMnth_abbr(), 0L);
-					k++;
-				}
-				response.setMonths(monthsale);
-				saleList.add(response);
+			response.setCode(pcode);
+			response.setName(pname);
+			response.setPack(pack);
+			response.setDataType("SALE-"+(request.getMyear()));
+			z=k;
+			for(int b=k;b<sz;b++)
+			{
+				MonthDto mn=monthData.get(b);
+				monthsale.put(mn.getMnth_abbr(), 0L);
+				k++;
+			}
+			response.setMonths(monthsale);
+			saleList.add(response);
+			
+			
+			response=new BranchMktRepo5Response();
+			response.setCode(0);
+			response.setName("");
+			response.setPack("");
+			response.setDataType(request.getOption()==1?"TGT&nbsp;-"+(request.getMyear()):"LYS&nbsp;-"+(request.getMyear()-1));
+			z=k;
+			for(int b=k;b<sz;b++)
+			{
+				MonthDto mn=monthData.get(b);
+				months.put(mn.getMnth_abbr(), 0L);
+				k++;
+			}
+			response.setMonths(months);
+			saleList.add(response);
 
 				
 // 				
-				months=new LinkedHashMap();
-				response=new BranchMktRepo5Response();
-				response.setCode(mgrp);
-				response.setName(gname);
-				response.setPack("");
-				response.setDataType(request.getOption()==1?"TGT":"LYS");
-				for(int b=z;b<sz;b++)
-				{
-					MonthDto mn=monthData.get(b);
-					group.put(mn.getMnth_abbr(), 0L);
-					z++;
-				}
+			response.setCode(mgrp);
+			response.setName(gname);
+			response.setPack("");
+			response.setDataType("SALE-"+(request.getMyear()));
+			for(int b=z;b<sz;b++)
+			{
+				MonthDto mn=monthData.get(b);
+				groupsale.put(mn.getMnth_abbr(), 0L);
+				z++;
+			}
+			months.putAll(groupsale);
+			response.setMonths(months);
+			response.setColor(1);
+			saleList.add(response);
 
 
-				months.putAll(group);
-				response.setMonths(months);
-				response.setColor(1);
-				saleList.add(response);
-				
-				months=new LinkedHashMap();
-				response=new BranchMktRepo5Response();
-				response.setCode(mgrp);
-				response.setName(gname);
-				response.setPack("");
-				response.setDataType("SALE");
-				for(int b=z;b<sz;b++)
-				{
-					MonthDto mn=monthData.get(b);
-					groupsale.put(mn.getMnth_abbr(), 0L);
-					z++;
-				}
+			months=new LinkedHashMap();
+			response=new BranchMktRepo5Response();
 
-
-				months.putAll(groupsale);
-				response.setMonths(months);
-				response.setColor(1);
-				saleList.add(response);
+			response.setCode(mgrp);
+			response.setName(gname);
+			response.setPack("");
+			response.setDataType(request.getOption()==1?"TGT&nbsp;-"+(request.getMyear()):"LYS&nbsp;-"+(request.getMyear()-1));
+			for(int b=z;b<sz;b++)
+			{
+				MonthDto mn=monthData.get(b);
+				group.put(mn.getMnth_abbr(), 0L);
+				z++;
+			}
+			months.putAll(group);
+			response.setMonths(months);
+			response.setColor(1);
+			saleList.add(response);
 
 				
 				
 				grandColumnTotal = total.values().stream().mapToLong(d -> d).sum();
-				
-				months=new LinkedHashMap();
-				months.putAll(total);
-				response=new BranchMktRepo5Response();
-				response.setCode(0);
-				response.setName("Grand Total");
-				response.setPack("");
-				response.setDataType(request.getOption()==1?"TGT":"LYS");
-				response.setMonths(months);
-				response.setColor(2);
-				saleList.add(response);
-
 				
 				months=new LinkedHashMap();
 				months.putAll(totalsale);
@@ -473,10 +444,24 @@ public class BranchMktRepo5ServiceImpl implements BranchMktService {
 				response.setCode(0);
 				response.setName("Grand Total");
 				response.setPack("");
-				response.setDataType("SALE");
+				response.setDataType("SALE+"+(request.getMyear()));
 				response.setMonths(months);
 				response.setColor(2);
 				saleList.add(response);
+
+				
+				months=new LinkedHashMap();
+				months.putAll(total);
+				response=new BranchMktRepo5Response();
+				response.setCode(0);
+				response.setName("Grand Total");
+				response.setPack("");
+				response.setDataType(request.getOption()==1?"TGT&nbsp;-"+(request.getMyear()):"LYS&nbsp;-"+(request.getMyear()-1));
+				response.setMonths(months);
+				response.setColor(2);
+				saleList.add(response);
+
+				
 
 				
 				return new ApiResponse<BranchMktRepo5Response>(title.toString(),size,saleList);

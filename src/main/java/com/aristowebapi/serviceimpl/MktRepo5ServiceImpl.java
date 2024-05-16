@@ -43,6 +43,7 @@ public class MktRepo5ServiceImpl  implements MktRepo5Service  {
 
 		title.append(aristoWebMessageConstant.divisionMap.get(String.valueOf(data.getDiv_code())));
 		title.append(request.getDepoCode()==0?"All India":mktRepo5Dao.getBranch(request.getDepoCode())+" Branch: ");
+		title.append(request.getUv()==1?" Unit Wise ":" Value Wise ");
 		title.append(request.getGpCode()>0?data.getGp_name():"");
 		title.append(" GROSS/CREDIT/NET SALE From  ");
 		title.append(data.getSmname());
@@ -88,8 +89,11 @@ public class MktRepo5ServiceImpl  implements MktRepo5Service  {
 					MktRepo5List=mktRepo5Dao.getWebReport24(request.getMyear(),request.getDivCode(),request.getDepoCode()
 							,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId(),request.getGpCode());
 
-			
 			}
+
+			System.out.println(request.getMyear()+" "+request.getDivCode()+" "+request.getDepoCode()
+			+" "+request.getSmon()+" "+request.getEmon()+" "+request.getUtype()+" "+request.getLoginId()+" "+request.getGpCode());		
+
 			size = MktRepo5List.size();
 			logger.info("size of the data is {} ***** ",size);
 		
@@ -129,33 +133,66 @@ public class MktRepo5ServiceImpl  implements MktRepo5Service  {
 			response=new MktRepo5Response();
 
 			response.setName(data.getDepo_name());
-			
 			response.setMthFs(data.getMfs());
-	    	response.setMthBudget(data.getMtargetval());
-	    	response.setMthGross(data.getMsaleval());
-	    	response.setMthCredit(data.getMcrval());
-	    	response.setMthNet(AppCalculationUtils.calculateSdf(data.getMsaleval(), data.getMcrval()));
-	    	response.setMthAch(data.getMtargetval()!=0?AppCalculationUtils.calculateAch(response.getMthNet(), data.getMtargetval()):0);
-	    	response.setMthSd(AppCalculationUtils.calculateSdf(response.getMthNet(), data.getMtargetval()));
-	    	response.setMthLys(data.getMlysval());
-	    	response.setMthGth(data.getMlysval()!=0?AppCalculationUtils.calculateGth(response.getMthNet(), data.getMlysval()):0);
-	    	response.setMthIncrSls(AppCalculationUtils.calculateSdf(response.getMthNet(), data.getMlysval()));
-	    	response.setMthPmr(AppCalculationUtils.calculatePmr(response.getMthNet(), data.getMfs()));
-	    	response.setMthPendingPi(data.getMpisale());
+			
+			if(request.getUv()==1)
+			{
+				
+				response.setMthBudget(data.getMtargetqty());
+				response.setMthGross(data.getMsaleqty());
+				response.setMthCredit(data.getMcrqty());
+				response.setMthNet(AppCalculationUtils.calculateSdf(data.getMsaleqty(), data.getMcrqty()));
+				response.setMthAch(data.getMtargetval()!=0?AppCalculationUtils.calculateAch(response.getMthNet(), data.getMtargetqty()):0);
+				response.setMthSd(AppCalculationUtils.calculateSdf(response.getMthNet(), data.getMtargetqty()));
+				response.setMthLys(data.getMlysqty());
+				response.setMthGth(data.getMlysqty()!=0?AppCalculationUtils.calculateGth(response.getMthNet(), data.getMlysqty()):0);
+				response.setMthIncrSls(AppCalculationUtils.calculateSdf(response.getMthNet(), data.getMlysqty()));
+				response.setMthPmr(AppCalculationUtils.calculatePmr(response.getMthNet(), data.getMfs()));
+				response.setMthPendingPi(data.getMpisaleqty());
 
-			response.setFs(data.getfs());
-	    	response.setBudget(data.getTargetval());
-	    	response.setGross(data.getSaleval());
-	    	response.setCredit(data.getCrval());
-	    	response.setNet(AppCalculationUtils.calculateSdf(data.getSaleval(), data.getCrval()));
-	    	response.setAch(data.getTargetval()!=0?AppCalculationUtils.calculateAch(response.getNet(), data.getTargetval()):0);
+				response.setFs(data.getfs());
+				response.setBudget(data.getTargetqty());
+				response.setGross(data.getSaleqty());
+				response.setCredit(data.getCrqty());
+				response.setNet(AppCalculationUtils.calculateSdf(data.getSaleqty(), data.getCrqty()));
+				response.setAch(data.getTargetqty()!=0?AppCalculationUtils.calculateAch(response.getNet(), data.getTargetqty()):0);
 
-	    	response.setSd(AppCalculationUtils.calculateSdf(response.getNet(), data.getTargetval()));
-	    	response.setLys(data.getLysval());
-	    	response.setGth(data.getLysval()!=0?AppCalculationUtils.calculateGth(response.getNet(), data.getLysval()):0);
-	    	response.setIncrSls(AppCalculationUtils.calculateSdf(response.getNet(), data.getLysval()));
-	    	response.setPmr(AppCalculationUtils.calculatePmr(response.getNet(), data.getfs()));
-	    	response.setPendingPi(data.getPisale());
+				response.setSd(AppCalculationUtils.calculateSdf(response.getNet(), data.getTargetqty()));
+				response.setLys(data.getLysqty());
+				response.setGth(data.getLysqty()!=0?AppCalculationUtils.calculateGth(response.getNet(), data.getLysqty()):0);
+				response.setIncrSls(AppCalculationUtils.calculateSdf(response.getNet(), data.getLysqty()));
+				response.setPmr(AppCalculationUtils.calculatePmr(response.getNet(), data.getfs()));
+				response.setPendingPi(data.getPisaleqty());
+
+			}
+			else
+			{
+				response.setMthBudget(data.getMtargetval());
+				response.setMthGross(data.getMsaleval());
+				response.setMthCredit(data.getMcrval());
+				response.setMthNet(AppCalculationUtils.calculateSdf(data.getMsaleval(), data.getMcrval()));
+				response.setMthAch(data.getMtargetval()!=0?AppCalculationUtils.calculateAch(response.getMthNet(), data.getMtargetval()):0);
+				response.setMthSd(AppCalculationUtils.calculateSdf(response.getMthNet(), data.getMtargetval()));
+				response.setMthLys(data.getMlysval());
+				response.setMthGth(data.getMlysval()!=0?AppCalculationUtils.calculateGth(response.getMthNet(), data.getMlysval()):0);
+				response.setMthIncrSls(AppCalculationUtils.calculateSdf(response.getMthNet(), data.getMlysval()));
+				response.setMthPmr(AppCalculationUtils.calculatePmr(response.getMthNet(), data.getMfs()));
+				response.setMthPendingPi(data.getMpisale());
+
+				response.setFs(data.getfs());
+				response.setBudget(data.getTargetval());
+				response.setGross(data.getSaleval());
+				response.setCredit(data.getCrval());
+				response.setNet(AppCalculationUtils.calculateSdf(data.getSaleval(), data.getCrval()));
+				response.setAch(data.getTargetval()!=0?AppCalculationUtils.calculateAch(response.getNet(), data.getTargetval()):0);
+
+				response.setSd(AppCalculationUtils.calculateSdf(response.getNet(), data.getTargetval()));
+				response.setLys(data.getLysval());
+				response.setGth(data.getLysval()!=0?AppCalculationUtils.calculateGth(response.getNet(), data.getLysval()):0);
+				response.setIncrSls(AppCalculationUtils.calculateSdf(response.getNet(), data.getLysval()));
+				response.setPmr(AppCalculationUtils.calculatePmr(response.getNet(), data.getfs()));
+				response.setPendingPi(data.getPisale());
+			}
 	    	response.setColor(0);
 	    	if(data.getDepo_code()==9996)
 		    	response.setColor(1);
@@ -165,22 +202,37 @@ public class MktRepo5ServiceImpl  implements MktRepo5Service  {
 	    	saleList.add(response);
 	    	if(data.getDepo_code()<9996)
 	    	{
-	    		
-	    		mtval = AppCalculationUtils.addDouble(mtval, data.getMtargetval());
-	    		msval = AppCalculationUtils.addDouble(msval, data.getMsaleval());
-	    		mcval = AppCalculationUtils.addDouble(mcval, data.getMcrval());
-	    		mpval = AppCalculationUtils.addDouble(mpval, data.getMpisale());
-	    		mlval = AppCalculationUtils.addDouble(mlval, data.getMlysval());
-	    		fs+=data.getfs();
-
-	    		
-	    		
-	    		tval = AppCalculationUtils.addDouble(tval, data.getTargetval());
-	    		sval = AppCalculationUtils.addDouble(sval, data.getSaleval());
-	    		cval = AppCalculationUtils.addDouble(cval, data.getCrval());
-	    		pval = AppCalculationUtils.addDouble(pval, data.getPisale());
-	    		lval = AppCalculationUtils.addDouble(lval, data.getLysval());
-	    		fs+=data.getfs();
+	    		if(request.getUv()==1)
+	    		{
+	    			mtval = AppCalculationUtils.addDouble(mtval, data.getMtargetqty());
+	    			msval = AppCalculationUtils.addDouble(msval, data.getMsaleqty());
+	    			mcval = AppCalculationUtils.addDouble(mcval, data.getMcrqty());
+	    			mpval = AppCalculationUtils.addDouble(mpval, data.getMpisaleqty());
+	    			mlval = AppCalculationUtils.addDouble(mlval, data.getMlysqty());
+	    			fs+=data.getfs();
+	    			tval = AppCalculationUtils.addDouble(tval, data.getTargetqty());
+	    			sval = AppCalculationUtils.addDouble(sval, data.getSaleqty());
+	    			cval = AppCalculationUtils.addDouble(cval, data.getCrqty());
+	    			pval = AppCalculationUtils.addDouble(pval, data.getPisaleqty());
+	    			lval = AppCalculationUtils.addDouble(lval, data.getLysqty());
+	    			fs+=data.getfs();
+	    			
+	    		}
+	    		else
+	    		{
+	    			mtval = AppCalculationUtils.addDouble(mtval, data.getMtargetval());
+	    			msval = AppCalculationUtils.addDouble(msval, data.getMsaleval());
+	    			mcval = AppCalculationUtils.addDouble(mcval, data.getMcrval());
+	    			mpval = AppCalculationUtils.addDouble(mpval, data.getMpisale());
+	    			mlval = AppCalculationUtils.addDouble(mlval, data.getMlysval());
+	    			fs+=data.getfs();
+	    			tval = AppCalculationUtils.addDouble(tval, data.getTargetval());
+	    			sval = AppCalculationUtils.addDouble(sval, data.getSaleval());
+	    			cval = AppCalculationUtils.addDouble(cval, data.getCrval());
+	    			pval = AppCalculationUtils.addDouble(pval, data.getPisale());
+	    			lval = AppCalculationUtils.addDouble(lval, data.getLysval());
+	    			fs+=data.getfs();
+	    		}
 	    	}
 
 		} //end of for loop

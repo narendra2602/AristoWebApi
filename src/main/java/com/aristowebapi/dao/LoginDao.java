@@ -25,7 +25,7 @@ public interface LoginDao extends JpaRepository<MktDataDto, Integer> {
 /*	@Query(value = "Select max(date_format(u.u_date,'%d/%m/%Y %h:%i:%s'))  msg from upload u  ", nativeQuery = true)
 	String getMessage();
 */
-	@Query(value = "Select concat(m.msg,' ',max(date_format(u.u_date,'%d/%m/%Y %h:%i:%s')))  msg from aristo.upload u,	(SELECT distinct msg FROM aristo.MSG_MASTER) m ", nativeQuery = true)
+	@Query(value = "Select concat(m.msg,' ',max(date_format(u.u_date,'%d/%m/%Y %h:%i:%s')))  msg from aristo_web.upload u,	(SELECT distinct message msg FROM aristo_web.MSG) m ", nativeQuery = true)
 	String getMessage();
-	
+//	SELECT CONCAT(m.msg,' ',MAX(DATE_FORMAT(u.u_date,'%d/%m/%Y %h:%i:%s')))  msg FROM aristo_web.upload u,	(SELECT DISTINCT message msg FROM aristo_web.MSG) m ;
 }
