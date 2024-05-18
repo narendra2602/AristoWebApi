@@ -58,6 +58,7 @@ Logger logger = LoggerFactory.getLogger(MktRepo9ServiceImpl.class);
 		
 		List<MonthDto> monthData = mktRepo10Dao.getAllMonth(request.getMyear());
 		int sz=monthData.size();
+		sz=request.getEmon();
 		int k=0;
 		int z=0;
 

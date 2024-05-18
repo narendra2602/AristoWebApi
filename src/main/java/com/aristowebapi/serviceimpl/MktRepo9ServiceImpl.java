@@ -63,6 +63,7 @@ public class MktRepo9ServiceImpl  implements MktRepo9Service{
 		
 		List<MonthDto> monthData = mktRepo9Dao.getAllMonth(request.getMyear());
 		int sz=monthData.size();
+		sz=request.getEmon();
 		int k=0;
 		int z=0;
 

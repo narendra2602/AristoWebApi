@@ -58,6 +58,7 @@ public class MktRepo6ServiceImpl implements MktRepo6Service  {
 		
 		List<MonthDto> monthData = mktRepo6Dao.getAllMonth(request.getMyear());
 		int sz=monthData.size();
+		sz=request.getEmon();
 		int k=0;
 		int z=0;
 
@@ -112,8 +113,6 @@ public class MktRepo6ServiceImpl implements MktRepo6Service  {
 			
 			MktRepo6 data = mktRepo6SaleList.get(i);
 			
-			if(data.getDepo_code()==0)
-				continue;
 
 			if(first)
 			{
@@ -156,7 +155,7 @@ public class MktRepo6ServiceImpl implements MktRepo6Service  {
 
 			}
 
-			if(sdepo_code!=data.getSdepo_code())
+			if(sdepo_code!=data.getSdepo_code() && request.getOption()==2)
 			{
 				response.setName("Branch Total");
 				response.setFs(bfs);
@@ -186,6 +185,8 @@ public class MktRepo6ServiceImpl implements MktRepo6Service  {
 			for(int b=k;b<sz;b++)
 			{
 				MonthDto mn=monthData.get(b);
+				if(mn.getMnth_code()>data.getMnth_code())
+					break;
 				if(mn.getMnth_code()==data.getMnth_code())
 				{
 					if(request.getUv()==1)
@@ -203,23 +204,25 @@ public class MktRepo6ServiceImpl implements MktRepo6Service  {
 					gfs+=data.getFs();
 					fs+=data.getFs();
 					bfs+=data.getFs();
-					if(branchtotal.containsKey(data.getMnth_abbr()))
+					if(request.getOption()==2)
 					{
-						double ggval =0;
-						if (request.getUv()==1)
-							ggval = AppCalculationUtils.addDouble(branchtotal.get(data.getMnth_abbr()), data.getSales_qty());
+						if(branchtotal.containsKey(data.getMnth_abbr()))
+						{
+							double ggval =0;
+							if (request.getUv()==1)
+								ggval = AppCalculationUtils.addDouble(branchtotal.get(data.getMnth_abbr()), data.getSales_qty());
+							else
+								ggval = AppCalculationUtils.addDouble(branchtotal.get(data.getMnth_abbr()), data.getSales_val());
+							branchtotal.put(data.getMnth_abbr(), ggval);
+						}
 						else
-							ggval = AppCalculationUtils.addDouble(branchtotal.get(data.getMnth_abbr()), data.getSales_val());
-						branchtotal.put(data.getMnth_abbr(), ggval);
+						{
+							if (request.getUv()==1)
+								branchtotal.put(data.getMnth_abbr(), data.getSales_qty());
+							else
+								branchtotal.put(data.getMnth_abbr(), data.getSales_val());
+						}
 					}
-					else
-					{
-						if (request.getUv()==1)
-							branchtotal.put(data.getMnth_abbr(), data.getSales_qty());
-						else
-							branchtotal.put(data.getMnth_abbr(), data.getSales_val());
-					}
-
 					if(total.containsKey(data.getMnth_abbr()))
 					{
 						double ggval =0;
@@ -244,17 +247,18 @@ public class MktRepo6ServiceImpl implements MktRepo6Service  {
 				else
 				{
 					months.put(mn.getMnth_abbr(), 0.0);
-
-					if(branchtotal.containsKey(mn.getMnth_abbr()))
+					if(request.getOption()==2)
 					{
-						// do nothing
-					}
-					else
-					{
-						branchtotal.put(mn.getMnth_abbr(), 0.0);
+						if(branchtotal.containsKey(mn.getMnth_abbr()))
+						{
+							// do nothing
+						}
+						else
+						{
+							branchtotal.put(mn.getMnth_abbr(), 0.0);
 
+						}
 					}
-
 					if(total.containsKey(mn.getMnth_abbr()))
 					{
 						// do nothing
@@ -287,18 +291,20 @@ public class MktRepo6ServiceImpl implements MktRepo6Service  {
 
 		response.setMonths(months);
 		saleList.add(response);
+		
+		if(request.getOption()==2)
+		{
+			response=new MktRepo6Response();
+			response.setName("Branch Total");
+			response.setFs(bfs);
+			branchcolumnTotal = branchtotal.values().stream().mapToDouble(d -> d).sum();
+			branchcolumnTotal=Math.round(branchcolumnTotal*100.0)/100.00;
 
-		response=new MktRepo6Response();
-		response.setName("Branch Total");
-		response.setFs(bfs);
-		branchcolumnTotal = branchtotal.values().stream().mapToDouble(d -> d).sum();
-		branchcolumnTotal=Math.round(branchcolumnTotal*100.0)/100.00;
-
-		branchtotal.put("TOTAL", branchcolumnTotal);
-		response.setMonths(branchtotal);
-		response.setColor(1);
-		saleList.add(response);
-
+			branchtotal.put("TOTAL", branchcolumnTotal);
+			response.setMonths(branchtotal);
+			response.setColor(1);
+			saleList.add(response);
+		}
 		
 		
 		grandColumnTotal = total.values().stream().mapToDouble(d -> d).sum();

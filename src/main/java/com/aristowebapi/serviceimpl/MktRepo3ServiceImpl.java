@@ -50,6 +50,7 @@ public class MktRepo3ServiceImpl implements MktRepo3Service {
 		
 		List<MonthDto> monthData = mktRepo3Dao.getAllMonth(request.getMyear());
 		int sz=monthData.size();
+		sz=request.getEmon();
 		int k=0;
 		int z=0;
 
