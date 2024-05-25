@@ -41,6 +41,9 @@ public class MktRepo11ServiceImpl implements MktRepo11Service{
 		title.append(aristoWebMessageConstant.divisionMap.get(String.valueOf(data.getDiv_code())));
 		title.append(request.getDepoCode()==0?"ALL INDIA":mktRepo11Dao.getBranch(request.getDepoCode())+" Branch: ");
 		title.append(" MONTH WISE DETAIL ");
+		title.append(" For The Marketing Year - ");
+		title.append(request.getMyear());
+
 		return title.toString();
 
 	}
@@ -97,24 +100,24 @@ public class MktRepo11ServiceImpl implements MktRepo11Service{
 			
 			response.setMonth(data.getMnth_abbr());
 			response.setFs(data.getFs());
-	    	response.setMonthTgt(AppCalculationUtils.valueDivideByLacInDouble(data.getTgt_val()));
-	    	response.setMonthSale(AppCalculationUtils.valueDivideByLacInDouble(data.getSales_val()));
-	    	response.setMonthLys(AppCalculationUtils.valueDivideByLacInDouble(data.getLys_val()));
-	    	response.setMonthAch(data.getAch());
-	    	response.setMonthGth(data.getGth());
-	    	response.setMonthPmr(AppCalculationUtils.calculatePmr(AppCalculationUtils.valueDivideByLacInDouble(data.getSales_val()),data.getFs()));
-	    	response.setMonthSd(AppCalculationUtils.valueDivideByLacInDouble(data.getSurdef()));
+	    	response.setMthBudget(AppCalculationUtils.valueDivideByLacInDouble(data.getTgt_val()));
+	    	response.setMthSale(AppCalculationUtils.valueDivideByLacInDouble(data.getSales_val()));
+	    	response.setMthLys(AppCalculationUtils.valueDivideByLacInDouble(data.getLys_val()));
+	    	response.setMthAchPer(data.getAch());
+	    	response.setMthGthPer(data.getGth());
+	    	response.setMthPmr(AppCalculationUtils.calculatePmr(AppCalculationUtils.valueDivideByLacInDouble(data.getSales_val()),data.getFs()));
+	    	response.setMthSurSlashdef(AppCalculationUtils.valueDivideByLacInDouble(data.getSurdef()));
 
-			response.setCummFs(cummFs);
-	    	response.setCummTgt(AppCalculationUtils.valueDivideByLacInDouble(cummTarget));
-	    	response.setCummSale(AppCalculationUtils.valueDivideByLacInDouble(cummSale));
+			response.setCumFs(cummFs);
+	    	response.setCumBudget(AppCalculationUtils.valueDivideByLacInDouble(cummTarget));
+	    	response.setCumSale(AppCalculationUtils.valueDivideByLacInDouble(cummSale));
 
-	    	response.setCummLys(AppCalculationUtils.valueDivideByLacInDouble(cummLys));
-	    	response.setCummAch(AppCalculationUtils.calculateAch(cummSale, cummTarget));
-	    	response.setCummGth(AppCalculationUtils.calculateGth(cummSale, cummLys));
-	    	response.setCummPmr(AppCalculationUtils.calculatePmr(AppCalculationUtils.valueDivideByLacInDouble(cummSale), cummFs));
-	    	response.setCummSd(AppCalculationUtils.valueDivideByLacInDouble((cummSale-cummTarget)));
-	    	response.setCummIncrSale(AppCalculationUtils.valueDivideByLacInDouble((cummSale-cummLys)));
+	    	response.setCumLys(AppCalculationUtils.valueDivideByLacInDouble(cummLys));
+	    	response.setCumAchPer(AppCalculationUtils.calculateAch(cummSale, cummTarget));
+	    	response.setCumGthPer(AppCalculationUtils.calculateGth(cummSale, cummLys));
+	    	response.setCumPmr(AppCalculationUtils.calculatePmr(AppCalculationUtils.valueDivideByLacInDouble(cummSale), cummFs));
+	    	response.setCumSurSlashdef(AppCalculationUtils.valueDivideByLacInDouble((cummSale-cummTarget)));
+	    	response.setCumIncrSale(AppCalculationUtils.valueDivideByLacInDouble((cummSale-cummLys)));
 
 
 
@@ -131,24 +134,24 @@ public class MktRepo11ServiceImpl implements MktRepo11Service{
 			response.setMonth("GRAND TOTAL");
 			
 			response.setFs(cummFs);
-	    	response.setMonthTgt(AppCalculationUtils.valueDivideByLacInDouble(monthTarget));
-	    	response.setMonthSale(AppCalculationUtils.valueDivideByLacInDouble(monthSale));
-	    	response.setMonthLys(AppCalculationUtils.valueDivideByLacInDouble(monthLys));
-	    	response.setMonthAch(AppCalculationUtils.calculateAch(monthSale, monthTarget));
-	    	response.setMonthGth(AppCalculationUtils.calculateGth(monthSale, monthLys));
-	    	response.setMonthPmr(AppCalculationUtils.calculatePmr(AppCalculationUtils.valueDivideByLacInDouble(monthSale), cummFs));
-	    	response.setMonthSd(AppCalculationUtils.valueDivideByLacInDouble((monthSale-monthTarget)));
+	    	response.setMthBudget(AppCalculationUtils.valueDivideByLacInDouble(monthTarget));
+	    	response.setMthSale(AppCalculationUtils.valueDivideByLacInDouble(monthSale));
+	    	response.setMthLys(AppCalculationUtils.valueDivideByLacInDouble(monthLys));
+	    	response.setMthAchPer(AppCalculationUtils.calculateAch(monthSale, monthTarget));
+	    	response.setMthGthPer(AppCalculationUtils.calculateGth(monthSale, monthLys));
+	    	response.setMthPmr(AppCalculationUtils.calculatePmr(AppCalculationUtils.valueDivideByLacInDouble(monthSale), cummFs));
+	    	response.setMthSurSlashdef(AppCalculationUtils.valueDivideByLacInDouble((monthSale-monthTarget)));
 	    	
 	    	
-			response.setCummFs(cummFs);
-	    	response.setCummTgt(AppCalculationUtils.valueDivideByLacInDouble(cummTarget));
-	    	response.setCummSale(AppCalculationUtils.valueDivideByLacInDouble(cummSale));
-	    	response.setCummLys(AppCalculationUtils.valueDivideByLacInDouble(cummLys));
-	    	response.setCummAch(AppCalculationUtils.calculateAch(cummSale, cummTarget));
-	    	response.setCummGth(AppCalculationUtils.calculateGth(cummSale, cummLys));
-	    	response.setCummPmr(AppCalculationUtils.calculatePmr(AppCalculationUtils.valueDivideByLacInDouble(cummSale), cummFs));
-	    	response.setCummSd(AppCalculationUtils.valueDivideByLacInDouble((cummSale-cummTarget)));
-	    	response.setCummIncrSale(AppCalculationUtils.valueDivideByLacInDouble((cummSale-cummLys)));
+			response.setCumFs(cummFs);
+	    	response.setCumBudget(AppCalculationUtils.valueDivideByLacInDouble(cummTarget));
+	    	response.setCumSale(AppCalculationUtils.valueDivideByLacInDouble(cummSale));
+	    	response.setCumLys(AppCalculationUtils.valueDivideByLacInDouble(cummLys));
+	    	response.setCumAchPer(AppCalculationUtils.calculateAch(cummSale, cummTarget));
+	    	response.setCumGthPer(AppCalculationUtils.calculateGth(cummSale, cummLys));
+	    	response.setCumPmr(AppCalculationUtils.calculatePmr(AppCalculationUtils.valueDivideByLacInDouble(cummSale), cummFs));
+	    	response.setCumSurSlashdef(AppCalculationUtils.valueDivideByLacInDouble((cummSale-cummTarget)));
+	    	response.setCumIncrSale(AppCalculationUtils.valueDivideByLacInDouble((cummSale-cummLys)));
 			response.setColor(2);
 
 			saleList.add(response);

@@ -15,22 +15,22 @@ public class BranchMisRepo6Response {
 	
 	private String name;
 	private int invSaleQty;
-	private double invSaleVal;
+	private long invSaleVal;
 	private int piSaleQty;
-	private double piSaleVal;
+	private long piSaleVal;
 	private int grossSaleQty;
-	private double grossSaleVal;
+	private long grossSaleVal;
 	private int salableQty;
-	private double salableVal;
+	private long salableVal;
 	private int expQty;
-	private double expVal;
+	private long expVal;
 	private int brkQty;
-	private double brkVal;
+	private long brkVal;
 	private int othQty;
-	private double othVal;
-	private double pdVal;
+	private long othVal;
+	private long pdVal;
 	private int netQty;
-	private double netVal;
+	private long netVal;
 	private int color;
 
 }

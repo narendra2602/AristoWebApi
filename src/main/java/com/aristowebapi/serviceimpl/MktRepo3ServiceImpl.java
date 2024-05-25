@@ -40,6 +40,8 @@ public class MktRepo3ServiceImpl implements MktRepo3Service {
 		title.append(request.getRepType()==1?" Product/ ":" Group/ ");
 		title.append(request.getUv()==1?"Unit Wise ":"Value Wise ");
 		title.append(request.getOption()==1?"Sales Trend ":"Target Trend ");
+		title.append("For The Marketing Year " );
+		title.append(request.getMyear());
 		return title.toString();
 
 	}

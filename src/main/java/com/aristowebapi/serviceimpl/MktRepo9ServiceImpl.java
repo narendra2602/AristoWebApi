@@ -50,6 +50,8 @@ public class MktRepo9ServiceImpl  implements MktRepo9Service{
 		}	
 		title.append(request.getGpCode()!=0?" Group -> "+data.getGp_name():"");
 		title.append(request.getUv()==1?" Unit Wise Trend ":" Value Wise Trend ");
+		title.append(" For The Marketing Year - ");
+		title.append(request.getMyear());
 		return title.toString();
 
 	}
@@ -66,8 +68,10 @@ public class MktRepo9ServiceImpl  implements MktRepo9Service{
 		sz=request.getEmon();
 		int k=0;
 		int z=0;
-
-
+		long tgtColumnTotal1=0;
+		long salesColumnTotal1=0;
+		long lysColumnTotal1=0;
+		int fsColumnTotal1=0;
 		List<MktRepo9> MktRepo9SaleList=null;
 
 			System.out.println("request type "+request.getRepType());
@@ -157,8 +161,8 @@ public class MktRepo9ServiceImpl  implements MktRepo9Service{
 
 				long tgtColumnTotal = tgt.values().stream().mapToLong(d -> d).sum();
 				tgt.put("TOTAL",tgtColumnTotal);
-				response.setTarget(tgt);
-
+				response.setBudget(tgt);
+				
 				
 				long salesColumnTotal = sales.values().stream().mapToLong(d -> d).sum();
 				sales.put("TOTAL",salesColumnTotal);
@@ -170,35 +174,35 @@ public class MktRepo9ServiceImpl  implements MktRepo9Service{
 
 				long incrColumnTotal = incr.values().stream().mapToLong(d -> d).sum();
 				incr.put("TOTAL",incrColumnTotal);
-				response.setIncr(incr);
+				response.setIncrSale(incr);
 
 //				ach.put("TOTAL", Math.round(((salesColumnTotal*1.0/tgtColumnTotal)*100)*100.0)/100.0);
 				ach.put("TOTAL", AppCalculationUtils.calculateAch(salesColumnTotal, tgtColumnTotal));
-				response.setAch(ach);
+				response.setAchPer(ach);
 
 //				gth.put("TOTAL", Math.round((((salesColumnTotal*1.0/lysColumnTotal)*100)-100)*100.0)/100.0);
 				gth.put("TOTAL",AppCalculationUtils.calculateGth(salesColumnTotal, lysColumnTotal));
-				response.setGth(gth);
+				response.setGthPer(gth);
 
 //				pmr.put("TOTAL", fsColumnTotal!=0?Math.round((salesColumnTotal*1.0/fsColumnTotal)*100.0)/100.0:0.00);
 				pmr.put("TOTAL", AppCalculationUtils.calculatePmr(salesColumnTotal,fsColumnTotal));
 				response.setPmr(pmr);
 
 				sd.put("TOTAL", salesColumnTotal-tgtColumnTotal);
-				response.setSd(sd);
+				response.setSurSlashdef(sd);
 				
 				
 
 				response.setName(mname);
 				response.setFs(fs);
-				response.setTarget(tgt);
+				response.setBudget(tgt);
 				response.setSales(sales);
 				response.setLys(lys);
-				response.setIncr(incr);
-				response.setAch(ach);
-				response.setGth(gth);
+				response.setIncrSale(incr);
+				response.setAchPer(ach);
+				response.setGthPer(gth);
 				response.setPmr(pmr);
-				response.setSd(sd);
+				response.setSurSlashdef(sd);
 				saleList.add(response);
 				
 				response=new MktRepo9Response();
@@ -311,17 +315,53 @@ public class MktRepo9ServiceImpl  implements MktRepo9Service{
 			k++;
 		}
 
+		int fsColumnTotal = fs.values().stream().mapToInt(d -> d).sum();
+		fs.put("TOTAL",fsColumnTotal);
+		response.setFs(fs);
+
+		long tgtColumnTotal = tgt.values().stream().mapToLong(d -> d).sum();
+		tgt.put("TOTAL",tgtColumnTotal);
+		response.setBudget(tgt);
 		
+		
+		long salesColumnTotal = sales.values().stream().mapToLong(d -> d).sum();
+		sales.put("TOTAL",salesColumnTotal);
+		response.setSales(sales);
+
+		long lysColumnTotal = lys.values().stream().mapToLong(d -> d).sum();
+		lys.put("TOTAL",lysColumnTotal);
+		response.setLys(lys);
+
+		long incrColumnTotal = incr.values().stream().mapToLong(d -> d).sum();
+		incr.put("TOTAL",incrColumnTotal);
+		response.setIncrSale(incr);
+
+//		ach.put("TOTAL", Math.round(((salesColumnTotal*1.0/tgtColumnTotal)*100)*100.0)/100.0);
+		ach.put("TOTAL", AppCalculationUtils.calculateAch(salesColumnTotal, tgtColumnTotal));
+		response.setAchPer(ach);
+
+//		gth.put("TOTAL", Math.round((((salesColumnTotal*1.0/lysColumnTotal)*100)-100)*100.0)/100.0);
+		gth.put("TOTAL",AppCalculationUtils.calculateGth(salesColumnTotal, lysColumnTotal));
+		response.setGthPer(gth);
+
+//		pmr.put("TOTAL", fsColumnTotal!=0?Math.round((salesColumnTotal*1.0/fsColumnTotal)*100.0)/100.0:0.00);
+		pmr.put("TOTAL", AppCalculationUtils.calculatePmr(salesColumnTotal,fsColumnTotal));
+		response.setPmr(pmr);
+
+		sd.put("TOTAL", salesColumnTotal-tgtColumnTotal);
+		response.setSurSlashdef(sd);
+		
+
 		response.setName(mname);
 		response.setFs(fs);
-		response.setTarget(tgt);
+		response.setBudget(tgt);
 		response.setSales(sales);
 		response.setLys(lys);
-		response.setIncr(incr);
-		response.setAch(ach);
-		response.setGth(gth);
+		response.setIncrSale(incr);
+		response.setAchPer(ach);
+		response.setGthPer(gth);
 		response.setPmr(pmr);
-		response.setSd(sd);
+		response.setSurSlashdef(sd);
 		saleList.add(response);
 
 /*		if(request.getRepType()==2)

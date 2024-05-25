@@ -183,11 +183,11 @@ public class BranchMisServiceImpl implements BranchMisservice{
 		response.setSurdef(AppCalculationUtils.roundToDecimal2Places(net-budget));
 */
 		response.setBudget(budget);
-		response.setGross(gross);
+		response.setGrossSale(gross);
 		response.setCredit(credit);
-		response.setNet(net);
-		response.setAch(AppCalculationUtils.calculateAch(net, budget));
-		response.setSurdef(net-budget);
+		response.setNetSale(net);
+		response.setAchPer(AppCalculationUtils.calculateAch(net, budget));
+		response.setSurSlashdef(net-budget);
 
 		response.setColor(color);
 		return response;
@@ -273,8 +273,8 @@ public class BranchMisServiceImpl implements BranchMisservice{
 	    	response.setInvSaleQty(data.getSaleqty());
 	    	response.setInvSaleVal(data.getSalesval());
 
-			response.setPiSaleQty(data.getSaleqty());
-	    	response.setPiSaleVal(data.getSalesval());
+			response.setPiSaleQty(data.getPisaleqty());
+	    	response.setPiSaleVal(data.getPisalesval());
 
 			response.setGrossSaleQty(data.getGross_sale_qty());
 	    	response.setGrossSaleVal(data.getGross_sale_val());

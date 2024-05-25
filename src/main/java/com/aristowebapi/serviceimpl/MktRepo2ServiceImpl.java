@@ -195,16 +195,16 @@ public class MktRepo2ServiceImpl implements MktRepo2Service {
 				response.setCode(mgrp);
 				response.setName(gpname);
 				response.setPack("");
-		    	response.setTgt(tval);
+		    	response.setBudget(tval);
 		    	response.setSale(sval);
-		    	response.setAch(tval!=0?AppCalculationUtils.calculateAch(sval, tval):0);
-		    	response.setSd(sval-tval);
-		    	response.setCummTgt(cumtval);
-		    	response.setCummSale(cumsval);
- 				response.setCummAch(cumtval!=0?AppCalculationUtils.calculateAch(cumsval, cumtval):0);
-		    	response.setCummSd(cumsval-cumtval);
+		    	response.setAchPer(tval!=0?AppCalculationUtils.calculateAch(sval, tval):0);
+		    	response.setSurSlashDef(sval-tval);
+		    	response.setCumBudget(cumtval);
+		    	response.setCumSale(cumsval);
+ 				response.setCumAchPer(cumtval!=0?AppCalculationUtils.calculateAch(cumsval, cumtval):0);
+		    	response.setCumSurSlashDef(cumsval-cumtval);
 		    	response.setLyr(cumlysval);
-		    	response.setGrowth(cumlysval!=0?AppCalculationUtils.calculateGth(cumsval, cumlysval):0.0);
+		    	response.setGthPer(cumlysval!=0?AppCalculationUtils.calculateGth(cumsval, cumlysval):0.0);
 		    	response.setPmr(nrep!=0?AppCalculationUtils.calculatePmr(cumsval, nrep):0);
 		    	response.setColor(1);
 		    	saleList.add(response);
@@ -228,32 +228,32 @@ public class MktRepo2ServiceImpl implements MktRepo2Service {
 
 		    if (request.getUv()==1)
 		    {
-		    	response.setTgt(data.getTargetqty());
+		    	response.setBudget(data.getTargetqty());
 		    	response.setSale(data.getSaleqty());
-		    	response.setAch(data.getTargetqty()!=0?AppCalculationUtils.calculateAch(data.getSaleqty(), data.getTargetqty()):0);
-		    	response.setSd(data.getSaleqty()-data.getTargetqty());
-		    	response.setCummTgt(data.getCumtarqty());
-		    	response.setCummSale(data.getCummsaleqty());
- 				response.setCummAch(data.getCumtarqty()!=0?AppCalculationUtils.calculateAch(data.getCummsaleqty(), data.getCumtarqty()):0);
-		    	response.setCummSd(data.getCummsaleqty()-data.getCumtarqty());
+		    	response.setAchPer(data.getTargetqty()!=0?AppCalculationUtils.calculateAch(data.getSaleqty(), data.getTargetqty()):0);
+		    	response.setSurSlashDef(data.getSaleqty()-data.getTargetqty());
+		    	response.setCumBudget(data.getCumtarqty());
+		    	response.setCumSale(data.getCummsaleqty());
+ 				response.setCumAchPer(data.getCumtarqty()!=0?AppCalculationUtils.calculateAch(data.getCummsaleqty(), data.getCumtarqty()):0);
+		    	response.setCumSurSlashDef(data.getCummsaleqty()-data.getCumtarqty());
 		    	response.setLyr(data.getCumlysqty());
-		    	response.setGrowth(data.getCumlysqty()!=0?AppCalculationUtils.calculateGth(data.getCummsaleqty(), data.getCumlysqty()):0.0);
+		    	response.setGthPer(data.getCumlysqty()!=0?AppCalculationUtils.calculateGth(data.getCummsaleqty(), data.getCumlysqty()):0.0);
 		    	response.setPmr(data.getnrep()!=0?AppCalculationUtils.calculatePmr(data.getCummsaleqty(), data.getnrep()):0);
-		    	rankAchMap.put(data.getMcode(),response.getCummAch());
+		    	rankAchMap.put(data.getMcode(),response.getCumAchPer());
 		    	rankPmrMap.put(data.getMcode(),response.getPmr());
 		    }
 		    else if (request.getUv()==2)
 		    {
-		    	response.setTgt(data.getTargetval());
+		    	response.setBudget(data.getTargetval());
 		    	response.setSale(data.getSaleval());
-		    	response.setAch(data.getTargetval()!=0?AppCalculationUtils.calculateAch(data.getSaleval(), data.getTargetval()):0);
-		    	response.setSd(data.getSaleval()-data.getTargetval());
-		    	response.setCummTgt(data.getCumtarval());
-		    	response.setCummSale(data.getCummsaleval());
- 				response.setCummAch(data.getCumtarval()!=0?AppCalculationUtils.calculateAch(data.getCummsaleval(), data.getCumtarval()):0);
-		    	response.setCummSd(data.getCummsaleval()-data.getCumtarval());
+		    	response.setAchPer(data.getTargetval()!=0?AppCalculationUtils.calculateAch(data.getSaleval(), data.getTargetval()):0);
+		    	response.setSurSlashDef(data.getSaleval()-data.getTargetval());
+		    	response.setCumBudget(data.getCumtarval());
+		    	response.setCumSale(data.getCummsaleval());
+ 				response.setCumAchPer(data.getCumtarval()!=0?AppCalculationUtils.calculateAch(data.getCummsaleval(), data.getCumtarval()):0);
+		    	response.setCumSurSlashDef(data.getCummsaleval()-data.getCumtarval());
 		    	response.setLyr(data.getCumlysval());
-		    	response.setGrowth(data.getCumlysval()!=0?AppCalculationUtils.calculateGth(data.getCummsaleval(), data.getCumlysval()):0.0);
+		    	response.setGthPer(data.getCumlysval()!=0?AppCalculationUtils.calculateGth(data.getCummsaleval(), data.getCumlysval()):0.0);
 		    	response.setPmr(data.getnrep()!=0?AppCalculationUtils.calculatePmr(data.getCummsaleval(), data.getnrep()):0);
 		    }
 	    	saleList.add(response);
@@ -292,16 +292,16 @@ public class MktRepo2ServiceImpl implements MktRepo2Service {
 			response.setCode(mgrp);
 			response.setName(gpname);
 			response.setPack("");
-			response.setTgt(tval);
+			response.setBudget(tval);
 			response.setSale(sval);
-			response.setAch(tval!=0?AppCalculationUtils.calculateAch(sval, tval):0);
-			response.setSd(sval-tval);
-			response.setCummTgt(cumtval);
-			response.setCummSale(cumsval);
-			response.setCummAch(cumtval!=0?AppCalculationUtils.calculateAch(cumsval, cumtval):0);
-			response.setCummSd(cumsval-cumtval);
+			response.setAchPer(tval!=0?AppCalculationUtils.calculateAch(sval, tval):0);
+			response.setSurSlashDef(sval-tval);
+			response.setCumBudget(cumtval);
+			response.setCumSale(cumsval);
+			response.setCumAchPer(cumtval!=0?AppCalculationUtils.calculateAch(cumsval, cumtval):0);
+			response.setCumSurSlashDef(cumsval-cumtval);
 			response.setLyr(cumlysval);
-			response.setGrowth(cumlysval!=0?AppCalculationUtils.calculateGth(cumsval, cumlysval):0.0);
+			response.setGthPer(cumlysval!=0?AppCalculationUtils.calculateGth(cumsval, cumlysval):0.0);
 			response.setPmr(nrep!=0?AppCalculationUtils.calculatePmr(cumsval, nrep):0);
 			response.setColor(1);
 
@@ -312,16 +312,16 @@ public class MktRepo2ServiceImpl implements MktRepo2Service {
 			response.setCode(0);
 			response.setName("GRAND TOTAL");
 			response.setPack("");
-			response.setTgt(gtval);
+			response.setBudget(gtval);
 			response.setSale(gsval);
-			response.setAch(gtval!=0?AppCalculationUtils.calculateAch(gsval, gtval):0);
-			response.setSd(gsval-gtval);
-			response.setCummTgt(gcumtval);
-			response.setCummSale(gcumsval);
-			response.setCummAch(gcumtval!=0?AppCalculationUtils.calculateAch(gcumsval, gcumtval):0);
-			response.setCummSd(gcumsval-gcumtval);
+			response.setAchPer(gtval!=0?AppCalculationUtils.calculateAch(gsval, gtval):0);
+			response.setSurSlashDef(gsval-gtval);
+			response.setCumBudget(gcumtval);
+			response.setCumSale(gcumsval);
+			response.setCumAchPer(gcumtval!=0?AppCalculationUtils.calculateAch(gcumsval, gcumtval):0);
+			response.setCumSurSlashDef(gcumsval-gcumtval);
 			response.setLyr(gcumlysval);
-			response.setGrowth(gcumlysval!=0?AppCalculationUtils.calculateGth(gcumsval, gcumlysval):0.0);
+			response.setGthPer(gcumlysval!=0?AppCalculationUtils.calculateGth(gcumsval, gcumlysval):0.0);
 			response.setPmr(nrep!=0?AppCalculationUtils.calculatePmr(gcumsval, nrep):0);
 			response.setColor(2);
 

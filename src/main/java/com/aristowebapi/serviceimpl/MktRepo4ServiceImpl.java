@@ -148,7 +148,7 @@ public class MktRepo4ServiceImpl implements MktRepo4Service{
 
 		long tgtColumnTotal = tgt.values().stream().mapToLong(d -> d).sum();
 		tgt.put("TOTAL",tgtColumnTotal);
-		response.setTarget(tgt);
+		response.setBudget(tgt);
 
 		
 		long salesColumnTotal = sales.values().stream().mapToLong(d -> d).sum();
@@ -161,19 +161,19 @@ public class MktRepo4ServiceImpl implements MktRepo4Service{
 
 		long incrColumnTotal = incr.values().stream().mapToLong(d -> d).sum();
 		incr.put("TOTAL",incrColumnTotal);
-		response.setIncr(incr);
+		response.setIncrSale(incr);
 
 		ach.put("TOTAL", Math.round(((salesColumnTotal*1.0/tgtColumnTotal)*100)*100.0)/100.0);
-		response.setAch(ach);
+		response.setAchPer(ach);
 
 		gth.put("TOTAL", Math.round((((salesColumnTotal*1.0/lysColumnTotal)*100)-100)*100.0)/100.0);
-		response.setGth(gth);
+		response.setGthPer(gth);
 
 		pmr.put("TOTAL", fsColumnTotal!=0?Math.round((salesColumnTotal/fsColumnTotal)):0);
 		response.setPmr(pmr);
 
 		sd.put("TOTAL", Math.round(salesColumnTotal*1.0-tgtColumnTotal)*100.00/100.00);
-		response.setSd(sd);
+		response.setSurSlashdef(sd);
 
 		rankach.put("TOTAL",0);
 		response.setRankAch(rankach);

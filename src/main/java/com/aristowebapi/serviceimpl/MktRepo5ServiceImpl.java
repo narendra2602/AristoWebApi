@@ -61,6 +61,8 @@ public class MktRepo5ServiceImpl  implements MktRepo5Service  {
 		List<MktRepo5> MktRepo5List=null;
 		int size = 0;
 		System.out.println("option "+request.getOption()+" value of code "+request.getGpCode()+" checkbox "+request.getPackCheckBox());
+
+		
 		try {
 
 			
@@ -72,6 +74,10 @@ public class MktRepo5ServiceImpl  implements MktRepo5Service  {
 			}
 			else if(request.getOption()==2 && request.getPackCheckBox()==1)
 			{
+		
+				System.out.println(request.getMyear()+" "+request.getDivCode()+" "+request.getDepoCode()
+				+" "+request.getSmon()+" "+request.getEmon()+" "+request.getUtype()+" "+request.getLoginId()+" "+request.getGpCode());		
+
 				MktRepo5List=mktRepo5Dao.getWebReport24Packallhq(request.getMyear(),request.getDivCode(),request.getDepoCode()
 						,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId(),request.getGpCode());
 				
@@ -91,8 +97,6 @@ public class MktRepo5ServiceImpl  implements MktRepo5Service  {
 
 			}
 
-			System.out.println(request.getMyear()+" "+request.getDivCode()+" "+request.getDepoCode()
-			+" "+request.getSmon()+" "+request.getEmon()+" "+request.getUtype()+" "+request.getLoginId()+" "+request.getGpCode());		
 
 			size = MktRepo5List.size();
 			logger.info("size of the data is {} ***** ",size);
@@ -142,27 +146,27 @@ public class MktRepo5ServiceImpl  implements MktRepo5Service  {
 				response.setMthGross(data.getMsaleqty());
 				response.setMthCredit(data.getMcrqty());
 				response.setMthNet(AppCalculationUtils.calculateSdf(data.getMsaleqty(), data.getMcrqty()));
-				response.setMthAch(data.getMtargetval()!=0?AppCalculationUtils.calculateAch(response.getMthNet(), data.getMtargetqty()):0);
-				response.setMthSd(AppCalculationUtils.calculateSdf(response.getMthNet(), data.getMtargetqty()));
+				response.setMthAchPer(data.getMtargetval()!=0?AppCalculationUtils.calculateAch(response.getMthNet(), data.getMtargetqty()):0);
+				response.setMthSurSlashDeff(AppCalculationUtils.calculateSdf(response.getMthNet(), data.getMtargetqty()));
 				response.setMthLys(data.getMlysqty());
-				response.setMthGth(data.getMlysqty()!=0?AppCalculationUtils.calculateGth(response.getMthNet(), data.getMlysqty()):0);
-				response.setMthIncrSls(AppCalculationUtils.calculateSdf(response.getMthNet(), data.getMlysqty()));
+				response.setMthGthPer(data.getMlysqty()!=0?AppCalculationUtils.calculateGth(response.getMthNet(), data.getMlysqty()):0);
+				response.setMthIncrSale(AppCalculationUtils.calculateSdf(response.getMthNet(), data.getMlysqty()));
 				response.setMthPmr(AppCalculationUtils.calculatePmr(response.getMthNet(), data.getMfs()));
 				response.setMthPendingPi(data.getMpisaleqty());
 
-				response.setFs(data.getfs());
-				response.setBudget(data.getTargetqty());
-				response.setGross(data.getSaleqty());
-				response.setCredit(data.getCrqty());
-				response.setNet(AppCalculationUtils.calculateSdf(data.getSaleqty(), data.getCrqty()));
-				response.setAch(data.getTargetqty()!=0?AppCalculationUtils.calculateAch(response.getNet(), data.getTargetqty()):0);
+				response.setCumFs(data.getfs());
+				response.setCumBudget(data.getTargetqty());
+				response.setCumGross(data.getSaleqty());
+				response.setCumCredit(data.getCrqty());
+				response.setCumNet(AppCalculationUtils.calculateSdf(data.getSaleqty(), data.getCrqty()));
+				response.setCumAchPer(data.getTargetqty()!=0?AppCalculationUtils.calculateAch(response.getCumNet(), data.getTargetqty()):0);
 
-				response.setSd(AppCalculationUtils.calculateSdf(response.getNet(), data.getTargetqty()));
-				response.setLys(data.getLysqty());
-				response.setGth(data.getLysqty()!=0?AppCalculationUtils.calculateGth(response.getNet(), data.getLysqty()):0);
-				response.setIncrSls(AppCalculationUtils.calculateSdf(response.getNet(), data.getLysqty()));
-				response.setPmr(AppCalculationUtils.calculatePmr(response.getNet(), data.getfs()));
-				response.setPendingPi(data.getPisaleqty());
+				response.setCumSurSlashDef(AppCalculationUtils.calculateSdf(response.getCumNet(), data.getTargetqty()));
+				response.setCumLys(data.getLysqty());
+				response.setCumGthPer(data.getLysqty()!=0?AppCalculationUtils.calculateGth(response.getCumNet(), data.getLysqty()):0);
+				response.setCumIncrSale(AppCalculationUtils.calculateSdf(response.getCumNet(), data.getLysqty()));
+				response.setCumPmr(AppCalculationUtils.calculatePmr(response.getCumNet(), data.getfs()));
+				response.setCumPendingPi(data.getPisaleqty());
 
 			}
 			else
@@ -171,27 +175,27 @@ public class MktRepo5ServiceImpl  implements MktRepo5Service  {
 				response.setMthGross(data.getMsaleval());
 				response.setMthCredit(data.getMcrval());
 				response.setMthNet(AppCalculationUtils.calculateSdf(data.getMsaleval(), data.getMcrval()));
-				response.setMthAch(data.getMtargetval()!=0?AppCalculationUtils.calculateAch(response.getMthNet(), data.getMtargetval()):0);
-				response.setMthSd(AppCalculationUtils.calculateSdf(response.getMthNet(), data.getMtargetval()));
+				response.setMthAchPer(data.getMtargetval()!=0?AppCalculationUtils.calculateAch(response.getMthNet(), data.getMtargetval()):0);
+				response.setMthSurSlashDeff(AppCalculationUtils.calculateSdf(response.getMthNet(), data.getMtargetval()));
 				response.setMthLys(data.getMlysval());
-				response.setMthGth(data.getMlysval()!=0?AppCalculationUtils.calculateGth(response.getMthNet(), data.getMlysval()):0);
-				response.setMthIncrSls(AppCalculationUtils.calculateSdf(response.getMthNet(), data.getMlysval()));
+				response.setMthGthPer(data.getMlysval()!=0?AppCalculationUtils.calculateGth(response.getMthNet(), data.getMlysval()):0);
+				response.setMthIncrSale(AppCalculationUtils.calculateSdf(response.getMthNet(), data.getMlysval()));
 				response.setMthPmr(AppCalculationUtils.calculatePmr(response.getMthNet(), data.getMfs()));
 				response.setMthPendingPi(data.getMpisale());
 
-				response.setFs(data.getfs());
-				response.setBudget(data.getTargetval());
-				response.setGross(data.getSaleval());
-				response.setCredit(data.getCrval());
-				response.setNet(AppCalculationUtils.calculateSdf(data.getSaleval(), data.getCrval()));
-				response.setAch(data.getTargetval()!=0?AppCalculationUtils.calculateAch(response.getNet(), data.getTargetval()):0);
+				response.setCumFs(data.getfs());
+				response.setCumBudget(data.getTargetval());
+				response.setCumGross(data.getSaleval());
+				response.setCumCredit(data.getCrval());
+				response.setCumNet(AppCalculationUtils.calculateSdf(data.getSaleval(), data.getCrval()));
+				response.setCumAchPer(data.getTargetval()!=0?AppCalculationUtils.calculateAch(response.getCumNet(), data.getTargetval()):0);
 
-				response.setSd(AppCalculationUtils.calculateSdf(response.getNet(), data.getTargetval()));
-				response.setLys(data.getLysval());
-				response.setGth(data.getLysval()!=0?AppCalculationUtils.calculateGth(response.getNet(), data.getLysval()):0);
-				response.setIncrSls(AppCalculationUtils.calculateSdf(response.getNet(), data.getLysval()));
-				response.setPmr(AppCalculationUtils.calculatePmr(response.getNet(), data.getfs()));
-				response.setPendingPi(data.getPisale());
+				response.setCumSurSlashDef(AppCalculationUtils.calculateSdf(response.getCumNet(), data.getTargetval()));
+				response.setCumLys(data.getLysval());
+				response.setCumGthPer(data.getLysval()!=0?AppCalculationUtils.calculateGth(response.getCumNet(), data.getLysval()):0);
+				response.setCumIncrSale(AppCalculationUtils.calculateSdf(response.getCumNet(), data.getLysval()));
+				response.setCumPmr(AppCalculationUtils.calculatePmr(response.getCumNet(), data.getfs()));
+				response.setCumPendingPi(data.getPisale());
 			}
 	    	response.setColor(0);
 	    	if(data.getDepo_code()==9996)
@@ -248,27 +252,27 @@ public class MktRepo5ServiceImpl  implements MktRepo5Service  {
 			response.setMthGross(msval);
 			response.setMthCredit(mcval);
 	    	response.setMthNet(AppCalculationUtils.calculateSdf(msval, mcval));
-			response.setMthAch(tval!=0?AppCalculationUtils.calculateAch(response.getMthNet(), mtval):0);
-	    	response.setMthSd(AppCalculationUtils.calculateSdf(response.getMthNet(), mtval));
+			response.setMthAchPer(tval!=0?AppCalculationUtils.calculateAch(response.getMthNet(), mtval):0);
+	    	response.setMthSurSlashDeff(AppCalculationUtils.calculateSdf(response.getMthNet(), mtval));
 	    	response.setMthLys(mlval);
-	    	response.setMthGth(mlval!=0?AppCalculationUtils.calculateGth(response.getMthNet(), mlval):0);
-	    	response.setMthIncrSls(AppCalculationUtils.calculateSdf(response.getMthNet(), mlval));
+	    	response.setMthGthPer(mlval!=0?AppCalculationUtils.calculateGth(response.getMthNet(), mlval):0);
+	    	response.setMthIncrSale(AppCalculationUtils.calculateSdf(response.getMthNet(), mlval));
 	    	response.setMthPmr(AppCalculationUtils.calculatePmr(response.getMthNet(), mfs));
 			response.setMthPendingPi(mpval);
 
 			
-			response.setFs(fs);
-			response.setBudget(tval);
-			response.setGross(sval);
-			response.setCredit(cval);
-	    	response.setNet(AppCalculationUtils.calculateSdf(sval, cval));
-			response.setAch(tval!=0?AppCalculationUtils.calculateAch(response.getNet(), tval):0);
-	    	response.setSd(AppCalculationUtils.calculateSdf(response.getNet(), tval));
-	    	response.setLys(lval);
-	    	response.setGth(lval!=0?AppCalculationUtils.calculateGth(response.getNet(), lval):0);
-	    	response.setIncrSls(AppCalculationUtils.calculateSdf(response.getNet(), lval));
-	    	response.setPmr(AppCalculationUtils.calculatePmr(response.getNet(), fs));
-			response.setPendingPi(pval);
+			response.setCumFs(fs);
+			response.setCumBudget(tval);
+			response.setCumGross(sval);
+			response.setCumCredit(cval);
+	    	response.setCumNet(AppCalculationUtils.calculateSdf(sval, cval));
+			response.setCumAchPer(tval!=0?AppCalculationUtils.calculateAch(response.getCumNet(), tval):0);
+	    	response.setCumSurSlashDef(AppCalculationUtils.calculateSdf(response.getCumNet(), tval));
+	    	response.setCumLys(lval);
+	    	response.setCumGthPer(lval!=0?AppCalculationUtils.calculateGth(response.getCumNet(), lval):0);
+	    	response.setCumIncrSale(AppCalculationUtils.calculateSdf(response.getCumNet(), lval));
+	    	response.setCumPmr(AppCalculationUtils.calculatePmr(response.getCumNet(), fs));
+			response.setCumPendingPi(pval);
 			response.setColor(3);
 
 			saleList.add(response);

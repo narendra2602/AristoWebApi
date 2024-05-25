@@ -15,11 +15,11 @@ public class BranchMisRepo5Response {
 	 
 	private String name;
 	private long budget;
-	private long gross;
+	private long grossSale;
 	private long credit;
-	private long net;
-	private double ach;
-	private long surdef;
+	private long netSale;
+	private double achPer;
+	private long surSlashdef;
 	private int color;
 
 }

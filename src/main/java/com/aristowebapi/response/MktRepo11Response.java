@@ -15,22 +15,22 @@ public class MktRepo11Response {
 	 
 	private String month;
 	private int fs;
-	private double monthTgt;
-	private double monthSale;
-	private double monthLys;
-	private double monthAch;
-	private double monthGth;
-	private double monthPmr;
-	private double monthSd;
-	private double cummTgt;
-	private double cummSale;
-	private double cummLys;
-	private double cummAch;
-	private double cummGth;
-	private double cummPmr;
-	private int cummFs;
-	private double cummSd;
-	private double cummIncrSale;
+	private double mthBudget;
+	private double mthSale;
+	private double mthLys;
+	private double mthAchPer;
+	private double mthGthPer;
+	private double mthPmr;
+	private double mthSurSlashdef;
+	private double cumBudget;
+	private double cumSale;
+	private double cumLys;
+	private double cumAchPer;
+	private double cumGthPer;
+	private double cumPmr;
+	private int cumFs;
+	private double cumSurSlashdef;
+	private double cumIncrSale;
 	private int color;
 	
 

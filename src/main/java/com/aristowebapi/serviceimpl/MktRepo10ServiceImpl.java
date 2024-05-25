@@ -43,6 +43,9 @@ Logger logger = LoggerFactory.getLogger(MktRepo9ServiceImpl.class);
 		title.append(aristoWebMessageConstant.divisionMap.get(String.valueOf(data.getDiv_code())));
 		title.append(request.getDepoCode()==0?"All India":mktRepo10Dao.getBranch(request.getDepoCode())+" Branch: ");
 		title.append(" Rupees Wise Sales Analysis Trend ");
+		title.append(" For The Marketing Year - ");
+		title.append(request.getMyear());
+
 		return title.toString();
 
 	}
@@ -144,7 +147,7 @@ Logger logger = LoggerFactory.getLogger(MktRepo9ServiceImpl.class);
 
 				long tgtColumnTotal = tgt.values().stream().mapToLong(d -> d).sum();
 				tgt.put("TOTAL",tgtColumnTotal);
-				response.setTarget(tgt);
+				response.setBudget(tgt);
 
 				
 				long salesColumnTotal = sales.values().stream().mapToLong(d -> d).sum();
@@ -157,32 +160,32 @@ Logger logger = LoggerFactory.getLogger(MktRepo9ServiceImpl.class);
 
 				long incrColumnTotal = incr.values().stream().mapToLong(d -> d).sum();
 				incr.put("TOTAL",incrColumnTotal);
-				response.setIncr(incr);
+				response.setIncrSale(incr);
 
 				ach.put("TOTAL", Math.round(((salesColumnTotal*1.0/tgtColumnTotal)*100)*100.0)/100.0);
-				response.setAch(ach);
+				response.setAchPer(ach);
 
 				gth.put("TOTAL", Math.round((((salesColumnTotal*1.0/lysColumnTotal)*100)-100)*100.0)/100.0);
-				response.setGth(gth);
+				response.setGthPer(gth);
 
 				pmr.put("TOTAL", fsColumnTotal!=0?Math.round((salesColumnTotal/fsColumnTotal)):0);
 				response.setPmr(pmr);
 
 				sd.put("TOTAL", salesColumnTotal-tgtColumnTotal);
-				response.setSd(sd);
+				response.setSurSlashdef(sd);
 				
 				
 
 				response.setName(mname);
 				response.setFs(fs);
-				response.setTarget(tgt);
+				response.setBudget(tgt);
 				response.setSales(sales);
 				response.setLys(lys);
-				response.setIncr(incr);
-				response.setAch(ach);
-				response.setGth(gth);
+				response.setIncrSale(incr);
+				response.setAchPer(ach);
+				response.setGthPer(gth);
 				response.setPmr(pmr);
-				response.setSd(sd);
+				response.setSurSlashdef(sd);
 				saleList.add(response);
 				
 				response=new MktRepo9Response();
@@ -284,14 +287,14 @@ Logger logger = LoggerFactory.getLogger(MktRepo9ServiceImpl.class);
 		
 		response.setName(mname);
 		response.setFs(fs);
-		response.setTarget(tgt);
+		response.setBudget(tgt);
 		response.setSales(sales);
 		response.setLys(lys);
-		response.setIncr(incr);
-		response.setAch(ach);
-		response.setGth(gth);
+		response.setIncrSale(incr);
+		response.setAchPer(ach);
+		response.setGthPer(gth);
 		response.setPmr(pmr);
-		response.setSd(sd);
+		response.setSurSlashdef(sd);
 		saleList.add(response);
 
 		
@@ -301,7 +304,7 @@ Logger logger = LoggerFactory.getLogger(MktRepo9ServiceImpl.class);
 
 		long tgtColumnTotal = tgt.values().stream().mapToLong(d -> d).sum();
 		tgt.put("TOTAL",tgtColumnTotal);
-		response.setTarget(tgt);
+		response.setBudget(tgt);
 
 		
 		long salesColumnTotal = sales.values().stream().mapToLong(d -> d).sum();
@@ -314,13 +317,13 @@ Logger logger = LoggerFactory.getLogger(MktRepo9ServiceImpl.class);
 
 		long incrColumnTotal = incr.values().stream().mapToLong(d -> d).sum();
 		incr.put("TOTAL",incrColumnTotal);
-		response.setIncr(incr);
+		response.setIncrSale(incr);
 
 		ach.put("TOTAL", Math.round(((salesColumnTotal*1.0/tgtColumnTotal)*100)*100.0)/100.0);
-		response.setAch(ach);
+		response.setAchPer(ach);
 
 		gth.put("TOTAL", Math.round((((salesColumnTotal*1.0/lysColumnTotal)*100)-100)*100.0)/100.0);
-		response.setGth(gth);
+		response.setGthPer(gth);
 
 //		pmr.put("TOTAL", fsColumnTotal!=0?Math.round((salesColumnTotal*1.0/fsColumnTotal)*100.0)/100.0:0.00);
 		pmr.put("TOTAL", AppCalculationUtils.calculatePmr(salesColumnTotal,fsColumnTotal));
@@ -328,7 +331,7 @@ Logger logger = LoggerFactory.getLogger(MktRepo9ServiceImpl.class);
 		response.setPmr(pmr);
 
 		sd.put("TOTAL", salesColumnTotal-tgtColumnTotal);
-		response.setSd(sd);
+		response.setSurSlashdef(sd);
 
 		saleList.add(response);
 		return new ApiResponse<MktRepo9Response>(title.toString(),size,lupdate,saleList);

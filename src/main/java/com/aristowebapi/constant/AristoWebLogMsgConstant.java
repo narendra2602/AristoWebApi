@@ -111,5 +111,7 @@ public class AristoWebLogMsgConstant {
 	public static final String DASH_BOARD_CONTROLLER="DashBoardController {} method execution started, myear : {} , div_code: {} , depo_code: {} , user_type: {} , login_id: {}";
 	public static final String DASH_BOARD_SERVICE="DashBoardServiceImpl:: {} method execution started, myear : {} , div_code: {} , depo_code: {} , user_type: {} , login_id: {}";
 
+	public static final String IQVIA_CONTROLLER="IqviaController {} method execution started, myear : {} , div_code: {} , depo_code: {} , user_type: {} , login_id: {}";
+	public static final String IQVIA_SERVICE="IqviaServiceImpl:: {} method execution started, myear : {} , div_code: {} , depo_code: {} , user_type: {} , login_id: {}";
 
 }
