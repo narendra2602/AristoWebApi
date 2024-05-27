@@ -52,6 +52,8 @@ public class MktRepo9ServiceImpl  implements MktRepo9Service{
 		title.append(request.getUv()==1?" Unit Wise Trend ":" Value Wise Trend ");
 		title.append(" For The Marketing Year - ");
 		title.append(request.getMyear());
+		title.append("-");
+		title.append(request.getMyear()+1);
 		return title.toString();
 
 	}

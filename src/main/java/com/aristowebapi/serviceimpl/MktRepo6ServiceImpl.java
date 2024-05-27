@@ -46,6 +46,11 @@ public class MktRepo6ServiceImpl implements MktRepo6Service  {
 		title.append(request.getUv()==1?" Unit Wise ":" Value Wise ");
 		title.append(request.getGpCode()==0?" All Groups ": data.getGp_name());
 		title.append(" Branch Wise Sales Trend ");
+		title.append(" For The Marketing Year - ");
+		title.append(request.getMyear());
+		title.append("-");
+		title.append(request.getMyear()+1);
+
 		return title.toString();
 
 	}

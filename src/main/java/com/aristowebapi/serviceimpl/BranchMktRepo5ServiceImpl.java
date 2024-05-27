@@ -437,7 +437,9 @@ public class BranchMktRepo5ServiceImpl implements BranchMktService {
 			saleList.add(response);
 
 				
-// 				
+// 			
+			response=new BranchMktRepo5Response();
+			months=new LinkedHashMap();
 			response.setCode(mgrp);
 			response.setName(gname);
 			response.setPack("");

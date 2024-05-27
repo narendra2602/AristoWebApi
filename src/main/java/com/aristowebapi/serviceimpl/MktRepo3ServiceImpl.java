@@ -42,6 +42,9 @@ public class MktRepo3ServiceImpl implements MktRepo3Service {
 		title.append(request.getOption()==1?"Sales Trend ":"Target Trend ");
 		title.append("For The Marketing Year " );
 		title.append(request.getMyear());
+		title.append("-");
+		title.append(request.getMyear()+1);
+
 		return title.toString();
 
 	}

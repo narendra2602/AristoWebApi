@@ -91,7 +91,7 @@ public class IqviaServiceImpl implements IqviaService{
 		response.setRankCy(data.getRc());
 		response.setProduct(data.getProduct());
 		response.setCompany(data.getCompany());
-		response.setLauch(data.getLaunch());
+		response.setLaunch(data.getLaunch());
 		response.setValInLacLy(data.getVall());
 		response.setValInLacCy(data.getValc());
 		response.setMsLy(data.getMsl());

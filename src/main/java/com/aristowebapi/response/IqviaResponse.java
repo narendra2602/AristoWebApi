@@ -17,7 +17,7 @@ public class IqviaResponse {
 	private int rankCy;
 	private String product;
 	private String company;
-	private int lauch;
+	private int launch;
 	private double valInLacLy;
 	private double valInLacCy;
 	private double msLy;

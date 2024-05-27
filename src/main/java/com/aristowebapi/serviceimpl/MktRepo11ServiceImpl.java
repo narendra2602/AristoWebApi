@@ -43,6 +43,8 @@ public class MktRepo11ServiceImpl implements MktRepo11Service{
 		title.append(" MONTH WISE DETAIL ");
 		title.append(" For The Marketing Year - ");
 		title.append(request.getMyear());
+		title.append("-");
+		title.append(request.getMyear()+1);
 
 		return title.toString();
 

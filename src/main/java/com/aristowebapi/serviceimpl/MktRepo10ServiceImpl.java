@@ -45,6 +45,8 @@ Logger logger = LoggerFactory.getLogger(MktRepo9ServiceImpl.class);
 		title.append(" Rupees Wise Sales Analysis Trend ");
 		title.append(" For The Marketing Year - ");
 		title.append(request.getMyear());
+		title.append("-");
+		title.append(request.getMyear()+1);
 
 		return title.toString();
 
