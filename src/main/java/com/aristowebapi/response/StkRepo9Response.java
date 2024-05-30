@@ -16,16 +16,21 @@ import lombok.NoArgsConstructor;
 public class StkRepo9Response {
 	
 	private String name;
-	private int saleQty;
-	private double saleVal;
-	private int salableQty;
-	private double salableVal;
+	private int salesQty;
+	private long salesVal;
+	private int saleableRetQty;
+	private long saleableRetVal;
 	private int expQty;
-	private double expVal;
-	private int brksppdltQty;
-	private double brksppdltVal;
-	private int netQty;
-	private double netVal;
+	private long expVal;
+	private int brkSpoilQty;
+	private long brkSpoilVal;
+	private int lostInTrQty;
+	private long lossInTrVal;
+	private long rateDiffVal;
+	private int otherRetQty;
+	private long otherRetVal;
+	private int netSalesQty;
+	private long netSalesVal;
 	private int color;
 	
 

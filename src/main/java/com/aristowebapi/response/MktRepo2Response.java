@@ -19,7 +19,7 @@ public class MktRepo2Response {
 	private long budget;
 	private long sale;
 	private double  achPer;
-	private long SurSlashDef;
+	private long surSlashDef;
 	private long cumBudget;
 	private long cumSale;
 	private double cumAchPer;
@@ -27,8 +27,8 @@ public class MktRepo2Response {
 	private long lyr;
 	private double gthPer;
 	private int pmr;
-	private int color;
 	private int rankAch;
 	private int rankPmr;
+	private int color;
 
 }

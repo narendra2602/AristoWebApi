@@ -4,15 +4,15 @@ public interface StkRepo9 {
 	
     public String getName();
     public int getSaleqty();
-    public double getSalesval();
+    public long getSalesval();
     public int getSalableqty();
-    public double getSalableval();
+    public long getSalableval();
     public int getExpqty();
-    public double getExpval();
+    public long getExpval();
     public int getBrkspqty();
-    public double getBrkspval();
+    public long getBrkspval();
     public int getNetqty();
-    public double getNetval();
+    public long getNetval();
     public String getPname();
     public String getSmname();
     public String getEmname();

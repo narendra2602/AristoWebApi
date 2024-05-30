@@ -213,7 +213,7 @@ public class MktRepo5ServiceImpl  implements MktRepo5Service  {
 	    			mcval = AppCalculationUtils.addDouble(mcval, data.getMcrqty());
 	    			mpval = AppCalculationUtils.addDouble(mpval, data.getMpisaleqty());
 	    			mlval = AppCalculationUtils.addDouble(mlval, data.getMlysqty());
-	    			fs+=data.getfs();
+	    			mfs+=data.getMfs();
 	    			tval = AppCalculationUtils.addDouble(tval, data.getTargetqty());
 	    			sval = AppCalculationUtils.addDouble(sval, data.getSaleqty());
 	    			cval = AppCalculationUtils.addDouble(cval, data.getCrqty());
@@ -229,7 +229,7 @@ public class MktRepo5ServiceImpl  implements MktRepo5Service  {
 	    			mcval = AppCalculationUtils.addDouble(mcval, data.getMcrval());
 	    			mpval = AppCalculationUtils.addDouble(mpval, data.getMpisale());
 	    			mlval = AppCalculationUtils.addDouble(mlval, data.getMlysval());
-	    			fs+=data.getfs();
+	    			mfs+=data.getMfs();
 	    			tval = AppCalculationUtils.addDouble(tval, data.getTargetval());
 	    			sval = AppCalculationUtils.addDouble(sval, data.getSaleval());
 	    			cval = AppCalculationUtils.addDouble(cval, data.getCrval());
@@ -245,7 +245,7 @@ public class MktRepo5ServiceImpl  implements MktRepo5Service  {
 		{
 
 			response=new MktRepo5Response();
-			response.setName("GRAND TOTAL");
+			response.setName("Grand Total");
 
 			response.setMthFs(mfs);
 			response.setMthBudget(mtval);

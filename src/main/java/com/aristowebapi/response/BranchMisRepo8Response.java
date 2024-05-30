@@ -13,6 +13,6 @@ import lombok.NoArgsConstructor;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class BranchMisRepo8Response extends StkRepo10Response{ 
 	
-	private int fs;
+	private int cumFs;
 
 }

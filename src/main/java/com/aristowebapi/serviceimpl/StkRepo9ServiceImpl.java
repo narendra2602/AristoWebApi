@@ -96,22 +96,22 @@ public class StkRepo9ServiceImpl implements StkRepo9Service {
 			response=new StkRepo9Response();
 
 			response.setName(data.getName());
-	    	response.setSaleQty(data.getSaleqty());
-	    	response.setSaleVal(data.getSalesval());
+	    	response.setSalesQty(data.getSaleqty());
+	    	response.setSalesVal(data.getSalesval());
 
-	    	response.setSalableQty(data.getSalableqty());
-	    	response.setSalableVal(data.getSalableval());
+	    	response.setSaleableRetQty(data.getSalableqty());
+	    	response.setSaleableRetVal(data.getSalableval());
 
 	    	response.setExpQty(data.getExpqty());
 	    	response.setExpVal(data.getExpval());
 
 	    	
-	    	response.setBrksppdltQty(data.getBrkspqty());
-	    	response.setBrksppdltVal(data.getBrkspval());
+	    	response.setBrkSpoilQty(data.getBrkspqty());
+	    	response.setBrkSpoilVal(data.getBrkspval());
 
 	    	
-	    	response.setNetQty(data.getNetqty());
-	    	response.setNetVal(data.getNetval());
+	    	response.setNetSalesQty(data.getNetqty());
+	    	response.setNetSalesVal(data.getNetval());
 	    	
 	    	response.setColor(data.getTp());
 

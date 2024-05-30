@@ -98,9 +98,10 @@ public class MktRepo7ServiceImpl implements  MktRepo7Service{
 	    	response.setSaleable(data.getSalable());
 	    	response.setExpiry(data.getExpiry());
 	    	response.setBreakage(data.getBreakage());
-	    	response.setRatediff(data.getRatediff());
+	    	response.setRateDiff(data.getRatediff());
 	    	response.setShortReceived(data.getShort());
 	    	response.setLossInTransit(data.getLoss());
+	    	response.setOther(0);
 	    	response.setTotal(data.getTotal());
 
 	    	saleList.add(response);
@@ -120,6 +121,7 @@ public class MktRepo7ServiceImpl implements  MktRepo7Service{
 	    	response.setSaleable(sval);
 	    	response.setExpiry(eval);
 	    	response.setBreakage(bval);
+	    	response.setOther(0);
 	    	response.setTotal(tval);
 			response.setColor(2);
 

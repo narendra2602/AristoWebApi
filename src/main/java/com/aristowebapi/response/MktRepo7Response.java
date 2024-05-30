@@ -17,9 +17,10 @@ public class MktRepo7Response {
 	private long saleable;
 	private long expiry;
 	private long breakage;
-	private long ratediff;
+	private long rateDiff;
 	private long shortReceived;
 	private long lossInTransit;
+	private long other;
 	private long total;
 	private int color;
 

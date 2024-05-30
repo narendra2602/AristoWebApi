@@ -16,7 +16,7 @@ public class BranchMisRepo5Response {
 	private String name;
 	private long budget;
 	private long grossSale;
-	private long credit;
+	private long creditNote;
 	private long netSale;
 	private double achPer;
 	private long surSlashdef;

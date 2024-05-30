@@ -184,7 +184,7 @@ public class BranchMisServiceImpl implements BranchMisservice{
 */
 		response.setBudget(budget);
 		response.setGrossSale(gross);
-		response.setCredit(credit);
+		response.setCreditNote(credit);
 		response.setNetSale(net);
 		response.setAchPer(AppCalculationUtils.calculateAch(net, budget));
 		response.setSurSlashdef(net-budget);
@@ -279,19 +279,23 @@ public class BranchMisServiceImpl implements BranchMisservice{
 			response.setGrossSaleQty(data.getGross_sale_qty());
 	    	response.setGrossSaleVal(data.getGross_sale_val());
 
-	    	response.setSalableQty(data.getSalableqty());
-	    	response.setSalableVal(data.getSalableval());
+	    	response.setSaleableQty(data.getSalableqty());
+	    	response.setSaleableVal(data.getSalableval());
 
 	    	response.setExpQty(data.getExpqty());
 	    	response.setExpVal(data.getExpval());
 
-	    	response.setBrkQty(data.getBrkqty());
-	    	response.setBrkVal(data.getBrkval());
+	    	response.setBrkgQty(data.getBrkqty());
+	    	response.setBrkgVal(data.getBrkval());
+///
+	    	response.setLossInTrQty(0);
+	    	response.setLossInTrVal(0);
+////
+	    	
+	    	response.setOtherQty(data.getOthqty());
+	    	response.setOtherVal(data.getOthval());
 
-	    	response.setOthQty(data.getOthqty());
-	    	response.setOthVal(data.getOthval());
-
-	    	response.setPdVal(data.getPdval());
+	    	response.setRateDiff(data.getPdval());
 	    	
 	    	response.setNetQty(data.getNetqty());
 	    	response.setNetVal(data.getNetval());
@@ -339,18 +343,18 @@ public class BranchMisServiceImpl implements BranchMisservice{
 	    	response.setGrossSaleVal(Math.round(ggrosssaleval));
 
 	    	
-	    	response.setSalableQty(gsalableqty);
-	    	response.setSalableVal(Math.round(gsalableval));
+	    	response.setSaleableQty(gsalableqty);
+	    	response.setSaleableVal(Math.round(gsalableval));
 
 	    	response.setExpQty(gexpqty);
 	    	response.setExpVal(Math.round(gexpval));
 
-	    	response.setBrkQty(gbrkqty);
-	    	response.setBrkVal(Math.round(gbrkval));
+	    	response.setBrkgQty(gbrkqty);
+	    	response.setBrkgVal(Math.round(gbrkval));
 
-	    	response.setOthQty(gothqty);
-	    	response.setOthVal(Math.round(gothval));
-	    	response.setPdVal(Math.round(gpdval));
+	    	response.setOtherQty(gothqty);
+	    	response.setOtherVal(Math.round(gothval));
+	    	response.setRateDiff(Math.round(gpdval));
 
 	    	
 	    	response.setNetQty(gnetqty);
@@ -491,7 +495,7 @@ public class BranchMisServiceImpl implements BranchMisservice{
 
 				months.put("TOTAL", columnTotal);
 				response.setMonths(months);
-				response.setFs(fs);
+				response.setCumFs(fs);
 				
 				saleList.add(response);
 				ter_code=data.getTerr_cd();
@@ -581,7 +585,7 @@ public class BranchMisServiceImpl implements BranchMisservice{
 			months.put("TOTAL", columnTotal);
 
 			response.setMonths(months);
-			response.setFs(fs);
+			response.setCumFs(fs);
 			saleList.add(response);
 
 			
@@ -594,7 +598,7 @@ public class BranchMisServiceImpl implements BranchMisservice{
 			response=new BranchMisRepo8Response();
 			response.setName("Total");
 			response.setMonths(months);
-			response.setFs(gfs);
+			response.setCumFs(gfs);
 			response.setColor(2);
 			saleList.add(response);		
 		return new ApiResponse<BranchMisRepo8Response>(title.toString(),size,saleList);

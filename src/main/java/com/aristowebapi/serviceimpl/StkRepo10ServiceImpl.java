@@ -179,7 +179,7 @@ public class StkRepo10ServiceImpl implements StkRepo10Service {
 			if(ter_code!=data.getTerr_cd())
 			{
 				response.setName(ter_name);
-				/*for(int b=z;b<sz;b++)
+				for(int b=z;b<sz;b++)
 				{
 					MonthDto mn=monthData.get(b);
 					if(request.getUv()==1)
@@ -193,7 +193,7 @@ public class StkRepo10ServiceImpl implements StkRepo10Service {
 					}
 				
 					z++;
-				}*/
+				}
 
 //				groupColumnTotal = group.values().stream().mapToLong(d -> d).sum();
 				if(request.getUv()==1)
@@ -474,8 +474,8 @@ public class StkRepo10ServiceImpl implements StkRepo10Service {
 				months.put("TOTAL", columnTotalVal);
 			else
 			{
-				months.put("TOTAL", columnTotal);
-				months.put("TOTAL", columnTotalVal);
+				months.put("TOTAL UNITS", columnTotal);
+				months.put("TOTAL VALUE", columnTotalVal);
 				
 			}
 
@@ -487,16 +487,33 @@ public class StkRepo10ServiceImpl implements StkRepo10Service {
 			months=new LinkedHashMap();
 			response=new StkRepo10Response();
 			response.setName(ter_name);
-/*			for(int b=z;b<sz;b++)
+			for(int b=z;b<sz;b++)
 			{
 				MonthDto mn=monthData.get(b);
-				group.put(mn.getMnth_abbr(), 0L);
-				total.put(mn.getMnth_abbr(), 0L);
+				if(request.getUv()==1)
+					group.put((mn.getMnth_abbr()+" UNITS"), 0L);
+				else if(request.getUv()==2)
+					group.put((mn.getMnth_abbr()+" VALUE"), 0L);
+				else
+				{
+					group.put((mn.getMnth_abbr()+" UNITS"), 0L);
+					group.put((mn.getMnth_abbr()+" VALUE"), 0L);
+				}
+			
 				z++;
 			}
-*/
-			group.put("TOTAL UNITS", groupColumnTotal);
-			group.put("TOTAL VALUE", groupColumnTotalVal);
+
+//			groupColumnTotal = group.values().stream().mapToLong(d -> d).sum();
+			if(request.getUv()==1)
+				group.put("TOTAL UNITS", groupColumnTotal);
+			else if(request.getUv()==2)
+				group.put("TOTAL VALUE", groupColumnTotalVal);
+			else
+			{
+				group.put("TOTAL UNITS", groupColumnTotal);
+				group.put("TOTAL VALUE", groupColumnTotalVal);
+				
+			}
 
 			months.putAll(group);
 			response.setMonths(months);
@@ -508,10 +525,19 @@ public class StkRepo10ServiceImpl implements StkRepo10Service {
 //			grandColumnTotalVal = total.values().stream().mapToLong(d -> d).sum();
 			
 			months=new LinkedHashMap();
-			total.put("TOTAL UNITS", grandColumnTotal);
-			total.put("TOTAL VALUE", grandColumnTotalVal);
+			
+			if(request.getUv()==1)
+				total.put("TOTAL", grandColumnTotal);
+			else if(request.getUv()==2)
+				total.put("TOTAL", grandColumnTotalVal);
+			else
+			{
+				total.put("TOTAL UNITS", grandColumnTotal);
+				total.put("TOTAL VALUE", grandColumnTotalVal);
+				
+			}
 
-//			total.keySet().stream().forEach(d->System.out.print(d));
+
 
 			months.putAll(total);
 			response=new StkRepo10Response();
