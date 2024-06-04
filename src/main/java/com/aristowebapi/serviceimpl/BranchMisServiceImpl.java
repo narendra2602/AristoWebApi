@@ -151,14 +151,18 @@ public class BranchMisServiceImpl implements BranchMisservice{
 	    	gnet+=data.getNet();
 	    	
 		} //end of for loop
-
-		saleList.add(getResponse(reg_name,budget,gross,credit,net,1));
-
-		saleList.add(getResponse(area_name,abudget,agross,acredit,anet,2));
-
-		saleList.add(getResponse(name+" Branch",gbudget,ggross,gcredit,gnet,3));
-
 		
+			if(request.getDepoCode()>0)
+			{
+			saleList.add(getResponse(reg_name,budget,gross,credit,net,1));
+			saleList.add(getResponse(area_name,abudget,agross,acredit,anet,2));
+			saleList.add(getResponse(name+" Branch",gbudget,ggross,gcredit,gnet,3));
+			}
+			if(request.getDepoCode()==0)
+			{
+			saleList.add(getResponse(" Total",gbudget,ggross,gcredit,gnet,3));
+			}
+
 		ApiResponse<BranchMisRepo5Response> apiResponse = new ApiResponse<>(title!=null?title.toString():"", size,saleList);
 		return apiResponse;
 		
@@ -222,7 +226,7 @@ public class BranchMisServiceImpl implements BranchMisservice{
 			size = BranchMisRepo6List.size();
 			logger.info("size of the data is {}",size);
 			
-			System.out.println(request.getMyear()+" "+request.getDivCode()+" "+request.getDepoCode()+" "+request.getSmon()+" "+request.getEmon()+" "+request.getRepType()+" "+request.getLoginId()+" "+request.getUtype()+" "+request.getCode());
+			System.out.println(request.getMyear()+" div "+request.getDivCode()+" "+request.getDepoCode()+" "+request.getSmon()+" "+request.getEmon()+" "+request.getRepType()+" "+request.getLoginId()+" "+request.getUtype()+" "+request.getCode());
 			
 			
 /*			if(size==0)

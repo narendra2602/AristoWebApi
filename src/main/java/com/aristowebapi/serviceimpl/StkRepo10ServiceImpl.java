@@ -469,9 +469,9 @@ public class StkRepo10ServiceImpl implements StkRepo10Service {
 				k++;
 			}
 			if(request.getUv()==1)
-				months.put("TOTAL", columnTotal);
+				months.put("TOTAL UNITS", columnTotal);
 			else if(request.getUv()==2)
-				months.put("TOTAL", columnTotalVal);
+				months.put("TOTAL VALUE", columnTotalVal);
 			else
 			{
 				months.put("TOTAL UNITS", columnTotal);
@@ -527,9 +527,9 @@ public class StkRepo10ServiceImpl implements StkRepo10Service {
 			months=new LinkedHashMap();
 			
 			if(request.getUv()==1)
-				total.put("TOTAL", grandColumnTotal);
+				total.put("TOTAL UNITS", grandColumnTotal);
 			else if(request.getUv()==2)
-				total.put("TOTAL", grandColumnTotalVal);
+				total.put("TOTAL VALUE", grandColumnTotalVal);
 			else
 			{
 				total.put("TOTAL UNITS", grandColumnTotal);

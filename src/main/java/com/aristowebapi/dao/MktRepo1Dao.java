@@ -62,8 +62,11 @@ public interface MktRepo1Dao extends JpaRepository<MktDataDto, Integer>{
 	List<BranchMasterDto> getAllHq(@Param("myear") int myear,@Param("div_code") int div_code,@Param("depo") int depo);
 
 	
+	@Query(value = "SELECT ter_code depo_code,ter_name depo_name FROM hqmast  where mkt_year=:myear and div_code=:div_code and depo_code=:depo_code and ter_code<>0 and (depo_code,ter_code) in  (Select depo_code,ter_code from user_ter where user_id=:loginId and status='Y' order by depo_code,ter_code)  ",  nativeQuery = true)
+	List<BranchMasterDto> getUtype4Hq(@Param("myear") int myear,@Param("div_code") int div_code,@Param("depo_code") int depo_code,@Param("loginId") int loginId);
+
 	@Query(value = "SELECT ter_code depo_code,ter_name depo_name FROM hqmast  where mkt_year=:myear and div_code=:div_code and ter_code<>0 and (depo_code,ter_code) in  (Select depo_code,ter_code from user_ter where user_id=:loginId and status='Y' order by depo_code,ter_code)  ",  nativeQuery = true)
-	List<BranchMasterDto> getUtype4Hq(@Param("myear") int myear,@Param("div_code") int div_code,@Param("loginId") int loginId);
+	List<BranchMasterDto> getUtype4HqAll(@Param("myear") int myear,@Param("div_code") int div_code,@Param("loginId") int loginId);
 
 	
 	@Query(value = "SELECT depo_code,depo_name FROM branch_comp  where depo_code<>32 and depo_code in  (Select depo_code from user_branch08 where user_id=:loginId and status='Y') order by depo_code ",  nativeQuery = true)

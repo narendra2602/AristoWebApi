@@ -320,16 +320,31 @@ public class StkRepo2ServiceImpl implements StkRepo2Service{
 
 					}
 
-					if(total.containsKey(mn.getMnth_abbr()))
+					if(request.getUv()==1)
 					{
-						// do nothing
+						if(total.containsKey((data.getMnth_abbr()+" UNITS")))
+						{
+
+						}
+						else
+						{
+							total.put((data.getMnth_abbr()+" UNITS"), 0L);
+						}
 					}
-					else
+					if(request.getUv()==2)
 					{
-						total.put(mn.getMnth_abbr(), 0L);
-
+						if(total.containsKey((data.getMnth_abbr()+" VALUE")))
+						{
+							long ggval = total.get((data.getMnth_abbr()+" VALUE"))+data.getSales_val();
+							total.put((data.getMnth_abbr()+" VALUE"), ggval);
+						}
+						else
+						{
+							total.put((data.getMnth_abbr()+" VALUE"),0L);
+						}
 					}
 
+					
 					
 					k++;
 				}
@@ -340,7 +355,7 @@ public class StkRepo2ServiceImpl implements StkRepo2Service{
 			if(!first)
 			{
 			response=new StkRepo2Response();
-			response.setName("");
+			response.setName(name);
 			z=k;
 			for(int b=k;b<sz;b++)
 			{
@@ -371,37 +386,38 @@ public class StkRepo2ServiceImpl implements StkRepo2Service{
 			saleList.add(response);
 
 			
-/*			months=new LinkedHashMap();
-			response=new StkRepo2UnitResponse();
-			response.setName("");
-			for(int b=z;b<sz;b++)
-			{
-				MonthDto mn=monthData.get(b);
-				group.put(mn.getMnth_abbr(), 0L);
-				total.put(mn.getMnth_abbr(), 0L);
-				z++;
-			}
-
-			group.put("TOTAL", groupColumnTotal);
-
-			months.putAll(group);
-			response.setMonths(months);
-			response.setColor(1);
-			saleList.add(response);
-*/			
 			
-			grandColumnTotal = total.values().stream().mapToLong(d -> d).sum();
+/*			grandColumnTotal = total.values().stream().mapToLong(d -> d).sum();
 			
 			months=new LinkedHashMap();
 			total.put("Total Value", grandColumnTotal);
-//			total.keySet().stream().forEach(d->System.out.print(d));
-
 			months.putAll(total);
 			response=new StkRepo2Response();
 			response.setName("Total Value");
 			response.setMonths(months);
 			response.setColor(2);
 			saleList.add(response);		
+			
+
+*/
+			response=new StkRepo2Response();
+			months=new LinkedHashMap();
+			grandColumnTotal = total.values().stream().mapToLong(d -> d).sum();
+			total.put("Total Value", grandColumnTotal);
+
+			response.setName("Total :");
+			z=k;
+			for(int b=k;b<sz;b++)
+			{
+				MonthDto mn=monthData.get(b);
+				total.put((mn.getMnth_abbr()+" VALUE"), 0L);
+				k++;
+			}
+			months.putAll(total);
+			response.setMonths(months);
+			saleList.add(response);
+
+			
 			return new ApiResponse<StkRepo2Response>(title.toString(),size,lupdate,saleList);
 			}
 			else 
@@ -558,7 +574,7 @@ public class StkRepo2ServiceImpl implements StkRepo2Service{
 				else
 				{
 					months.put(mn.getMnth_abbr()+" UNITS", 0L);
-					months.put(mn.getMnth_abbr()+" VALUES", 0L);
+					months.put(mn.getMnth_abbr()+" VALUE", 0L);
 					if(group.containsKey(mn.getMnth_abbr()))
 					{
 						// do nothing
@@ -594,21 +610,21 @@ public class StkRepo2ServiceImpl implements StkRepo2Service{
 			}
 			
 		}			
-			response=new StkRepo2Response();
-			response.setName("");
-			z=k;
-			for(int b=k;b<sz;b++)
-			{
-				MonthDto mn=monthData.get(b);
-				months.put(mn.getMnth_abbr()+" UNITS", 0L);
-				months.put(mn.getMnth_abbr()+" VALUES", 0L);
-				k++;
-			}
-			months.put("TOTAL UNITS", columnTotal);
-			months.put("TOTAL VALUES", vcolumnTotal);
+		response.setName(name);
+		z=k;
+		for(int b=k;b<sz;b++)
+		{
+			MonthDto mn=monthData.get(b);
+			months.put(mn.getMnth_abbr()+" UNITS", 0L);
+			months.put(mn.getMnth_abbr()+" VALUES", 0L);
+			k++;
+		}
 
-			response.setMonths(months);
-			saleList.add(response);
+		months.put("TOTAL UNITS", columnTotal);
+		months.put("TOTAL VALUE", vcolumnTotal);
+		response.setMonths(months);
+		
+		saleList.add(response);
 // grand total 
 			
 			response=new StkRepo2Response();
@@ -622,8 +638,8 @@ public class StkRepo2ServiceImpl implements StkRepo2Service{
 				k++;
 			}
 			total.put("TOTAL UNITS", 0L);
-			total.put("TOTAL VALUES", vgrandColumnTotal);
-
+			total.put("TOTAL VALUE", vgrandColumnTotal);
+			
 			response.setMonths(total);
 			saleList.add(response);
 			

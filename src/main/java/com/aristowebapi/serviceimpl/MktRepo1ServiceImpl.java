@@ -43,7 +43,9 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 
 		
 		if(request.getUtype()==4 && request.getDepoCode()==0)
-			branchData =mktRepo1Dao.getUtype4Hq(request.getMyear(),request.getDivCode(), request.getLoginId());
+			branchData =mktRepo1Dao.getUtype4HqAll(request.getMyear(),request.getDivCode(), request.getLoginId());
+		else if(request.getUtype()==4 && request.getDepoCode()>0)
+			branchData =mktRepo1Dao.getUtype4Hq(request.getMyear(),request.getDivCode(),request.getDepoCode(), request.getLoginId());
 		else if(request.getUtype()==5 && request.getDepoCode()==0)
 			branchData =mktRepo1Dao.getUtype5Branch(request.getLoginId());
 		else if(request.getDepoCode()==0)
