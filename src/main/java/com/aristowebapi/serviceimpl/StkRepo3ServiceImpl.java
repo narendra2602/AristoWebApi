@@ -123,14 +123,14 @@ public class StkRepo3ServiceImpl implements StkRepo3Service{
 			if(!partyCode.equalsIgnoreCase(data.getSprt_cd()))
 			{
 				response.setName(partyName);
-				z=k;
+/*				z=k;
 				for(int b=k;b<sz;b++)
 				{
 					MonthDto mn=monthData.get(b);
 					months.put(mn.getMnth_abbr(), 0L);
 					k++;
 				}
-
+*/
 				months.put("TOTAL", columnTotal);
 				response.setMonths(months);
 				
@@ -150,13 +150,13 @@ public class StkRepo3ServiceImpl implements StkRepo3Service{
 			{
 				response.setName(ter_name);
 				
-				for(int b=z;b<sz;b++)
+/*				for(int b=z;b<sz;b++)
 				{
 					MonthDto mn=monthData.get(b);
 					group.put(mn.getMnth_abbr(), 0L);
 					z++;
 				}
-
+*/
 				group.put("TOTAL", groupColumnTotal);
 
 				months.putAll(group);
@@ -182,7 +182,7 @@ public class StkRepo3ServiceImpl implements StkRepo3Service{
 
 			
 			// before put please check depo code in branch list if not found put 0 value in map otherwise actual zero
-			for(int b=k;b<sz;b++)
+			for(int b=0;b<sz;b++)
 			{
 				MonthDto mn=monthData.get(b);
 				if(mn.getMnth_code()==data.getMnth_code())
@@ -211,11 +211,20 @@ public class StkRepo3ServiceImpl implements StkRepo3Service{
 					}
 
 					k++;
-					break;
+//					break;
 				}
 				else
 				{
-					months.put(mn.getMnth_abbr(), 0L);
+					if(months.containsKey(mn.getMnth_abbr()))
+					{
+						// do nothing
+					}
+					else
+					{
+						months.put(mn.getMnth_abbr(), 0L);
+
+					}
+
 					if(group.containsKey(mn.getMnth_abbr()))
 					{
 						// do nothing
@@ -246,14 +255,14 @@ public class StkRepo3ServiceImpl implements StkRepo3Service{
 			{
 			response=new StkRepo3Response();
 			response.setName("");
-			z=k;
+/*			z=k;
 			for(int b=k;b<sz;b++)
 			{
 				MonthDto mn=monthData.get(b);
 				months.put(mn.getMnth_abbr(), 0L);
 				k++;
 			}
-			months.put("TOTAL", columnTotal);
+*/			months.put("TOTAL", columnTotal);
 
 			response.setMonths(months);
 			saleList.add(response);
@@ -262,7 +271,7 @@ public class StkRepo3ServiceImpl implements StkRepo3Service{
 			months=new LinkedHashMap();
 			response=new StkRepo3Response();
 			response.setName(ter_name);
-			for(int b=z;b<sz;b++)
+/*			for(int b=z;b<sz;b++)
 			{
 				MonthDto mn=monthData.get(b);
 				group.put(mn.getMnth_abbr(), 0L);
@@ -270,7 +279,7 @@ public class StkRepo3ServiceImpl implements StkRepo3Service{
 				z++;
 			}
 
-			group.put("TOTAL", groupColumnTotal);
+*/			group.put("TOTAL", groupColumnTotal);
 
 			months.putAll(group);
 			response.setMonths(months);

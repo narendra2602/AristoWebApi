@@ -17,11 +17,14 @@ import com.aristowebapi.constant.AristoWebLogMsgConstant;
 import com.aristowebapi.request.BranchMisRepo5Request;
 import com.aristowebapi.request.BranchMisRepo6Request;
 import com.aristowebapi.request.BranchMisRepo8Request;
+import com.aristowebapi.request.MisRepo31Request;
 import com.aristowebapi.response.ApiResponse;
 import com.aristowebapi.response.BranchMisRepo5Response;
 import com.aristowebapi.response.BranchMisRepo6Response;
 import com.aristowebapi.response.BranchMisRepo8Response;
+import com.aristowebapi.response.MisRepo31Response;
 import com.aristowebapi.service.BranchMisservice;
+import com.aristowebapi.service.MisRepo31Service;
 import com.aristowebapi.utility.AppRequestParameterUtils;
 
 @RestController
@@ -39,6 +42,10 @@ public class BranchMisController {
 	
 	@Autowired
 	private BranchMisservice branchMisService;
+	
+	@Autowired
+	private MisRepo31Service  misRepo31Service;
+
 	
 	@GetMapping("${mrc_branch_mis_repo5_path}")
 	public ResponseEntity<ApiResponse<BranchMisRepo5Response>> getBranchMisRepo5(@RequestBody BranchMisRepo5Request request,HttpServletRequest req)
@@ -79,6 +86,22 @@ public class BranchMisController {
 		return new ResponseEntity<ApiResponse<BranchMisRepo8Response>>(branchMisService.getBranchMisRepo8(request), HttpStatus.OK);
 	
 	}
+	
+	@GetMapping("${mrc_mis_repo31_path}")
+	public ResponseEntity<ApiResponse<MisRepo31Response>> getMisRepo31(@RequestBody MisRepo31Request request,HttpServletRequest req)
+	{
+		
+
+		int requestValues[]=getRequestData(req);
+		request.setLoginId(requestValues[0]);
+		request.setUtype(requestValues[1]);
+		logger.info(AristoWebLogMsgConstant.MIS_REPO31_CONTROLLER,"getMisRepo31", request.getMyear(),request.getDivCode(),request.getDepoCode(),request.getUtype(),request.getLoginId(),request.getHqCode());
+		
+		return new ResponseEntity<ApiResponse<MisRepo31Response>>(misRepo31Service.getMisRepo31(request), HttpStatus.OK);
+	
+	}
+
+	
 	private int[] getRequestData(HttpServletRequest req)
 	{
 		String authHeader = req.getHeader("Authorization");

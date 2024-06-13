@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import com.aristowebapi.dto.DashBoardCurrentMonthChart;
 import com.aristowebapi.dto.DashBoardData;
+import com.aristowebapi.dto.DashBoardDataAchGTh;
 import com.aristowebapi.dto.DashBoardDataDouble;
 import com.aristowebapi.dto.DashBoardSalesChart;
 import com.aristowebapi.dto.MktDataDto;
@@ -47,15 +48,15 @@ public interface DashBoardDao extends JpaRepository<MktDataDto, Integer> {
 	
 
 	@Query(value="CALL getDashboardGroupwiseAch(:myear,:div_code,:depo_code,:cmon,:login_id,:utype);", nativeQuery=true)
-	List<DashBoardDataDouble> getDashboardGroupwiseAch(@Param("myear") int myear,@Param("div_code") int div_code,
+	List<DashBoardDataAchGTh> getDashboardGroupwiseAch(@Param("myear") int myear,@Param("div_code") int div_code,
 			@Param("depo_code") int depo_code,@Param("cmon") int cmon,@Param("login_id") int login_id,@Param("utype") int utype);
 
 	@Query(value="CALL getDashboardBranchwiseAch(:myear,:div_code,:depo_code,:cmon,:login_id,:utype);", nativeQuery=true)
-	List<DashBoardDataDouble> getDashboardBranchwiseAch(@Param("myear") int myear,@Param("div_code") int div_code,
+	List<DashBoardDataAchGTh> getDashboardBranchwiseAch(@Param("myear") int myear,@Param("div_code") int div_code,
 			@Param("depo_code") int depo_code,@Param("cmon") int cmon,@Param("login_id") int login_id,@Param("utype") int utype);
 
 	@Query(value="CALL getDashboardHqwiseAch(:myear,:div_code,:depo_code,:cmon,:login_id,:utype);", nativeQuery=true)
-	List<DashBoardDataDouble> getDashboardHqwiseAch(@Param("myear") int myear,@Param("div_code") int div_code,
+	List<DashBoardDataAchGTh> getDashboardHqwiseAch(@Param("myear") int myear,@Param("div_code") int div_code,
 			@Param("depo_code") int depo_code,@Param("cmon") int cmon,@Param("login_id") int login_id,@Param("utype") int utype);
 
 	@Query(value="CALL getDashboardTop5Products(:myear,:div_code,:depo_code,:cmon,:login_id);", nativeQuery=true)

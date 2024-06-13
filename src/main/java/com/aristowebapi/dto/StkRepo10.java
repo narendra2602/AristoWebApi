@@ -6,6 +6,7 @@ public interface StkRepo10 {
 	public String getMnth_abbr();
 	public String getSprt_cd();
 	public String getMname();
+	public String getDepo_name();
 	public int getTerr_cd();
 	public String getTer_name();
 	public long getSales();

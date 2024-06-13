@@ -1,7 +1,6 @@
-package com.aristowebapi.response;
+package com.aristowebapi.serviceimpl;
 
-import java.util.Map;
-
+import com.aristowebapi.response.DashBoardDataResponseDouble;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
@@ -10,14 +9,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class StkRepo10Response {
+public class DashBoardDataResponseAchAndGth {
 	
-	private String branch;
 	private String name;
-	private Map<String,Long> months;
-	private int color;
+	private double achPer;
+	private double gthPer;
+
 
 }

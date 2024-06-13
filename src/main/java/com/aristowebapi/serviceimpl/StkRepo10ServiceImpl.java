@@ -113,10 +113,10 @@ public class StkRepo10ServiceImpl implements StkRepo10Service {
 		int fs=0;
 		int gfs=0;
 		String pcode="";
+		String depo_name="";
 		for (int i=0;i<size;i++)
 		{
 			StkRepo10 data = stkRepo10SaleList.get(i);
-			
 			if(first)
 			{
 				response=new StkRepo10Response();
@@ -124,6 +124,7 @@ public class StkRepo10ServiceImpl implements StkRepo10Service {
 				name=data.getMname();
 				ter_code=data.getTerr_cd();
 				ter_name=data.getTer_name();
+				depo_name=data.getDepo_name();
 				months=new LinkedHashMap();
 				group=new LinkedHashMap();
 				total=new LinkedHashMap();
@@ -134,8 +135,11 @@ public class StkRepo10ServiceImpl implements StkRepo10Service {
 
 			if(!pcode.equalsIgnoreCase(data.getSprt_cd()))
 			{
+				
+				response.setBranch(depo_name);
 				response.setName(name);
-				z=k;
+				
+/*			z=k;
 				for(int b=k;b<sz;b++)
 				{
 					MonthDto mn=monthData.get(b);
@@ -150,7 +154,7 @@ public class StkRepo10ServiceImpl implements StkRepo10Service {
 					}
 					k++;
 				}
-
+*/
 				if(request.getUv()==1)
 					months.put("TOTAL UNITS", columnTotal);
 				else if(request.getUv()==2)
@@ -166,6 +170,7 @@ public class StkRepo10ServiceImpl implements StkRepo10Service {
 				saleList.add(response);
 				pcode=data.getSprt_cd();
 				name=data.getMname();
+				
 				columnTotal=0;
 				columnTotalVal=0;
 				
@@ -178,8 +183,10 @@ public class StkRepo10ServiceImpl implements StkRepo10Service {
 			
 			if(ter_code!=data.getTerr_cd())
 			{
-				response.setName(ter_name);
-				for(int b=z;b<sz;b++)
+				response.setBranch(depo_name);
+				response.setName(ter_name+"- Total");
+				
+/*				for(int b=z;b<sz;b++)
 				{
 					MonthDto mn=monthData.get(b);
 					if(request.getUv()==1)
@@ -194,7 +201,7 @@ public class StkRepo10ServiceImpl implements StkRepo10Service {
 				
 					z++;
 				}
-
+*/
 //				groupColumnTotal = group.values().stream().mapToLong(d -> d).sum();
 				if(request.getUv()==1)
 					group.put("TOTAL UNITS", groupColumnTotal);
@@ -217,7 +224,7 @@ public class StkRepo10ServiceImpl implements StkRepo10Service {
 				
 				ter_code=data.getTerr_cd();
 				ter_name=data.getTer_name();
-				
+				depo_name=data.getDepo_name();
 				z=0;
 				groupColumnTotal=0;
 				groupColumnTotalVal=0;
@@ -229,14 +236,12 @@ public class StkRepo10ServiceImpl implements StkRepo10Service {
 
 			
 			// before put please check depo code in branch list if not found put 0 value in map otherwise actual zero
-			for(int b=k;b<sz;b++)
+			for(int b=0;b<sz;b++)
 			{
 				MonthDto mn=monthData.get(b);
+				
 				if(mn.getMnth_code()==data.getMnth_code())
 				{
-//					months.put(data.getMnth_abbr(), request.getUv()==2?data.getSales_val():data.getSales());
-//					columnTotal+=request.getUv()==2?data.getSales_val():data.getSales();
-					
 					
 					if(request.getUv()==1)
 					{
@@ -288,6 +293,7 @@ public class StkRepo10ServiceImpl implements StkRepo10Service {
 						}
 						
 					}
+					
 					else if(group.containsKey(data.getMnth_abbr()+" VALUE"))
 					{
 						long gval = 0;
@@ -329,17 +335,72 @@ public class StkRepo10ServiceImpl implements StkRepo10Service {
 						}
 					}
 					
-/*					if(total.containsKey(data.getMnth_abbr()))
+					if(total.containsKey(data.getMnth_abbr()+" UNITS"))
 					{
-						long ggval = total.get(data.getMnth_abbr())+(request.getUv()==2?data.getSales_val():data.getSales());
-						total.put(data.getMnth_abbr(), ggval);
+						long gval = 0;
+
+						if(request.getUv()==1)
+						{
+							gval = total.get(data.getMnth_abbr()+" UNITS")+data.getSales();
+							total.put(data.getMnth_abbr()+" UNITS", gval);
+						}
+						if(request.getUv()==2)
+						{
+							gval = total.get(data.getMnth_abbr()+" VALUE")+data.getSales_val();
+							total.put(data.getMnth_abbr()+" VALUE", gval);
+						}
+						if(request.getUv()==3)
+						{
+							gval = total.get(data.getMnth_abbr()+" UNITS")+data.getSales();
+							total.put(data.getMnth_abbr()+" UNITS", gval);
+							gval = total.get(data.getMnth_abbr()+" VALUE")+data.getSales_val();
+							total.put(data.getMnth_abbr()+" VALUE", gval);
+						}
+						
 					}
+					
+					else if(total.containsKey(data.getMnth_abbr()+" VALUE"))
+					{
+						long gval = 0;
+
+						if(request.getUv()==1)
+						{
+							gval = total.get(data.getMnth_abbr()+" UNITS")+data.getSales();
+							total.put(data.getMnth_abbr()+" UNITS", gval);
+						}
+						if(request.getUv()==2)
+						{
+							gval = total.get(data.getMnth_abbr()+" VALUE")+data.getSales_val();
+							total.put(data.getMnth_abbr()+" VALUE", gval);
+						}
+						if(request.getUv()==3)
+						{
+							gval = total.get(data.getMnth_abbr()+" UNITS")+data.getSales();
+							total.put(data.getMnth_abbr()+" UNITS", gval);
+							gval = total.get(data.getMnth_abbr()+" VALUE")+data.getSales_val();
+							total.put(data.getMnth_abbr()+" VALUE", gval);
+						}
+						
+					}
+
 					else
 					{
-						total.put(data.getMnth_abbr(), request.getUv()==2?data.getSales_val():data.getSales());
+						if(request.getUv()==1)
+						{
+							total.put(data.getMnth_abbr()+" UNITS", data.getSales());
+						}
+						if(request.getUv()==2)
+						{
+							total.put(data.getMnth_abbr()+" VALUE", data.getSales_val());
+						}
+						if(request.getUv()==3)
+						{
+							total.put(data.getMnth_abbr()+" UNITS", data.getSales());
+							total.put(data.getMnth_abbr()+" VALUE", data.getSales_val());
+						}
 					}
-*/
-					if(request.getUv()==1)
+
+/*					if(request.getUv()==1)
 					{
 						if(total.containsKey((data.getMnth_abbr()+" UNITS")))
 						{
@@ -386,32 +447,41 @@ public class StkRepo10ServiceImpl implements StkRepo10Service {
 						}
 					}
 
-					
+*/					
 					
 					k++;
-					break;
+//					break;
 				}
 				else
 				{
-					if(request.getUv()==1)
-						months.put((mn.getMnth_abbr()+" UNITS"), 0L);
-					else if(request.getUv()==2)
-						months.put((mn.getMnth_abbr()+" VALUE"), 0L);
-					else
-					{
-						months.put((mn.getMnth_abbr()+" UNITS"), 0L);
-						months.put((mn.getMnth_abbr()+" VALUE"), 0L);
-						
-					}
-
-					if(group.containsKey(mn.getMnth_abbr()+" UNITS"))
+					
+					k++;
+					
+					if(months.containsKey(mn.getMnth_abbr()+" UNITS") || months.containsKey(mn.getMnth_abbr()+" VALUE"))
 					{
 						// do nothing
 					}
 					else
 					{
 						if(request.getUv()==1)
-						group.put(mn.getMnth_abbr()+" UNITS", 0L);
+							months.put(mn.getMnth_abbr()+" UNITS", 0L);
+						if(request.getUv()==2)
+							months.put(mn.getMnth_abbr()+" VALUE", 0L);
+						if(request.getUv()==3)
+						{
+							months.put(mn.getMnth_abbr()+" UNITS", 0L);
+							months.put(mn.getMnth_abbr()+" VALUE", 0L);
+						}
+					}
+
+					if(group.containsKey(mn.getMnth_abbr()+" UNITS") || group.containsKey(mn.getMnth_abbr()+" VALUE"))
+					{
+						// do nothing
+					}
+					else
+					{
+						if(request.getUv()==1)
+							group.put(mn.getMnth_abbr()+" UNITS", 0L);
 						if(request.getUv()==2)
 							group.put(mn.getMnth_abbr()+" VALUE", 0L);
 						if(request.getUv()==3)
@@ -421,11 +491,7 @@ public class StkRepo10ServiceImpl implements StkRepo10Service {
 						}
 					}
 
-					if(total.containsKey(mn.getMnth_abbr()+" UNITS"))
-					{
-						// do nothing
-					}
-					else if(total.containsKey(mn.getMnth_abbr()+" VALUE"))
+					if(total.containsKey(mn.getMnth_abbr()+" UNITS") || total.containsKey(mn.getMnth_abbr()+" VALUE"))
 					{
 						// do nothing
 					}
@@ -442,8 +508,8 @@ public class StkRepo10ServiceImpl implements StkRepo10Service {
 						}
 
 					}
-					
-					k++;
+
+//					k++;
 				}
 			}
 			
@@ -452,8 +518,9 @@ public class StkRepo10ServiceImpl implements StkRepo10Service {
 			if(!first)
 			{
 			response=new StkRepo10Response();
+			response.setBranch(depo_name);
 			response.setName(name);
-			z=k;
+/*			z=k;
 			for(int b=k;b<sz;b++)
 			{
 				MonthDto mn=monthData.get(b);
@@ -468,7 +535,7 @@ public class StkRepo10ServiceImpl implements StkRepo10Service {
 				}
 				k++;
 			}
-			if(request.getUv()==1)
+*/			if(request.getUv()==1)
 				months.put("TOTAL UNITS", columnTotal);
 			else if(request.getUv()==2)
 				months.put("TOTAL VALUE", columnTotalVal);
@@ -486,7 +553,9 @@ public class StkRepo10ServiceImpl implements StkRepo10Service {
 			
 			months=new LinkedHashMap();
 			response=new StkRepo10Response();
-			response.setName(ter_name);
+			response.setBranch(depo_name);
+			response.setName(ter_name+"- Total");
+/*			z=sz;
 			for(int b=z;b<sz;b++)
 			{
 				MonthDto mn=monthData.get(b);
@@ -502,7 +571,7 @@ public class StkRepo10ServiceImpl implements StkRepo10Service {
 			
 				z++;
 			}
-
+*/
 //			groupColumnTotal = group.values().stream().mapToLong(d -> d).sum();
 			if(request.getUv()==1)
 				group.put("TOTAL UNITS", groupColumnTotal);
@@ -525,6 +594,24 @@ public class StkRepo10ServiceImpl implements StkRepo10Service {
 //			grandColumnTotalVal = total.values().stream().mapToLong(d -> d).sum();
 			
 			months=new LinkedHashMap();
+			response=new StkRepo10Response();
+			z=sz;
+			for(int b=z;b<sz;b++)
+			{
+				MonthDto mn=monthData.get(b);
+				if(request.getUv()==1)
+					total.put((mn.getMnth_abbr()+" UNITS"), 0L);
+				else if(request.getUv()==2)
+					total.put((mn.getMnth_abbr()+" VALUE"), 0L);
+				else
+				{
+					total.put((mn.getMnth_abbr()+" UNITS"), 0L);
+					total.put((mn.getMnth_abbr()+" VALUE"), 0L);
+				}
+			
+				z++;
+			}
+
 			
 			if(request.getUv()==1)
 				total.put("TOTAL UNITS", grandColumnTotal);
@@ -540,8 +627,11 @@ public class StkRepo10ServiceImpl implements StkRepo10Service {
 
 
 			months.putAll(total);
-			response=new StkRepo10Response();
+			
+			response.setBranch("");
 			response.setName("Total");
+			
+
 			response.setMonths(months);
 			response.setColor(2);
 			saleList.add(response);		

@@ -6,6 +6,7 @@ import com.aristowebapi.response.DashBoardDataResponse;
 import com.aristowebapi.response.DashBoardDataResponseDouble;
 import com.aristowebapi.response.DashBoardPanelDataResponse;
 import com.aristowebapi.response.StockiestResponse;
+import com.aristowebapi.serviceimpl.DashBoardDataResponseAchAndGth;
 
 public interface DashBoardService {
 	 
@@ -21,9 +22,9 @@ public interface DashBoardService {
 
 	ApiResponse<DashBoardPanelDataResponse> getDashboardPanelData(int myear,int div_code, int depo_code,int cmon,int login_id,int utype);
 	
-	ApiResponse<DashBoardDataResponseDouble> getDashboardGroupwiseAch(int myear,int div_code, int depo_code,int cmon,int login_id,int usertype);
-	ApiResponse<DashBoardDataResponseDouble> getDashboardBranchAch(int myear,int div_code, int depo_code,int cmon,int login_id,int usertype);
-	ApiResponse<DashBoardDataResponseDouble> getDashboardHqwiseAch(int myear,int div_code, int depo_code,int cmon,int login_id,int usertype);
+	ApiResponse<DashBoardDataResponseAchAndGth> getDashboardGroupwiseAch(int myear,int div_code, int depo_code,int cmon,int login_id,int usertype);
+	ApiResponse<DashBoardDataResponseAchAndGth> getDashboardBranchAch(int myear,int div_code, int depo_code,int cmon,int login_id,int usertype);
+	ApiResponse<DashBoardDataResponseAchAndGth> getDashboardHqwiseAch(int myear,int div_code, int depo_code,int cmon,int login_id,int usertype);
 	ApiResponse<DashBoardDataResponseDouble> getDashboardTop5Products(int myear,int div_code, int depo_code,int cmon,int login_id);
 	ApiResponse<DashBoardDataResponse> getDashboardMonthCombo(int myear,int div_code, int depo_code,int login_id,int usertype);
 	ApiResponse<DashBoardDataResponse> getDashboardYearCombo();

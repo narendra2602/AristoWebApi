@@ -433,8 +433,9 @@ public class BranchMisServiceImpl implements BranchMisservice{
 		String title=null;
 		List<BranchMisRepo8> BranchMisRepo8List=null;
 		int size = 0;
-
-		if(request.getOpt()==1) // hqwise
+		if(request.getDepoCode()==0)
+			BranchMisRepo8List=branchMisDao.getBranchMisRepo8Branch(request.getMyear(),request.getDivCode(),request.getDepoCode(),request.getSmon(),request.getEmon(),request.getRepType(),request.getLoginId(),request.getUtype(),request.getCode());
+		else if(request.getOpt()==1) // hqwise
 			BranchMisRepo8List=branchMisDao.getBranchMisRepo8HQ(request.getMyear(),request.getDivCode(),request.getDepoCode(),request.getSmon(),request.getEmon(),request.getRepType(),request.getLoginId(),request.getUtype(),request.getCode());
 		else if(request.getOpt()==2) // region
 			BranchMisRepo8List=branchMisDao.getBranchMisRepo8Region(request.getMyear(),request.getDivCode(),request.getDepoCode(),request.getSmon(),request.getEmon(),request.getRepType(),request.getLoginId(),request.getUtype(),request.getCode());
@@ -456,11 +457,16 @@ public class BranchMisServiceImpl implements BranchMisservice{
 		List<BranchMisRepo8Response> saleList = new ArrayList();
 
 		
-		
+		System.out.println("value of uv "+request.getUv());
 		System.out.println("size is "+size);
 		long columnTotal=0;
+		long columnTotalVal=0;
+		long groupColumnTotalVal=0;
 		long groupColumnTotal=0;
 		long grandColumnTotal=0;
+		long grandColumnTotalVal=0;
+		long vgrandColumnTotal=0;
+
 		boolean first=true;
 		int depo_code=0;
 		int ter_code=0;
@@ -493,11 +499,28 @@ public class BranchMisServiceImpl implements BranchMisservice{
 				for(int b=k;b<sz;b++)
 				{
 					MonthDto mn=monthData.get(b);
-					months.put(mn.getMnth_abbr(), 0L);
+					if(request.getUv()==1)
+						months.put((mn.getMnth_abbr()+" UNITS"), 0L);
+					else if(request.getUv()==2)
+						months.put((mn.getMnth_abbr()+" VALUE"), 0L);
+					else
+					{
+						months.put((mn.getMnth_abbr()+" UNITS"), 0L);
+						months.put((mn.getMnth_abbr()+" VALUE"), 0L);
+					}
 					k++;
 				}
 
-				months.put("TOTAL", columnTotal);
+				if(request.getUv()==1)
+					months.put("TOTAL UNITS", columnTotal);
+				else if(request.getUv()==2)
+					months.put("TOTAL VALUE", columnTotalVal);
+				else
+				{
+					months.put("TOTAL UNITS", columnTotal);
+					months.put("TOTAL VALUE", columnTotalVal);
+					
+				}
 				response.setMonths(months);
 				response.setCumFs(fs);
 				
@@ -505,6 +528,7 @@ public class BranchMisServiceImpl implements BranchMisservice{
 				ter_code=data.getTerr_cd();
 				ter_name=data.getTer_name();
 				columnTotal=0;
+				columnTotalVal=0;
 				gfs+=fs;
 				k=0;
 				fs=0;
@@ -521,56 +545,205 @@ public class BranchMisServiceImpl implements BranchMisservice{
 				MonthDto mn=monthData.get(b);
 				if(mn.getMnth_code()==data.getMnth_code())
 				{
-					months.put(data.getMnth_abbr(), request.getUv()==2?data.getSales_val():data.getSales());
-					columnTotal+=request.getUv()==2?data.getSales_val():data.getSales();
+					//months.put(data.getMnth_abbr(), request.getUv()==2?data.getSales_val():data.getSales());
+					//columnTotal+=request.getUv()==2?data.getSales_val():data.getSales();
 					fs+=data.getFs();
-					
-					if(group.containsKey(data.getMnth_abbr()))
+///
+					if(request.getUv()==1)
 					{
-						long gval = group.get(data.getMnth_abbr())+(request.getUv()==2?data.getSales_val():data.getSales());
-						group.put(data.getMnth_abbr(), gval);
+						months.put((data.getMnth_abbr()+" UNITS"),data.getSales());
+						columnTotal+=data.getSales();
+						groupColumnTotal+=data.getSales();
+						grandColumnTotal+=data.getSales();
 					}
-					else
+					else if(request.getUv()==2)
 					{
-						group.put(data.getMnth_abbr(), request.getUv()==2?data.getSales_val():data.getSales());
+						months.put((data.getMnth_abbr()+" VALUE"),data.getSales_val());
+						columnTotalVal+=data.getSales_val();
+						groupColumnTotalVal+=data.getSales_val();
+						grandColumnTotalVal+=data.getSales_val();
 					}
-					
-					if(total.containsKey(data.getMnth_abbr()))
+					else if(request.getUv()==3)
 					{
-						long ggval = total.get(data.getMnth_abbr())+(request.getUv()==2?data.getSales_val():data.getSales());
-						total.put(data.getMnth_abbr(), ggval);
-					}
-					else
-					{
-						total.put(data.getMnth_abbr(), request.getUv()==2?data.getSales_val():data.getSales());
+						months.put((data.getMnth_abbr()+" UNITS"),data.getSales());
+						months.put((data.getMnth_abbr()+" VALUE"),data.getSales_val());
+						columnTotal+=data.getSales();
+						columnTotalVal+=data.getSales_val();
+						groupColumnTotal+=data.getSales();
+						groupColumnTotalVal+=data.getSales_val();
+						grandColumnTotal+=data.getSales();
+						grandColumnTotalVal+=data.getSales_val();
 					}
 
+					
+					if(group.containsKey(data.getMnth_abbr()+" UNITS"))
+					{
+						long gval = 0;
+
+						if(request.getUv()==1)
+						{
+							gval = group.get(data.getMnth_abbr()+" UNITS")+data.getSales();
+							group.put(data.getMnth_abbr()+" UNITS", gval);
+						}
+						if(request.getUv()==2)
+						{
+							gval = group.get(data.getMnth_abbr()+" VALUE")+data.getSales_val();
+							group.put(data.getMnth_abbr()+" VALUE", gval);
+						}
+						if(request.getUv()==3)
+						{
+							gval = group.get(data.getMnth_abbr()+" UNITS")+data.getSales();
+							group.put(data.getMnth_abbr()+" UNITS", gval);
+							gval = group.get(data.getMnth_abbr()+" VALUE")+data.getSales_val();
+							group.put(data.getMnth_abbr()+" VALUE", gval);
+						}
+						
+					}
+					else if(group.containsKey(data.getMnth_abbr()+" VALUE"))
+					{
+						long gval = 0;
+
+						if(request.getUv()==1)
+						{
+							gval = group.get(data.getMnth_abbr()+" UNITS")+data.getSales();
+							group.put(data.getMnth_abbr()+" UNITS", gval);
+						}
+						if(request.getUv()==2)
+						{
+							gval = group.get(data.getMnth_abbr()+" VALUE")+data.getSales_val();
+							group.put(data.getMnth_abbr()+" VALUE", gval);
+						}
+						if(request.getUv()==3)
+						{
+							gval = group.get(data.getMnth_abbr()+" UNITS")+data.getSales();
+							group.put(data.getMnth_abbr()+" UNITS", gval);
+							gval = group.get(data.getMnth_abbr()+" VALUE")+data.getSales_val();
+							group.put(data.getMnth_abbr()+" VALUE", gval);
+						}
+						
+					}
+
+					else
+					{
+						if(request.getUv()==1)
+						{
+							group.put(data.getMnth_abbr()+" UNITS", data.getSales());
+						}
+						if(request.getUv()==2)
+						{
+							group.put(data.getMnth_abbr()+" VALUE", data.getSales_val());
+						}
+						if(request.getUv()==3)
+						{
+							group.put(data.getMnth_abbr()+" UNITS", data.getSales());
+							group.put(data.getMnth_abbr()+" VALUE", data.getSales_val());
+						}
+					}
+					
+					if(request.getUv()==1)
+					{
+						if(total.containsKey((data.getMnth_abbr()+" UNITS")))
+						{
+							long ggval = total.get(data.getMnth_abbr()+" UNITS")+data.getSales();
+							total.put((data.getMnth_abbr()+" UNITS"), ggval);
+						}
+						else
+						{
+							total.put((data.getMnth_abbr()+" UNITS"), data.getSales());
+						}
+					}
+					if(request.getUv()==2)
+					{
+						if(total.containsKey((data.getMnth_abbr()+" VALUE")))
+						{
+							long ggval = total.get((data.getMnth_abbr()+" VALUE"))+data.getSales_val();
+							total.put((data.getMnth_abbr()+" VALUE"), ggval);
+						}
+						else
+						{
+							total.put((data.getMnth_abbr()+" VALUE"), data.getSales_val());
+						}
+					}
+					if(request.getUv()==3)
+					{
+						if(total.containsKey((data.getMnth_abbr()+" UNITS")))
+						{
+							long ggval = total.get(data.getMnth_abbr()+" UNITS")+data.getSales();
+							total.put((data.getMnth_abbr()+" UNITS"), ggval);
+						}
+						else
+						{
+							total.put((data.getMnth_abbr()+" UNITS"), data.getSales());
+						}
+
+						if(total.containsKey((data.getMnth_abbr()+" VALUE")))
+						{
+							long ggval = total.get((data.getMnth_abbr()+" VALUE"))+data.getSales_val();
+							total.put((data.getMnth_abbr()+" VALUE"), ggval);
+						}
+						else
+						{
+							total.put((data.getMnth_abbr()+" VALUE"), data.getSales_val());
+						}
+					}
+
+					
+
+///					
 					k++;
 					break;
 				}
 				else
 				{
-					months.put(mn.getMnth_abbr(), 0L);
-					if(group.containsKey(mn.getMnth_abbr()))
+					if(request.getUv()==1)
+						months.put((mn.getMnth_abbr()+" UNITS"), 0L);
+					else if(request.getUv()==2)
+						months.put((mn.getMnth_abbr()+" VALUE"), 0L);
+					else
+					{
+						months.put((mn.getMnth_abbr()+" UNITS"), 0L);
+						months.put((mn.getMnth_abbr()+" VALUE"), 0L);
+						
+					}
+
+					if(group.containsKey(mn.getMnth_abbr()+" UNITS"))
 					{
 						// do nothing
 					}
 					else
 					{
-						group.put(mn.getMnth_abbr(), 0L);
-
+						if(request.getUv()==1)
+						group.put(mn.getMnth_abbr()+" UNITS", 0L);
+						if(request.getUv()==2)
+							group.put(mn.getMnth_abbr()+" VALUE", 0L);
+						if(request.getUv()==3)
+						{
+							group.put(mn.getMnth_abbr()+" UNITS", 0L);
+							group.put(mn.getMnth_abbr()+" VALUE", 0L);
+						}
 					}
 
-					if(total.containsKey(mn.getMnth_abbr()))
+					if(total.containsKey(mn.getMnth_abbr()+" UNITS"))
+					{
+						// do nothing
+					}
+					else if(total.containsKey(mn.getMnth_abbr()+" VALUE"))
 					{
 						// do nothing
 					}
 					else
 					{
-						total.put(mn.getMnth_abbr(), 0L);
+						if(request.getUv()==1)
+							total.put(mn.getMnth_abbr()+" UNITS", 0L);
+						if(request.getUv()==2)
+							total.put(mn.getMnth_abbr()+" VALUE", 0L);
+						if(request.getUv()==3)
+						{
+							total.put(mn.getMnth_abbr()+" UNITS", 0L);
+							total.put(mn.getMnth_abbr()+" VALUE", 0L);
+						}
 
 					}
-
 					
 					k++;
 				}
@@ -583,20 +756,48 @@ public class BranchMisServiceImpl implements BranchMisservice{
 			for(int b=k;b<sz;b++)
 			{
 				MonthDto mn=monthData.get(b);
-				months.put(mn.getMnth_abbr(), 0L);
+				if(request.getUv()==1)
+					months.put((mn.getMnth_abbr()+" UNITS"), 0L);
+				else if(request.getUv()==2)
+					months.put((mn.getMnth_abbr()+" VALUE"), 0L);
+				else
+				{
+					months.put((mn.getMnth_abbr()+" UNITS"), 0L);
+					months.put((mn.getMnth_abbr()+" VALUE"), 0L);
+				}
 				k++;
 			}
-			months.put("TOTAL", columnTotal);
 
+			if(request.getUv()==1)
+				months.put("TOTAL UNITS", columnTotal);
+			else if(request.getUv()==2)
+				months.put("TOTAL VALUE", columnTotalVal);
+			else
+			{
+				months.put("TOTAL UNITS", columnTotal);
+				months.put("TOTAL VALUE", columnTotalVal);
+				
+			}
 			response.setMonths(months);
 			response.setCumFs(fs);
 			saleList.add(response);
 
 			
-			grandColumnTotal = total.values().stream().mapToLong(d -> d).sum();
+//			grandColumnTotal = total.values().stream().mapToLong(d -> d).sum();
 			
 			months=new LinkedHashMap();
-			total.put("TOTAL", grandColumnTotal);
+			if(request.getUv()==1)
+				total.put("TOTAL UNITS", grandColumnTotal);
+			else if(request.getUv()==2)
+				total.put("TOTAL VALUE", grandColumnTotalVal);
+			else
+			{
+				total.put("TOTAL UNITS", grandColumnTotal);
+				total.put("TOTAL VALUE", grandColumnTotalVal);
+				
+			}
+
+
 
 			months.putAll(total);
 			response=new BranchMisRepo8Response();
