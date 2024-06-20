@@ -6,12 +6,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import com.aristowebapi.dto.DashBoardAchGthTrend;
 import com.aristowebapi.dto.DashBoardCurrentMonthChart;
 import com.aristowebapi.dto.DashBoardData;
 import com.aristowebapi.dto.DashBoardDataAchGTh;
 import com.aristowebapi.dto.DashBoardDataDouble;
 import com.aristowebapi.dto.DashBoardSalesChart;
 import com.aristowebapi.dto.MktDataDto;
+import com.aristowebapi.dto.MonthDto;
 import com.aristowebapi.dto.StockiestMaster;
 
 public interface DashBoardDao extends JpaRepository<MktDataDto, Integer> { 
@@ -26,6 +28,11 @@ public interface DashBoardDao extends JpaRepository<MktDataDto, Integer> {
 			@Param("depo_code") int depo_code,@Param("cmon") int cmon,@Param("login_id") int login_id,@Param("utype") int utype,@Param("rep_type") int rep_type);
 
 
+	@Query(value="CALL getDashboardAchGthReport(:myear,:div_code,:depo_code,:utype,:login_id);", nativeQuery=true)
+	List<DashBoardAchGthTrend> getDashboardAchGthReport(@Param("myear") int myear,@Param("div_code") int div_code,
+			@Param("depo_code") int depo_code,@Param("utype") int utype,@Param("login_id") int login_id);
+
+	
 	@Query(value="CALL getDashboardPanelData(:myear,:div_code,:depo_code,:cmon,:login_id,:utype,:rep_type);", nativeQuery=true)
 	List<DashBoardDataDouble> getDashboardPanelData(@Param("myear") int myear,@Param("div_code") int div_code,
 			@Param("depo_code") int depo_code,@Param("cmon") int cmon,@Param("login_id") int login_id,@Param("utype") int utype,@Param("rep_type") int rep_type);
@@ -102,5 +109,6 @@ public interface DashBoardDao extends JpaRepository<MktDataDto, Integer> {
 	List<StockiestMaster> getStockiestList(@Param("myear") int myear,@Param("div_code") int div_code,
 			@Param("depo_code") int depo_code,@Param("utype") int utype,@Param("login_id") int login_id);
 
-	
+
+
 }

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.aristowebapi.constant.AristoWebLogMsgConstant;
 import com.aristowebapi.response.ApiResponse;
+import com.aristowebapi.response.DashBoardAchGthResponse;
 import com.aristowebapi.response.DashBoardChartResponse;
 import com.aristowebapi.response.DashBoardDataResponse;
 import com.aristowebapi.response.DashBoardDataResponseDouble;
@@ -63,6 +64,21 @@ public class DashBoardController {
 	
 	}
 
+	@GetMapping("${mrc_dashboardachgth_path}")
+	public ResponseEntity<ApiResponse<DashBoardAchGthResponse>> getDashboardAchGthData(@PathVariable("myear") int myear,@PathVariable("divCode") int divCode,@PathVariable("depoCode") int depoCode,HttpServletRequest request)
+
+	{
+		int loginId=getLoginIdFromToken(request)[0];
+        int uType=getLoginIdFromToken(request)[1];
+
+        logger.info(AristoWebLogMsgConstant.DASH_BOARD_CONTROLLER,"getDashboardAchGthData", myear,divCode,depoCode,uType,loginId);
+        
+		return new ResponseEntity<ApiResponse<DashBoardAchGthResponse>>(dashBoardService.getDashboardAchGthData(myear,divCode,depoCode,uType,loginId), HttpStatus.OK);
+	
+	}
+
+	
+	
 	@GetMapping("${mrc_dashboardtop5Stockiest_path}")
 	public ResponseEntity<ApiResponse<DashBoardDataResponseDouble>> getDashboardTop5(@PathVariable("myear") int myear,@PathVariable("divCode") int divCode,@PathVariable("depoCode") int depoCode,@PathVariable("cmon") int cmon,HttpServletRequest request)
 

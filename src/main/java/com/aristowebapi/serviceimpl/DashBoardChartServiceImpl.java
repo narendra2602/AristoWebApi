@@ -1,8 +1,10 @@
 package com.aristowebapi.serviceimpl;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,18 +12,23 @@ import org.springframework.stereotype.Service;
 
 import com.aristowebapi.constant.AristoWebMessageConstant;
 import com.aristowebapi.dao.DashBoardDao;
+import com.aristowebapi.dto.DashBoardAchGthTrend;
 import com.aristowebapi.dto.DashBoardCurrentMonthChart;
 import com.aristowebapi.dto.DashBoardData;
 import com.aristowebapi.dto.DashBoardDataAchGTh;
 import com.aristowebapi.dto.DashBoardDataDouble;
 import com.aristowebapi.dto.DashBoardSalesChart;
+import com.aristowebapi.dto.MktRepo9;
+import com.aristowebapi.dto.MonthDto;
 import com.aristowebapi.dto.StockiestMaster;
 import com.aristowebapi.response.ApiResponse;
+import com.aristowebapi.response.DashBoardAchGthResponse;
 import com.aristowebapi.response.DashBoardChartResponse;
 import com.aristowebapi.response.DashBoardDataResponse;
 import com.aristowebapi.response.DashBoardDataResponseDouble;
 import com.aristowebapi.response.DashBoardPanelDataResponse;
 import com.aristowebapi.response.DataSetResponse;
+import com.aristowebapi.response.MktRepo9Response;
 import com.aristowebapi.response.StockiestResponse;
 import com.aristowebapi.service.DashBoardService;
 import com.aristowebapi.utility.AppCalculationUtils;
@@ -552,5 +559,58 @@ public class DashBoardChartServiceImpl implements DashBoardService {
 
 		
 	}
+
+	@Override
+	public ApiResponse<DashBoardAchGthResponse> getDashboardAchGthData(int myear, int div_code, int depo_code,
+			int utype, int login_id) {
+		
+		String title="Trend";
+		
+		List<DashBoardAchGthTrend> DataList=null;
+
+		
+			
+		DataList=dashBoardDao.getDashboardAchGthReport(myear,div_code,depo_code,utype,login_id);
+				
+			
+		DashBoardAchGthResponse response=null;
+		
+		List<DashBoardAchGthResponse> saleList = new ArrayList();
+
+		Map<String, Double> ach=null;
+		Map<String, Double> gth=null;
+
+		
+		boolean first=true;
+		int size = DataList.size();
+		
+		
+		//create ReportTitleResponse class object and set title with Report heading
+		int i=0;
+		for (i=0;i<size;i++)
+		{
+			DashBoardAchGthTrend data = DataList.get(i);
+			if(first)
+			{
+				response=new DashBoardAchGthResponse();
+				ach=new LinkedHashMap();
+				gth=new LinkedHashMap();
+				first=false;
+			}
+
+			ach.put(data.getMnth_abbr(),data.getAch());
+			gth.put(data.getMnth_abbr(),data.getGth());
+			
+		}		
+
+		
+		
+		response.setAchPer(ach);
+		response.setGthPer(gth);
+		saleList.add(response);
+		
+		return new ApiResponse<DashBoardAchGthResponse>(title.toString(),size,saleList);
+	}
+
 
 }

@@ -126,7 +126,7 @@ public class MktRepo2ServiceImpl implements MktRepo2Service {
 					,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId(),request.getHqCode());
 			}
 
-			else if(request.getUtype()==4 && request.getDepoCode()>0 && request.getHqCode()==0)
+			else if(request.getUtype()==4 && request.getDepoCode()>0)
 			{
 			MktRepo2List=mktRepo2Dao.getWebMkt2Depo4(request.getMyear(),request.getDivCode(),request.getDepoCode()
 					,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId(),request.getHqCode());
@@ -255,6 +255,8 @@ public class MktRepo2ServiceImpl implements MktRepo2Service {
 		    	response.setLyr(data.getCumlysval());
 		    	response.setGthPer(data.getCumlysval()!=0?AppCalculationUtils.calculateGth(data.getCummsaleval(), data.getCumlysval()):0.0);
 		    	response.setPmr(data.getnrep()!=0?AppCalculationUtils.calculatePmr(data.getCummsaleval(), data.getnrep()):0);
+		    	rankAchMap.put(data.getMcode(),response.getCumAchPer());
+		    	rankPmrMap.put(data.getMcode(),response.getPmr());
 		    }
 	    	saleList.add(response);
 
@@ -334,6 +336,7 @@ public class MktRepo2ServiceImpl implements MktRepo2Service {
 		
 		} catch (Exception e) {
 			logger.error(AristoWebLogMsgConstant.MKT_REPORT_SERVICE_021,"getMktRepo2");
+			e.printStackTrace();
 			throw new ApiException(e.getMessage());
 		}
 		

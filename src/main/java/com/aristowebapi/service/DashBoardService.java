@@ -1,6 +1,7 @@
 package com.aristowebapi.service;
 
 import com.aristowebapi.response.ApiResponse;
+import com.aristowebapi.response.DashBoardAchGthResponse;
 import com.aristowebapi.response.DashBoardChartResponse;
 import com.aristowebapi.response.DashBoardDataResponse;
 import com.aristowebapi.response.DashBoardDataResponseDouble;
@@ -21,7 +22,9 @@ public interface DashBoardService {
 	ApiResponse<DashBoardDataResponseDouble> getDashboardPendingPI(int myear,int div_code, int depo_code,int cmon,int login_id,int utype);
 
 	ApiResponse<DashBoardPanelDataResponse> getDashboardPanelData(int myear,int div_code, int depo_code,int cmon,int login_id,int utype);
-	
+
+	ApiResponse<DashBoardAchGthResponse> getDashboardAchGthData(int myear,int div_code, int depo_code,int utype,int login_id);
+
 	ApiResponse<DashBoardDataResponseAchAndGth> getDashboardGroupwiseAch(int myear,int div_code, int depo_code,int cmon,int login_id,int usertype);
 	ApiResponse<DashBoardDataResponseAchAndGth> getDashboardBranchAch(int myear,int div_code, int depo_code,int cmon,int login_id,int usertype);
 	ApiResponse<DashBoardDataResponseAchAndGth> getDashboardHqwiseAch(int myear,int div_code, int depo_code,int cmon,int login_id,int usertype);

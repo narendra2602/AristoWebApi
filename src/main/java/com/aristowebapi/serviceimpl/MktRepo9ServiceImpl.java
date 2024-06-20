@@ -209,7 +209,11 @@ public class MktRepo9ServiceImpl  implements MktRepo9Service{
 				
 				response=new MktRepo9Response();
 				pcode=data.getSprd_cd();
-				mname=data.getMname()+","+data.getPack();
+				if(request.getRepType()==1)
+					mname=data.getGp_name();
+				else
+					mname=data.getMname()+","+data.getPack();
+
 				sales=new LinkedHashMap();
 				tgt=new LinkedHashMap();
 				lys=new LinkedHashMap();
