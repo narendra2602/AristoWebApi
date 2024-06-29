@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class StkRepo3Response {
 	
+	private String branch;
 	private String name;
 	private Map<String,Long> months;
 	private int color;

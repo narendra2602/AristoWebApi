@@ -113,6 +113,7 @@ public class MktRepo6ServiceImpl implements MktRepo6Service  {
 		int gfs=0;
 		int bfs=0;
 		System.out.println("size is "+size);
+		String branch="";
 		for (int i=0;i<size;i++)
 		{
 			
@@ -125,6 +126,7 @@ public class MktRepo6ServiceImpl implements MktRepo6Service  {
 				depo_code=data.getDepo_code();
 				sdepo_code=data.getSdepo_code();
 				name=data.getDepo_name();
+				branch=data.getBranch_name();
 				months=new LinkedHashMap();
 				branchtotal=new LinkedHashMap();
 				total=new LinkedHashMap();
@@ -134,6 +136,7 @@ public class MktRepo6ServiceImpl implements MktRepo6Service  {
 			
 			if(depo_code!=data.getDepo_code())
 			{
+				response.setBranch(branch);
 				response.setName(name);
 				response.setFs(fs);
 				z=k;
@@ -151,6 +154,7 @@ public class MktRepo6ServiceImpl implements MktRepo6Service  {
 				saleList.add(response);
 				depo_code=data.getDepo_code();
 				name=data.getDepo_name();
+				branch=data.getBranch_name();
 				fs=0;
 				columnTotal=0;
 				
@@ -162,7 +166,8 @@ public class MktRepo6ServiceImpl implements MktRepo6Service  {
 
 			if(sdepo_code!=data.getSdepo_code() && request.getOption()==2)
 			{
-				response.setName("Branch Total");
+				response.setBranch(branch);
+				response.setName("Total");
 				response.setFs(bfs);
 
 				
@@ -180,7 +185,7 @@ public class MktRepo6ServiceImpl implements MktRepo6Service  {
 				response=new MktRepo6Response();
 				branchtotal=new LinkedHashMap();
 
-				
+				branch=data.getBranch_name();
 
 
 			}
@@ -281,6 +286,7 @@ public class MktRepo6ServiceImpl implements MktRepo6Service  {
 		
 		
 		response=new MktRepo6Response();
+		response.setBranch(branch);
 		response.setName(name);
 		response.setFs(fs);
 		z=k;
@@ -300,7 +306,8 @@ public class MktRepo6ServiceImpl implements MktRepo6Service  {
 		if(request.getOption()==2)
 		{
 			response=new MktRepo6Response();
-			response.setName("Branch Total");
+			response.setBranch(branch);
+			response.setName("Total");
 			response.setFs(bfs);
 			branchcolumnTotal = branchtotal.values().stream().mapToDouble(d -> d).sum();
 			branchcolumnTotal=Math.round(branchcolumnTotal*100.0)/100.00;
@@ -320,7 +327,8 @@ public class MktRepo6ServiceImpl implements MktRepo6Service  {
 
 		months.putAll(total);
 		response=new MktRepo6Response();
-		response.setName("Grand Total");
+		response.setBranch("Grand Total");
+		response.setName("");
 		response.setFs(gfs);
 		response.setMonths(months);
 		response.setColor(2);

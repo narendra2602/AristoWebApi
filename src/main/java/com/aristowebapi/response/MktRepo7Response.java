@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class MktRepo7Response { 
 	
+	private String branch;
 	private String name;
 	private long saleable;
 	private long expiry;

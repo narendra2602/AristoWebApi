@@ -40,6 +40,8 @@ public class MktRepo11ServiceImpl implements MktRepo11Service{
 		StringBuilder title=new StringBuilder();
 		title.append(aristoWebMessageConstant.divisionMap.get(String.valueOf(data.getDiv_code())));
 		title.append(request.getDepoCode()==0?"ALL INDIA":mktRepo11Dao.getBranch(request.getDepoCode())+" Branch: ");
+		title.append(request.getHqCode()>0?"HQ -":"");
+		title.append(request.getHqCode()>0?mktRepo11Dao.getHq(request.getMyear(),request.getDepoCode(),request.getDivCode(),request.getHqCode()):"");
 		title.append(" MONTH WISE DETAIL ");
 		title.append(" For The Marketing Year - ");
 		title.append(request.getMyear());

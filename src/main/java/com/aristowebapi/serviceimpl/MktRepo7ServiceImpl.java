@@ -93,7 +93,7 @@ public class MktRepo7ServiceImpl implements  MktRepo7Service{
 			}
 			
 			response=new MktRepo7Response();
-
+			response.setBranch(data.getBranch_name());
 			response.setName(data.getDepo_name());
 	    	response.setSaleable(data.getSalable());
 	    	response.setExpiry(data.getExpiry());
@@ -117,7 +117,8 @@ public class MktRepo7ServiceImpl implements  MktRepo7Service{
 		{
 
 			response=new MktRepo7Response();
-			response.setName("GRAND TOTAL");
+			response.setBranch("GRAND TOTAL");
+			response.setName("");
 	    	response.setSaleable(sval);
 	    	response.setExpiry(eval);
 	    	response.setBreakage(bval);

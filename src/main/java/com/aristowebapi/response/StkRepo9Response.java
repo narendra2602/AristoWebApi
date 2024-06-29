@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class StkRepo9Response {
 	
+	private String branch;
 	private String name;
 	private int salesQty;
 	private long salesVal;

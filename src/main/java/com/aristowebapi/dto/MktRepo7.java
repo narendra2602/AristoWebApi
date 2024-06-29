@@ -18,5 +18,6 @@ public interface MktRepo7 {
 	public String getSmname();
 	public String getEmname();
 	public String getGp_name();
+	public String getBranch_name();
 
 }

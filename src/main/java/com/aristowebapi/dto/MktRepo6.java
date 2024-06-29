@@ -15,5 +15,5 @@ public interface MktRepo6 {
 	public double getSales_val();
 	public String getGp_name();
 	public double  getSales_qty();
-
+	public String getBranch_name();
 }

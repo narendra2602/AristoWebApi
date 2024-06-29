@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class MktRepo6Response { 
 	
+	private String branch;
 	private String name;
 	private int fs;
 	private int color;

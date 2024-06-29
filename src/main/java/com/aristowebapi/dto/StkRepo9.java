@@ -18,6 +18,6 @@ public interface StkRepo9 {
     public String getEmname();
     public String getTer_name();
     public int getTp();
-
+    public String getDepo_name();
 
 }

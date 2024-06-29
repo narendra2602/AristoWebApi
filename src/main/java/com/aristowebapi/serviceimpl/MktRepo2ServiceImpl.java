@@ -203,7 +203,7 @@ public class MktRepo2ServiceImpl implements MktRepo2Service {
 		    	response.setCumSale(cumsval);
  				response.setCumAchPer(cumtval!=0?AppCalculationUtils.calculateAch(cumsval, cumtval):0);
 		    	response.setCumSurSlashDef(cumsval-cumtval);
-		    	response.setLyr(cumlysval);
+		    	response.setCumLys(cumlysval);
 		    	response.setGthPer(cumlysval!=0?AppCalculationUtils.calculateGth(cumsval, cumlysval):0.0);
 		    	response.setPmr(nrep!=0?AppCalculationUtils.calculatePmr(cumsval, nrep):0);
 		    	response.setColor(1);
@@ -236,7 +236,7 @@ public class MktRepo2ServiceImpl implements MktRepo2Service {
 		    	response.setCumSale(data.getCummsaleqty());
  				response.setCumAchPer(data.getCumtarqty()!=0?AppCalculationUtils.calculateAch(data.getCummsaleqty(), data.getCumtarqty()):0);
 		    	response.setCumSurSlashDef(data.getCummsaleqty()-data.getCumtarqty());
-		    	response.setLyr(data.getCumlysqty());
+		    	response.setCumLys(data.getCumlysqty());
 		    	response.setGthPer(data.getCumlysqty()!=0?AppCalculationUtils.calculateGth(data.getCummsaleqty(), data.getCumlysqty()):0.0);
 		    	response.setPmr(data.getnrep()!=0?AppCalculationUtils.calculatePmr(data.getCummsaleqty(), data.getnrep()):0);
 		    	rankAchMap.put(data.getMcode(),response.getCumAchPer());
@@ -252,7 +252,7 @@ public class MktRepo2ServiceImpl implements MktRepo2Service {
 		    	response.setCumSale(data.getCummsaleval());
  				response.setCumAchPer(data.getCumtarval()!=0?AppCalculationUtils.calculateAch(data.getCummsaleval(), data.getCumtarval()):0);
 		    	response.setCumSurSlashDef(data.getCummsaleval()-data.getCumtarval());
-		    	response.setLyr(data.getCumlysval());
+		    	response.setCumLys(data.getCumlysval());
 		    	response.setGthPer(data.getCumlysval()!=0?AppCalculationUtils.calculateGth(data.getCummsaleval(), data.getCumlysval()):0.0);
 		    	response.setPmr(data.getnrep()!=0?AppCalculationUtils.calculatePmr(data.getCummsaleval(), data.getnrep()):0);
 		    	rankAchMap.put(data.getMcode(),response.getCumAchPer());
@@ -302,7 +302,7 @@ public class MktRepo2ServiceImpl implements MktRepo2Service {
 			response.setCumSale(cumsval);
 			response.setCumAchPer(cumtval!=0?AppCalculationUtils.calculateAch(cumsval, cumtval):0);
 			response.setCumSurSlashDef(cumsval-cumtval);
-			response.setLyr(cumlysval);
+			response.setCumLys(cumlysval);
 			response.setGthPer(cumlysval!=0?AppCalculationUtils.calculateGth(cumsval, cumlysval):0.0);
 			response.setPmr(nrep!=0?AppCalculationUtils.calculatePmr(cumsval, nrep):0);
 			response.setColor(1);
@@ -322,7 +322,7 @@ public class MktRepo2ServiceImpl implements MktRepo2Service {
 			response.setCumSale(gcumsval);
 			response.setCumAchPer(gcumtval!=0?AppCalculationUtils.calculateAch(gcumsval, gcumtval):0);
 			response.setCumSurSlashDef(gcumsval-gcumtval);
-			response.setLyr(gcumlysval);
+			response.setCumLys(gcumlysval);
 			response.setGthPer(gcumlysval!=0?AppCalculationUtils.calculateGth(gcumsval, gcumlysval):0.0);
 			response.setPmr(nrep!=0?AppCalculationUtils.calculatePmr(gcumsval, nrep):0);
 			response.setColor(2);

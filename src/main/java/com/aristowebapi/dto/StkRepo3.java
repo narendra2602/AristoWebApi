@@ -12,5 +12,5 @@ public interface StkRepo3 {
 	public String getTer_name();
 	public String getSmname();
 	public String getEmname();
-	
+	public String getDepo_name();
 }

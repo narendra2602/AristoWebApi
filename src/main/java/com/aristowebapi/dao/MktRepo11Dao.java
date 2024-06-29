@@ -18,5 +18,8 @@ public interface MktRepo11Dao extends JpaRepository<MktDataDto, Integer>{
 	@Query(value = "SELECT depo_name FROM branch_comp where depo_code=:depo", nativeQuery = true)
 	String getBranch(@Param("depo") int depo);
 
+	@Query(value = "SELECT ter_name FROM aris.hqmast where mkt_year=:myear and  depo_code=:depo and div_code=:div and ter_code=:hq", nativeQuery = true)
+	String getHq(@Param("myear") int myear,@Param("depo") int depo,@Param("div") int div,@Param("hq") int hq);
+
 
 }

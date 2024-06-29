@@ -12,5 +12,6 @@ public interface BranchMisRepo8 {
 	public String getPname();
     public String getSmname();
     public String getEmname();
+    public String getDepo_name();
 
 }

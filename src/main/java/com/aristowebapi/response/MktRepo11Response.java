@@ -22,13 +22,13 @@ public class MktRepo11Response {
 	private double mthGthPer;
 	private double mthPmr;
 	private double mthSurSlashdef;
+	private int cumFs;
 	private double cumBudget;
 	private double cumSale;
 	private double cumLys;
 	private double cumAchPer;
 	private double cumGthPer;
 	private double cumPmr;
-	private int cumFs;
 	private double cumSurSlashdef;
 	private double cumIncrSale;
 	private int color;

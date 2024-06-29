@@ -35,6 +35,7 @@ public interface MktRepo5 {
 	public double getLysqty();
 	public double getCrqty();
 	public double getPisaleqty();
+	public String getBranch_name();
 
 	
 

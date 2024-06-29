@@ -95,6 +95,7 @@ public class StkRepo9ServiceImpl implements StkRepo9Service {
 			
 			response=new StkRepo9Response();
 
+			response.setBranch(data.getDepo_name());
 			response.setName(data.getName());
 	    	response.setSalesQty(data.getSaleqty());
 	    	response.setSalesVal(data.getSalesval());

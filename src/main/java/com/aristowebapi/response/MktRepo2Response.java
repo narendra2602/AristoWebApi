@@ -24,7 +24,7 @@ public class MktRepo2Response {
 	private long cumSale;
 	private double cumAchPer;
 	private long cumSurSlashDef;
-	private long lyr;
+	private long cumLys;
 	private double gthPer;
 	private int pmr;
 	private int rankAch;

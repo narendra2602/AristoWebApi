@@ -80,7 +80,7 @@ public interface DashBoardDao extends JpaRepository<MktDataDto, Integer> {
 	@Query(value = "select div_code val,div_name name from divmast where div_code in (select div_code from userdiv where user_id=:userId and user_status='Y' order by div_code) ", nativeQuery = true)
 	List<DashBoardData> getDivList(@Param("userId") int userId);
 
-	@Query(value = "select depo_code val,depo_name name from branch_comp where depo_code in (select depo_code from user_branch08 where user_id=:userId and status='Y')  order by depo_code ", nativeQuery = true)
+	@Query(value = "select depo_code val,depo_name name from branch_comp where depo_code in (select depo_code from user_branch08 where user_id=:userId and status='Y')  order by depo_name ", nativeQuery = true)
 	List<DashBoardData> getBranchList(@Param("userId") int userId);
 
 	

@@ -13,10 +13,12 @@ import lombok.NoArgsConstructor;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class BranchMisRepo5Response {  
 	 
+	private String branch;
 	private String name;
 	private long budget;
 	private long grossSale;
 	private long creditNote;
+	private long lastYearSale;
 	private long netSale;
 	private double achPer;
 	private long surSlashdef;

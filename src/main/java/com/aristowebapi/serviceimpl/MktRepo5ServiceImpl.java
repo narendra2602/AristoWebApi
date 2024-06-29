@@ -136,6 +136,7 @@ public class MktRepo5ServiceImpl  implements MktRepo5Service  {
 			
 			response=new MktRepo5Response();
 
+			response.setBranch(data.getBranch_name());
 			response.setName(data.getDepo_name());
 			response.setMthFs(data.getMfs());
 			
@@ -245,8 +246,8 @@ public class MktRepo5ServiceImpl  implements MktRepo5Service  {
 		{
 
 			response=new MktRepo5Response();
-			response.setName("Grand Total");
-
+			response.setBranch("Grand Total");
+			response.setName("");
 			response.setMthFs(mfs);
 			response.setMthBudget(mtval);
 			response.setMthGross(msval);

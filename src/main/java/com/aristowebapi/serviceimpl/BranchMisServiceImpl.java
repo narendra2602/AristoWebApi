@@ -82,15 +82,19 @@ public class BranchMisServiceImpl implements BranchMisservice{
 		long gross=0;
 		long credit=0;
 		long net=0;
+		long lys=0;
 		long abudget=0;
 		long agross=0;
 		long acredit=0;
 		long anet=0;
+		long alys=0;
 
 		long gbudget=0;
 		long ggross=0;
 		long gcredit=0;
 		long gnet=0;
+		long glys=0;
+		String branch="";
 		for (int i=0;i<size;i++)
 		{
 			BranchMisRepo5 data = BranchMisRepo5List.get(i);
@@ -103,64 +107,71 @@ public class BranchMisServiceImpl implements BranchMisservice{
 				area_code=data.getArea_cd();
 				reg_name=data.getReg_name();
 				area_name=data.getArea_name();
-				name=data.getDepo_name();
+				branch=data.getDepo_name();
+				name=data.getTer_name();
 				first=false;
 			}
 			
 			if(reg_code!=data.getReg_cd())
 			{
 				
-				saleList.add(getResponse(reg_name,budget,gross,credit,net,1));
+				saleList.add(getResponse(branch,reg_name,budget,gross,credit,lys,net,1));
 				reg_code=data.getReg_cd();
 				reg_name=data.getReg_name();
 				budget=0;
 				gross=0;
 				credit=0;
 				net=0;
+				lys=0;
 				
 			}
 
 			if(area_code!=data.getArea_cd())
 			{
 				
-				saleList.add(getResponse(area_name,abudget,agross,acredit,anet,2));
+				saleList.add(getResponse(branch,area_name,abudget,agross,acredit,alys,anet,2));
 				area_code=data.getArea_cd();
 				area_name=data.getArea_name();
 				abudget=0;
 				agross=0;
 				acredit=0;
 				anet=0;
+				alys=0;
 				
 			}
 
-			saleList.add(getResponse(data.getTer_name(),data.getBudget(),data.getGross(),data.getCredit(),data.getNet(),0));
+			saleList.add(getResponse(data.getDepo_name(),data.getTer_name(),data.getBudget(),data.getGross(),data.getCredit(),data.getLysval(),data.getNet(),0));
 
 	    	
 	    	budget+=data.getBudget();
 	    	gross+=data.getGross();
 	    	credit+=data.getCredit();
+	    	lys+=data.getLysval();
 	    	net+=data.getNet();
+	    	
 	    	abudget+=data.getBudget();
 	    	agross+=data.getGross();
 	    	acredit+=data.getCredit();
+	    	alys+=data.getLysval();
 	    	anet+=data.getNet();
 
 	    	gbudget+=data.getBudget();
 	    	ggross+=data.getGross();
 	    	gcredit+=data.getCredit();
+	    	glys+=data.getLysval();
 	    	gnet+=data.getNet();
 	    	
 		} //end of for loop
 		
 			if(request.getDepoCode()>0)
 			{
-			saleList.add(getResponse(reg_name,budget,gross,credit,net,1));
-			saleList.add(getResponse(area_name,abudget,agross,acredit,anet,2));
-			saleList.add(getResponse(name+" Branch",gbudget,ggross,gcredit,gnet,3));
+			saleList.add(getResponse(branch,reg_name,budget,gross,credit,lys,net,1));
+			saleList.add(getResponse(branch,area_name,abudget,agross,acredit,alys,anet,2));
+			saleList.add(getResponse(branch,"",gbudget,ggross,gcredit,glys,gnet,3));
 			}
 			if(request.getDepoCode()==0)
 			{
-			saleList.add(getResponse(" Total",gbudget,ggross,gcredit,gnet,3));
+			saleList.add(getResponse(branch," Total",gbudget,ggross,gcredit,glys,gnet,3));
 			}
 
 		ApiResponse<BranchMisRepo5Response> apiResponse = new ApiResponse<>(title!=null?title.toString():"", size,saleList);
@@ -175,9 +186,10 @@ public class BranchMisServiceImpl implements BranchMisservice{
 	}
 
 
-	private BranchMisRepo5Response getResponse(String name,long budget,long gross,long credit,long net, int color)
+	private BranchMisRepo5Response getResponse(String branch,String name,long budget,long gross,long credit,long lastYearSale,long net, int color)
 	{
 		BranchMisRepo5Response response=new BranchMisRepo5Response();
+		response.setBranch(branch);
 		response.setName(name);;
 
 /*		response.setBudget(AppCalculationUtils.roundToDecimal2Places(budget));
@@ -189,6 +201,7 @@ public class BranchMisServiceImpl implements BranchMisservice{
 		response.setBudget(budget);
 		response.setGrossSale(gross);
 		response.setCreditNote(credit);
+		response.setLastYearSale(lastYearSale);
 		response.setNetSale(net);
 		response.setAchPer(AppCalculationUtils.calculateAch(net, budget));
 		response.setSurSlashdef(net-budget);
@@ -273,6 +286,7 @@ public class BranchMisServiceImpl implements BranchMisservice{
 			
 			response=new BranchMisRepo6Response();
 
+			response.setBranch(data.getDepo_name());
 			response.setName(data.getName());
 	    	response.setInvSaleQty(data.getSaleqty());
 	    	response.setInvSaleVal(data.getSalesval());
@@ -336,7 +350,8 @@ public class BranchMisServiceImpl implements BranchMisservice{
 		{
 
 			response=new BranchMisRepo6Response();
-			response.setName("GRAND TOTAL");
+			response.setBranch("GRAND TOTAL");
+			response.setName(" ");
 	    	response.setInvSaleQty(gsaleqty);
 	    	response.setInvSaleVal(Math.round(gsaleval));
 
@@ -475,15 +490,17 @@ public class BranchMisServiceImpl implements BranchMisservice{
 		int fs=0;
 		int gfs=0;
 		String pcode="";
+		String branch="";
 		for (int i=0;i<size;i++)
 		{
 			BranchMisRepo8 data = BranchMisRepo8List.get(i);
-			
+			System.out.println(" branch "+data.getDepo_name());
 			if(first)
 			{
 				response=new BranchMisRepo8Response();
 				ter_code=data.getTerr_cd();
 				ter_name=data.getTer_name();
+				branch=data.getDepo_name();
 				months=new LinkedHashMap();
 				group=new LinkedHashMap();
 				total=new LinkedHashMap();
@@ -494,6 +511,7 @@ public class BranchMisServiceImpl implements BranchMisservice{
 
 			if(ter_code!=data.getTerr_cd())
 			{
+				response.setBranch(branch);
 				response.setName(ter_name);
 				z=k;
 				for(int b=k;b<sz;b++)
@@ -527,6 +545,7 @@ public class BranchMisServiceImpl implements BranchMisservice{
 				saleList.add(response);
 				ter_code=data.getTerr_cd();
 				ter_name=data.getTer_name();
+				branch=data.getDepo_name();
 				columnTotal=0;
 				columnTotalVal=0;
 				gfs+=fs;
@@ -751,6 +770,7 @@ public class BranchMisServiceImpl implements BranchMisservice{
 			
 		}			
 			response=new BranchMisRepo8Response();
+			response.setBranch(branch);
 			response.setName(ter_name);
 			z=k;
 			for(int b=k;b<sz;b++)
@@ -801,6 +821,7 @@ public class BranchMisServiceImpl implements BranchMisservice{
 
 			months.putAll(total);
 			response=new BranchMisRepo8Response();
+			response.setBranch(branch);
 			response.setName("Total");
 			response.setMonths(months);
 			response.setCumFs(gfs);

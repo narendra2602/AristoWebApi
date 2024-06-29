@@ -43,9 +43,10 @@ public class DailyReportServiceImpl  implements DailyReportService{
 	private String getTitle(DailyReportRequest request,DailyReport data)
 	{
 		StringBuilder title=new StringBuilder();
-		title.append(aristoWebMessageConstant.divisionMap.get(String.valueOf(data.getDiv_code())));
+		title.append(request.getDivCode()>0?aristoWebMessageConstant.divisionMap.get(String.valueOf(data.getDiv_code())):"ALL DIVISION");
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		SimpleDateFormat sdf1 = new SimpleDateFormat("dd-MM-yyyy");
+		title.append(request.getRepType()==1?" HO Report ":" Branch Report ");
 		title.append(" BILLING MONTH ");
 		title.append(getDayMonthYear(sdf.format(request.getEntryDate())));
 		title.append(" AS ON ");
@@ -166,13 +167,13 @@ public class DailyReportServiceImpl  implements DailyReportService{
 
 				response=new DailyReportResponse();
 				response.setBr(data.getDepo_code());
-				if(data.getBr_name().equalsIgnoreCase("ALL INDIA") && data.getTp()<99)
+				if(data.getBr_name().equalsIgnoreCase("ALL INDIA") && data.getTp()<990)
 					response.setBr(0);
-				else if(data.getBr_name().contains("TOTAL") && data.getTp()<99)
+				else if(data.getBr_name().contains("TOTAL") && data.getTp()<990)
 					response.setBr(0);
-				else if(data.getBr_name().contains("CORP") && data.getTp()==98)
+				else if(data.getBr_name().contains("CORP") && data.getTp()==980)
 					response.setBr(0);
-				else if(data.getBr_name().equalsIgnoreCase("ALL INDIA") && data.getTp()==99)
+				else if(data.getBr_name().equalsIgnoreCase("ALL INDIA") && data.getTp()==990)
 					response.setBr(0);
 
 				response.setBranch(data.getBr_name());
@@ -197,14 +198,18 @@ public class DailyReportServiceImpl  implements DailyReportService{
 					response.setStatus(status?"Open":"Close");
 				response.setEntryDate(data.getEnt_Date());
 				response.setTime(data.getEnt_time());
-				if(data.getBr_name().equalsIgnoreCase("ALL INDIA") && data.getTp()<99)
+				if(data.getBr_name().equalsIgnoreCase("ALL INDIA") && data.getTp()<990)
 					response.setColor(1);
-				else if(data.getBr_name().contains("TOTAL") && data.getTp()<99)
+				else if(data.getBr_name().contains("TOTAL") && data.getTp()<990)
 					response.setColor(1);
-				else if(data.getBr_name().contains("CORP") && data.getTp()==98)
+				else if(data.getBr_name().contains("CORP") && data.getTp()==980)
 					response.setColor(1);
-				else if(data.getBr_name().equalsIgnoreCase("ALL INDIA") && data.getTp()==99)
+				else if(data.getBr_name().equalsIgnoreCase("ALL INDIA") && data.getTp()==990)
 					response.setColor(2);
+				else if(data.getDiv_name().contains("CORP"))
+					response.setColor(1);
+
+
 				saleList.add(response);
 			} // eof rep_type 1 
 			else if(request.getRepType()==2)	
@@ -255,12 +260,12 @@ public class DailyReportServiceImpl  implements DailyReportService{
 
 				}
 
-				if(data.getTp()==97)
+				if(data.getTp()==970)
 				{
 					branchMap.put(data.getDepo_code(), status1?"Open":"Close");
 
 				}
-				if(data.getTp()==98)
+				if(data.getTp()==980)
 				{
 					divMap.put(data.getDiv_code(), corpMap.get(data.getDiv_code()));
 
@@ -268,13 +273,13 @@ public class DailyReportServiceImpl  implements DailyReportService{
 
 				response=new DailyReportResponse();
 				response.setBr(data.getDepo_code());
-				if(data.getBr_name().equalsIgnoreCase("ALL INDIA") && data.getTp()<99)
+				if(data.getBr_name().equalsIgnoreCase("ALL INDIA") && data.getTp()<990)
 					response.setBr(0);
-				else if(data.getBr_name().contains("TOTAL") && data.getTp()<99)
+				else if(data.getBr_name().contains("TOTAL") && data.getTp()<990)
 					response.setBr(0);
-				else if(data.getBr_name().contains("CORP") && data.getTp()==98)
+				else if(data.getBr_name().contains("CORP") && data.getTp()==980)
 					response.setBr(0);
-				else if(data.getBr_name().equalsIgnoreCase("ALL INDIA") && data.getTp()==99)
+				else if(data.getBr_name().equalsIgnoreCase("ALL INDIA") && data.getTp()==990)
 					response.setBr(0);
 
 				response.setBranch(data.getBr_name());
@@ -293,21 +298,21 @@ public class DailyReportServiceImpl  implements DailyReportService{
 				response.setOsAsOn(data.getOutstand());
 				if(data.getTp()<50)
 					response.setStatus(data.getStatus());
-				else if(data.getTp()==97)
+				else if(data.getTp()==970)
 					response.setStatus(branchMap.get(data.getDepo_code()));
-				else if(data.getTp()==98)
+				else if(data.getTp()==980)
 					response.setStatus(divMap.get(data.getDiv_code()));
 				else 
 					response.setStatus(status1?"Open":"Close");
 				response.setEntryDate(data.getEnt_Date());
 				response.setTime(data.getEnt_time());
-				if(data.getBr_name().equalsIgnoreCase("ALL INDIA") && data.getTp()<99)
+				if(data.getBr_name().equalsIgnoreCase("ALL INDIA") && data.getTp()<990)
 					response.setColor(1);
-				else if(data.getBr_name().contains("TOTAL") && data.getTp()<99)
+				else if(data.getBr_name().contains("TOTAL") && data.getTp()<990)
 					response.setColor(1);
-				else if(data.getBr_name().contains("CORP") && data.getTp()==98)
+				else if(data.getBr_name().contains("CORP") && data.getTp()==980)
 					response.setColor(1);
-				else if(data.getBr_name().equalsIgnoreCase("ALL INDIA") && data.getTp()==99)
+				else if(data.getBr_name().equalsIgnoreCase("ALL INDIA") && data.getTp()==990)
 					response.setColor(2);
 				saleList.add(response);
 			} // eof rep_type 2 
@@ -321,6 +326,7 @@ public class DailyReportServiceImpl  implements DailyReportService{
 		} catch (Exception e) {
 			logger.error(AristoWebLogMsgConstant.DAILY_REPORT_SERVICE,"getDailyReport");
 			throw new ApiException(e.getMessage());
+			
 		}
 		
 

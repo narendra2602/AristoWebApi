@@ -13,6 +13,7 @@ public interface MktRepo8 {
 	public int getTot();
 	public String getSmname();
 	public String getEmname();
+	public String getBranch_name();
 
 
 }
