@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class MktRepo5Response { 
 	
 	private String branch;
-	private String name;
+	private String hqName;
 	private int mthFs;
 	private double mthBudget;
 	private double mthGross;

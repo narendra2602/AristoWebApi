@@ -15,4 +15,5 @@ public class BranchMisRepo5Request extends ViewRequest{
 	 
 	private int repType;
 	private int code;
+	
 }

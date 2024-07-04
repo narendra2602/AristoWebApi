@@ -47,7 +47,7 @@ public class StkRepo10ServiceImpl implements StkRepo10Service {
 		
 		StringBuilder title=new StringBuilder();
 		title.append(aristoWebMessageConstant.divisionMap.get(String.valueOf(request.getDivCode())));
-		title.append(" PRODUCT -> : ");
+		title.append(request.getRepTypePgwise()==1?" PRODUCT -> : ":"Group ->");
 		title.append(data.getPname());
 		title.append(" ");
 		title.append(" - STOCKIEST WISE ");
@@ -85,7 +85,17 @@ public class StkRepo10ServiceImpl implements StkRepo10Service {
 		
 		String title=null;
 		
+		if(request.getRepTypePgwise()==2 && request.getRepType()==1)
+				request.setRepType(12);
+		if(request.getRepTypePgwise()==2 && request.getRepType()==2)
+			request.setRepType(22);
+		if(request.getRepTypePgwise()==2 && request.getRepType()==3)
+			request.setRepType(32);
 		
+		if(request.getRepTypePgwise()==2)
+			request.setUv(2);
+		
+		System.out.println("rep type "+request.getRepType()+" uv "+request.getUv());
 		List<StkRepo10> stkRepo10SaleList=stkRepo10Dao.getStockiestRepo10(request.getMyear(),request.getDivCode(),request.getDepoCode()
 				,request.getSmon(),request.getEmon(),request.getRepType(),request.getPcode(),request.getLoginId());
 	
@@ -628,8 +638,8 @@ public class StkRepo10ServiceImpl implements StkRepo10Service {
 
 			months.putAll(total);
 			
-			response.setBranch("");
-			response.setName("Total");
+			response.setBranch("Total");
+			response.setName("");
 			
 
 			response.setMonths(months);

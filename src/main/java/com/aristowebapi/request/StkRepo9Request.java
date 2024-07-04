@@ -14,5 +14,6 @@ import lombok.NoArgsConstructor;
 public class StkRepo9Request extends ViewRequest{
 
 	private int code;
+	private int rep_type_pgwise;
 	
 }

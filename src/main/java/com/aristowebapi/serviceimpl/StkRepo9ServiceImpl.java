@@ -37,7 +37,7 @@ public class StkRepo9ServiceImpl implements StkRepo9Service {
 	{
 		StringBuilder title=new StringBuilder();
 		title.append(aristoWebMessageConstant.divisionMap.get(String.valueOf(request.getDivCode())));
-		title.append("PRODUCT - > ");
+		title.append(request.getRep_type_pgwise()==1?"PRODUCT - > ":"GROUP ->");
 		title.append(data.getPname());
 		title.append(" STOCKIEST WISE SALES DETAIL FROM ");
 		title.append(data.getSmname());
@@ -57,8 +57,13 @@ public class StkRepo9ServiceImpl implements StkRepo9Service {
 		int size = 0;
 
 		try {
+			if(request.getRep_type_pgwise()==1)
 			StkRepo9List=stkRepo9Dao.getStockiestRepo9(request.getMyear(),request.getDivCode(),request.getDepoCode()
 					,request.getSmon(),request.getEmon(),request.getCode(),request.getLoginId());
+			else
+				StkRepo9List=stkRepo9Dao.getStockiestRepo9Group(request.getMyear(),request.getDivCode(),request.getDepoCode()
+						,request.getSmon(),request.getEmon(),request.getCode(),request.getLoginId());
+				
 			size = StkRepo9List.size();
 			
 			logger.info("size of the data is {}",size);

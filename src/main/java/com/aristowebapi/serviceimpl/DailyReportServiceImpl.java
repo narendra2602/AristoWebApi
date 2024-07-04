@@ -192,7 +192,7 @@ public class DailyReportServiceImpl  implements DailyReportService{
 				response.setOsAsOn(data.getOutstand());
 				if(data.getTp()<50)
 					response.setStatus(data.getStatus());
-				else if(data.getTp()==98 || data.getTp()==50 )
+				else if(data.getTp()==980 || data.getTp()==50 )
 					response.setStatus(branchMap.get(data.getDepo_code()));
 				else 
 					response.setStatus(status?"Open":"Close");
@@ -208,7 +208,10 @@ public class DailyReportServiceImpl  implements DailyReportService{
 					response.setColor(2);
 				else if(data.getDiv_name().contains("CORP"))
 					response.setColor(1);
-
+				if(data.getDepo_code()==99)
+					response.setColor(1);
+				if(data.getDepo_code()==0 || data.getBr_name().equalsIgnoreCase("ALL INDIA"))
+					response.setColor(2);
 
 				saleList.add(response);
 			} // eof rep_type 1 
@@ -314,6 +317,11 @@ public class DailyReportServiceImpl  implements DailyReportService{
 					response.setColor(1);
 				else if(data.getBr_name().equalsIgnoreCase("ALL INDIA") && data.getTp()==990)
 					response.setColor(2);
+				if(data.getDepo_code()==99)
+					response.setColor(1);
+				if(data.getDepo_code()==0 || data.getBr_name().equalsIgnoreCase("ALL INDIA"))
+					response.setColor(2);
+
 				saleList.add(response);
 			} // eof rep_type 2 
 

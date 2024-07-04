@@ -17,4 +17,6 @@ public class StkRepo10Request extends ViewRequest{
 	private int repType;
 	private int uv;
 	private int pcode;
+	private int repTypePgwise;
+	private int creditNoteType;
 }

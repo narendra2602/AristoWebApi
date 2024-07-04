@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class BranchMisRepo6Response { 
 	
 	private String branch;
-	private String name;
+	private String hqName;
 	private int invSaleQty;
 	private long invSaleVal;
 	private int piSaleQty;

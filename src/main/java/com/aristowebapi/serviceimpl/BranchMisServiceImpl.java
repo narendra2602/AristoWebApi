@@ -140,7 +140,7 @@ public class BranchMisServiceImpl implements BranchMisservice{
 				
 			}
 
-			saleList.add(getResponse(data.getDepo_name(),data.getTer_name(),data.getBudget(),data.getGross(),data.getCredit(),data.getLysval(),data.getNet(),0));
+			saleList.add(getResponse(data.getDepo_name(),request.getDepoCode()>0?data.getTer_name():"",data.getBudget(),data.getGross(),data.getCredit(),data.getLysval(),data.getNet(),0));
 
 	    	
 	    	budget+=data.getBudget();
@@ -167,11 +167,11 @@ public class BranchMisServiceImpl implements BranchMisservice{
 			{
 			saleList.add(getResponse(branch,reg_name,budget,gross,credit,lys,net,1));
 			saleList.add(getResponse(branch,area_name,abudget,agross,acredit,alys,anet,2));
-			saleList.add(getResponse(branch,"",gbudget,ggross,gcredit,glys,gnet,3));
+			saleList.add(getResponse(branch," Total",gbudget,ggross,gcredit,glys,gnet,3));
 			}
 			if(request.getDepoCode()==0)
 			{
-			saleList.add(getResponse(branch," Total",gbudget,ggross,gcredit,glys,gnet,3));
+			saleList.add(getResponse("All India"," Total",gbudget,ggross,gcredit,glys,gnet,3));
 			}
 
 		ApiResponse<BranchMisRepo5Response> apiResponse = new ApiResponse<>(title!=null?title.toString():"", size,saleList);
@@ -190,7 +190,7 @@ public class BranchMisServiceImpl implements BranchMisservice{
 	{
 		BranchMisRepo5Response response=new BranchMisRepo5Response();
 		response.setBranch(branch);
-		response.setName(name);;
+		response.setHqName(name);;
 
 /*		response.setBudget(AppCalculationUtils.roundToDecimal2Places(budget));
 		response.setGross(AppCalculationUtils.roundToDecimal2Places(gross));
@@ -285,9 +285,10 @@ public class BranchMisServiceImpl implements BranchMisservice{
 			}
 			
 			response=new BranchMisRepo6Response();
+			System.out.println(data.getDepo_name()+"  "+data.getName());
 
 			response.setBranch(data.getDepo_name());
-			response.setName(data.getName());
+			response.setHqName(request.getDepoCode()>0?data.getName():"");
 	    	response.setInvSaleQty(data.getSaleqty());
 	    	response.setInvSaleVal(data.getSalesval());
 
@@ -351,7 +352,7 @@ public class BranchMisServiceImpl implements BranchMisservice{
 
 			response=new BranchMisRepo6Response();
 			response.setBranch("GRAND TOTAL");
-			response.setName(" ");
+			response.setHqName(" ");
 	    	response.setInvSaleQty(gsaleqty);
 	    	response.setInvSaleVal(Math.round(gsaleval));
 
@@ -417,7 +418,7 @@ public class BranchMisServiceImpl implements BranchMisservice{
 		    		break;
 		    case 3: title.append("(EXPIRY) FROM ");
 		    		break;
-		    case 4: title.append("(SALABLE) FROM ");
+		    case 4: title.append("(SALEABLE) FROM ");
 		    		break;
 		    case 5: title.append("(BRK/SPOILED) FROM ");
 		    		break;
@@ -448,7 +449,9 @@ public class BranchMisServiceImpl implements BranchMisservice{
 		String title=null;
 		List<BranchMisRepo8> BranchMisRepo8List=null;
 		int size = 0;
-		if(request.getDepoCode()==0)
+		if(request.getDepoCode()==0 && request.getOpt()==1) // branch
+			BranchMisRepo8List=branchMisDao.getBranchMisRepo8HQ(request.getMyear(),request.getDivCode(),request.getDepoCode(),request.getSmon(),request.getEmon(),request.getRepType(),request.getLoginId(),request.getUtype(),request.getCode());
+		else if(request.getDepoCode()==0)
 			BranchMisRepo8List=branchMisDao.getBranchMisRepo8Branch(request.getMyear(),request.getDivCode(),request.getDepoCode(),request.getSmon(),request.getEmon(),request.getRepType(),request.getLoginId(),request.getUtype(),request.getCode());
 		else if(request.getOpt()==1) // hqwise
 			BranchMisRepo8List=branchMisDao.getBranchMisRepo8HQ(request.getMyear(),request.getDivCode(),request.getDepoCode(),request.getSmon(),request.getEmon(),request.getRepType(),request.getLoginId(),request.getUtype(),request.getCode());
@@ -512,7 +515,7 @@ public class BranchMisServiceImpl implements BranchMisservice{
 			if(ter_code!=data.getTerr_cd())
 			{
 				response.setBranch(branch);
-				response.setName(ter_name);
+				response.setHqName(request.getDepoCode()>0?ter_name:"");
 				z=k;
 				for(int b=k;b<sz;b++)
 				{
@@ -771,7 +774,8 @@ public class BranchMisServiceImpl implements BranchMisservice{
 		}			
 			response=new BranchMisRepo8Response();
 			response.setBranch(branch);
-			response.setName(ter_name);
+			response.setHqName(request.getDepoCode()>0?ter_name:"");
+			gfs+=fs;
 			z=k;
 			for(int b=k;b<sz;b++)
 			{
@@ -821,8 +825,8 @@ public class BranchMisServiceImpl implements BranchMisservice{
 
 			months.putAll(total);
 			response=new BranchMisRepo8Response();
-			response.setBranch(branch);
-			response.setName("Total");
+			response.setBranch(request.getDepoCode()==0?"All India":branch);
+			response.setHqName("Total");
 			response.setMonths(months);
 			response.setCumFs(gfs);
 			response.setColor(2);

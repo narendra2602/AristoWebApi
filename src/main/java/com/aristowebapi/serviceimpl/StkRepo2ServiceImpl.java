@@ -45,6 +45,22 @@ public class StkRepo2ServiceImpl implements StkRepo2Service{
 	private String getTitle(StkRepo2Request request,StkRepo2 data)
 	{
 
+		String crtype="";
+		if (request.getCreditNoteType()==1)
+				crtype="Salable";
+		else if(request.getCreditNoteType()==2)
+			crtype="Spoiled";
+		else if(request.getCreditNoteType()==3)
+			crtype="Breakage";
+		else if(request.getCreditNoteType()==4)
+			crtype="Expired";
+		else if(request.getCreditNoteType()==6)
+			crtype="Price Diff";
+		else if(request.getCreditNoteType()==7)
+			crtype="Short Received";
+		else if(request.getCreditNoteType()==9)
+			crtype="Loss in Transit";
+
 		
 		StringBuilder title=new StringBuilder();
 		title.append(aristoWebMessageConstant.divisionMap.get(String.valueOf(data.getDiv_code())));
@@ -55,13 +71,14 @@ public class StkRepo2ServiceImpl implements StkRepo2Service{
 		{
 		    case 1:	title.append("GROSS SALE");
 		            break;
-		    case 2: title.append("CREDIT");
+		    case 2: title.append("CREDIT ");
 		    		break;
-		    case 3: title.append("NET SALE");
+		    case 3: title.append("NET SALE ");
 		    		break;
 
 		}
-		title.append(" - PRODUCT WISE ");
+		title.append(request.getCreditNoteType()>0?crtype:"");
+		title.append(request.getRepTypePgwise()==1?" - PRODUCT WISE ":" GROUP WISE ");
 		title.append(request.getUv()==1?" UNIT TREND ":request.getUv()==2?" VALUE TREND ":" UNIT/VALUE TREND FROM ");
 		title.append(data.getSmname());
 		title.append(" To ");
@@ -85,10 +102,28 @@ public class StkRepo2ServiceImpl implements StkRepo2Service{
 
 		
 		String title=null;
+		if(request.getRepTypePgwise()==2 && request.getRepType()==1)
+			request.setRepType(12);
+		if(request.getRepTypePgwise()==2 && request.getRepType()==3)
+			request.setRepType(32);
 		
+		if(request.getRepTypePgwise()==2)
+			request.setUv(2);
 		
-		List<StkRepo2> stkRepo2SaleList=stkRepo2Dao.getStockiestRepo2(request.getMyear(),request.getDivCode(),request.getDepoCode()
+		System.out.println(request.getMyear()+" "+request.getDivCode()+" "+request.getDepoCode()+" "+request.getSmon()+" "+request.getEmon()+" "+request.getRepType()+" "+request.getStkCode()+" "+request.getLoginId());
+
+		List<StkRepo2> stkRepo2SaleList=null;
+		if(request.getRepType()==2 && request.getRepTypePgwise()==2 ) // credit note
+			stkRepo2SaleList=stkRepo2Dao.getStockiestRepo2CreditGroup(request.getMyear(),request.getDivCode(),request.getDepoCode()
+					,request.getSmon(),request.getEmon(),request.getCreditNoteType(),request.getStkCode(),request.getLoginId());
+		else if(request.getRepType()==2 && request.getRepTypePgwise()==1 ) // credit note
+			stkRepo2SaleList=stkRepo2Dao.getStockiestRepo2Credit(request.getMyear(),request.getDivCode(),request.getDepoCode()
+					,request.getSmon(),request.getEmon(),request.getCreditNoteType(),request.getStkCode(),request.getLoginId());
+		else
+			stkRepo2SaleList=stkRepo2Dao.getStockiestRepo2(request.getMyear(),request.getDivCode(),request.getDepoCode()
 				,request.getSmon(),request.getEmon(),request.getRepType(),request.getStkCode(),request.getLoginId());
+	
+		
 		
 		StkRepo2Response response=null;
 
@@ -98,7 +133,9 @@ public class StkRepo2ServiceImpl implements StkRepo2Service{
 		
 		List<StkRepo2Response> saleList = new ArrayList();
 
-		int size = stkRepo2SaleList.size();
+		int size=0;
+		if(stkRepo2SaleList!=null)
+		   size = stkRepo2SaleList.size();
 		System.out.println("size is "+size);
 		String mname="";
 		if(size==0)
@@ -164,7 +201,10 @@ public class StkRepo2ServiceImpl implements StkRepo2Service{
 					months.put("TOTAL VALUE", columnTotalVal);
 				}
 				response.setMonths(months);
-				
+				if (pcode==9999)
+						response.setColor(1);
+				else
+						response.setColor(0);
 				saleList.add(response);
 				pcode=data.getMcode();
 				name=data.getMname();
@@ -383,6 +423,11 @@ public class StkRepo2ServiceImpl implements StkRepo2Service{
 			}
 
 			response.setMonths(months);
+			if (pcode==9999)
+				response.setColor(1);
+		else
+				response.setColor(0);
+
 			saleList.add(response);
 
 			
@@ -415,6 +460,7 @@ public class StkRepo2ServiceImpl implements StkRepo2Service{
 			}
 			months.putAll(total);
 			response.setMonths(months);
+			response.setColor(2);
 			saleList.add(response);
 
 			
@@ -441,9 +487,17 @@ public class StkRepo2ServiceImpl implements StkRepo2Service{
 		
 		String title=null;
 		
-		
-		List<StkRepo2> stkRepo2SaleList=stkRepo2Dao.getStockiestRepo2(request.getMyear(),request.getDivCode(),request.getDepoCode()
+		List<StkRepo2> stkRepo2SaleList=null;
+		if(request.getRepType()==2) // credit note
+			stkRepo2SaleList=stkRepo2Dao.getStockiestRepo2Credit(request.getMyear(),request.getDivCode(),request.getDepoCode()
+					,request.getSmon(),request.getEmon(),request.getCreditNoteType(),request.getStkCode(),request.getLoginId());
+		else
+			stkRepo2SaleList=stkRepo2Dao.getStockiestRepo2(request.getMyear(),request.getDivCode(),request.getDepoCode()
 				,request.getSmon(),request.getEmon(),request.getRepType(),request.getStkCode(),request.getLoginId());
+
+		
+//		List<StkRepo2> stkRepo2SaleList=stkRepo2Dao.getStockiestRepo2(request.getMyear(),request.getDivCode(),request.getDepoCode()
+//				,request.getSmon(),request.getEmon(),request.getRepType(),request.getStkCode(),request.getLoginId());
 		
 		StkRepo2Response response=null;
 
@@ -504,7 +558,11 @@ public class StkRepo2ServiceImpl implements StkRepo2Service{
 				months.put("TOTAL UNITS", columnTotal);
 				months.put("TOTAL VALUE", vcolumnTotal);
 				response.setMonths(months);
-				
+				if (pcode==9999)
+					response.setColor(1);
+			else
+					response.setColor(0);
+
 				saleList.add(response);
 				pcode=data.getMcode();
 				name=data.getMname();
@@ -623,7 +681,11 @@ public class StkRepo2ServiceImpl implements StkRepo2Service{
 		months.put("TOTAL UNITS", columnTotal);
 		months.put("TOTAL VALUE", vcolumnTotal);
 		response.setMonths(months);
-		
+		if (pcode==9999)
+			response.setColor(1);
+	else
+			response.setColor(0);
+
 		saleList.add(response);
 // grand total 
 			
@@ -641,6 +703,7 @@ public class StkRepo2ServiceImpl implements StkRepo2Service{
 			total.put("TOTAL VALUE", vgrandColumnTotal);
 			
 			response.setMonths(total);
+			response.setColor(2);
 			saleList.add(response);
 			
 		

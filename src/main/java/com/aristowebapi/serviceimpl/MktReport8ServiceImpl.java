@@ -88,7 +88,7 @@ public class MktReport8ServiceImpl implements MktRepo8Service{
 			response=new MktRepo8Response();
 
 			response.setBranch(data.getBranch_name());
-			response.setName(data.getDepo_name());
+			response.setHqName(request.getDepoCode()>0?data.getDepo_name():"");
 	    	response.setGross(data.getGross());
 	    	response.setExpiry(data.getExpiry());
 	    	response.setExpiryRaio(data.getExpratio());
@@ -105,7 +105,7 @@ public class MktReport8ServiceImpl implements MktRepo8Service{
 
 			response=new MktRepo8Response();
 			response.setBranch("TOTAL");
-			response.setName("");
+			response.setHqName("");
 	    	response.setGross(sval);
 	    	response.setExpiry(eval);
 	    	response.setExpiryRaio(Math.round(((eval*1.0/sval)*100)*100.0)/100.0);

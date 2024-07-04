@@ -137,7 +137,11 @@ public class MktRepo6ServiceImpl implements MktRepo6Service  {
 			if(depo_code!=data.getDepo_code())
 			{
 				response.setBranch(branch);
-				response.setName(name);
+				if(request.getOption()==2 || request.getDepoCode()>0)
+					response.setHqName(name);
+				else
+					response.setHqName("");
+
 				response.setFs(fs);
 				z=k;
 				for(int b=k;b<sz;b++)
@@ -167,7 +171,7 @@ public class MktRepo6ServiceImpl implements MktRepo6Service  {
 			if(sdepo_code!=data.getSdepo_code() && request.getOption()==2)
 			{
 				response.setBranch(branch);
-				response.setName("Total");
+				response.setHqName("Total");
 				response.setFs(bfs);
 
 				
@@ -287,7 +291,10 @@ public class MktRepo6ServiceImpl implements MktRepo6Service  {
 		
 		response=new MktRepo6Response();
 		response.setBranch(branch);
-		response.setName(name);
+		if(request.getOption()==2 || request.getDepoCode()>0)
+			response.setHqName(name);
+		else
+			response.setHqName("");
 		response.setFs(fs);
 		z=k;
 		for(int b=k;b<sz;b++)
@@ -307,7 +314,7 @@ public class MktRepo6ServiceImpl implements MktRepo6Service  {
 		{
 			response=new MktRepo6Response();
 			response.setBranch(branch);
-			response.setName("Total");
+			response.setHqName("Total");
 			response.setFs(bfs);
 			branchcolumnTotal = branchtotal.values().stream().mapToDouble(d -> d).sum();
 			branchcolumnTotal=Math.round(branchcolumnTotal*100.0)/100.00;
@@ -328,7 +335,7 @@ public class MktRepo6ServiceImpl implements MktRepo6Service  {
 		months.putAll(total);
 		response=new MktRepo6Response();
 		response.setBranch("Grand Total");
-		response.setName("");
+		response.setHqName("");
 		response.setFs(gfs);
 		response.setMonths(months);
 		response.setColor(2);

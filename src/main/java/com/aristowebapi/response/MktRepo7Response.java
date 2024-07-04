@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class MktRepo7Response { 
 	
 	private String branch;
-	private String name;
+	private String hqName;
 	private long saleable;
 	private long expiry;
 	private long breakage;
