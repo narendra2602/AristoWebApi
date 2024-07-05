@@ -32,7 +32,7 @@ public class StkRepo2ServiceImpl implements StkRepo2Service{
 	@Autowired
 	private AristoWebMessageConstant  aristoWebMessageConstant;
 	
-	private String lupdate="";
+	private String lupdate=""; 
 	Map<String, Object> grandTotalMap=null;
 	Map<String, Integer> grandTotalIntMap=null;
 	long grandColumnTotal=0;
@@ -46,8 +46,25 @@ public class StkRepo2ServiceImpl implements StkRepo2Service{
 	{
 
 		String crtype="";
+		
+		StringBuilder title=new StringBuilder();
+		title.append(aristoWebMessageConstant.divisionMap.get(String.valueOf(data.getDiv_code())));
+		title.append(" STOCKIEST : ");
+		title.append(data.getStk_name());
+		title.append(" ");
+		switch(request.getRepType())
+		{
+		    case 1:	title.append("GROSS SALE");
+		            break;
+		    case 2: title.append("CREDIT - ");
+		    		break;
+		    case 3: title.append("NET SALE ");
+		    		break;
+
+		}
+//		String crtype="";
 		if (request.getCreditNoteType()==1)
-				crtype="Salable";
+				crtype="Saleable";
 		else if(request.getCreditNoteType()==2)
 			crtype="Spoiled";
 		else if(request.getCreditNoteType()==3)
@@ -61,22 +78,6 @@ public class StkRepo2ServiceImpl implements StkRepo2Service{
 		else if(request.getCreditNoteType()==9)
 			crtype="Loss in Transit";
 
-		
-		StringBuilder title=new StringBuilder();
-		title.append(aristoWebMessageConstant.divisionMap.get(String.valueOf(data.getDiv_code())));
-		title.append(" STOCKIEST : ");
-		title.append(data.getStk_name());
-		title.append(" ");
-		switch(request.getRepType())
-		{
-		    case 1:	title.append("GROSS SALE");
-		            break;
-		    case 2: title.append("CREDIT ");
-		    		break;
-		    case 3: title.append("NET SALE ");
-		    		break;
-
-		}
 		title.append(request.getCreditNoteType()>0?crtype:"");
 		title.append(request.getRepTypePgwise()==1?" - PRODUCT WISE ":" GROUP WISE ");
 		title.append(request.getUv()==1?" UNIT TREND ":request.getUv()==2?" VALUE TREND ":" UNIT/VALUE TREND FROM ");

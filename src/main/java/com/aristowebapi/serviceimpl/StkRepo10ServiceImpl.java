@@ -52,17 +52,25 @@ public class StkRepo10ServiceImpl implements StkRepo10Service {
 		title.append(" ");
 		title.append(" - STOCKIEST WISE ");
 		title.append(request.getUv()==1?" UNIT TREND ":request.getUv()==2?" VALUE TREND ":" UNIT/VALUE TREND ");
-		switch(request.getRepType())
-		{
-		    case 1:	title.append("(GROSS) FROM ");
-		            break;
-		    case 2: title.append("(CREDIT) FROM ");
-		    		break;
-		    case 3: title.append("(NET) FROM ");
-		    		break;
+		String crtype="";
+		if (request.getCreditNoteType()==1)
+				crtype="Saleable";
+		else if(request.getCreditNoteType()==2)
+			crtype="Spoiled";
+		else if(request.getCreditNoteType()==3)
+			crtype="Breakage";
+		else if(request.getCreditNoteType()==4)
+			crtype="Expired";
+		else if(request.getCreditNoteType()==6)
+			crtype="Price Diff";
+		else if(request.getCreditNoteType()==7)
+			crtype="Short Received";
+		else if(request.getCreditNoteType()==9)
+			crtype="Loss in Transit";
 
-		}
-
+		title.append(request.getRepType()==1?" Gross ":((request.getRepType()==22 || request.getRepType()==2)?" Credit -":" Net "));
+		title.append(request.getCreditNoteType()>0?crtype:"");
+		title.append(" From ");
 		title.append(data.getSmname());
 		title.append(" To ");
 		title.append(data.getEmname());

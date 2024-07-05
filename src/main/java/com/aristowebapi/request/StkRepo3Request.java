@@ -13,5 +13,5 @@ import lombok.NoArgsConstructor;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class StkRepo3Request extends ViewRequest{ 
 	private int repType;
-
+	private int creditNoteType;
 }

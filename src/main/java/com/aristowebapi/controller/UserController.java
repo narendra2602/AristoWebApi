@@ -82,7 +82,7 @@ public class UserController {
         int loginId=requestValues[0]; 
 
         request.setUserId(loginId);
-        //request.setUserId(5157);
+//        request.setUserId(100000263);
 
     	if(service.changePassword(request)==1)
         	return ResponseEntity.ok("Password Changes successfully");

@@ -47,17 +47,33 @@ public class StkRepo3ServiceImpl implements StkRepo3Service{
 		StringBuilder title=new StringBuilder();
 		title.append(aristoWebMessageConstant.divisionMap.get(String.valueOf(request.getDivCode())));
 		title.append(" STOCKIEST/RUPEES/SALES WISE : ");
+		String crtype="";
+		if (request.getCreditNoteType()==1)
+				crtype="Salaable";
+		else if(request.getCreditNoteType()==2)
+			crtype="Spoiled";
+		else if(request.getCreditNoteType()==3)
+			crtype="Breakage";
+		else if(request.getCreditNoteType()==4)
+			crtype="Expired";
+		else if(request.getCreditNoteType()==6)
+			crtype="Price Diff";
+		else if(request.getCreditNoteType()==7)
+			crtype="Short Received";
+		else if(request.getCreditNoteType()==9)
+			crtype="Loss in Transit";
 		switch(request.getRepType())
 		{
-		    case 1:	title.append("GROSS SALE ");
+		    case 1:	title.append("GROSS SALE - ");
 		            break;
-		    case 2: title.append("CREDIT ");
+		    case 2: title.append("CREDIT - ");
 		    		break;
-		    case 3: title.append("NET SALE ");
+		    case 3: title.append("NET SALE - ");
 		    		break;
 
 		}
-		title.append("TREND FROM ");
+		title.append(request.getCreditNoteType()>0?crtype:"");
+		title.append(" TREND FROM ");
 		title.append(data.getSmname());
 		title.append(" To ");
 		title.append(data.getEmname());
@@ -82,9 +98,13 @@ public class StkRepo3ServiceImpl implements StkRepo3Service{
 		Map<String, Long> months=null;
 		Map<String, Long> total=null;
 		Map<String, Long> group=null;
-
-		
-		List<StkRepo3> stkRepo3SaleList=stkRepo3Dao.getStockiestRepo3(request.getMyear(),request.getDivCode(),request.getDepoCode()
+		List<StkRepo3> stkRepo3SaleList=null;
+		if(request.getRepType()==2)
+			stkRepo3SaleList=stkRepo3Dao.getStockiestRepo3Credit(request.getMyear(),request.getDivCode(),request.getDepoCode()
+					,request.getSmon(),request.getEmon(),request.getCreditNoteType(),request.getLoginId());
+			
+		else	
+			 stkRepo3SaleList=stkRepo3Dao.getStockiestRepo3(request.getMyear(),request.getDivCode(),request.getDepoCode()
 				,request.getSmon(),request.getEmon(),request.getRepType(),request.getLoginId());
 		
 		

@@ -75,6 +75,8 @@ public class UserInfoService implements UserDetailsService {
      public int changePassword(ChangePasswordRequest request )
      {
     		 UserInfo userDetail = repository.findById(request.getUserId());
+    		 
+    		 System.out.println(" id+kya hai "+userDetail.getId());
     		 int update=0;
         	 if (userDetail!=null)
         	 {
