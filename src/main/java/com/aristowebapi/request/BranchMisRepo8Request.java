@@ -15,5 +15,5 @@ public class BranchMisRepo8Request extends BranchMisRepo6Request{
 	
 	private int uv;
 	private int opt;
-	
+	private int repTypePgwise;
 }

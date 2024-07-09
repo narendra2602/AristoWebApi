@@ -16,6 +16,7 @@ import lombok.NoArgsConstructor;
 public class NearExpiryRequest { 
 	
 	private int divCode;
+	private int depoCode;
 	private int loginId;
 	private Date currDate;
 	private int code;

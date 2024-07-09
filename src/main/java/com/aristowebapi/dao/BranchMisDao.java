@@ -24,11 +24,24 @@ public interface BranchMisDao extends JpaRepository<MktDataDto, Integer> {
 			@Param("smon") int smon,@Param("emon") int emon,@Param("rep_type") int rep_type,
 			@Param("login_id") int login_id,@Param("utype") int utype,@Param("code") int code);
 
+	@Query(value="CALL aristo_web.web_branch_mis_repo6_group(:myear,:div_code,:depo_code,:smon,:emon,:rep_type,:login_id,:utype,:code);", nativeQuery=true)
+	List<BranchMisRepo6> getBranchMisRepo6Group(@Param("myear") int myear,@Param("div_code") int div_code,@Param("depo_code") int depo_code,
+			@Param("smon") int smon,@Param("emon") int emon,@Param("rep_type") int rep_type,
+			@Param("login_id") int login_id,@Param("utype") int utype,@Param("code") int code);
+
+	
 	@Query(value="CALL aristo_web.web_branch_mis_repo8HQ(:myear,:div_code,:depo_code,:smon,:emon,:rep_type,:login_id,:utype,:code);", nativeQuery=true)
 	List<BranchMisRepo8> getBranchMisRepo8HQ(@Param("myear") int myear,@Param("div_code") int div_code,@Param("depo_code") int depo_code,
 			@Param("smon") int smon,@Param("emon") int emon,@Param("rep_type") int rep_type,
 			@Param("login_id") int login_id,@Param("utype") int utype,@Param("code") int code);
 
+	
+	@Query(value="CALL aristo_web.web_branch_mis_repo8HQ_group(:myear,:div_code,:depo_code,:smon,:emon,:rep_type,:login_id,:utype,:code);", nativeQuery=true)
+	List<BranchMisRepo8> getBranchMisRepo8HQGroup(@Param("myear") int myear,@Param("div_code") int div_code,@Param("depo_code") int depo_code,
+			@Param("smon") int smon,@Param("emon") int emon,@Param("rep_type") int rep_type,
+			@Param("login_id") int login_id,@Param("utype") int utype,@Param("code") int code);
+
+	
 	@Query(value="CALL aristo_web.web_branch_mis_repo8Region(:myear,:div_code,:depo_code,:smon,:emon,:rep_type,:login_id,:utype,:code);", nativeQuery=true)
 	List<BranchMisRepo8> getBranchMisRepo8Region(@Param("myear") int myear,@Param("div_code") int div_code,@Param("depo_code") int depo_code,
 			@Param("smon") int smon,@Param("emon") int emon,@Param("rep_type") int rep_type,
@@ -41,6 +54,11 @@ public interface BranchMisDao extends JpaRepository<MktDataDto, Integer> {
 	
 	@Query(value="CALL aristo_web.web_branch_mis_repo8Branch(:myear,:div_code,:depo_code,:smon,:emon,:rep_type,:login_id,:utype,:code);", nativeQuery=true)
 	List<BranchMisRepo8> getBranchMisRepo8Branch(@Param("myear") int myear,@Param("div_code") int div_code,@Param("depo_code") int depo_code,
+			@Param("smon") int smon,@Param("emon") int emon,@Param("rep_type") int rep_type,
+			@Param("login_id") int login_id,@Param("utype") int utype,@Param("code") int code);
+
+	@Query(value="CALL aristo_web.web_branch_mis_repo8Branch_group(:myear,:div_code,:depo_code,:smon,:emon,:rep_type,:login_id,:utype,:code);", nativeQuery=true)
+	List<BranchMisRepo8> getBranchMisRepo8BranchGroup(@Param("myear") int myear,@Param("div_code") int div_code,@Param("depo_code") int depo_code,
 			@Param("smon") int smon,@Param("emon") int emon,@Param("rep_type") int rep_type,
 			@Param("login_id") int login_id,@Param("utype") int utype,@Param("code") int code);
 

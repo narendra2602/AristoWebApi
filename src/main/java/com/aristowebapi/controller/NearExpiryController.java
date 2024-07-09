@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.aristowebapi.constant.AristoWebLogMsgConstant;
 import com.aristowebapi.request.NearExpiryRequest;
 import com.aristowebapi.response.ApiResponse;
+import com.aristowebapi.response.NearExpiryBranchWiseResponse;
 import com.aristowebapi.response.NearExpiryResponse;
 import com.aristowebapi.service.NearExpiryService;
 import com.aristowebapi.utility.AppRequestParameterUtils;
@@ -49,6 +50,23 @@ public class NearExpiryController {
 	
 	}
 
+	
+	@GetMapping("${mrc_nearexpiry_branch_path}")
+	public ResponseEntity<ApiResponse<NearExpiryBranchWiseResponse>> getExpiryReportBranchwise(@RequestBody NearExpiryRequest request,HttpServletRequest req)
+	{
+		
+
+        int loginId=getLoginIdFromToken(req)[0];
+        int uType=getLoginIdFromToken(req)[1];
+
+        request.setLoginId(loginId);
+        
+        logger.info(AristoWebLogMsgConstant.NEAR_EXPIRY_CONTROLLER,"getExpiryReportBranchwise", request.getDivCode(),loginId);
+		return new ResponseEntity<ApiResponse<NearExpiryBranchWiseResponse>>(nearExpiryService.getExpiryReporBranchwiset(request), HttpStatus.OK);
+	
+	}
+
+	
 	   private int[] getLoginIdFromToken(HttpServletRequest request)
 	    {
 			String authHeader = request.getHeader("Authorization");

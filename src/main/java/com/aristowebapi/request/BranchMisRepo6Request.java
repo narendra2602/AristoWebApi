@@ -14,6 +14,6 @@ import lombok.NoArgsConstructor;
 public class BranchMisRepo6Request extends ViewRequest { 
 	private int repType;
 	private int code;
-	
+	private int repTypePgwise;
 
 }

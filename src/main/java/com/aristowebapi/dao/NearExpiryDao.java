@@ -19,6 +19,11 @@ public interface NearExpiryDao extends JpaRepository<MktDataDto, Integer> {
 			@Param("curr_date") Date curr_date,
 			@Param("div_code") int div_code);
 			
+	@Query(value="CALL aristo_web.near_expiry_report_branchwise(:year,:depo_code,:login_id,:curr_date,:div_code);", nativeQuery=true)
+	List<NearExpiry> getNearExpiryReportBranchwise(@Param("year") int year,@Param("depo_code") int depo_code,
+			@Param("login_id") int login_id,
+			@Param("curr_date") Date curr_date,
+			@Param("div_code") int div_code);
 
 
 }

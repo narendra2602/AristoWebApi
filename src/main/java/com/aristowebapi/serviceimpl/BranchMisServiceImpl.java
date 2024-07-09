@@ -216,9 +216,9 @@ public class BranchMisServiceImpl implements BranchMisservice{
 	private String getTitle(BranchMisRepo6Request request,BranchMisRepo6 data)
 	{
 		StringBuilder title=new StringBuilder();
-		title.append("PRODUCT - > ");
+		title.append(request.getRepTypePgwise()==1?"PRODUCT - > ":" GROUP - > ");
 		title.append(data.getPname());
-		title.append(request.getRepType()==1?" H.Q.WISE ":request.getRepType()==2?" REGION WISE ":request.getRepType()==3?" AREA WISE ":" BRANCH WISE ");
+		title.append(request.getRepType()==2 || request.getRepType()==22 ?" H.Q.WISE ":" BRANCH WISE ");
 		title.append("SALES DETAIL FROM ");
 		title.append(data.getSmname());
 		title.append(" TO ");
@@ -234,12 +234,25 @@ public class BranchMisServiceImpl implements BranchMisservice{
 		List<BranchMisRepo6> BranchMisRepo6List=null;
 		int size = 0;
 		
+		if(request.getRepTypePgwise()==2 && request.getRepType()==1) // branch wise group wise
+			request.setRepType(12);
+
+		if(request.getRepTypePgwise()==2 && request.getRepType()==2)  // hqwise group wise 
+			request.setRepType(22);
+
+		
+		System.out.println(request.getMyear()+" div "+request.getDivCode()+" "+request.getDepoCode()+" "+request.getSmon()+" "+request.getEmon()+" "+request.getRepType()+" "+request.getLoginId()+" "+request.getUtype()+" "+request.getCode());
+
+		
 		try {
-			BranchMisRepo6List=branchMisDao.getBranchMisRepo6(request.getMyear(),request.getDivCode(),request.getDepoCode(),request.getSmon(),request.getEmon(),request.getRepType(),request.getLoginId(),request.getUtype(),request.getCode());
+			if(request.getRepTypePgwise()==2)
+				BranchMisRepo6List=branchMisDao.getBranchMisRepo6Group(request.getMyear(),request.getDivCode(),request.getDepoCode(),request.getSmon(),request.getEmon(),request.getRepType(),request.getLoginId(),request.getUtype(),request.getCode());
+			else
+				BranchMisRepo6List=branchMisDao.getBranchMisRepo6(request.getMyear(),request.getDivCode(),request.getDepoCode(),request.getSmon(),request.getEmon(),request.getRepType(),request.getLoginId(),request.getUtype(),request.getCode());
+
 			size = BranchMisRepo6List.size();
 			logger.info("size of the data is {}",size);
 			
-			System.out.println(request.getMyear()+" div "+request.getDivCode()+" "+request.getDepoCode()+" "+request.getSmon()+" "+request.getEmon()+" "+request.getRepType()+" "+request.getLoginId()+" "+request.getUtype()+" "+request.getCode());
 			
 			
 /*			if(size==0)
@@ -288,7 +301,7 @@ public class BranchMisServiceImpl implements BranchMisservice{
 			System.out.println(data.getDepo_name()+"  "+data.getName());
 
 			response.setBranch(data.getDepo_name());
-			response.setHqName(request.getDepoCode()>0?data.getName():"");
+			response.setHqName(request.getDepoCode()>0 || request.getRepType()==2 || request.getRepType()==22 ?data.getName():"");
 	    	response.setInvSaleQty(data.getSaleqty());
 	    	response.setInvSaleVal(data.getSalesval());
 
@@ -445,14 +458,20 @@ public class BranchMisServiceImpl implements BranchMisservice{
 		int z=0;
 		sz=request.getEmon();
 
-		
+		// opt==1 hq   and opt==4 branch
 		String title=null;
 		List<BranchMisRepo8> BranchMisRepo8List=null;
 		int size = 0;
-		if(request.getDepoCode()==0 && request.getOpt()==1) // branch
+		if(request.getDepoCode()==0 && request.getOpt()==1 && request.getRepTypePgwise()==2) // branch
+			BranchMisRepo8List=branchMisDao.getBranchMisRepo8HQGroup(request.getMyear(),request.getDivCode(),request.getDepoCode(),request.getSmon(),request.getEmon(),request.getRepType(),request.getLoginId(),request.getUtype(),request.getCode());
+		else if(request.getDepoCode()==0 && request.getOpt()==1) // branch
 			BranchMisRepo8List=branchMisDao.getBranchMisRepo8HQ(request.getMyear(),request.getDivCode(),request.getDepoCode(),request.getSmon(),request.getEmon(),request.getRepType(),request.getLoginId(),request.getUtype(),request.getCode());
+		else if(request.getDepoCode()==0 && request.getRepTypePgwise()==2)
+			BranchMisRepo8List=branchMisDao.getBranchMisRepo8BranchGroup(request.getMyear(),request.getDivCode(),request.getDepoCode(),request.getSmon(),request.getEmon(),request.getRepType(),request.getLoginId(),request.getUtype(),request.getCode());
 		else if(request.getDepoCode()==0)
 			BranchMisRepo8List=branchMisDao.getBranchMisRepo8Branch(request.getMyear(),request.getDivCode(),request.getDepoCode(),request.getSmon(),request.getEmon(),request.getRepType(),request.getLoginId(),request.getUtype(),request.getCode());
+		else if(request.getOpt()==1 && request.getRepTypePgwise()==2) // hqwise
+			BranchMisRepo8List=branchMisDao.getBranchMisRepo8HQGroup(request.getMyear(),request.getDivCode(),request.getDepoCode(),request.getSmon(),request.getEmon(),request.getRepType(),request.getLoginId(),request.getUtype(),request.getCode());
 		else if(request.getOpt()==1) // hqwise
 			BranchMisRepo8List=branchMisDao.getBranchMisRepo8HQ(request.getMyear(),request.getDivCode(),request.getDepoCode(),request.getSmon(),request.getEmon(),request.getRepType(),request.getLoginId(),request.getUtype(),request.getCode());
 		else if(request.getOpt()==2) // region
@@ -497,7 +516,7 @@ public class BranchMisServiceImpl implements BranchMisservice{
 		for (int i=0;i<size;i++)
 		{
 			BranchMisRepo8 data = BranchMisRepo8List.get(i);
-			System.out.println(" branch "+data.getDepo_name());
+			
 			if(first)
 			{
 				response=new BranchMisRepo8Response();
@@ -515,7 +534,7 @@ public class BranchMisServiceImpl implements BranchMisservice{
 			if(ter_code!=data.getTerr_cd())
 			{
 				response.setBranch(branch);
-				response.setHqName(request.getDepoCode()>0?ter_name:"");
+				response.setHqName(request.getDepoCode()>0 || request.getOpt()==1 ?ter_name:"");
 				z=k;
 				for(int b=k;b<sz;b++)
 				{
@@ -774,7 +793,7 @@ public class BranchMisServiceImpl implements BranchMisservice{
 		}			
 			response=new BranchMisRepo8Response();
 			response.setBranch(branch);
-			response.setHqName(request.getDepoCode()>0?ter_name:"");
+			response.setHqName(request.getDepoCode()>0 || request.getOpt()==1 ?ter_name:"");
 			gfs+=fs;
 			z=k;
 			for(int b=k;b<sz;b++)
