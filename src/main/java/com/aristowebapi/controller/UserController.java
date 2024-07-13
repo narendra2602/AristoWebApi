@@ -11,17 +11,19 @@ import org.springframework.security.core.Authentication;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.aristowebapi.constant.AristoWebLogMsgConstant;
 import com.aristowebapi.dto.UserInfo;
 import com.aristowebapi.request.ChangePasswordRequest;
 import com.aristowebapi.request.LoginRequest;
 import com.aristowebapi.response.ApiResponse;
-import com.aristowebapi.response.MktRepo11Response;
 import com.aristowebapi.response.TokenResponse;
+import com.aristowebapi.response.UserResponse;
 import com.aristowebapi.service.TokenBlacklist;
 import com.aristowebapi.serviceimpl.JwtService;
 import com.aristowebapi.serviceimpl.UserInfoDetails;
@@ -89,6 +91,27 @@ public class UserController {
         else
         	return ResponseEntity.ok("Error while Password Changed");
     } 
+    
+    @PostMapping("/resetPassword/{userId}") 
+    public ResponseEntity<String> resetPassword(@PathVariable("userId") int userId) { 
+
+
+    	if(service.resetPassword(userId)==1)
+        	return ResponseEntity.ok("Password Reset successfully");
+        else
+        	return ResponseEntity.ok("Error while Reset Password ");
+    } 
+
+
+    @GetMapping("/userList") 
+	public ResponseEntity<ApiResponse<UserResponse>> getUserList()
+	{
+
+//		logger.info(AristoWebLogMsgConstant.DASH_BOARD_CONTROLLER,"getDashboardYearCombo");
+
+		return new ResponseEntity<ApiResponse<UserResponse>>(service.getAllUser(), HttpStatus.OK);
+	
+	}
     
     @GetMapping("/user/userProfile") 
     @PreAuthorize("hasAuthority('ROLE_USER')") 

@@ -140,6 +140,21 @@ public class BranchMisServiceImpl implements BranchMisservice{
 				
 			}
 
+
+			if(!branch.equalsIgnoreCase(data.getDepo_name()))
+			{
+				
+				saleList.add(getResponse(branch,"Total",budget,gross,credit,lys,net,2));
+				branch=data.getDepo_name();
+				budget=0;
+				gross=0;
+				credit=0;
+				net=0;
+				lys=0;
+				
+			}
+
+			
 			saleList.add(getResponse(data.getDepo_name(),request.getDepoCode()>0 || request.getRepType()==2?data.getTer_name():"",data.getBudget(),data.getGross(),data.getCredit(),data.getLysval(),data.getNet(),0));
 
 	    	
@@ -169,9 +184,14 @@ public class BranchMisServiceImpl implements BranchMisservice{
 			saleList.add(getResponse(branch,area_name,abudget,agross,acredit,alys,anet,2));
 			saleList.add(getResponse(branch," Total",gbudget,ggross,gcredit,glys,gnet,3));
 			}
-			if(request.getDepoCode()==0)
+			else if(request.getDepoCode()==0 && request.getRepType()==1)
 			{
 			saleList.add(getResponse("All India"," Total",gbudget,ggross,gcredit,glys,gnet,3));
+			}
+			else if(request.getDepoCode()==0 && request.getRepType()==2)
+			{
+				saleList.add(getResponse(branch," Total",budget,gross,credit,lys,net,2));
+				saleList.add(getResponse("All India"," Total",gbudget,ggross,gcredit,glys,gnet,3));
 			}
 
 		ApiResponse<BranchMisRepo5Response> apiResponse = new ApiResponse<>(title!=null?title.toString():"", size,saleList);

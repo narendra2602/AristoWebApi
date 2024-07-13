@@ -45,7 +45,7 @@ public class MktRepo7ServiceImpl implements  MktRepo7Service{
 		else
 			title.append("BRANCH WISE ");
 			
-		title.append("EXPIRY/BREAKAGE/SALABLE From  ");
+		title.append("EXPIRY/BREAKAGE/SALEABLE From  ");
 		title.append(data.getSmname());
 		title.append(" To ");
 		title.append(data.getEmname());
@@ -76,6 +76,9 @@ public class MktRepo7ServiceImpl implements  MktRepo7Service{
 		long  sval=0;
 		long  eval=0;
 		long  bval=0;
+		long  rval=0;
+		long  shortval=0;
+		long  lossval=0;
 		long  tval=0;
 
 
@@ -109,7 +112,10 @@ public class MktRepo7ServiceImpl implements  MktRepo7Service{
 	    	sval+=data.getSalable();
 	    	eval+=data.getExpiry();
 	    	bval+=data.getBreakage();
-	    	tval+=data.getSalable()+data.getExpiry()+data.getBreakage();
+	    	rval+=data.getRatediff();
+	    	shortval+=data.getShort();
+	    	lossval+=data.getLoss();		
+	    	tval+=data.getSalable()+data.getExpiry()+data.getBreakage()+data.getRatediff()+data.getShort()+data.getLoss();
 
 		} //end of for loop
 
@@ -122,9 +128,11 @@ public class MktRepo7ServiceImpl implements  MktRepo7Service{
 	    	response.setSaleable(sval);
 	    	response.setExpiry(eval);
 	    	response.setBreakage(bval);
-	    	response.setOther(0);
+	    	response.setRateDiff(rval);
+	    	response.setShortReceived(shortval);
+	    	response.setLossInTransit(lossval);
 	    	response.setTotal(tval);
-			response.setColor(2);
+			response.setColor(1);
 
 			saleList.add(response);
 		}

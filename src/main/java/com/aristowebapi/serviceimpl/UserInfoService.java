@@ -1,4 +1,5 @@
 package com.aristowebapi.serviceimpl;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -12,7 +13,10 @@ import org.springframework.stereotype.Service;
 
 import com.aristowebapi.dao.UserInfoRepository;
 import com.aristowebapi.dto.UserInfo;
-import com.aristowebapi.request.ChangePasswordRequest; 
+import com.aristowebapi.request.ChangePasswordRequest;
+import com.aristowebapi.response.ApiResponse;
+import com.aristowebapi.response.BranchMisRepo5Response;
+import com.aristowebapi.response.UserResponse; 
   
 @Service
 public class UserInfoService implements UserDetailsService { 
@@ -72,6 +76,30 @@ public class UserInfoService implements UserDetailsService {
         return "User updated Successfully"; 
     } 
 
+    
+    public ApiResponse<UserResponse> getAllUser() {
+    	List<UserInfo> userList = repository.findAll();
+    	UserInfo userInfo=null;
+    	UserResponse userResponse= null;
+    	List<UserResponse> userResponseList=new ArrayList<UserResponse>();
+    	
+    	int size=userList.size();
+    	for(int i=0;i<size;i++)
+    	{
+    	   userInfo = userList.get(i);
+    	   userResponse= new UserResponse();
+    	   userResponse.setLoginId(userInfo.getId());
+    	   userResponse.setFname(userInfo.getFname());
+    	   userResponse.setLoginName(userInfo.getLoginName());
+    	   userResponse.setUtype(userInfo.getUserType());
+    	   userResponse.setLastLoginDate(userInfo.getLastLoginDateTime().toString());
+    	   userResponseList.add(userResponse);
+    	}
+    	ApiResponse<UserResponse> apiResponse = new ApiResponse<>("User List", size,userResponseList);
+        return apiResponse; 
+    } 
+
+    
      public int changePassword(ChangePasswordRequest request )
      {
     		 UserInfo userDetail = repository.findById(request.getUserId());
@@ -92,4 +120,21 @@ public class UserInfoService implements UserDetailsService {
 
     		 return update;
      }
+     
+     public int resetPassword(int userId )
+     {
+    		 UserInfo userDetail = repository.findById(userId);
+    		 
+    		
+    		 int update=0;
+        	 if (userDetail!=null)
+        	 {
+        			 userDetail.setPassword(encoder.encode("123"));
+        			 repository.save(userDetail);
+        			 update=1;
+        	 }
+
+    		 return update;
+     }
+
 } 
