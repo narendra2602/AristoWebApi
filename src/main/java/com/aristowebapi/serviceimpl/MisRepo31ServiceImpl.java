@@ -56,19 +56,6 @@ public class MisRepo31ServiceImpl implements MisRepo31Service{
 		List<MisRepo31> MisRepo31List=null;
 		int size = 0;
 
-		if(request.getUtype()==3 && request.getDepoCode()==0)
-		{
-			
-			MisRepo31List=misRepo31Dao.getMisRepo31AllIndiaPmt(request.getMyear(),request.getDivCode(),request.getDepoCode()
-					,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId(),request.getHqCode());
-		}
-		else if(request.getUtype()==3 && request.getDepoCode()>0)
-			MisRepo31List=misRepo31Dao.getMisRepo31Pmt(request.getMyear(),request.getDivCode(),request.getDepoCode()
-					,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId(),request.getHqCode());
-/*		else if(request.getHqCode()>0)
-		MisRepo31List=misRepo31Dao.getMisRepo31Hq(request.getMyear(),request.getDivCode(),request.getDepoCode()
-				,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId(),request.getHqCode());
-*/		else
 		MisRepo31List=misRepo31Dao.getMisRepo31Branch(request.getMyear(),request.getDivCode(),request.getDepoCode()
 				,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId(),request.getHqCode());
 

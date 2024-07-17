@@ -141,7 +141,7 @@ public class BranchMisServiceImpl implements BranchMisservice{
 			}
 
 
-			if(!branch.equalsIgnoreCase(data.getDepo_name()))
+			if(!branch.equalsIgnoreCase(data.getDepo_name()) && request.getRepType()==2)
 			{
 				
 				saleList.add(getResponse(branch,"Total",budget,gross,credit,lys,net,2));
@@ -340,12 +340,12 @@ public class BranchMisServiceImpl implements BranchMisservice{
 	    	response.setBrkgQty(data.getBrkqty());
 	    	response.setBrkgVal(data.getBrkval());
 ///
-	    	response.setLossInTrQty(0);
-	    	response.setLossInTrVal(0);
+	    	response.setLossInTrQty(data.getOthqty());
+	    	response.setLossInTrVal(data.getOthval());
 ////
 	    	
-	    	response.setOtherQty(data.getOthqty());
-	    	response.setOtherVal(data.getOthval());
+	    	response.setOtherQty(0);
+	    	response.setOtherVal(0);
 
 	    	response.setRateDiff(data.getPdval());
 	    	
@@ -405,8 +405,13 @@ public class BranchMisServiceImpl implements BranchMisservice{
 	    	response.setBrkgQty(gbrkqty);
 	    	response.setBrkgVal(Math.round(gbrkval));
 
-	    	response.setOtherQty(gothqty);
-	    	response.setOtherVal(Math.round(gothval));
+	    	response.setLossInTrQty(gothqty);
+	    	response.setLossInTrVal(Math.round(gothval));
+
+	    	
+	    	response.setOtherQty(0);
+	    	response.setOtherVal(0);
+	    	
 	    	response.setRateDiff(Math.round(gpdval));
 
 	    	
@@ -478,6 +483,7 @@ public class BranchMisServiceImpl implements BranchMisservice{
 		int z=0;
 		sz=request.getEmon();
 
+		 System.out.println(request.getMyear()+" "+request.getDivCode()+" "+request.getDepoCode()+" "+request.getSmon()+" "+request.getEmon()+" "+request.getRepType()+" "+request.getLoginId()+" "+request.getUtype()+" "+request.getCode());
 		// opt==1 hq   and opt==4 branch
 		String title=null;
 		List<BranchMisRepo8> BranchMisRepo8List=null;

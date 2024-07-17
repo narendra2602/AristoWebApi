@@ -207,7 +207,7 @@ public class DailyReportServiceImpl  implements DailyReportService{
 				else if(data.getBr_name().equalsIgnoreCase("ALL INDIA") && data.getTp()==990)
 					response.setColor(2);
 				else if(data.getDiv_name().contains("CORP"))
-					response.setColor(1);
+					response.setColor(0);
 				if(data.getDepo_code()==99)
 					response.setColor(1);
 				if(data.getDepo_code()==0 || data.getBr_name().equalsIgnoreCase("ALL INDIA"))
