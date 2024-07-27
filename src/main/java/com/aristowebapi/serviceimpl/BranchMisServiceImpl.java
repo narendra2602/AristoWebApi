@@ -260,7 +260,6 @@ public class BranchMisServiceImpl implements BranchMisservice{
 		if(request.getRepTypePgwise()==2 && request.getRepType()==2)  // hqwise group wise 
 			request.setRepType(22);
 
-		
 		System.out.println(request.getMyear()+" div "+request.getDivCode()+" "+request.getDepoCode()+" "+request.getSmon()+" "+request.getEmon()+" "+request.getRepType()+" "+request.getLoginId()+" "+request.getUtype()+" "+request.getCode());
 
 		
@@ -488,6 +487,9 @@ public class BranchMisServiceImpl implements BranchMisservice{
 		String title=null;
 		List<BranchMisRepo8> BranchMisRepo8List=null;
 		int size = 0;
+		if(request.getRepTypePgwise()==2)
+			request.setUv(2);
+		
 		if(request.getDepoCode()==0 && request.getOpt()==1 && request.getRepTypePgwise()==2) // branch
 			BranchMisRepo8List=branchMisDao.getBranchMisRepo8HQGroup(request.getMyear(),request.getDivCode(),request.getDepoCode(),request.getSmon(),request.getEmon(),request.getRepType(),request.getLoginId(),request.getUtype(),request.getCode());
 		else if(request.getDepoCode()==0 && request.getOpt()==1) // branch

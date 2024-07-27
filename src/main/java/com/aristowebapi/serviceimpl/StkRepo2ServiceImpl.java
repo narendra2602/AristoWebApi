@@ -17,6 +17,7 @@ import com.aristowebapi.dto.MonthDto;
 import com.aristowebapi.dto.StkRepo2;
 import com.aristowebapi.request.StkRepo2Request;
 import com.aristowebapi.response.ApiResponse;
+import com.aristowebapi.response.BranchMisRepo8Response;
 import com.aristowebapi.response.StkRepo2Response;
 import com.aristowebapi.service.StkRepo2Service;
 import com.aristowebapi.utility.AppCalculationUtils;
@@ -35,8 +36,6 @@ public class StkRepo2ServiceImpl implements StkRepo2Service{
 	private String lupdate=""; 
 	Map<String, Object> grandTotalMap=null;
 	Map<String, Integer> grandTotalIntMap=null;
-	long grandColumnTotal=0;
-	long vgrandColumnTotal=0;
 
 	Map<String, Double> grandTotalDoubleMap=null;
 	double grandColumnTotalDouble=0.00;
@@ -141,7 +140,10 @@ public class StkRepo2ServiceImpl implements StkRepo2Service{
 		String mname="";
 		if(size==0)
 			mname=stkRepo2Dao.getPartyName(request.getDivCode(), request.getDepoCode(), request.getStkCode());
-		
+		long grandColumnTotal=0;
+		long grandColumnTotalVal=0;
+		long vgrandColumnTotal=0;
+
 		long columnTotal=0;
 		long columnTotalVal=0;
 		long groupColumnTotal=0;
@@ -261,11 +263,14 @@ public class StkRepo2ServiceImpl implements StkRepo2Service{
 					{
 						months.put((data.getMnth_abbr()+" UNITS"),data.getSales());
 						columnTotal+=data.getSales();
+						grandColumnTotal+=data.getSales();
 					}
 					else if(request.getUv()==2)
 					{
 						months.put((data.getMnth_abbr()+" VALUE"),data.getSales_val());
 						columnTotalVal+=data.getSales_val();
+						grandColumnTotalVal+=data.getSales_val();
+						
 					}
 					else if(request.getUv()==3)
 					{
@@ -273,9 +278,12 @@ public class StkRepo2ServiceImpl implements StkRepo2Service{
 						months.put((data.getMnth_abbr()+" VALUE"),data.getSales_val());
 						columnTotal+=data.getSales();
 						columnTotalVal+=data.getSales_val();
+						grandColumnTotal+=data.getSales();
+						grandColumnTotalVal+=data.getSales_val();
+						
 					}
 
-
+//					System.out.println("vgrandColumnTotal IS "+grandColumnTotalVal);
 					
 					if(group.containsKey(data.getMnth_abbr()))
 					{
@@ -291,12 +299,12 @@ public class StkRepo2ServiceImpl implements StkRepo2Service{
 					{
 						if(total.containsKey((data.getMnth_abbr()+" UNITS")))
 						{
-							long ggval = total.get(data.getMnth_abbr()+" UNITS")+data.getSales_val();
+							long ggval = total.get(data.getMnth_abbr()+" UNITS")+data.getSales();
 							total.put((data.getMnth_abbr()+" UNITS"), ggval);
 						}
 						else
 						{
-							total.put((data.getMnth_abbr()+" UNITS"), data.getSales_val());
+							total.put((data.getMnth_abbr()+" UNITS"), data.getSales());
 						}
 					}
 					if(request.getUv()==2)
@@ -315,14 +323,12 @@ public class StkRepo2ServiceImpl implements StkRepo2Service{
 					{
 						if(total.containsKey((data.getMnth_abbr()+" UNITS")))
 						{
-//							long ggval = total.get(data.getMnth_abbr()+" UNITS")+data.getSales_val();
-//							total.put((data.getMnth_abbr()+" UNITS"), ggval);
-							total.put((data.getMnth_abbr()+" UNITS"), 0L);
+							long ggval = total.get(data.getMnth_abbr()+" UNITS")+data.getSales();
+							total.put((data.getMnth_abbr()+" UNITS"), ggval);
 						}
 						else
 						{
-//							total.put((data.getMnth_abbr()+" UNITS"), data.getSales_val());
-							total.put((data.getMnth_abbr()+" UNITS"), 0L);
+							total.put((data.getMnth_abbr()+" UNITS"), data.getSales());
 						}
 
 						if(total.containsKey((data.getMnth_abbr()+" VALUE")))
@@ -335,6 +341,7 @@ public class StkRepo2ServiceImpl implements StkRepo2Service{
 							total.put((data.getMnth_abbr()+" VALUE"), data.getSales_val());
 						}
 					}
+
 
 					k++;
 					break;
@@ -361,30 +368,27 @@ public class StkRepo2ServiceImpl implements StkRepo2Service{
 
 					}
 
-					if(request.getUv()==1)
+					if(total.containsKey(mn.getMnth_abbr()+" UNITS"))
 					{
-						if(total.containsKey((data.getMnth_abbr()+" UNITS")))
-						{
-
-						}
-						else
-						{
-							total.put((data.getMnth_abbr()+" UNITS"), 0L);
-						}
+						// do nothing
 					}
-					if(request.getUv()==2)
+					else if(total.containsKey(mn.getMnth_abbr()+" VALUE"))
 					{
-						if(total.containsKey((data.getMnth_abbr()+" VALUE")))
-						{
-							long ggval = total.get((data.getMnth_abbr()+" VALUE"))+data.getSales_val();
-							total.put((data.getMnth_abbr()+" VALUE"), ggval);
-						}
-						else
-						{
-							total.put((data.getMnth_abbr()+" VALUE"),0L);
-						}
+						// do nothing
 					}
+					else
+					{
+						if(request.getUv()==1)
+							total.put(mn.getMnth_abbr()+" UNITS", 0L);
+						if(request.getUv()==2)
+							total.put(mn.getMnth_abbr()+" VALUE", 0L);
+						if(request.getUv()==3)
+						{
+							total.put(mn.getMnth_abbr()+" UNITS", 0L);
+							total.put(mn.getMnth_abbr()+" VALUE", 0L);
+						}
 
+					}
 					
 					
 					k++;
@@ -433,37 +437,35 @@ public class StkRepo2ServiceImpl implements StkRepo2Service{
 
 			
 			
-/*			grandColumnTotal = total.values().stream().mapToLong(d -> d).sum();
-			
-			months=new LinkedHashMap();
-			total.put("Total Value", grandColumnTotal);
-			months.putAll(total);
-			response=new StkRepo2Response();
-			response.setName("Total Value");
-			response.setMonths(months);
-			response.setColor(2);
-			saleList.add(response);		
-			
 
-*/
 			response=new StkRepo2Response();
 			months=new LinkedHashMap();
-			grandColumnTotal = total.values().stream().mapToLong(d -> d).sum();
-			total.put("Total Value", grandColumnTotal);
+			
+			if(request.getUv()==1)
+				total.put("TOTAL UNITS", grandColumnTotal);
+			else if(request.getUv()==2)
+				total.put("TOTAL VALUE", grandColumnTotalVal);
+			else
+			{
+				total.put("TOTAL UNITS", grandColumnTotal);
+				total.put("TOTAL VALUE", grandColumnTotalVal);
+				
+			}
+
 
 			response.setName("Total :");
-			z=k;
-			for(int b=k;b<sz;b++)
-			{
-				MonthDto mn=monthData.get(b);
-				total.put((mn.getMnth_abbr()+" VALUE"), 0L);
-				k++;
-			}
 			months.putAll(total);
 			response.setMonths(months);
 			response.setColor(2);
 			saleList.add(response);
 
+
+	
+
+
+
+			
+			
 			
 			return new ApiResponse<StkRepo2Response>(title.toString(),size,lupdate,saleList);
 			}
@@ -511,7 +513,10 @@ public class StkRepo2ServiceImpl implements StkRepo2Service{
 
 		int size = stkRepo2SaleList.size();
 		
-		
+		long grandColumnTotal=0;
+		long grandColumnTotalVal=0;
+		long vgrandColumnTotal=0;
+
 		long columnTotal=0;
 		long vcolumnTotal=0;
 
@@ -591,6 +596,7 @@ public class StkRepo2ServiceImpl implements StkRepo2Service{
 					grandColumnTotal+=data.getSales();
 					vgrandColumnTotal+=data.getSales_val();
 					vcolumnTotal+=data.getSales_val();
+					
 					if(group.containsKey(data.getMnth_abbr()))
 					{
 						long gval = group.get(data.getMnth_abbr())+data.getSales_val();

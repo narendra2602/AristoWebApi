@@ -117,4 +117,8 @@ public class AristoWebLogMsgConstant {
 	public static final String MIS_REPO31_CONTROLLER="MisRepo31Controller {} method execution started, myear : {} , div_code: {} , depo_code: {} , user_type: {} , login_id: {}, hq_code: {}";
 	public static final String MIS_REPO31_SERVICE="MisRepo31ServiceImpl:: {} method execution started, myear : {} , div_code: {} , depo_code: {} , user_type: {} , login_id: {} , hq_code: {}";
 
+	
+	public static final String PENDING_REPORT_CONTROLLER="PendingController:: {} method execution started, myear : {} , div_code: {}, depo_code: {} , user_type: {} , login_id: {}";
+	public static final String PENDING_REPORT_SERVICE="PendingServiceImpl:: {} method execution started";
+
 }

@@ -284,8 +284,8 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 				
 				branches.put("TOTAL", columnTotal);
 				response.setBranches(branches);
-				
-				saleList.add(response);
+				if(columnTotal>0)
+					saleList.add(response);
 				pcode=data.getMcode();
 				pname=data.getMname();
 				pack=data.getPack();
@@ -316,7 +316,8 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 				
 				response.setBranches(branches);
 				response.setColor(1);
-				saleList.add(response);
+				if(groupColumnTotal>0)
+					saleList.add(response);
 
 				
 				mgrp=data.getMgrp();
@@ -411,7 +412,8 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 		branches.put("TOTAL", columnTotal);
 
 		response.setBranches(branches);
-		saleList.add(response);
+		if(columnTotal>0)
+			saleList.add(response);
 
 		
 		branches=new LinkedHashMap();
@@ -431,6 +433,7 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 		branches.putAll(group);
 		response.setBranches(branches);
 		response.setColor(1);
+		if(groupColumnTotal>0)
 		saleList.add(response);
 		
 		
