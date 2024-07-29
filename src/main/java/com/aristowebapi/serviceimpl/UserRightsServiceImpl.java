@@ -11,17 +11,27 @@ import org.springframework.stereotype.Service;
 import com.aristowebapi.constant.AristoWebMessageConstant;
 import com.aristowebapi.dao.UserRightsBranchDao;
 import com.aristowebapi.dao.UserRightsDao;
+import com.aristowebapi.dao.UserRightsPmtDao;
 import com.aristowebapi.dao.UserRightsReportDao;
-import com.aristowebapi.dto.UserDepo;
-import com.aristowebapi.dto.UserDivision;
-import com.aristowebapi.dto.UserReports;
+import com.aristowebapi.dao.UserRightsTerDao;
+import com.aristowebapi.dto.DashBoardData;
 import com.aristowebapi.dto.UserRights;
 import com.aristowebapi.dto.UserRightsReport;
+import com.aristowebapi.entity.UserDepo;
+import com.aristowebapi.entity.UserDivision;
+import com.aristowebapi.entity.UserPmt;
+import com.aristowebapi.entity.UserReports;
+import com.aristowebapi.entity.UserTer;
 import com.aristowebapi.request.UserReportRightsRequest;
+import com.aristowebapi.request.UserRightsPmtRequest;
 import com.aristowebapi.request.UserRightsRequest;
+import com.aristowebapi.request.UserRightsTerRequest;
 import com.aristowebapi.response.ApiResponse;
+import com.aristowebapi.response.DashBoardDataResponse;
 import com.aristowebapi.response.UserReportRightsMenuResponse;
 import com.aristowebapi.response.UserReportRightsTabResponse;
+import com.aristowebapi.response.UserRightsHqResponse;
+import com.aristowebapi.response.UserRightsPmtResponse;
 import com.aristowebapi.response.UserRightsResponse;
 import com.aristowebapi.service.UserRightsService;
 
@@ -33,6 +43,11 @@ public class UserRightsServiceImpl implements UserRightsService{
 	@Autowired
 	private UserRightsDao userRightsDao;
 	
+	@Autowired
+	private UserRightsPmtDao userRightsPmtDao;
+	
+	@Autowired
+	private  UserRightsTerDao userRightsTerDao;
 	
 	@Autowired
 	private UserRightsBranchDao userRightsBranchDao;
@@ -212,4 +227,141 @@ public class UserRightsServiceImpl implements UserRightsService{
 		  return ureport.size();
 	}
 
+	@Override
+	public ApiResponse<UserRightsPmtResponse> getUserPmtGroupList(int loginId, int divCode) {
+		// TODO Auto-generated method stub
+		List<UserRights> reportList=null;
+		
+		reportList = userRightsPmtDao.gePmtGroupList(loginId,divCode);
+		
+		UserRightsPmtResponse response=null;
+		List<UserRightsPmtResponse> rightsList = new ArrayList();
+		int size=reportList.size();
+		for(int i=0;i<size;i++)
+		{
+			
+			UserRights data = reportList.get(i);
+			
+			response=new UserRightsPmtResponse();
+			response.setVal(data.getVal());
+			response.setName(data.getName());
+			response.setDivCode(divCode);
+			response.setUserStatus(data.getuser_status());
+			response.setId(data.getId());
+			rightsList.add(response);
+		
+		}
+		ApiResponse<UserRightsPmtResponse> apiResponse = new ApiResponse<>("PMT Group List", size,rightsList);
+		return apiResponse;
+
+
+	}
+
+	
+	@Override
+	public int saveUserPmtGroupList(List<UserRightsPmtRequest> pmtList) {
+		// TODO Auto-generated method stub
+		List<UserPmt> userPmtList = new ArrayList<>();
+		System.out.println("zise is "+pmtList.size());
+		pmtList.forEach(pmt -> {
+				UserPmt userPmt = new UserPmt();
+				userPmt.setUser_id(pmt.getUserId());
+				userPmt.setDiv_code(pmt.getDivCode());
+				userPmt.setGp_code(pmt.getVal());
+				userPmt.setStatus(pmt.getUserStatus());
+				userPmt.setId(pmt.getId());
+				userPmtList.add(userPmt);
+		});
+		  List<UserPmt> upmt = userRightsPmtDao.saveAll(userPmtList);
+		  return upmt.size();
+	}
+
+	@Override
+	public ApiResponse<UserRightsHqResponse> getUserTerList(int loginId, int myear, int divCode, int depoCode) {
+		// TODO Auto-generated method stub
+		List<UserRights> reportList=null;
+		
+		reportList = userRightsTerDao.geTerList(loginId,myear,divCode,depoCode);
+		
+		UserRightsHqResponse response=null;
+		List<UserRightsHqResponse> rightsList = new ArrayList();
+		int size=reportList.size();
+		for(int i=0;i<size;i++)
+		{
+			
+			UserRights data = reportList.get(i);
+			
+			response=new UserRightsHqResponse();
+			response.setVal(data.getVal());
+			response.setName(data.getName());
+			response.setDivCode(divCode);
+			response.setDepoCode(depoCode);
+			response.setUserStatus(data.getuser_status());
+			response.setId(data.getId());
+			rightsList.add(response);
+		
+		}
+		ApiResponse<UserRightsHqResponse> apiResponse = new ApiResponse<>("Hq List", size,rightsList);
+		return apiResponse;
+
+	}
+
+	@Override
+	public int saveUserTerList(List<UserRightsTerRequest> terList) {
+		// TODO Auto-generated method stub
+		List<UserTer> userTerList = new ArrayList<>();
+		System.out.println("zise is "+terList.size());
+		terList.forEach(ter -> {
+			UserTer userTer = new UserTer();
+				userTer.setUser_id(ter.getUserId());
+				userTer.setDiv_code(ter.getDivCode());
+				userTer.setDepo_code(ter.getDepoCode());
+				userTer.setTer_code(ter.getVal());
+				userTer.setStatus(ter.getUserStatus());
+				userTer.setId(ter.getId());
+				userTerList.add(userTer);
+		});
+		  List<UserTer> uter = userRightsTerDao.saveAll(userTerList);
+		  return uter.size();
+
+	}
+
+	@Override
+	public ApiResponse<DashBoardDataResponse> getDivisionList(int loginId) {
+		List<DashBoardData> divList=userRightsTerDao.getDivList(loginId);
+		List<DashBoardDataResponse> divisionResponseList  =new ArrayList<>();
+		int size=divList.size();
+		divList.forEach(data->{
+
+			DashBoardDataResponse branchres=new DashBoardDataResponse();
+			branchres.setValue(data.getVal());
+			branchres.setName(data.getName());
+			divisionResponseList.add(branchres);
+		});
+
+		ApiResponse<DashBoardDataResponse> apiResponse = new ApiResponse<>("Division ",size,divisionResponseList);
+		return apiResponse;
+	}
+
+	@Override
+	public ApiResponse<DashBoardDataResponse> getBranchList(int loginId) {
+		List<DashBoardData> branchlist=userRightsTerDao.getBranchList(loginId);
+		List<DashBoardDataResponse> branchResponseList=new ArrayList<>();
+		
+		int size=branchlist.size();
+
+
+		branchlist.forEach(data->{
+
+			DashBoardDataResponse branchres=new DashBoardDataResponse();
+			branchres.setValue(data.getVal());
+			branchres.setName(data.getName());
+			branchResponseList.add(branchres);
+		});
+	
+		ApiResponse<DashBoardDataResponse> apiResponse = new ApiResponse<>("Branch",size,branchResponseList);
+		return apiResponse;
+	}
+
+	
 }

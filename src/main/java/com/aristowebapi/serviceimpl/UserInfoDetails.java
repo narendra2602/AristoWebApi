@@ -9,7 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.aristowebapi.dto.UserInfo; 
+import com.aristowebapi.entity.UserInfo; 
   
 public class UserInfoDetails implements UserDetails { 
   

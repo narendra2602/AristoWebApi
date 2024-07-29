@@ -6,8 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.aristowebapi.dto.UserDivision;
 import com.aristowebapi.dto.UserRights;
+import com.aristowebapi.entity.UserDivision;
 
 public interface UserRightsDao extends JpaRepository<UserDivision, Integer>{
 	

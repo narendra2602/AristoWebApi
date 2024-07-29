@@ -17,8 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.aristowebapi.constant.AristoWebLogMsgConstant;
-import com.aristowebapi.dto.UserInfo;
+import com.aristowebapi.entity.UserInfo;
 import com.aristowebapi.request.ChangePasswordRequest;
 import com.aristowebapi.request.LoginRequest;
 import com.aristowebapi.response.ApiResponse;

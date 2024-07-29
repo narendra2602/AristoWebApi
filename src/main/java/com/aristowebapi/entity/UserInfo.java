@@ -1,4 +1,4 @@
-package com.aristowebapi.dto;
+package com.aristowebapi.entity;
 
 import java.util.Date;
 

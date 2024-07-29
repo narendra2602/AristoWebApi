@@ -6,9 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.aristowebapi.dto.UserReports;
-import com.aristowebapi.dto.UserRights;
 import com.aristowebapi.dto.UserRightsReport;
+import com.aristowebapi.entity.UserReports;
 
 public interface UserRightsReportDao extends JpaRepository<UserReports, Integer>{
 

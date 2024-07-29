@@ -79,6 +79,7 @@ public class MktRepo7ServiceImpl implements  MktRepo7Service{
 		long  rval=0;
 		long  shortval=0;
 		long  lossval=0;
+		long  qltyval=0;
 		long  tval=0;
 
 
@@ -104,6 +105,7 @@ public class MktRepo7ServiceImpl implements  MktRepo7Service{
 	    	response.setRateDiff(data.getRatediff());
 	    	response.setShortReceived(data.getShort());
 	    	response.setLossInTransit(data.getLoss());
+	    	response.setQualityIssue(data.getQlty());
 	    	response.setOther(0);
 	    	response.setTotal(data.getTotal());
 
@@ -114,8 +116,9 @@ public class MktRepo7ServiceImpl implements  MktRepo7Service{
 	    	bval+=data.getBreakage();
 	    	rval+=data.getRatediff();
 	    	shortval+=data.getShort();
-	    	lossval+=data.getLoss();		
-	    	tval+=data.getSalable()+data.getExpiry()+data.getBreakage()+data.getRatediff()+data.getShort()+data.getLoss();
+	    	lossval+=data.getLoss();
+	    	qltyval+=data.getQlty();
+	    	tval+=data.getSalable()+data.getExpiry()+data.getBreakage()+data.getRatediff()+data.getShort()+data.getLoss()+data.getQlty();
 
 		} //end of for loop
 
@@ -131,6 +134,7 @@ public class MktRepo7ServiceImpl implements  MktRepo7Service{
 	    	response.setRateDiff(rval);
 	    	response.setShortReceived(shortval);
 	    	response.setLossInTransit(lossval);
+	    	response.setQualityIssue(qltyval);
 	    	response.setTotal(tval);
 			response.setColor(1);
 

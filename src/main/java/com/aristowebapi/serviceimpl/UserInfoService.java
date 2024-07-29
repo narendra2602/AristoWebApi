@@ -12,10 +12,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.aristowebapi.dao.UserInfoRepository;
-import com.aristowebapi.dto.UserInfo;
+import com.aristowebapi.entity.UserInfo;
 import com.aristowebapi.request.ChangePasswordRequest;
 import com.aristowebapi.response.ApiResponse;
-import com.aristowebapi.response.BranchMisRepo5Response;
 import com.aristowebapi.response.UserResponse; 
   
 @Service

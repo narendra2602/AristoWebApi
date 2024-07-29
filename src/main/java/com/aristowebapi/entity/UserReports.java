@@ -1,4 +1,4 @@
-package com.aristowebapi.dto;
+package com.aristowebapi.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,13 +14,15 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name ="user_branch08")
-public class UserDepo {
+@Table(name ="user_rights")
+public class UserReports {
+
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) 
     private int id;
 	private int user_id;
-	private int depo_code;
+	private int tab_id;
+	private String repo_id;
 	private String status;
 
 }

@@ -22,6 +22,7 @@ public class MktRepo7Response {
 	private long shortReceived;
 	private long lossInTransit;
 	private long other;
+	private long qualityIssue;
 	private long total;
 	private int color;
 
