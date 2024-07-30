@@ -25,6 +25,7 @@ public class MisRepo31Response {
 	private long brkgReturn;
 	private long rateDiffCn;
 	private long lossInTransitCn;
+	private long qualityReturn;
 	private long otherReturn;
 	private long totalCnQty;
 	private long totalCnValue;

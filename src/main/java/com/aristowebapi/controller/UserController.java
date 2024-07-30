@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.aristowebapi.entity.UserInfo;
 import com.aristowebapi.request.ChangePasswordRequest;
 import com.aristowebapi.request.LoginRequest;
+import com.aristowebapi.request.UpdateUserStatusRequest;
 import com.aristowebapi.response.ApiResponse;
 import com.aristowebapi.response.TokenResponse;
 import com.aristowebapi.response.UserResponse;
@@ -101,6 +102,16 @@ public class UserController {
         	return ResponseEntity.ok("Error while Reset Password ");
     } 
 
+    @PostMapping("/changeUserStatus") 
+    public ResponseEntity<String> updateStatus(@RequestBody UpdateUserStatusRequest request) { 
+
+
+    	if(service.updateStatus(request.getUserId(),request.getUserStatus())==1)
+        	return ResponseEntity.ok("Status Updated successfully");
+        else
+        	return ResponseEntity.ok("Error while Status Updation Password ");
+    } 
+ 
 
     @GetMapping("/userList") 
 	public ResponseEntity<ApiResponse<UserResponse>> getUserList()

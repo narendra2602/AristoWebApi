@@ -42,4 +42,6 @@ public class UserInfo {
 	@UpdateTimestamp
     private Date lastLoginDateTime;
     private String roles; 
+	@Column(name="user_status")
+    private String userStatus;
 }

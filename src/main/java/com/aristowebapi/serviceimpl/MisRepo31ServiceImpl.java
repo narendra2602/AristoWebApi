@@ -96,6 +96,7 @@ public class MisRepo31ServiceImpl implements MisRepo31Service{
 		response.setBrkgReturn(data.getBrkg_return());
 		response.setRateDiffCn(data.getPd_cn());
 		response.setLossInTransitCn(data.getLoss_in_transit());
+		response.setQualityReturn(data.getQlty_unit());
 		response.setOtherReturn(data.getOther_unit());
 		response.setTotalCnQty(data.getTotal_cn_unit());
 		response.setTotalCnValue(data.getTotal_cn_value());

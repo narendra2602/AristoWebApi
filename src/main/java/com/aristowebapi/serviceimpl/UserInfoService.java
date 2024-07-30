@@ -39,6 +39,7 @@ public class UserInfoService implements UserDetailsService {
   
     public String addUser(UserInfo userInfo) {
         userInfo.setPassword(encoder.encode(userInfo.getPassword())); 
+        userInfo.setUserStatus("Y");
         repository.save(userInfo);
         return "User Added Successfully"; 
     } 
@@ -92,6 +93,7 @@ public class UserInfoService implements UserDetailsService {
     	   userResponse.setLoginName(userInfo.getLoginName());
     	   userResponse.setUtype(userInfo.getUserType());
     	   userResponse.setLastLoginDate(userInfo.getLastLoginDateTime().toString());
+    	   userResponse.setUserStatus(userInfo.getUserStatus());
     	   userResponseList.add(userResponse);
     	}
     	ApiResponse<UserResponse> apiResponse = new ApiResponse<>("User List", size,userResponseList);
@@ -136,4 +138,21 @@ public class UserInfoService implements UserDetailsService {
     		 return update;
      }
 
+     public int updateStatus(int userId,String userStatus )
+     {
+    		 UserInfo userDetail = repository.findById(userId);
+    		 
+    		
+    		 int update=0;
+        	 if (userDetail!=null)
+        	 {
+        			 userDetail.setUserStatus(userStatus);
+        			 repository.save(userDetail);
+        			 update=1;
+        	 }
+
+    		 return update;
+     }
+
+     
 } 

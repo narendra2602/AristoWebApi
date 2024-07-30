@@ -305,6 +305,9 @@ public class BranchMisServiceImpl implements BranchMisservice{
     	int gnetqty=0;
     	double gnetval=0.00;
 
+    	int gqltyqty=0;
+    	double gqltyval=0.00;
+
 		for (int i=0;i<size;i++)
 		{
 			BranchMisRepo6 data = BranchMisRepo6List.get(i);
@@ -317,8 +320,6 @@ public class BranchMisServiceImpl implements BranchMisservice{
 			}
 			
 			response=new BranchMisRepo6Response();
-			System.out.println(data.getDepo_name()+"  "+data.getName());
-
 			response.setBranch(data.getDepo_name());
 			response.setHqName(request.getDepoCode()>0 || request.getRepType()==2 || request.getRepType()==22 ?data.getName():"");
 	    	response.setInvSaleQty(data.getSaleqty());
@@ -342,6 +343,9 @@ public class BranchMisServiceImpl implements BranchMisservice{
 	    	response.setLossInTrQty(data.getOthqty());
 	    	response.setLossInTrVal(data.getOthval());
 ////
+	    	response.setQualityQty(data.getQltyqty());
+	    	response.setQualityVal(data.getQltyval());
+
 	    	
 	    	response.setOtherQty(0);
 	    	response.setOtherVal(0);
@@ -375,6 +379,8 @@ public class BranchMisServiceImpl implements BranchMisservice{
 	    	gnetqty+=data.getNetqty();
 	    	gnetval+=data.getNetval();
 
+	    	gqltyqty+=data.getQltyqty();
+	    	gqltyval+=data.getQltyval();
 	    	
 	    	
 		} //end of for loop
@@ -417,6 +423,10 @@ public class BranchMisServiceImpl implements BranchMisservice{
 	    	response.setNetQty(gnetqty);
 	    	response.setNetVal(Math.round(gnetval));
 
+	    	response.setQualityQty(gqltyqty);
+	    	response.setQualityVal(Math.round(gqltyval));
+
+	    	
 			response.setColor(2);
 
 			saleList.add(response);

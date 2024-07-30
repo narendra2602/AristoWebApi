@@ -76,6 +76,10 @@ public class MktRepo9ServiceImpl  implements MktRepo9Service{
 		int fsColumnTotal1=0;
 		List<MktRepo9> MktRepo9SaleList=null;
 
+		
+		System.out.println(request.getMyear()+" "+request.getDivCode()+" "+request.getDepoCode()
+		+" "+request.getSmon()+" "+request.getEmon()+" "+request.getUtype()+" "+request.getLoginId()+" "+request.getGpCode()+" "+request.getHqCode());
+		
 			System.out.println("request type "+request.getRepType());
 			if(request.getRepType()==2)
 			MktRepo9SaleList=mktRepo9Dao.getWebReportGroupProductSummary(request.getMyear(),request.getDivCode(),request.getDepoCode()

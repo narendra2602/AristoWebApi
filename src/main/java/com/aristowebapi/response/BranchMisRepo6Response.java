@@ -29,6 +29,8 @@ public class BranchMisRepo6Response {
 	private long brkgVal;
 	private int lossInTrQty;
 	private long lossInTrVal;
+	private int qualityQty;
+	private long qualityVal;
 	private int otherQty;
 	private long otherVal;
 	private long rateDiff;

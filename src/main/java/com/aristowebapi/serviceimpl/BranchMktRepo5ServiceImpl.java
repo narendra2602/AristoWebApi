@@ -506,7 +506,7 @@ public class BranchMktRepo5ServiceImpl implements BranchMktService {
 				
 				months=new LinkedHashMap();
 				months.putAll(totalsale);
-				months.put("TOTAL", grandColumnTotal2);
+				months.put("TOTAL", grandColumnTotal1);
 				response=new BranchMktRepo5Response();
 				response.setCode(0);
 				response.setName("Grand Total");

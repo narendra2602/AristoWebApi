@@ -16,7 +16,7 @@ public interface LoginDao extends JpaRepository<MktDataDto, Integer> {
 	LoginDto authenticateUser(@Param("userName") String userName,@Param("password") String password,@Param("active") String active);
 
 
-	@Query(value = "select r.tab_id,t.tab_name,r.repo_id,r.repo_name from repo_master r,tab_master t where r.tab_id=t.tabid and r.lock='Y' and r.repo_id in (select repo_id from user_rights where user_id=:userId and status='Y')  order by r.tab_id,r.repo_id ", nativeQuery = true)
+	@Query(value = "select r.tab_id,t.tab_name,r.repo_id,r.repo_name from repo_master r,tab_master t where r.tab_id=t.tabid and r.lock='Y' and r.repo_id in (select repo_id from user_rights where user_id=:userId and status='Y')  order by r.tab_id,r.repo_name ", nativeQuery = true)
 	List<ReportMenuDto> getMenuList(@Param("userId") int userId);
 
 //	@Query(value = "Select distinct concat(b.ter_name,'-',u.u_date) msg from upload u,a_branch08 b where u.depo_code=:depoCode and u.depo_code = b.depo_code   ", nativeQuery = true)

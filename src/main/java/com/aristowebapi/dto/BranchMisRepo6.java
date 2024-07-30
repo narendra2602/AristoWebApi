@@ -25,5 +25,8 @@ public interface BranchMisRepo6 {
     public String getSmname();
     public String getEmname();
     public String getDepo_name();
+    public int getQltyqty();
+    public long getQltyval();
+
 
 }

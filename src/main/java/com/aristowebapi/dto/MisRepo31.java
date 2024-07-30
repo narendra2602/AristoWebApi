@@ -36,5 +36,7 @@ public interface MisRepo31 {
 	public long getTotal_cn_value();
 	public String getSmname();
 	public String getEmname();
+	public long getQlty_unit();
+	public long getQlty_val();
 
 }
