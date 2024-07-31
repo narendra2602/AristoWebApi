@@ -22,6 +22,7 @@ public class UserInfoDetails implements UserDetails {
     private int loginId;
     private int userType;
     private String fname;
+    private String userStatus;
     private List<GrantedAuthority> authorities= new ArrayList<GrantedAuthority>();; 
   
     public UserInfoDetails(UserInfo userInfo) { 
@@ -30,6 +31,7 @@ public class UserInfoDetails implements UserDetails {
         loginId = userInfo.getId();
         userType = userInfo.getUserType();
         fname=userInfo.getFname();
+        userStatus= userInfo.getUserStatus();
        // String ROLE_PREFIX = "ROLE_";
        // authorities.add(new SimpleGrantedAuthority(ROLE_PREFIX + userInfo.getRoles()));
         authorities = Arrays.stream(userInfo.getRoles().split(",")) 
@@ -64,8 +66,13 @@ public class UserInfoDetails implements UserDetails {
     public String getUsername() { 
         return name; 
     } 
+    
   
-    @Override
+    public String getUserStatus() {
+		return userStatus;
+	}
+
+	@Override
     public boolean isAccountNonExpired() { 
         return true; 
     } 

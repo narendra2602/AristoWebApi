@@ -105,15 +105,15 @@ public class UserRightsController {
 		}
 
 	 @GetMapping("${mrc_userpmt_path}")
-	public ResponseEntity<ApiResponse<UserRightsPmtResponse>> getUserPmtGroupList(@PathVariable("userId") int userId,@PathVariable("divCode") int divCode)
+	public ResponseEntity<ApiResponse<UserRightsPmtResponse>> getUserPmtGroupList(@PathVariable("userId") int userId)
 	{
 		
-		return new ResponseEntity<ApiResponse<UserRightsPmtResponse>>(userRightsService.getUserPmtGroupList(userId,divCode), HttpStatus.OK);
+		return new ResponseEntity<ApiResponse<UserRightsPmtResponse>>(userRightsService.getUserPmtGroupList(userId), HttpStatus.OK);
 	
 	} 
 
 	 @PostMapping("${mrc_saveuserpmt_path}")
-		public ResponseEntity<String>  saveUserPmtGroupList(@RequestBody List<UserRightsPmtRequest> request)
+		public ResponseEntity<String>  saveUserPmtGroupList(@RequestBody UserRightsPmtRequest request)
 		{
 			System.out.println(request);
 			 

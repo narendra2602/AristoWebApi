@@ -153,8 +153,6 @@ public class UserController {
         
          
         UserInfoDetails userDetails = (UserInfoDetails) authentication.getPrincipal();
-        
-        
        // if (authentication.isAuthenticated()) { 
             String token =  jwtService.generateToken(authRequest.getUsername(),userDetails.getLoginId(),userDetails.getUserType(),userDetails.getFname());
             return new ResponseEntity<TokenResponse>(new TokenResponse(token),HttpStatus.OK);

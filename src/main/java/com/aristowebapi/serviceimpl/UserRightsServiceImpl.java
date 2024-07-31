@@ -16,6 +16,7 @@ import com.aristowebapi.dao.UserRightsReportDao;
 import com.aristowebapi.dao.UserRightsTerDao;
 import com.aristowebapi.dto.DashBoardData;
 import com.aristowebapi.dto.UserRights;
+import com.aristowebapi.dto.UserRightsPmt;
 import com.aristowebapi.dto.UserRightsReport;
 import com.aristowebapi.entity.UserDepo;
 import com.aristowebapi.entity.UserDivision;
@@ -228,11 +229,11 @@ public class UserRightsServiceImpl implements UserRightsService{
 	}
 
 	@Override
-	public ApiResponse<UserRightsPmtResponse> getUserPmtGroupList(int loginId, int divCode) {
+	public ApiResponse<UserRightsPmtResponse> getUserPmtGroupList(int loginId) {
 		// TODO Auto-generated method stub
-		List<UserRights> reportList=null;
+		List<UserRightsPmt> reportList=null;
 		
-		reportList = userRightsPmtDao.gePmtGroupList(loginId,divCode);
+		reportList = userRightsPmtDao.getPmtGroupList(loginId);
 		
 		UserRightsPmtResponse response=null;
 		List<UserRightsPmtResponse> rightsList = new ArrayList();
@@ -240,14 +241,15 @@ public class UserRightsServiceImpl implements UserRightsService{
 		for(int i=0;i<size;i++)
 		{
 			
-			UserRights data = reportList.get(i);
+			UserRightsPmt data = reportList.get(i);
 			
 			response=new UserRightsPmtResponse();
-			response.setVal(data.getVal());
-			response.setName(data.getName());
-			response.setDivCode(divCode);
-			response.setUserStatus(data.getuser_status());
 			response.setId(data.getId());
+			response.setDivCode(data.getDiv_code());
+			response.setDivName(data.getDiv_name());
+			response.setGpCode(data.getGp_code());
+			response.setGpName(data.getGp_name());
+			response.setUserStatus(data.getuser_status());
 			rightsList.add(response);
 		
 		}
@@ -258,7 +260,7 @@ public class UserRightsServiceImpl implements UserRightsService{
 	}
 
 	
-	@Override
+/*	@Override
 	public int saveUserPmtGroupList(List<UserRightsPmtRequest> pmtList) {
 		// TODO Auto-generated method stub
 		List<UserPmt> userPmtList = new ArrayList<>();
@@ -276,6 +278,22 @@ public class UserRightsServiceImpl implements UserRightsService{
 		  return upmt.size();
 	}
 
+*/	
+	@Override
+	public int saveUserPmtGroupList(UserRightsPmtRequest pmt) {
+		// TODO Auto-generated method stub
+				UserPmt userPmt = new UserPmt();
+				userPmt.setUser_id(pmt.getUserId());
+				userPmt.setDiv_code(pmt.getDivCode());
+				userPmt.setGp_code(pmt.getVal());
+				userPmt.setStatus(pmt.getUserStatus());
+				userPmt.setId(pmt.getId());
+
+				UserPmt upmt = userRightsPmtDao.save(userPmt);
+				return upmt!=null?1:0;
+	}
+
+	
 	@Override
 	public ApiResponse<UserRightsHqResponse> getUserTerList(int loginId, int myear, int divCode, int depoCode) {
 		// TODO Auto-generated method stub

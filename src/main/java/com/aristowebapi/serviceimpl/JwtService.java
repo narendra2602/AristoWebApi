@@ -30,6 +30,7 @@ public class JwtService {
 		claims.put("usertype", userType);
 		claims.put("loginid", loginId);
 		claims.put("fname", fname);
+	
 		
 		return createToken(claims, userName); 
 	} 
@@ -98,7 +99,9 @@ public class JwtService {
 	 public boolean validateToken(String token, UserDetails userDetails,HttpServletRequest request) {
 	        try {
 	    		final String username = extractUsername(token); 
-	    		return (username.equals(userDetails.getUsername()) && !isTokenExpired(token)); 
+	    		
+	    		return (username.equals(userDetails.getUsername())  && !isTokenExpired(token)); 
+//	    		return (username.equals(userDetails.getUsername()) && userDetails.getequals("Y") && !isTokenExpired(token)); 
 	        } catch (SignatureException ex) {
 	            // Invalid signature/claims
 	        } catch (ExpiredJwtException ex) {

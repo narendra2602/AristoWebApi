@@ -25,8 +25,8 @@ public interface UserRightsService {
 	ApiResponse<UserReportRightsTabResponse> getUserReportList(int loginId);
 	int saveUserReportList(List<UserReportRightsRequest> reportList);
 	
-	ApiResponse<UserRightsPmtResponse> getUserPmtGroupList(int loginId,int divCode);
-	int saveUserPmtGroupList(List<UserRightsPmtRequest> pmtList);
+	ApiResponse<UserRightsPmtResponse> getUserPmtGroupList(int loginId);
+	int saveUserPmtGroupList(UserRightsPmtRequest pmtList);
 	
 	ApiResponse<UserRightsHqResponse> getUserTerList(int loginId,int myear,int divCode,int depoCode);
 	int saveUserTerList(List<UserRightsTerRequest> terList);

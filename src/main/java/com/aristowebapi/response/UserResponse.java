@@ -13,6 +13,7 @@ public class UserResponse {
 	private int loginId;
 	private String fname;
 	private String loginName;
+	private String userType;
 	private int utype;
 	private String lastLoginDate;
 	private String userStatus;

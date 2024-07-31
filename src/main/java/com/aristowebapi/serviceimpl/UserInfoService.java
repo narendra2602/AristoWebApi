@@ -30,8 +30,9 @@ public class UserInfoService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException { 
   
-        Optional<UserInfo> userDetail = repository.findByLoginName(username); 
-  
+//        Optional<UserInfo> userDetail = repository.findByLoginName(username); 
+        Optional<UserInfo> userDetail = repository.findByLoginNameAndUserStatus(username,"Y"); 
+        
         // Converting userDetail to UserDetails 
         return userDetail.map(UserInfoDetails::new) 
                 .orElseThrow(() -> new UsernameNotFoundException("User not found " + username)); 
@@ -94,6 +95,7 @@ public class UserInfoService implements UserDetailsService {
     	   userResponse.setUtype(userInfo.getUserType());
     	   userResponse.setLastLoginDate(userInfo.getLastLoginDateTime().toString());
     	   userResponse.setUserStatus(userInfo.getUserStatus());
+    	   userResponse.setUserType(userInfo.getUserType()==1?"Branch":userInfo.getUserType()==2?"All India":userInfo.getUserType()==3?"PMT":userInfo.getUserType()==4?"HQ":userInfo.getUserType()==5?"Multiple Branch":"Admin");
     	   userResponseList.add(userResponse);
     	}
     	ApiResponse<UserResponse> apiResponse = new ApiResponse<>("User List", size,userResponseList);

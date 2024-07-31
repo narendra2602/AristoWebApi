@@ -13,8 +13,9 @@ public class UserRightsPmtResponse {
 
 	
 	private int id;
-	private int val;
+	private int gpCode;
 	private int divCode;
-	private  String name;
+	private  String divName;
+	private  String gpName;
 	private String userStatus;
 }

@@ -24,7 +24,7 @@ public class JwtExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(value = {BadCredentialsException.class})
     protected ResponseEntity<Object> handleBadCredentialsException(BadCredentialsException ex) {
         HttpStatus status = HttpStatus.UNAUTHORIZED;
-        String message = "Invalid credentials";
+        String message = "Invalid credentials or User is disabled";
 
         return ResponseEntity.status(status).body(message);
     }
