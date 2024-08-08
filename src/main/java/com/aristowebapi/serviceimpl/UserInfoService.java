@@ -41,6 +41,7 @@ public class UserInfoService implements UserDetailsService {
     public String addUser(UserInfo userInfo) {
         userInfo.setPassword(encoder.encode(userInfo.getPassword())); 
         userInfo.setUserStatus("Y");
+        userInfo.setRoles(userInfo.getUserType()==1?"Branch":userInfo.getUserType()==2?"All India":userInfo.getUserType()==3?"PMT":userInfo.getUserType()==4?"HQ":"Multiple Branch");
         repository.save(userInfo);
         return "User Added Successfully"; 
     } 

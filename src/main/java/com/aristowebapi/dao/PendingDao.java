@@ -17,7 +17,7 @@ public interface PendingDao extends JpaRepository<MktDataDto, Integer> {
 	List<PendingData> getPendingPI(@Param("myear") int myear,@Param("div_code") int div_code,
 			@Param("depo_code") int depo_code,@Param("cmon") int cmon,@Param("login_id") int login_id,@Param("utype") int utype);
 
-	@Query(value = "SELECT div_code,div_name FROM divmast where div_code not in (9,12,13,16) order by div_Code", nativeQuery = true)
+	@Query(value = "SELECT div_code,div_name FROM divmast where div_code not in (9,12,13,16,17) order by div_Code", nativeQuery = true)
 	List<DivisionMasterDto> getAllDivision();
 
 

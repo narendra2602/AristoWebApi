@@ -14,7 +14,7 @@ public interface UserRightsTerDao extends JpaRepository<UserTer	, Integer>{
 	
 	@Query(value = "select h.ter_code val,h.ter_name name,ifnull(u.status,'N') user_status,ifnull(u.id,0) id  from aris.hqmast h" + 
 			"	   left join aristo_web.user_ter u on h.depo_code=u.depo_code and h.ter_code=u.ter_code " + 
-			"	   and  u.user_id=:userId where h.mkt_year=:myear and h.div_code=:div_code and h.depo_code=:depo_code and h.ter_code> 0  order by h.ter_code", nativeQuery = true)
+			"	   and  u.user_id=:userId where h.mkt_year=:myear and h.div_code=:div_code and h.depo_code=:depo_code and h.ter_code> 0  order by h.ter_name", nativeQuery = true)
 	List<UserRights> geTerList(@Param("userId") int userId,@Param("myear") int myear,@Param("div_code") int div_code,@Param("depo_code") int depo_code);
 	
 

@@ -31,11 +31,6 @@ public class StkRepo10ServiceImpl implements StkRepo10Service {
 	private AristoWebMessageConstant  aristoWebMessageConstant;
 	
 	private String lupdate="";
-	Map<String, Object> grandTotalMap=null;
-	Map<String, Integer> grandTotalIntMap=null;
-	long grandColumnTotal=0;
-	long grandColumnTotalVal=0;
-	long vgrandColumnTotal=0;
 
 	Map<String, Long> grandTotalDoubleMap=null;
 	double grandColumnTotalDouble=0.00;
@@ -90,7 +85,12 @@ public class StkRepo10ServiceImpl implements StkRepo10Service {
 		int z=0;
 		sz=request.getEmon();
 
-		
+		Map<String, Object> grandTotalMap=null;
+		Map<String, Integer> grandTotalIntMap=null;
+		long grandColumnTotal=0;
+		long grandColumnTotalVal=0;
+		long vgrandColumnTotal=0;
+
 		String title=null;
 		
 		if(request.getRepTypePgwise()==2 && request.getRepType()==1)
@@ -261,19 +261,22 @@ public class StkRepo10ServiceImpl implements StkRepo10Service {
 				if(mn.getMnth_code()==data.getMnth_code())
 				{
 					
+					grandColumnTotal+=data.getSales();
+					grandColumnTotalVal+=data.getSales_val();
+					
 					if(request.getUv()==1)
 					{
 						months.put((data.getMnth_abbr()+" UNITS"),data.getSales());
 						columnTotal+=data.getSales();
 						groupColumnTotal+=data.getSales();
-						grandColumnTotal+=data.getSales();
+						
 					}
 					else if(request.getUv()==2)
 					{
 						months.put((data.getMnth_abbr()+" VALUE"),data.getSales_val());
 						columnTotalVal+=data.getSales_val();
 						groupColumnTotalVal+=data.getSales_val();
-						grandColumnTotalVal+=data.getSales_val();
+						
 					}
 					else if(request.getUv()==3)
 					{
@@ -283,10 +286,8 @@ public class StkRepo10ServiceImpl implements StkRepo10Service {
 						columnTotalVal+=data.getSales_val();
 						groupColumnTotal+=data.getSales();
 						groupColumnTotalVal+=data.getSales_val();
-						grandColumnTotal+=data.getSales();
-						grandColumnTotalVal+=data.getSales_val();
 					}
-
+					
 					
 					if(group.containsKey(data.getMnth_abbr()+" UNITS"))
 					{

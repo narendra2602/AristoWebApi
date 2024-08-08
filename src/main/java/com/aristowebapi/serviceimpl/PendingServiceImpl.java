@@ -115,7 +115,7 @@ public class PendingServiceImpl implements PendingService {
 				}
 
 				
-				division.put("TOTAL", columnTotal);
+				division.put("TOTAL", AppCalculationUtils.roundToDecimal2Places(columnTotal));
 				response.setDivision(division);
 				
 				saleList.add(response);

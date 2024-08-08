@@ -152,7 +152,7 @@ public class MktRepo6ServiceImpl implements MktRepo6Service  {
 				}
 
 				columnTotal=Math.round(columnTotal*100.0)/100.00;
-				months.put("TOTAL", columnTotal);
+				months.put(request.getUv()==1?"TOTAL":"total", columnTotal);
 				response.setMonths(months);
 				
 				saleList.add(response);
@@ -178,7 +178,9 @@ public class MktRepo6ServiceImpl implements MktRepo6Service  {
 				branchcolumnTotal = branchtotal.values().stream().mapToDouble(d -> d).sum();
 				branchcolumnTotal=Math.round(branchcolumnTotal*100.0)/100.00;
 
-				branchtotal.put("TOTAL", branchcolumnTotal);
+				branchtotal.put(request.getUv()==1?"TOTAL":"TOTAL", branchcolumnTotal);
+
+				
 				response.setMonths(branchtotal);
 				response.setColor(1);
 				saleList.add(response);
@@ -237,23 +239,33 @@ public class MktRepo6ServiceImpl implements MktRepo6Service  {
 								branchtotal.put(data.getMnth_abbr(), data.getSales_val());
 						}
 					}
-					if(total.containsKey(data.getMnth_abbr()))
+					if(request.getUv()==1)
 					{
-						double ggval =0;
-						if (request.getUv()==1)
-							ggval = AppCalculationUtils.addDouble(total.get(data.getMnth_abbr()), data.getSales_qty());
+						if(total.containsKey(data.getMnth_abbr()))
+						{
+							double ggval =0;
+								ggval = AppCalculationUtils.addDouble(total.get(data.getMnth_abbr()), data.getSales_qty());
+								total.put(data.getMnth_abbr(), ggval);
+						}
 						else
+						{
+								total.put(data.getMnth_abbr(), data.getSales_qty());
+						}
+					}
+					if(request.getUv()==2)
+					{
+						if(request.getUv()==2 && total.containsKey(data.getMnth_abbr()))
+						{
+							double ggval =0;
 							ggval = AppCalculationUtils.addDouble(total.get(data.getMnth_abbr()), data.getSales_val());
-						total.put(data.getMnth_abbr(), ggval);
-					}
-					else
-					{
-						if (request.getUv()==1)
-							total.put(data.getMnth_abbr(), data.getSales_qty());
+							total.put(data.getMnth_abbr(), ggval);
+						}
 						else
-							total.put(data.getMnth_abbr(), data.getSales_val());
+						{
+								total.put(data.getMnth_abbr(), data.getSales_val());
+						}
 					}
-
+				
 					
 					k++;
 					break;
@@ -263,26 +275,60 @@ public class MktRepo6ServiceImpl implements MktRepo6Service  {
 					months.put(mn.getMnth_abbr(), 0.0);
 					if(request.getOption()==2)
 					{
-						if(branchtotal.containsKey(mn.getMnth_abbr()))
+						if (request.getUv()==1)
+						{
+							if(branchtotal.containsKey(mn.getMnth_abbr()))
+							{
+								// do nothing
+							}
+							else
+							{
+								branchtotal.put(mn.getMnth_abbr(), 0.0);
+
+							}
+						}
+						
+						if (request.getUv()==2)
+						{
+							if(branchtotal.containsKey(mn.getMnth_abbr()))
+							{
+								// do nothing
+							}
+							else
+							{
+								branchtotal.put(mn.getMnth_abbr(), 0.0);
+
+							}
+						}
+
+					}
+					if (request.getUv()==1)
+					{
+
+						if(total.containsKey(mn.getMnth_abbr()))
 						{
 							// do nothing
 						}
 						else
 						{
-							branchtotal.put(mn.getMnth_abbr(), 0.0);
+							total.put(mn.getMnth_abbr(), 0.0);
 
 						}
 					}
-					if(total.containsKey(mn.getMnth_abbr()))
+					if (request.getUv()==2)
 					{
-						// do nothing
-					}
-					else
-					{
-						total.put(mn.getMnth_abbr(), 0.0);
 
-					}
-				
+						if(total.containsKey(mn.getMnth_abbr()))
+						{
+							// do nothing
+						}
+						else
+						{
+							total.put(mn.getMnth_abbr(), 0.0);
+
+						}
+					}				
+
 					k++;
 				}
 			}
@@ -305,7 +351,7 @@ public class MktRepo6ServiceImpl implements MktRepo6Service  {
 			k++;
 		}
 		columnTotal=Math.round(columnTotal*100.0)/100.00;
-		months.put("TOTAL", columnTotal);
+		months.put(request.getUv()==1?"TOTAL":"TOTAL", columnTotal);
 
 		response.setMonths(months);
 		saleList.add(response);
@@ -319,7 +365,7 @@ public class MktRepo6ServiceImpl implements MktRepo6Service  {
 			branchcolumnTotal = branchtotal.values().stream().mapToDouble(d -> d).sum();
 			branchcolumnTotal=Math.round(branchcolumnTotal*100.0)/100.00;
 
-			branchtotal.put("TOTAL", branchcolumnTotal);
+			branchtotal.put(request.getUv()==1?"TOTAL":"TOTAL", branchcolumnTotal);
 			response.setMonths(branchtotal);
 			response.setColor(1);
 			saleList.add(response);
@@ -329,7 +375,8 @@ public class MktRepo6ServiceImpl implements MktRepo6Service  {
 		grandColumnTotal = total.values().stream().mapToDouble(d -> d).sum();
 		grandColumnTotal=Math.round(grandColumnTotal*100.0)/100.00;
 		months=new LinkedHashMap();
-		total.put("TOTAL", grandColumnTotal);
+		total.put(request.getUv()==1?"TOTAL":"TOTAL", grandColumnTotal);
+		
 		total.keySet().stream().forEach(d->System.out.print(d));
 
 		months.putAll(total);
