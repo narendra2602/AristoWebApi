@@ -13,9 +13,10 @@ import lombok.NoArgsConstructor;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class IqviaRequest {
 	
-	private int myear;
+	private int userType;
 	private int divCode;
 	private int depoCode;
-	private int mon;
+	private int loginId;
+	private int gpCode;
 
 }

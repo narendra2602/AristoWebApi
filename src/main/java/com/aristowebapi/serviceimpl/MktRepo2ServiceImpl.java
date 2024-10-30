@@ -195,10 +195,10 @@ public class MktRepo2ServiceImpl implements MktRepo2Service {
 				response.setCode(mgrp);
 				response.setName(gpname);
 				response.setPack("");
-		    	response.setBudget(tval);
-		    	response.setSale(sval);
-		    	response.setAchPer(tval!=0?AppCalculationUtils.calculateAch(sval, tval):0);
-		    	response.setSurSlashDef(sval-tval);
+		    	response.setMthBudget(tval);
+		    	response.setMthSale(sval);
+		    	response.setMthAchPer(tval!=0?AppCalculationUtils.calculateAch(sval, tval):0);
+		    	response.setMthSurSlashDef(sval-tval);
 		    	response.setCumBudget(cumtval);
 		    	response.setCumSale(cumsval);
  				response.setCumAchPer(cumtval!=0?AppCalculationUtils.calculateAch(cumsval, cumtval):0);
@@ -228,10 +228,10 @@ public class MktRepo2ServiceImpl implements MktRepo2Service {
 
 		    if (request.getUv()==1)
 		    {
-		    	response.setBudget(data.getTargetqty());
-		    	response.setSale(data.getSaleqty());
-		    	response.setAchPer(data.getTargetqty()!=0?AppCalculationUtils.calculateAch(data.getSaleqty(), data.getTargetqty()):0);
-		    	response.setSurSlashDef(data.getSaleqty()-data.getTargetqty());
+		    	response.setMthBudget(data.getTargetqty());
+		    	response.setMthSale(data.getSaleqty());
+		    	response.setMthAchPer(data.getTargetqty()!=0?AppCalculationUtils.calculateAch(data.getSaleqty(), data.getTargetqty()):0);
+		    	response.setMthSurSlashDef(data.getSaleqty()-data.getTargetqty());
 		    	response.setCumBudget(data.getCumtarqty());
 		    	response.setCumSale(data.getCummsaleqty());
  				response.setCumAchPer(data.getCumtarqty()!=0?AppCalculationUtils.calculateAch(data.getCummsaleqty(), data.getCumtarqty()):0);
@@ -244,10 +244,10 @@ public class MktRepo2ServiceImpl implements MktRepo2Service {
 		    }
 		    else if (request.getUv()==2)
 		    {
-		    	response.setBudget(data.getTargetval());
-		    	response.setSale(data.getSaleval());
-		    	response.setAchPer(data.getTargetval()!=0?AppCalculationUtils.calculateAch(data.getSaleval(), data.getTargetval()):0);
-		    	response.setSurSlashDef(data.getSaleval()-data.getTargetval());
+		    	response.setMthBudget(data.getTargetval());
+		    	response.setMthSale(data.getSaleval());
+		    	response.setMthAchPer(data.getTargetval()!=0?AppCalculationUtils.calculateAch(data.getSaleval(), data.getTargetval()):0);
+		    	response.setMthSurSlashDef(data.getSaleval()-data.getTargetval());
 		    	response.setCumBudget(data.getCumtarval());
 		    	response.setCumSale(data.getCummsaleval());
  				response.setCumAchPer(data.getCumtarval()!=0?AppCalculationUtils.calculateAch(data.getCummsaleval(), data.getCumtarval()):0);
@@ -294,10 +294,10 @@ public class MktRepo2ServiceImpl implements MktRepo2Service {
 			response.setCode(mgrp);
 			response.setName(gpname);
 			response.setPack("");
-			response.setBudget(tval);
-			response.setSale(sval);
-			response.setAchPer(tval!=0?AppCalculationUtils.calculateAch(sval, tval):0);
-			response.setSurSlashDef(sval-tval);
+			response.setMthBudget(tval);
+			response.setMthSale(sval);
+			response.setMthAchPer(tval!=0?AppCalculationUtils.calculateAch(sval, tval):0);
+			response.setMthSurSlashDef(sval-tval);
 			response.setCumBudget(cumtval);
 			response.setCumSale(cumsval);
 			response.setCumAchPer(cumtval!=0?AppCalculationUtils.calculateAch(cumsval, cumtval):0);
@@ -314,10 +314,10 @@ public class MktRepo2ServiceImpl implements MktRepo2Service {
 			response.setCode(0);
 			response.setName("GRAND TOTAL");
 			response.setPack("");
-			response.setBudget(gtval);
-			response.setSale(gsval);
-			response.setAchPer(gtval!=0?AppCalculationUtils.calculateAch(gsval, gtval):0);
-			response.setSurSlashDef(gsval-gtval);
+			response.setMthBudget(gtval);
+			response.setMthSale(gsval);
+			response.setMthAchPer(gtval!=0?AppCalculationUtils.calculateAch(gsval, gtval):0);
+			response.setMthSurSlashDef(gsval-gtval);
 			response.setCumBudget(gcumtval);
 			response.setCumSale(gcumsval);
 			response.setCumAchPer(gcumtval!=0?AppCalculationUtils.calculateAch(gcumsval, gcumtval):0);

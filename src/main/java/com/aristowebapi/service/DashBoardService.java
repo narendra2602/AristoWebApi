@@ -35,6 +35,7 @@ public interface DashBoardService {
 	ApiResponse<DashBoardDataResponse> getDivisionList(int loginId);
 
 	ApiResponse<DashBoardDataResponse> getBranchList(int loginId);
+	ApiResponse<DashBoardDataResponse> getHoBranchList(int loginId,int divCode);
 	ApiResponse<DashBoardDataResponse> getHqList(int myear,int div_code, int depo_code,int utype,int login_id);
 	ApiResponse<DashBoardDataResponse> getRegionList(int myear,int div_code, int depo_code,int utype,int login_id);
 	ApiResponse<DashBoardDataResponse> getAreaList(int myear,int div_code, int depo_code,int utype,int login_id);
@@ -44,6 +45,8 @@ public interface DashBoardService {
 	ApiResponse<DashBoardDataResponse> getProductList(int div_code,int utype,int login_id,int myear,int gp_code);
 	
 	ApiResponse<DashBoardDataResponse> getGroupList(int div_code,int utype,int login_id,int myear);
+	
+	ApiResponse<DashBoardDataResponse> getIqviaGroupList(int div_code);
 
 	ApiResponse<StockiestResponse> getStockiestList(int myear,int div_code, int depo_code,int utype,int login_id);
 	

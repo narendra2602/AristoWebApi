@@ -13,10 +13,10 @@ import com.aristowebapi.dto.DailyEntryList;
 public interface DailyEntryDao extends JpaRepository<DailyEntry, Integer>{
 	
 	
-	@Query(value="CALL daily_bill_entry(:myear,:div_code,:depo_code,:month);", nativeQuery=true)
+	@Query(value="CALL daily_bill_entryNew(:myear,:div_code,:depo_code,:month,:depoName);", nativeQuery=true)
 	List<DailyEntryList> getLastEntry(@Param("myear") int myear,@Param("div_code") int div_code,
 			@Param("depo_code") int depo_code,
-			@Param("month") int month);
+			@Param("month") int month,@Param("depoName") String depoName);
 
 
 }

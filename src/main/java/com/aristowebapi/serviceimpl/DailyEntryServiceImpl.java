@@ -37,10 +37,10 @@ public class DailyEntryServiceImpl implements DailyEntryService{
 		
 		List<DailyEntryList> DailyEntryList=null;
 		int size = 0;
-		DailyEntryList=dailyeEntryDao.getLastEntry(request.getMyear(),request.getDivCode(),request.getDepoCode()
-						,request.getMonth());
+		DailyEntryList=dailyeEntryDao.getLastEntry(request.getMyear(),request.getDivCode(),request.getDepoCode(),request.getMonth(),request.getDepoName());
 			size = DailyEntryList.size();
-		
+		System.out.println("size is "+size +request.getMyear()+" "+request.getDivCode()+" "+request.getDepoCode()+request.getMonth()+" "+request.getDepoName());
+			
 		DailyEntryListResponse response=null;
 		List<DailyEntryListResponse> saleList = new ArrayList();
 

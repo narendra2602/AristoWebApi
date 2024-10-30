@@ -83,6 +83,10 @@ public interface DashBoardDao extends JpaRepository<MktDataDto, Integer> {
 	@Query(value = "select depo_code val,depo_name name from branch_comp where depo_code in (select depo_code from user_branch08 where user_id=:userId and status='Y')  order by depo_name ", nativeQuery = true)
 	List<DashBoardData> getBranchList(@Param("userId") int userId);
 
+	@Query(value = "CALL daily_entry_branch(:userId,:divCode);", nativeQuery=true)
+	List<DashBoardData> getHoBranchList(@Param("userId") int userId,@Param("divCode") int divCode);
+
+	
 	
 	@Query(value="CALL getHqList(:myear,:div_code,:depo_code,:utype,:login_id);", nativeQuery=true)
 	List<DashBoardData> getHqList(@Param("myear") int myear,@Param("div_code") int div_code,
@@ -105,6 +109,12 @@ public interface DashBoardDao extends JpaRepository<MktDataDto, Integer> {
 	@Query(value="CALL getGroupList(:div_code,:utype,:login_id,:myear);", nativeQuery=true)
 	List<DashBoardData> getGroupList(@Param("div_code") int div_code,	@Param("utype") int utype,@Param("login_id") int login_id,@Param("myear") int myear);
 
+	
+	@Query(value="CALL getIqviaMaster(:div_code);", nativeQuery=true)
+	List<DashBoardData> getIqviaGroupList(@Param("div_code") int div_code);
+
+	
+	
 	@Query(value="CALL getStockiestList(:myear,:div_code,:depo_code,:utype,:login_id);", nativeQuery=true)
 	List<StockiestMaster> getStockiestList(@Param("myear") int myear,@Param("div_code") int div_code,
 			@Param("depo_code") int depo_code,@Param("utype") int utype,@Param("login_id") int login_id);

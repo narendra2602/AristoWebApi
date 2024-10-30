@@ -91,7 +91,7 @@ public class MktReport8ServiceImpl implements MktRepo8Service{
 			response.setHqName(request.getDepoCode()>0?data.getDepo_name():"");
 	    	response.setGross(data.getGross());
 	    	response.setExpiry(data.getExpiry());
-	    	response.setExpiryRaio(data.getExpratio());
+	    	response.setExpiryRatio(data.getExpratio());
 
 	    	saleList.add(response);
 
@@ -108,7 +108,7 @@ public class MktReport8ServiceImpl implements MktRepo8Service{
 			response.setHqName("");
 	    	response.setGross(sval);
 	    	response.setExpiry(eval);
-	    	response.setExpiryRaio(Math.round(((eval*1.0/sval)*100)*100.0)/100.0);
+	    	response.setExpiryRatio(Math.round(((eval*1.0/sval)*100)*100.0)/100.0);
 			response.setColor(1);
 
 			saleList.add(response);

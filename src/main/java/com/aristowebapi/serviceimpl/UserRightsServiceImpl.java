@@ -220,7 +220,7 @@ public class UserRightsServiceImpl implements UserRightsService{
 			   userReport.setUser_id(report.getUserId());
 			   userReport.setTab_id(report.getTabId());
 			   userReport.setRepo_id(report.getRepoId());
-			   userReport.setStatus(report.getUserStatus());
+			   userReport.setUser_status(report.getUserStatus());
 			   userReport.setId(report.getId());
 			   userReportList.add(userReport);
 		});
@@ -304,12 +304,14 @@ public class UserRightsServiceImpl implements UserRightsService{
 		UserRightsHqResponse response=null;
 		List<UserRightsHqResponse> rightsList = new ArrayList();
 		int size=reportList.size();
+		System.out.println("size is "+size);
 		for(int i=0;i<size;i++)
 		{
 			
 			UserRights data = reportList.get(i);
 			
 			response=new UserRightsHqResponse();
+			System.out.println(data.getVal());
 			response.setVal(data.getVal());
 			response.setName(data.getName());
 			response.setDivCode(divCode);

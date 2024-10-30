@@ -23,6 +23,6 @@ public class UserReports {
 	private int user_id;
 	private int tab_id;
 	private String repo_id;
-	private String status;
+	private String user_status;
 
 }

@@ -40,9 +40,18 @@ public class IqviaController {
 	{
 		
 		logger.info(AristoWebLogMsgConstant.IQVIA_CONTROLLER,"getIqvia", request.getDivCode(),request.getDepoCode());
-		
+		int requestValues[]=getRequestData(req);
+		request.setLoginId(requestValues[0]);
+		request.setUserType(requestValues[1]);
+
 		return new ResponseEntity<ApiResponse<IqviaResponse>>(iqviaService.getIqvia(request), HttpStatus.OK);
 	
+	}
+	private int[] getRequestData(HttpServletRequest req)
+	{
+		String authHeader = req.getHeader("Authorization");
+		int requestValues[]=appRequestParameterUtils.getRequestBodyParameters(authHeader);
+		return requestValues;
 	}
 
 	

@@ -20,6 +20,6 @@ public class DailyEntryListRequest {
 	private int depoCode;
 	private int myear;
 	private int month;
-
+	private String depoName;
 
 }

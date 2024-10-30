@@ -15,7 +15,7 @@ public class MktRepo8Response {
 	private String hqName;
 	private long gross;
 	private long expiry;
-	private double expiryRaio;
+	private double expiryRatio;
 	private int color;
 
 }

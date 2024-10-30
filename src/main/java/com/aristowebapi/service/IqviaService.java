@@ -8,4 +8,6 @@ public interface IqviaService {
 
 	
 	ApiResponse<IqviaResponse> getIqvia(IqviaRequest request);
+	
+	
 }

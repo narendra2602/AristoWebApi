@@ -16,10 +16,10 @@ public class MktRepo2Response {
 	private int code;
 	private String name;
 	private String pack;
-	private long budget;
-	private long sale;
-	private double  achPer;
-	private long surSlashDef;
+	private long mthBudget;
+	private long mthSale;
+	private double  mthAchPer;
+	private long mthSurSlashDef;
 	private long cumBudget;
 	private long cumSale;
 	private double cumAchPer;

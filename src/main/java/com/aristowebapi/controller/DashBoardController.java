@@ -247,6 +247,20 @@ public class DashBoardController {
 	
 	}
 
+	@GetMapping("${mrc_dashboardHoBranch_path}")
+	public ResponseEntity<ApiResponse<DashBoardDataResponse>> getHoBranchList(@PathVariable("divCode") int divCode,HttpServletRequest request)
+	{
+
+        int loginId=getLoginIdFromToken(request)[0];
+
+		logger.info(AristoWebLogMsgConstant.DASH_BOARD_CONTROLLER,"getHoBranchList");
+        
+		return new ResponseEntity<ApiResponse<DashBoardDataResponse>>(dashBoardService.getHoBranchList(loginId,divCode), HttpStatus.OK);
+
+	
+	}
+
+	
 	@GetMapping("${mrc_dashboardHqCombo_path}")
 	public ResponseEntity<ApiResponse<DashBoardDataResponse>> getHqList(@PathVariable("myear") int myear,@PathVariable("divCode") int divCode,@PathVariable("depoCode") int depoCode,HttpServletRequest request)
 	{
@@ -315,6 +329,18 @@ public class DashBoardController {
 		return new ResponseEntity<ApiResponse<DashBoardDataResponse>>(dashBoardService.getGroupList(divCode,uType,loginId,myear), HttpStatus.OK);
 	
 	}
+	
+	@GetMapping("${mrc_iqviaGroupCombo_path}")
+	public ResponseEntity<ApiResponse<DashBoardDataResponse>> getIqviaGroupList(@PathVariable("divCode") int divCode,HttpServletRequest request)
+	{
+
+
+		logger.info(AristoWebLogMsgConstant.DASH_BOARD_CONTROLLER,"getIqviaGroupList");
+
+		return new ResponseEntity<ApiResponse<DashBoardDataResponse>>(dashBoardService.getIqviaGroupList(divCode), HttpStatus.OK);
+	
+	}
+
 	
 	@GetMapping("${mrc_dashboardStockiestCombo_path}")
 	public ResponseEntity<ApiResponse<StockiestResponse>> getStockiestList(@PathVariable("myear") int myear,@PathVariable("divCode") int divCode,@PathVariable("depoCode") int depoCode,HttpServletRequest request)

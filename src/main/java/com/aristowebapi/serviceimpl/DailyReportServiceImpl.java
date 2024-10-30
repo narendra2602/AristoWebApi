@@ -190,12 +190,25 @@ public class DailyReportServiceImpl  implements DailyReportService{
 				response.setRemiitToday(data.getRemit());
 				response.setRemitCumm(data.getRemit_cumm());
 				response.setOsAsOn(data.getOutstand());
-				if(data.getTp()<50)
+//				response.setStatus(data.getStatus());
+/*				if(data.getTp()<50)
 					response.setStatus(data.getStatus());
 				else if(data.getTp()==980 || data.getTp()==50 )
 					response.setStatus(branchMap.get(data.getDepo_code()));
 				else 
 					response.setStatus(status?"Open":"Close");
+*/
+				
+				if(data.getTp()<302 || data.getTp()==970 || data.getTp()==990 | data.getTp()==980)
+					response.setStatus(data.getStatus());
+				else if(data.getTp()==970)
+					response.setStatus(branchMap.get(data.getDepo_code()));
+				else if(data.getTp()==980)
+					response.setStatus(divMap.get(data.getDiv_code()));
+				else 
+					response.setStatus(status1?"Open":"Close");
+
+				
 				response.setEntryDate(data.getEnt_Date());
 				response.setTime(data.getEnt_time());
 				if(data.getBr_name().equalsIgnoreCase("ALL INDIA") && data.getTp()<990)
@@ -218,7 +231,7 @@ public class DailyReportServiceImpl  implements DailyReportService{
 			else if(request.getRepType()==2)	
 			{		
 
-				if(data.getTp()<50)
+				if(data.getTp()<50 )
 				{
 					if(divMap.containsKey(data.getDiv_code()))
 					{
@@ -243,7 +256,7 @@ public class DailyReportServiceImpl  implements DailyReportService{
 
 				}
 
-				if(data.getTp()<50)
+				if(data.getTp()<50 )
 				{
 					if(branchMap.containsKey(data.getDepo_code()))
 					{
@@ -299,7 +312,8 @@ public class DailyReportServiceImpl  implements DailyReportService{
 				response.setRemiitToday(data.getRemit());
 				response.setRemitCumm(data.getRemit_cumm());
 				response.setOsAsOn(data.getOutstand());
-				if(data.getTp()<50)
+//				if(data.getTp()<50)
+				if(data.getTp()<302 || data.getTp()==970 || data.getTp()==990 | data.getTp()==980)
 					response.setStatus(data.getStatus());
 				else if(data.getTp()==970)
 					response.setStatus(branchMap.get(data.getDepo_code()));

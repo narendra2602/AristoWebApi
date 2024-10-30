@@ -15,6 +15,7 @@ import com.aristowebapi.dao.UserInfoRepository;
 import com.aristowebapi.entity.UserInfo;
 import com.aristowebapi.request.ChangePasswordRequest;
 import com.aristowebapi.response.ApiResponse;
+import com.aristowebapi.response.UserApiResponse;
 import com.aristowebapi.response.UserResponse; 
   
 @Service
@@ -38,12 +39,16 @@ public class UserInfoService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found " + username)); 
     } 
   
-    public String addUser(UserInfo userInfo) {
+    public UserApiResponse addUser(UserInfo userInfo) {
         userInfo.setPassword(encoder.encode(userInfo.getPassword())); 
         userInfo.setUserStatus("Y");
         userInfo.setRoles(userInfo.getUserType()==1?"Branch":userInfo.getUserType()==2?"All India":userInfo.getUserType()==3?"PMT":userInfo.getUserType()==4?"HQ":"Multiple Branch");
-        repository.save(userInfo);
-        return "User Added Successfully"; 
+        userInfo=repository.save(userInfo);
+        UserApiResponse userResponse=new UserApiResponse();
+        userResponse.setId(userInfo.getId());
+
+        userResponse.setMessage("User Added Successfully");
+        return userResponse; 
     } 
 
     
@@ -62,9 +67,11 @@ public class UserInfoService implements UserDetailsService {
 
     	   
 //           List<UserInfo> newList = userList.stream().filter(u->u.getId()>150)
-                   List<UserInfo> newList = userList.stream()
+    	List<UserInfo> newList = userList.stream().filter(u->u.getUserType()==4)
+                  // List<UserInfo> newList = userList.stream()
         		    .map(e -> {
-        		      e.setPassword(encoder.encode(e.getPassword().trim()));
+//        		      e.setPassword(encoder.encode(e.getPassword().trim()));
+        		      e.setPassword(encoder.encode("123"));
         		      return e;
         		    })
         		    .collect(Collectors.toList());

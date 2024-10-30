@@ -136,6 +136,7 @@ public class MktRepo6ServiceImpl implements MktRepo6Service  {
 			
 			if(depo_code!=data.getDepo_code())
 			{
+				System.out.println(branch);
 				response.setBranch(branch);
 				if(request.getOption()==2 || request.getDepoCode()>0)
 					response.setHqName(name);

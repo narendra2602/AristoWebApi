@@ -11,9 +11,9 @@ import com.aristowebapi.dto.MktDataDto;
 
 public interface IqviaDao extends JpaRepository<MktDataDto, Integer>{
 	
-	@Query(value="CALL aristo_web.iqvia_procnew(:myear,:div_code,:depo_code,:mon);", nativeQuery=true)
-	List<Iqvia> getIqvia(@Param("myear") int myear,@Param("div_code") int div_code,@Param("depo_code") int depo_code,
-			@Param("mon") int mon);
+	@Query(value="CALL aristo_web.iqvia_procnew(:div_code,:depo_code,:userType,:userId,:gpCode);", nativeQuery=true)
+	List<Iqvia> getIqvia(@Param("div_code") int div_code,@Param("depo_code") int depo_code,
+			@Param("userType") int userType,@Param("userId") int userId,@Param("gpCode") int gpCode);
 
 	@Query(value = "SELECT depo_name FROM branch_comp where depo_code=:depo", nativeQuery = true)
 	String getBranch(@Param("depo") int depo);

@@ -23,6 +23,7 @@ import com.aristowebapi.request.LoginRequest;
 import com.aristowebapi.request.UpdateUserStatusRequest;
 import com.aristowebapi.response.ApiResponse;
 import com.aristowebapi.response.TokenResponse;
+import com.aristowebapi.response.UserApiResponse;
 import com.aristowebapi.response.UserResponse;
 import com.aristowebapi.service.TokenBlacklist;
 import com.aristowebapi.serviceimpl.JwtService;
@@ -58,12 +59,13 @@ public class UserController {
     } 
   
     @PostMapping("/addNewUser") 
-    public String addNewUser(@RequestBody UserInfo userInfo) { 
+    public ResponseEntity<UserApiResponse> addNewUser(@RequestBody UserInfo userInfo) { 
     	System.out.println(userInfo.getPassword());
     	System.out.println(userInfo.getLoginName());
     	System.out.println(userInfo.getUserType());
     	System.out.println(userInfo.getFname());
-        return service.addUser(userInfo); 
+//        return service.addUser(userInfo); 
+        return new ResponseEntity<UserApiResponse>(service.addUser(userInfo), HttpStatus.OK);
     } 
 
     
@@ -154,7 +156,7 @@ public class UserController {
          
         UserInfoDetails userDetails = (UserInfoDetails) authentication.getPrincipal();
        // if (authentication.isAuthenticated()) { 
-            String token =  jwtService.generateToken(authRequest.getUsername(),userDetails.getLoginId(),userDetails.getUserType(),userDetails.getFname());
+            String token =  jwtService.generateToken(authRequest.getUsername().toLowerCase(),userDetails.getLoginId(),userDetails.getUserType(),userDetails.getFname());
             return new ResponseEntity<TokenResponse>(new TokenResponse(token),HttpStatus.OK);
             //return ResponseEntity.ok(new AuthenticationResponse(token));
         //} else { 

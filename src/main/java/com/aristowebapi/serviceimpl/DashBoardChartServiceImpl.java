@@ -612,5 +612,38 @@ public class DashBoardChartServiceImpl implements DashBoardService {
 		return new ApiResponse<DashBoardAchGthResponse>(title.toString(),size,saleList);
 	}
 
+	@Override
+	public ApiResponse<DashBoardDataResponse> getHoBranchList(int loginId,int divCode) {
+		List<DashBoardData> branchlist=dashBoardDao.getHoBranchList(loginId,divCode);
+		List<DashBoardDataResponse> branchResponseList=new ArrayList<>();
+		
+		    int size=branchlist.size();
+		    
+			branchlist.forEach(data->{
+
+			DashBoardDataResponse branchres=new DashBoardDataResponse();
+			branchres.setValue(data.getVal());
+			branchres.setName(data.getName());
+			branchResponseList.add(branchres);
+		});
+	
+		ApiResponse<DashBoardDataResponse> apiResponse = new ApiResponse<>("HoBranch",size,branchResponseList);
+		return apiResponse;
+	}
+
+	@Override
+	public ApiResponse<DashBoardDataResponse> getIqviaGroupList(int div_code) {
+		List<DashBoardData> dataList= dashBoardDao.getIqviaGroupList(div_code);
+		List<DashBoardDataResponse> saleList = getResponseData(dataList);
+		String title="Iqvia Group List ";
+
+		
+		int size=dataList.size();
+		
+		ApiResponse<DashBoardDataResponse> apiResponse = new ApiResponse<>(title!=null?title.toString():"", size,saleList);
+		return apiResponse;
+
+	}
+
 
 }
