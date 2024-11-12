@@ -30,6 +30,7 @@ import com.aristowebapi.response.MktRepo11Response;
 import com.aristowebapi.response.MktRepo1AchResponse;
 import com.aristowebapi.response.MktRepo1Response;
 import com.aristowebapi.response.MktRepo2Response;
+import com.aristowebapi.response.MktRepo2SelectiveItemResponse;
 import com.aristowebapi.response.MktRepo3Response;
 import com.aristowebapi.response.MktRepo4Response;
 import com.aristowebapi.response.MktRepo5Response;
@@ -154,7 +155,19 @@ public class MktReportController {
 		return new ResponseEntity<ApiResponse<MktRepo2Response>>(mktRepo2Service.getMktRepo2(request), HttpStatus.OK);
 	
 	}
+	@GetMapping("${mrc_repo2SelectiveItem_path}")
+	public ResponseEntity<ApiResponse<MktRepo2SelectiveItemResponse>> getMktRepo2SelectiveItem(@RequestBody MktRepo2Request request,HttpServletRequest req)
+	{
+		int requestValues[]=getRequestData(req);
+		request.setLoginId(requestValues[0]);
+		request.setUtype(requestValues[1]);
+		logger.info(AristoWebLogMsgConstant.MKT_REPORT_CONTROLLER_02,"getMktRepo2SelectiveItem", request.getMyear(),request.getDivCode(),request.getDepoCode(),request.getUtype(),request.getLoginId());
+
+		
+		return new ResponseEntity<ApiResponse<MktRepo2SelectiveItemResponse>>(mktRepo2Service.getMktRepo2SelectiveItem(request), HttpStatus.OK);
 	
+	}
+
 	@GetMapping("${mrc_repo3_path}")
 	public ResponseEntity<ApiResponse<MktRepo3Response>> getMktRepo3(@RequestBody MktRepo3Request request,HttpServletRequest req)
 	{

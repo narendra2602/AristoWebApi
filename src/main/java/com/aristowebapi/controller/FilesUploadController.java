@@ -30,6 +30,9 @@ public class FilesUploadController {
 	@Autowired
 	private FileUploadService fileUploadService;
 	
+//	@Autowired
+//	private FileUploadService fileUploadNewService;
+	
     @PostMapping("/upload")
     public ResponseEntity<FileUploadResponse> uploadFiles(@RequestBody FileUploadRequest request,HttpServletRequest req) {
         try {
@@ -37,9 +40,11 @@ public class FilesUploadController {
 
         	int requestValues[]=getRequestData(req);
     		request.setLoginId(requestValues[0]);
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body(fileUploadService.uploadFile(request));
-
+//    		if(request.getFileName().contains("Iqvia"))
+    			return ResponseEntity.status(HttpStatus.OK).body(fileUploadService.uploadFile(request));
+/*    		else if(request.getFileName().contains("Test"))
+    			return ResponseEntity.status(HttpStatus.OK).body(fileUploadNewService.uploadFileNew(request));
+*/			
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED)
                     .body(new FileUploadResponse("Error while uploading file!",0,0));

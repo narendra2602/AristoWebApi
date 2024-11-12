@@ -72,4 +72,17 @@ public interface MKtRepo2Dao extends JpaRepository<MktDataDto, Integer> {
 			@Param("rep_type") int rep_type);
 
 	
+	
+	// user type2 for all depo	
+		@Query(value="CALL web_mkt_2allSelectiveCode(:myear,:div_code,:depo_code,:smon,:emon,:utype,:login_id,:pcode,:repType);", nativeQuery=true)
+		List<MktRepo2> getWebMkt2SelectiveCode(@Param("myear") int myear,@Param("div_code") int div_code,@Param("depo_code") int depo_code,
+				@Param("smon") int smon,@Param("emon") int emon,@Param("utype") int utype,@Param("login_id") int login_id,
+				@Param("pcode") int pcode,@Param("repType") int repType);
+
+		// user type2 for all depo	
+		@Query(value="CALL web_mkt_2allSelectiveGroup(:myear,:div_code,:depo_code,:smon,:emon,:utype,:login_id,:pcode,:repType);", nativeQuery=true)
+		List<MktRepo2> getWebMkt2SelectiveGroup(@Param("myear") int myear,@Param("div_code") int div_code,@Param("depo_code") int depo_code,
+				@Param("smon") int smon,@Param("emon") int emon,@Param("utype") int utype,@Param("login_id") int login_id,
+				@Param("pcode") int pcode,@Param("repType") int repType);
+	
 }

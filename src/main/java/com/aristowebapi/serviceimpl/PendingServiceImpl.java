@@ -187,7 +187,7 @@ public class PendingServiceImpl implements PendingService {
 				division.put(bm.getDiv_name(), 0D);
 				k++;
 			}
-			division.put("TOTAL", columnTotal);
+			division.put("TOTAL",  AppCalculationUtils.roundToDecimal2Places(columnTotal));
 
 			response.setDivision(division);
 			saleList.add(response);
@@ -197,7 +197,7 @@ public class PendingServiceImpl implements PendingService {
 			grandColumnTotal = total.values().stream().mapToDouble(d -> d).sum();
 
 			division=new LinkedHashMap();
-			total.put("TOTAL", grandColumnTotal);
+			total.put("TOTAL", AppCalculationUtils.roundToDecimal2Places(grandColumnTotal));
 
 			division.putAll(total);
 			response=new PendingResponse();

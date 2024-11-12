@@ -82,6 +82,8 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 		    		break;
 		    case 11: repname="PI Sale";
 					break;
+		    case 12: repname="Gross+Free Sale";
+					break;
 
 
 		}
@@ -112,6 +114,9 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 		else if(request.getOptType()==11)
 			reportList=mktRepo1Dao.getWebReportGross(request.getMyear(),request.getDivCode(),request.getDepoCode()
 				,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId(),request.getRepType(),2);
+		else if(request.getOptType()==12)
+			reportList=mktRepo1Dao.getWebReportGross(request.getMyear(),request.getDivCode(),request.getDepoCode()
+				,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId(),request.getRepType(),3);
 		else if(request.getOptType()==2 )
 			reportList=mktRepo1Dao.getWebReportCredit(request.getMyear(),request.getDivCode(),request.getDepoCode()
 			,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId(),request.getRepType(),10);

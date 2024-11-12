@@ -15,6 +15,8 @@ public class MktRepo2Request extends ViewRequest {
 	
 	private int hqCode;
 	private int uv;
+	private int repType;
+	private int itemType;
 
 
 }
