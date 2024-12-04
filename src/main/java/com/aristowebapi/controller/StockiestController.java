@@ -22,6 +22,7 @@ import com.aristowebapi.response.ApiResponse;
 import com.aristowebapi.response.StkRepo10Response;
 import com.aristowebapi.response.StkRepo2Response;
 import com.aristowebapi.response.StkRepo3Response;
+import com.aristowebapi.response.StkRepo5Response;
 import com.aristowebapi.response.StkRepo9Response;
 import com.aristowebapi.service.StkRepo10Service;
 import com.aristowebapi.service.StkRepo2Service;
@@ -103,6 +104,20 @@ public class StockiestController {
 	}
 
 
+	@GetMapping("${mrc_stk_rep5_path}")
+	public ResponseEntity<ApiResponse<StkRepo5Response>> getStkRepo5(@RequestBody StkRepo9Request request ,HttpServletRequest req)
+	{
+		
+		int requestValues[]=getRequestData(req);
+		request.setLoginId(requestValues[0]);
+		request.setUtype(requestValues[1]);
+
+		logger.info(AristoWebLogMsgConstant.STK_REPO5_CONTROLLER,"getStkRepo5",request.getMyear(),request.getDivCode(),request.getDepoCode(),request.getUtype(),request.getLoginId());
+
+		return new ResponseEntity<ApiResponse<StkRepo5Response>>(stkRepo9Service.getStkRepo5(request), HttpStatus.OK);
+	
+	}
+
 	@GetMapping("${mrc_stk_rep9_path}")
 	public ResponseEntity<ApiResponse<StkRepo9Response>> getStkRepo9(@RequestBody StkRepo9Request request ,HttpServletRequest req)
 	{
@@ -116,6 +131,7 @@ public class StockiestController {
 		return new ResponseEntity<ApiResponse<StkRepo9Response>>(stkRepo9Service.getStkRepo9(request), HttpStatus.OK);
 	
 	}
+
 
 	
 	@GetMapping("${mrc_stk_rep10_path}")

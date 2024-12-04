@@ -54,6 +54,8 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 			branchData =mktRepo1Dao.getAllHq(request.getMyear(),request.getDivCode(), request.getDepoCode());	
 		
 //		branchData.stream().forEach(e->System.out.print(e.getDepo_name()));
+		
+		System.out.println("size of branchata is ****** "+branchData.size());
 		return branchData;
 		
 	}
@@ -176,6 +178,8 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 	{
 		List<MktRepo1Ach> reportList = null;
 	
+		System.out.println(request.getMyear()+" "+request.getDivCode()+" "+request.getDepoCode()
+					+" "+request.getSmon()+" "+request.getEmon()+" "+request.getUtype()+" "+request.getLoginId()+" "+request.getRepType());
 		if(request.getOptType()==8)
 				reportList=mktRepo1Dao.getWebReportAch(request.getMyear(),request.getDivCode(),request.getDepoCode()
 					,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId(),request.getRepType());
@@ -812,14 +816,29 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 		
 		branches=new LinkedHashMap();
 
-
+		
 		for(int b=0;b<sz;b++)
 		{
 			BranchMasterDto bm=branchData.get(b);
-			double sale = bottomVerticalSalval.get(bm.getDepo_name());
-			double target = bottomVerticalTarval.get(bm.getDepo_name());
-			gsale += bottomVerticalSalval.get(bm.getDepo_name());
-			gtarget += bottomVerticalTarval.get(bm.getDepo_name());
+			double sale =0;
+			double target=0;
+			System.out.println("bm ki value "+bm.getDepo_name());
+			System.out.println(bottomVerticalSalval.get(bm.getDepo_name()));
+			if(bottomVerticalSalval.get(bm.getDepo_name())==null)
+				System.out.println(bottomVerticalSalval.get(bm.getDepo_name()));
+			else
+			{
+				sale = bottomVerticalSalval.get(bm.getDepo_name());
+				gsale += bottomVerticalSalval.get(bm.getDepo_name());
+
+			}
+			if(bottomVerticalTarval.get(bm.getDepo_name())==null)
+				System.out.println(bottomVerticalTarval.get(bm.getDepo_name()));
+			else
+			{
+				target = bottomVerticalTarval.get(bm.getDepo_name());
+				gtarget += bottomVerticalTarval.get(bm.getDepo_name());
+			}
 			if(request.getOptType()==8)
 				total.put(bm.getDepo_name(), AppCalculationUtils.calculateAch(sale, target));
 			else

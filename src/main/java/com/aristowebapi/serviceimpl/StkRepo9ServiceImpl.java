@@ -11,14 +11,14 @@ import org.springframework.stereotype.Service;
 import com.aristowebapi.constant.AristoWebLogMsgConstant;
 import com.aristowebapi.constant.AristoWebMessageConstant;
 import com.aristowebapi.dao.StkRepo9Dao;
+import com.aristowebapi.dto.StkRepo5;
 import com.aristowebapi.dto.StkRepo9;
 import com.aristowebapi.exception.ApiException;
 import com.aristowebapi.request.StkRepo9Request;
 import com.aristowebapi.response.ApiResponse;
-import com.aristowebapi.response.StkRepo2Response;
+import com.aristowebapi.response.StkRepo5Response;
 import com.aristowebapi.response.StkRepo9Response;
 import com.aristowebapi.service.StkRepo9Service;
-import com.aristowebapi.utility.AppCalculationUtils;
 @Service
 
 public class StkRepo9ServiceImpl implements StkRepo9Service {
@@ -47,7 +47,20 @@ public class StkRepo9ServiceImpl implements StkRepo9Service {
 
 	}
 
-	
+	private String getTitle5(StkRepo9Request request,StkRepo5 data)
+	{
+		StringBuilder title=new StringBuilder();
+		title.append(aristoWebMessageConstant.divisionMap.get(String.valueOf(request.getDivCode())));
+		title.append("PRODUCT - > ");
+		title.append(data.getPname());
+		title.append(" INVOICE WISE SALES DETAIL FROM ");
+		title.append(data.getSmname());
+		title.append(" TO ");
+		title.append(data.getEmname());
+		return title.toString();
+
+	}
+
 	@Override
 	public ApiResponse<StkRepo9Response> getStkRepo9(StkRepo9Request request) {
 		
@@ -143,6 +156,76 @@ public class StkRepo9ServiceImpl implements StkRepo9Service {
 
 	}
 
-	
+
+	@Override
+	public ApiResponse<StkRepo5Response> getStkRepo5(StkRepo9Request request) {
+		logger.info(AristoWebLogMsgConstant.STK_REPO5_SERVICE,"getStkRepo5");
+		
+		List<StkRepo5> StkRepo5List=null;
+		int size = 0;
+
+		try {
+			StkRepo5List=stkRepo9Dao.getStockiestRepo5(request.getMyear(),request.getDivCode(),request.getDepoCode()
+					,request.getSmon(),request.getEmon(),request.getCode(),request.getLoginId());
+				
+			size = StkRepo5List.size();
+			
+			logger.info("size of the data is {}",size);
+		
+			String pname="";
+			if(size==0)
+				pname=stkRepo9Dao.getPname(request.getDivCode(), request.getCode());
+			
+			StkRepo5Response response=null;
+		List<StkRepo5Response> saleList = new ArrayList();
+
+		boolean first=true;
+		String title=null;
+ 
+		for (int i=0;i<size;i++)
+		{
+			StkRepo5 data = StkRepo5List.get(i);
+			
+			
+			if(first)
+			{
+				title = getTitle5(request, data);
+				first=false;
+			}
+			
+			response=new StkRepo5Response();
+
+			response.setBranch(data.getDepo_name());
+			response.setName(data.getName());
+			response.setInvoiceNo(data.getSinv_no());
+			response.setInvoiceDate(data.getSinv_dt());
+			response.setBatchNo(data.getSbatch_no());
+			response.setSupplyRate(data.getSrate_net());
+	    	response.setSalesQty(data.getSaleqty());
+	    	response.setSalesVal(data.getSalesval());
+
+	    	
+	    	response.setColor(data.getTp());
+
+	    	saleList.add(response);
+
+
+		} //end of for loop
+
+		if(!first)
+		{
+
+			ApiResponse<StkRepo5Response> apiResponse = new ApiResponse<>(title!=null?title.toString():"",size,lupdate,saleList);
+			return apiResponse;
+		}
+		else 
+			return new ApiResponse<StkRepo5Response>(pname!=null?pname.toString():"",size,saleList);		
+		
+		} catch (Exception e) {
+			logger.error(AristoWebLogMsgConstant.STK_REPO2_SERVICE_01,"getStkRepo5");
+			throw new ApiException(e.getMessage());
+		}
+
+	}	
 }
 

@@ -98,6 +98,11 @@ public class AristoWebLogMsgConstant {
 	public static final String STK_REPO3_SERVICE="StkRepo3ServiceImpl:: {} method execution started, myear : {} , div_code: {} , depo_code: {} , user_type: {} , login_id: {}";
 	public static final String STK_REPO3_SERVICE_01="StkRepo3ServiceImpl:: {} method execution started, myear : {} , div_code: {} , depo_code: {} , user_type: {} , login_id: {}";
 
+
+	public static final String STK_REPO5_CONTROLLER="StkRepo5Controller {} method execution started, myear : {} , div_code: {} , depo_code: {} , user_type: {} , login_id: {}";
+	public static final String STK_REPO5_SERVICE="StkRepo5ServiceImpl:: {} method execution started, myear : {} , div_code: {} , depo_code: {} , user_type: {} , login_id: {}";
+	public static final String STK_REPO5_SERVICE_01="StkRepo5ServiceImpl:: {} method execution started, myear : {} , div_code: {} , depo_code: {} , user_type: {} , login_id: {}";
+
 	
 	public static final String STK_REPO9_CONTROLLER="StkRepo9Controller {} method execution started, myear : {} , div_code: {} , depo_code: {} , user_type: {} , login_id: {}";
 	public static final String STK_REPO9_SERVICE="StkRepo9ServiceImpl:: {} method execution started, myear : {} , div_code: {} , depo_code: {} , user_type: {} , login_id: {}";
