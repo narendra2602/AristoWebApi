@@ -93,10 +93,11 @@ public class AppCalculationUtils {
 		return  pmr;
 	}
 	
-	public static double calculatePmr(long sale,long fs)
+	public static long calculatePmr(long sale,long fs)
 	{
-		double pmr=0.00;  
-		pmr=fs!=0?Math.round(((sale*1.0)/fs)*100.0)/100.0:0;
+		long pmr=0;  
+//		pmr=fs!=0?Math.round(((sale*1.0)/fs)*100.0)/100.0:0;
+		pmr=fs!=0?Math.round(((sale)/fs)*100)/100:0;
 		return  pmr;
 	}
 	

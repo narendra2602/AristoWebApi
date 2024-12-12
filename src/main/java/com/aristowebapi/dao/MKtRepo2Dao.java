@@ -8,6 +8,9 @@ import org.springframework.data.repository.query.Param;
 
 import com.aristowebapi.dto.MktDataDto;
 import com.aristowebapi.dto.MktRepo2;
+import com.aristowebapi.dto.MktRepo2New;
+import com.aristowebapi.dto.MktRepo2NewTrend;
+import com.aristowebapi.dto.MonthDto;
 
 public interface MKtRepo2Dao extends JpaRepository<MktDataDto, Integer> { 
 	
@@ -73,16 +76,32 @@ public interface MKtRepo2Dao extends JpaRepository<MktDataDto, Integer> {
 
 	
 	
-	// user type2 for all depo	
+	// user type2 for all depo	mkt 2.1
 		@Query(value="CALL web_mkt_2allSelectiveCode(:myear,:div_code,:depo_code,:smon,:emon,:utype,:login_id,:pcode,:repType);", nativeQuery=true)
 		List<MktRepo2> getWebMkt2SelectiveCode(@Param("myear") int myear,@Param("div_code") int div_code,@Param("depo_code") int depo_code,
 				@Param("smon") int smon,@Param("emon") int emon,@Param("utype") int utype,@Param("login_id") int login_id,
 				@Param("pcode") int pcode,@Param("repType") int repType);
 
-		// user type2 for all depo	
+		// user type2 for all depo	mkt 2.1
 		@Query(value="CALL web_mkt_2allSelectiveGroup(:myear,:div_code,:depo_code,:smon,:emon,:utype,:login_id,:pcode,:repType);", nativeQuery=true)
 		List<MktRepo2> getWebMkt2SelectiveGroup(@Param("myear") int myear,@Param("div_code") int div_code,@Param("depo_code") int depo_code,
 				@Param("smon") int smon,@Param("emon") int emon,@Param("utype") int utype,@Param("login_id") int login_id,
 				@Param("pcode") int pcode,@Param("repType") int repType);
-	
+
+		// user type2 for all depo	mkt 2.2
+		@Query(value="CALL web_mkt_2allMultipleGroupNew(:myear,:div_code,:depo_code,:smon,:emon,:utype,:login_id,:pcode,:repType);", nativeQuery=true)
+		List<MktRepo2New> getWebMkt2MultipleGroup(@Param("myear") int myear,@Param("div_code") int div_code,@Param("depo_code") int depo_code,
+				@Param("smon") int smon,@Param("emon") int emon,@Param("utype") int utype,@Param("login_id") int login_id,
+				@Param("pcode") String pcode,@Param("repType") int repType);
+
+		// user type2 for all depo	mkt 2.2 Trend
+		@Query(value="CALL web_mkt_2allMultipleGroupTrend(:myear,:div_code,:depo_code,:smon,:emon,:utype,:login_id,:pcode,:repType);", nativeQuery=true)
+		List<MktRepo2NewTrend> getWebMkt2MultipleGroupTrend(@Param("myear") int myear,@Param("div_code") int div_code,@Param("depo_code") int depo_code,
+				@Param("smon") int smon,@Param("emon") int emon,@Param("utype") int utype,@Param("login_id") int login_id,
+				@Param("pcode") String pcode,@Param("repType") int repType);
+
+		@Query(value = "SELECT mnth_code,mnth_abbr FROM monthfl where mkt_year=:myear order by mnth_code", nativeQuery = true)
+		List<MonthDto> getAllMonth(@Param("myear") int myear);
+
+		
 }

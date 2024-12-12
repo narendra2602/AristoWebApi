@@ -4,7 +4,6 @@ import static java.util.stream.Collectors.toMap;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -20,11 +19,18 @@ import com.aristowebapi.constant.AristoWebLogMsgConstant;
 import com.aristowebapi.constant.AristoWebMessageConstant;
 import com.aristowebapi.dao.MKtRepo2Dao;
 import com.aristowebapi.dto.MktRepo2;
+import com.aristowebapi.dto.MktRepo2New;
+import com.aristowebapi.dto.MktRepo2NewTrend;
+import com.aristowebapi.dto.MktRepo3;
+import com.aristowebapi.dto.MonthDto;
 import com.aristowebapi.exception.ApiException;
 import com.aristowebapi.request.MktRepo2Request;
 import com.aristowebapi.response.ApiResponse;
+import com.aristowebapi.response.MktRepo2MultipleGroupResponse;
+import com.aristowebapi.response.MktRepo2MultipleGroupTrendResponse;
 import com.aristowebapi.response.MktRepo2Response;
 import com.aristowebapi.response.MktRepo2SelectiveItemResponse;
+import com.aristowebapi.response.MktRepo3Response;
 import com.aristowebapi.service.MktRepo2Service;
 import com.aristowebapi.utility.AppCalculationUtils;
 
@@ -614,4 +620,522 @@ public class MktRepo2ServiceImpl implements MktRepo2Service {
 		
 	}
 
-}
+	private String getTitle2(MktRepo2Request request,MktRepo2New data)
+	{
+
+		
+		StringBuilder title=new StringBuilder();
+		title.append(aristoWebMessageConstant.divisionMap.get(String.valueOf(data.getDiv_code())));
+		title.append(request.getDepoCode()==0?"All India ":data.getBrname());
+		title.append(" Group : "+data.getGp_name());
+		title.append(" Value Wise ");
+		title.append("Detail From  ");
+		title.append(data.getSmname());
+		title.append(" To ");
+		title.append(data.getEmname());
+		return title.toString();
+
+	}
+
+	
+	@Override
+	public ApiResponse<MktRepo2MultipleGroupResponse> getMktRepo2MultipleGroup(MktRepo2Request request) {
+		logger.info(AristoWebLogMsgConstant.MKT_REPORT_SERVICE_02,"getMktRepo2New");
+		List<MktRepo2New> MktRepo2List=null;
+		int size = 0;
+		try {
+			
+				MktRepo2List=mktRepo2Dao.getWebMkt2MultipleGroup(request.getMyear(),request.getDivCode(),request.getDepoCode()
+						,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId(),request.getGroupCode(),request.getRepType());
+				
+
+			size = MktRepo2List.size();
+			
+			
+			
+			
+			logger.info("size of the data is {}",size);
+		
+			
+		
+			MktRepo2MultipleGroupResponse response=null;
+		List<MktRepo2MultipleGroupResponse> saleList = new ArrayList();
+
+		boolean first=true;
+		String title=null;
+		int mgrp=0;
+		String gpname="";
+		long tval=0;
+		long  sval=0;
+		long cumtval=0;
+		long cumsval=0;
+		long cumlysval=0;
+		long gtval=0;
+		long  gsval=0;
+		long gcumtval=0;
+		long gcumsval=0;
+		long gcumlysval=0;
+		int grep=0;
+
+		int nrep=0;
+		for (int i=0;i<size;i++)
+		{
+			MktRepo2New data = MktRepo2List.get(i);
+			
+			if(first)
+			{
+				response=new MktRepo2MultipleGroupResponse();
+				title = getTitle2(request, data);
+				mgrp=data.getMgrp();
+				gpname=data.getGp_name();
+				
+					first=false;
+			}
+			
+				
+			
+			if(mgrp!=data.getMgrp())
+			{
+				response=new MktRepo2MultipleGroupResponse();
+				response.setName(gpname);
+				response.setBranch("TOTAL***");
+				response.setHqName("");
+				response.setFs(nrep);
+				response.setMthBudget(tval);
+				response.setMthSale(sval);
+				response.setMthAchPer(tval!=0?AppCalculationUtils.calculateAch(sval, tval):0);
+				response.setMthSurSlashDef(sval-tval);
+				response.setCumBudget(cumtval);
+				response.setCumSale(cumsval);
+				response.setCumAchPer(cumtval!=0?AppCalculationUtils.calculateAch(cumsval, cumtval):0);
+				response.setCumSurSlashDef(cumsval-cumtval);
+				response.setCumLys(cumlysval);
+				response.setGthPer(cumlysval!=0?AppCalculationUtils.calculateGth(cumsval, cumlysval):0.0);
+				response.setPmr(nrep!=0?AppCalculationUtils.calculatePmr(cumsval, grep):0);
+				response.setColor(1);
+
+				saleList.add(response);
+				gpname=data.getGp_name();
+				mgrp=data.getMgrp();
+	    		tval=0;
+	    		sval=0;
+	    		cumtval=0;
+	    		cumsval=0;
+	    		cumlysval=0;
+	    		nrep=0;
+			}
+
+    		response=new MktRepo2MultipleGroupResponse();
+
+			if(request.getDepoCode()==0)
+			{
+				response.setBranch(data.getTer_name());
+				response.setHqName("");
+				
+			}
+			else
+			{
+				response.setBranch(data.getBrname());
+				response.setHqName(data.getTer_name());
+			}	
+				response.setFs(data.getNrep());
+				response.setName(data.getPname());
+//		    if (request.getUv()==1)
+		    {
+		    	
+		    	response.setMthBudget(data.getTargetqty());
+		    	response.setMthSale(data.getSaleqty());
+		    	response.setMthAchPer(data.getTargetqty()!=0?AppCalculationUtils.calculateAch(data.getSaleqty(), data.getTargetqty()):0);
+		    	response.setMthSurSlashDef(data.getSaleqty()-data.getTargetqty());
+		    	response.setCumBudget(data.getCumtarqty());
+		    	response.setCumSale(data.getCummsaleqty());
+ 				response.setCumAchPer(data.getCumtarqty()!=0?AppCalculationUtils.calculateAch(data.getCummsaleqty(), data.getCumtarqty()):0);
+		    	response.setCumSurSlashDef(data.getCummsaleqty()-data.getCumtarqty());
+		    	response.setCumLys(data.getCumlysqty());
+		    	response.setGthPer(data.getCumlysqty()!=0?AppCalculationUtils.calculateGth(data.getCummsaleqty(), data.getCumlysqty()):0.0);
+		    	response.setPmr(data.getNrep()!=0?AppCalculationUtils.calculatePmr(data.getCummsaleqty(), data.getNrep()):0);
+		    }
+/*		    else if (request.getUv()==2)
+		    {
+		    	response.setMthBudget(data.getTargetval());
+		    	response.setMthSale(data.getSaleval());
+		    	response.setMthAchPer(data.getTargetval()!=0?AppCalculationUtils.calculateAch(data.getSaleval(), data.getTargetval()):0);
+		    	response.setMthSurSlashDef(data.getSaleval()-data.getTargetval());
+		    	response.setCumBudget(data.getCumtarval());
+		    	response.setCumSale(data.getCummsaleval());
+ 				response.setCumAchPer(data.getCumtarval()!=0?AppCalculationUtils.calculateAch(data.getCummsaleval(), data.getCumtarval()):0);
+		    	response.setCumSurSlashDef(data.getCummsaleval()-data.getCumtarval());
+		    	response.setCumLys(data.getCumlysval());
+		    	response.setGthPer(data.getCumlysval()!=0?AppCalculationUtils.calculateGth(data.getCummsaleval(), data.getCumlysval()):0.0);
+		    	response.setPmr(data.getnrep()!=0?AppCalculationUtils.calculatePmr(data.getCummsaleval(), data.getnrep()):0);
+		    }
+*/		    if(data.getBrname().contains("Total"))
+		    
+		    	response.setColor(1);
+	    	saleList.add(response);
+
+	    	
+		    if(!data.getBrname().equalsIgnoreCase("Total : "))
+		    {
+				grep+=data.getNrep();
+				nrep+=data.getNrep();
+
+		    		tval+=data.getTargetval();
+		    		sval+=data.getSaleval();
+		    		cumtval+=data.getCumtarval();
+		    		cumsval+=data.getCummsaleval();
+		    		cumlysval+=data.getCumlysval();
+		    		gtval+=data.getTargetval();
+		    		gsval+=data.getSaleval();
+		    		gcumtval+=data.getCumtarval();
+		    		gcumsval+=data.getCummsaleval();
+		    		gcumlysval+=data.getCumlysval();
+		    }
+		} //end of for loop
+		
+		
+
+        
+        
+		if(!first)
+		{
+
+			response=new MktRepo2MultipleGroupResponse();
+			response.setName(gpname);
+			response.setBranch("TOTAL");
+			response.setHqName("");
+			response.setFs(nrep);
+			response.setMthBudget(tval);
+			response.setMthSale(sval);
+			response.setMthAchPer(tval!=0?AppCalculationUtils.calculateAch(sval, tval):0);
+			response.setMthSurSlashDef(sval-tval);
+			response.setCumBudget(cumtval);
+			response.setCumSale(cumsval);
+			response.setCumAchPer(cumtval!=0?AppCalculationUtils.calculateAch(cumsval, cumtval):0);
+			response.setCumSurSlashDef(cumsval-cumtval);
+			response.setCumLys(cumlysval);
+			response.setGthPer(cumlysval!=0?AppCalculationUtils.calculateGth(cumsval, cumlysval):0.0);
+			response.setPmr(nrep!=0?AppCalculationUtils.calculatePmr(cumsval, grep):0);
+			response.setColor(1);
+
+			saleList.add(response);
+
+			response=new MktRepo2MultipleGroupResponse();
+			response.setName("");
+			response.setBranch("GRAND TOTAL");
+			response.setHqName("");
+			response.setFs(grep);
+			response.setMthBudget(gtval);
+			response.setMthSale(gsval);
+			response.setMthAchPer(gtval!=0?AppCalculationUtils.calculateAch(gsval, gtval):0);
+			response.setMthSurSlashDef(gsval-gtval);
+			response.setCumBudget(gcumtval);
+			response.setCumSale(gcumsval);
+			response.setCumAchPer(gcumtval!=0?AppCalculationUtils.calculateAch(gcumsval, gcumtval):0);
+			response.setCumSurSlashDef(gcumsval-gcumtval);
+			response.setCumLys(gcumlysval);
+			response.setGthPer(gcumlysval!=0?AppCalculationUtils.calculateGth(gcumsval, gcumlysval):0.0);
+			response.setPmr(nrep!=0?AppCalculationUtils.calculatePmr(gcumsval, grep):0);
+			response.setColor(2);
+
+			saleList.add(response);
+		}
+
+		
+		ApiResponse<MktRepo2MultipleGroupResponse> apiResponse = new ApiResponse<>(title!=null?title.toString():"", size,saleList);
+		return apiResponse;
+		
+		} catch (Exception e) {
+			logger.error(AristoWebLogMsgConstant.MKT_REPORT_SERVICE_021,"getMktRepo2New");
+			e.printStackTrace();
+			throw new ApiException(e.getMessage());
+		}
+		
+	}
+
+	
+	private String getTitle4(MktRepo2Request request,MktRepo2NewTrend data)
+	{
+
+		
+		StringBuilder title=new StringBuilder();
+		title.append(aristoWebMessageConstant.divisionMap.get(String.valueOf(data.getDiv_code())));
+		title.append(request.getDepoCode()==0?"All India ":data.getBrname());
+		title.append(" Group : "+data.getGp_name());
+		title.append(" Value Wise ");
+		title.append("Detail From  ");
+		title.append(data.getSmname());
+		title.append(" To ");
+		title.append(data.getEmname());
+		return title.toString();
+
+	}
+
+	
+
+	@Override
+	public ApiResponse<MktRepo2MultipleGroupTrendResponse> getMktRepo2MultipleGroupTrend(MktRepo2Request request) {
+		List<MonthDto> monthData = mktRepo2Dao.getAllMonth(request.getMyear());
+		int sz=monthData.size();
+		sz=request.getEmon();
+		int k=0;
+		int z=0;
+
+		
+		String title=null;
+		List<MktRepo2NewTrend> mktRepo2List=null;
+		
+		mktRepo2List=mktRepo2Dao.getWebMkt2MultipleGroupTrend(request.getMyear(),request.getDivCode(),request.getDepoCode()
+				,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId(),request.getGroupCode(),request.getRepType());
+		
+		MktRepo2MultipleGroupTrendResponse response=null;
+		List<MktRepo2MultipleGroupTrendResponse> saleList = new ArrayList();
+		Map<String, Long> months=null;
+		Map<String, Long> group=null;
+		Map<String, Long> total=null;
+
+		boolean first=true;
+
+		int size = mktRepo2List.size();
+		int pcode=0;
+		int mgrp=0;
+		long columnTotal=0;
+		long groupColumnTotal=0;
+		long grandColumnTotal=0;
+
+		String pname=null;
+		String pack=null;
+		String gname=null;
+		String brname=null;
+		String hqname=null;
+		for (int i=0;i<size;i++)
+		{
+			MktRepo2NewTrend data = mktRepo2List.get(i);
+			
+			if(first)
+			{
+				pcode=data.getSprd_cd();
+				pname=data.getPname();
+				mgrp=data.getMgrp();
+				gname=data.getGp_name();
+				brname=data.getBrname();
+				hqname=data.getTer_name();
+				response=new MktRepo2MultipleGroupTrendResponse();
+				months=new LinkedHashMap();
+				group=new LinkedHashMap();
+				total=new LinkedHashMap();
+				first=false;
+				
+				title = getTitle4(request, data); 
+			}
+
+			if(pcode!=data.getSprd_cd())
+			{
+				response.setName(pname);
+				z=k;
+				for(int b=k;b<sz;b++)
+				{
+					MonthDto mn=monthData.get(b);
+					months.put(mn.getMnth_abbr(), 0L);
+					k++;
+				}
+
+				months.put("TOTAL", columnTotal);
+				response.setMonths(months);
+				
+				saleList.add(response);
+				pcode=data.getSprd_cd();
+				pname=data.getPname();
+				brname=data.getBrname();
+				hqname=data.getTer_name();
+				columnTotal=0;
+				
+				k=0;
+				response=new MktRepo2MultipleGroupTrendResponse();
+				months=new LinkedHashMap();
+
+			}
+
+			
+			if(mgrp!=data.getMgrp())
+			{
+				
+				response.setName(gname);
+				response.setBranch("Total");
+				response.setHqName("");
+				for(int b=z;b<sz;b++)
+				{
+					MonthDto mn=monthData.get(b);
+					group.put(mn.getMnth_abbr(), 0L);
+					z++;
+				}
+
+				group.put("TOTAL", groupColumnTotal);
+
+				months.putAll(group);
+
+				
+				response.setMonths(months);
+				response.setColor(1);
+				saleList.add(response);
+
+				
+				mgrp=data.getMgrp();
+				gname=data.getGp_name();
+				
+				z=0;
+				groupColumnTotal=0;
+				response=new MktRepo2MultipleGroupTrendResponse();
+				months=new LinkedHashMap();
+				group=new LinkedHashMap();
+				
+			}
+
+			if(request.getDepoCode()==0)
+			{
+				response.setBranch(data.getTer_name());
+				response.setHqName("");
+				
+			}
+			else
+			{
+				response.setBranch(data.getBrname());
+				response.setHqName(data.getTer_name());
+			}	
+				response.setFs(data.getNrep());
+			
+			// before put please check depo code in branch list if not found put 0 value in map otherwise actual zero
+			for(int b=k;b<sz;b++)
+			{
+				MonthDto mn=monthData.get(b);
+				if(mn.getMnth_code()==data.getMnth_code())
+				{
+					months.put(data.getMnth_abbr(), request.getUv()==2?data.getSaleval():data.getSaleqty());
+					columnTotal+=request.getUv()==2?data.getSaleval():data.getSaleqty();
+					groupColumnTotal+=data.getSaleval();
+					//grandColumnTotal+=data.getSales_val();
+					if(group.containsKey(data.getMnth_abbr()))
+					{
+						long gval = group.get(data.getMnth_abbr())+data.getSaleval();
+						group.put(data.getMnth_abbr(), gval);
+					}
+					else
+					{
+						group.put(data.getMnth_abbr(), data.getSaleval());
+					}
+					
+					if(total.containsKey(data.getMnth_abbr()))
+					{
+						long ggval = total.get(data.getMnth_abbr())+data.getSaleval();
+						total.put(data.getMnth_abbr(), ggval);
+					}
+					else
+					{
+						total.put(data.getMnth_abbr(), data.getSaleval());
+					}
+
+					k++;
+					break;
+				}
+				else
+				{
+					months.put(mn.getMnth_abbr(), 0L);
+					if(group.containsKey(mn.getMnth_abbr()))
+					{
+						// do nothing
+					}
+					else
+					{
+						group.put(mn.getMnth_abbr(), 0L);
+
+					}
+
+					if(total.containsKey(mn.getMnth_abbr()))
+					{
+						// do nothing
+					}
+					else
+					{
+						total.put(mn.getMnth_abbr(), 0L);
+
+					}
+
+					
+					k++;
+				}
+			}
+			
+		}			
+			response=new MktRepo2MultipleGroupTrendResponse();
+			response.setName(pname);
+			if(request.getDepoCode()==0)
+			{
+				response.setBranch(hqname);
+				response.setHqName("");
+				
+			}
+			else
+			{
+				response.setBranch(brname);
+				response.setHqName(hqname);
+			}	
+
+			z=k;
+			for(int b=k;b<sz;b++)
+			{
+				MonthDto mn=monthData.get(b);
+				months.put(mn.getMnth_abbr(), 0L);
+				k++;
+			}
+			months.put("TOTAL", columnTotal);
+
+			response.setMonths(months);
+			saleList.add(response);
+
+			
+			months=new LinkedHashMap();
+			response=new MktRepo2MultipleGroupTrendResponse();
+			response.setName(gname);
+			response.setBranch("Total");
+			response.setHqName("");
+			for(int b=z;b<sz;b++)
+			{
+				MonthDto mn=monthData.get(b);
+				group.put(mn.getMnth_abbr(), 0L);
+				total.put(mn.getMnth_abbr(), 0L);
+				z++;
+			}
+
+			group.put("TOTAL", groupColumnTotal);
+
+			months.putAll(group);
+			response.setMonths(months);
+			response.setColor(1);
+			saleList.add(response);
+			
+			
+			grandColumnTotal = total.values().stream().mapToLong(d -> d).sum();
+			
+			months=new LinkedHashMap();
+			total.put("TOTAL", grandColumnTotal);
+//			total.keySet().stream().forEach(d->System.out.print(d));
+
+			months.putAll(total);
+			response=new MktRepo2MultipleGroupTrendResponse();
+			response.setName("Grand Total");
+			response.setBranch("");
+			response.setHqName("");
+			response.setMonths(months);
+			response.setColor(2);
+//			saleList.add(response);
+
+			return new ApiResponse<MktRepo2MultipleGroupTrendResponse>(title.toString(),size,saleList);
+
+
+			
+		}
+
+	}
+
+
+

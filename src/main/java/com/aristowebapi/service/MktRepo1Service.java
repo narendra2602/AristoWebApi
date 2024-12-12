@@ -9,6 +9,6 @@ public interface MktRepo1Service {
 	 
 	ApiResponse<MktRepo1Response> getMktRepo1(MktRepo1Request request);
 	ApiResponse<MktRepo1AchResponse> getMktRepo1Ach(MktRepo1Request request);
-	ApiResponse<MktRepo1AchResponse> getMktRepo1Pmr(MktRepo1Request request);
+	ApiResponse<MktRepo1Response> getMktRepo1Pmr(MktRepo1Request request);
 	
 }

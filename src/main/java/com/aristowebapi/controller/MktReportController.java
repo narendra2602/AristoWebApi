@@ -29,6 +29,8 @@ import com.aristowebapi.response.ApiResponse;
 import com.aristowebapi.response.MktRepo11Response;
 import com.aristowebapi.response.MktRepo1AchResponse;
 import com.aristowebapi.response.MktRepo1Response;
+import com.aristowebapi.response.MktRepo2MultipleGroupResponse;
+import com.aristowebapi.response.MktRepo2MultipleGroupTrendResponse;
 import com.aristowebapi.response.MktRepo2Response;
 import com.aristowebapi.response.MktRepo2SelectiveItemResponse;
 import com.aristowebapi.response.MktRepo3Response;
@@ -129,7 +131,7 @@ public class MktReportController {
 	}
 	
 	@GetMapping("${mrc_repo1pmr_path}")
-	public ResponseEntity<ApiResponse<MktRepo1AchResponse>> getMktRepo1Pmr(@RequestBody MktRepo1Request request,HttpServletRequest req)
+	public ResponseEntity<ApiResponse<MktRepo1Response>> getMktRepo1Pmr(@RequestBody MktRepo1Request request,HttpServletRequest req)
 	{
 
 		int requestValues[]=getRequestData(req);
@@ -138,7 +140,7 @@ public class MktReportController {
 		logger.info(AristoWebLogMsgConstant.MKT_REPORT_CONTROLLER_01,"getMktRepo1Pmr", request.getMyear(),request.getDivCode(),request.getDepoCode(),request.getUtype(),request.getLoginId());
 
 		
-		return new ResponseEntity<ApiResponse<MktRepo1AchResponse>>(mktRepo1Service.getMktRepo1Pmr(request), HttpStatus.OK);
+		return new ResponseEntity<ApiResponse<MktRepo1Response>>(mktRepo1Service.getMktRepo1Pmr(request), HttpStatus.OK);
 	
 	}
 
@@ -167,7 +169,31 @@ public class MktReportController {
 		return new ResponseEntity<ApiResponse<MktRepo2SelectiveItemResponse>>(mktRepo2Service.getMktRepo2SelectiveItem(request), HttpStatus.OK);
 	
 	}
+	@GetMapping("${mrc_repo2MultipleGroup_path}")
+	public ResponseEntity<ApiResponse<MktRepo2MultipleGroupResponse>> getMktRepo2MultipleGroup(@RequestBody MktRepo2Request request,HttpServletRequest req)
+	{
+		int requestValues[]=getRequestData(req);
+		request.setLoginId(requestValues[0]);
+		request.setUtype(requestValues[1]);
+		logger.info(AristoWebLogMsgConstant.MKT_REPORT_CONTROLLER_02,"getMktRepo2MultipleGroup", request.getMyear(),request.getDivCode(),request.getDepoCode(),request.getUtype(),request.getLoginId());
 
+		return new ResponseEntity<ApiResponse<MktRepo2MultipleGroupResponse>>(mktRepo2Service.getMktRepo2MultipleGroup(request), HttpStatus.OK);
+	
+	}
+
+	@GetMapping("${mrc_repo2MultipleGroupTrend_path}")
+	public ResponseEntity<ApiResponse<MktRepo2MultipleGroupTrendResponse>> getMktRepo2MultipleGroupTrend(@RequestBody MktRepo2Request request,HttpServletRequest req)
+	{
+		int requestValues[]=getRequestData(req);
+		request.setLoginId(requestValues[0]);
+		request.setUtype(requestValues[1]);
+		logger.info(AristoWebLogMsgConstant.MKT_REPORT_CONTROLLER_02,"getMktRepo2MultipleGroup", request.getMyear(),request.getDivCode(),request.getDepoCode(),request.getUtype(),request.getLoginId());
+
+		return new ResponseEntity<ApiResponse<MktRepo2MultipleGroupTrendResponse>>(mktRepo2Service.getMktRepo2MultipleGroupTrend(request), HttpStatus.OK);
+	
+	}
+
+	
 	@GetMapping("${mrc_repo3_path}")
 	public ResponseEntity<ApiResponse<MktRepo3Response>> getMktRepo3(@RequestBody MktRepo3Request request,HttpServletRequest req)
 	{

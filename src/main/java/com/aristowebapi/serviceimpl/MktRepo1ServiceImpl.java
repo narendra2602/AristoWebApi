@@ -211,10 +211,11 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 		fsMap=new LinkedHashMap();
 		for(int b=0;b<sz1;b++)
 		{
+			
 			DashBoardData fs=fsData.get(b);
 			fsMap.put(fs.getName(),fs.getVal());
 			totalFs+=fs.getVal();
-			System.out.println(fsMap.get(fs.getName())+" "+fs.getName());
+			System.out.println(fsMap.get(fs.getName())+" "+fs.getVal());
 		}
 		
 		fsMap.put("Total", totalFs);
@@ -869,7 +870,7 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 	}
 
 	@Override
-	public ApiResponse<MktRepo1AchResponse> getMktRepo1Pmr(MktRepo1Request request) {
+	public ApiResponse<MktRepo1Response> getMktRepo1Pmr(MktRepo1Request request) {
 		
 		logger.info(AristoWebLogMsgConstant.MKT_REPORT_SERVICE_01,"getMktRepo1");
 		List<BranchMasterDto> branchData = getBranchData(request);
@@ -884,17 +885,17 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 		Map<String, Long> fsMap=null;
 		fsMap=getNoOfRepMap(request);
 		
-		MktRepo1AchResponse response=null;
-		List<MktRepo1AchResponse> saleList = new ArrayList();
-		Map<String, Double> branches=null;
-		Map<String, Double> group=null;
-		Map<String, Double> total=null;
+		MktRepo1Response response=null;
+		List<MktRepo1Response> saleList = new ArrayList();
+		Map<String, Long> branches=null;
+		Map<String, Long> group=null;
+		Map<String, Long> total=null;
 		boolean first=true;
 		int pcode=0;
 		int mgrp=0;
-		double columnTotal=0;
-		double groupColumnTotal=0;
-		double grandColumnTotal=0;
+		long columnTotal=0;
+		long groupColumnTotal=0;
+		long grandColumnTotal=0;
 
 		long gsale=0;
 		long gtarget=0;
@@ -930,7 +931,7 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 				pack=data.getPack();
 				mgrp=data.getMgrp();
 				gname=data.getGp_name();
-				response=new MktRepo1AchResponse();
+				response=new MktRepo1Response();
 				branches=new LinkedHashMap();
 				group=new LinkedHashMap();
 				total=new LinkedHashMap();
@@ -945,14 +946,14 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 			}
 			if(pcode!=data.getMcode())
 			{
-				response.setPcode(pcode);
-				response.setPname(pname);
+				response.setCode(pcode);
+				response.setName(pname);
 				response.setPack(pack);
 				z=k;
 				for(int b=k;b<sz;b++)
 				{
 					BranchMasterDto bm=branchData.get(b);
-					branches.put(bm.getDepo_name(), 0.0);
+					branches.put(bm.getDepo_name(), 0L);
 					k++;
 				}
 				
@@ -977,7 +978,7 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 				horizontalTarval=0;
 				
 				k=0;
-				response=new MktRepo1AchResponse();
+				response=new MktRepo1Response();
 				branches=new LinkedHashMap();
 
 			}
@@ -985,15 +986,15 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 			if(mgrp!=data.getMgrp())
 			{
 				
-				response.setPcode(mgrp);
-				response.setPname(gname);
+				response.setCode(mgrp);
+				response.setName(gname);
 				response.setPack("");
 				System.out.println("value of z and sz "+z+" "+sz+" "+gname);
 				
 				for(int b=z;b<sz;b++)
 				{
 					BranchMasterDto bm=branchData.get(b);
-					group.put(bm.getDepo_name(), 0.0);
+					group.put(bm.getDepo_name(), 0L);
 					z++;
 				}
 
@@ -1028,7 +1029,7 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 				
 				z=0;
 				groupColumnTotal=0;
-				response=new MktRepo1AchResponse();
+				response=new MktRepo1Response();
 				branches=new LinkedHashMap();
 				group=new LinkedHashMap();
 				grVerticalSalval =new LinkedHashMap();
@@ -1044,10 +1045,11 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 				if(bm.getDepo_code()==data.getDepo_code())
 				{
 						fs = fsMap.get(bm.getDepo_name());
+						System.out.println("value of fs "+fs+" depo_name "+bm.getDepo_name()+" value "+data.getSales_val());
 						if(fs!=0)
 						 branches.put(data.getDepo_name(), request.getUv()==2?AppCalculationUtils.calculatePmr(data.getSales_val(),fs):AppCalculationUtils.calculatePmr(data.getSales(),fs));
 						else
-							branches.put(data.getDepo_name(), 0.0);							
+							branches.put(data.getDepo_name(), 0L);							
 					
 	        		 horizontalSalqty+= data.getSales();
 	        		 horizontalSalval+= data.getSales_val();
@@ -1083,7 +1085,7 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 				}
 				else
 				{
-					branches.put(bm.getDepo_name(), 0.0);
+					branches.put(bm.getDepo_name(), 0L);
 
 					if(grVerticalSalval.containsKey(bm.getDepo_name()))
 					{
@@ -1095,6 +1097,15 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 
 					}
 
+					if(bottomVerticalSalval.containsKey(bm.getDepo_name()))
+					{
+						// do nothing
+					}
+					else
+					{
+						bottomVerticalSalval.put(bm.getDepo_name(), 0L);
+
+					}
 
 					
 					k++;
@@ -1105,15 +1116,15 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 
 		
 		
-		response=new MktRepo1AchResponse();
-		response.setPcode(pcode);
-		response.setPname(pname);
+		response=new MktRepo1Response();
+		response.setCode(pcode);
+		response.setName(pname);
 		response.setPack(pack);
 		z=k;
 		for(int b=k;b<sz;b++)
 		{
 			BranchMasterDto bm=branchData.get(b);
-			branches.put(bm.getDepo_name(), 0.0);
+			branches.put(bm.getDepo_name(), 0L);
 			k++;
 		}
 		
@@ -1130,14 +1141,14 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 
 		
 		branches=new LinkedHashMap();
-		response=new MktRepo1AchResponse();
-		response.setPcode(mgrp);
-		response.setPname(gname);
+		response=new MktRepo1Response();
+		response.setCode(mgrp);
+		response.setName(gname);
 		response.setPack("");
 		for(int b=z;b<sz;b++)
 		{
 			BranchMasterDto bm=branchData.get(b);
-			group.put(bm.getDepo_name(), 0.0);
+			group.put(bm.getDepo_name(), 0L);
 			z++;
 		}
 
@@ -1177,7 +1188,6 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 		}
 
 		fs = fsMap.get("Total");
-		System.out.println("total gsale "+gsale);
 		grandColumnTotal=AppCalculationUtils.calculatePmr(gsale, fs);
 
 		
@@ -1186,15 +1196,15 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 		total.put("TOTAL", grandColumnTotal);
 
 		branches.putAll(total);
-		response=new MktRepo1AchResponse();
-		response.setPcode(0);
-		response.setPname("Grand Total");
+		response=new MktRepo1Response();
+		response.setCode(0);
+		response.setName("Grand Total");
 		response.setPack("");
 		response.setBranches(branches);
 		response.setColor(2);
 		saleList.add(response);
 
-		return new ApiResponse<MktRepo1AchResponse>(title.toString(),size,lupdate,saleList);
+		return new ApiResponse<MktRepo1Response>(title.toString(),size,lupdate,saleList);
 	}
 
 
