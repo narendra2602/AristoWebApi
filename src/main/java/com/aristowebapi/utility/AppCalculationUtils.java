@@ -38,7 +38,10 @@ public class AppCalculationUtils {
 	public static int calculatePmr(long sale,int fs)
 	{
 		int pmr=0;  
-		pmr=fs!=0?Math.round(((sale)/fs)):0;
+		double pmr1=0.00;
+		pmr1=fs!=0?Math.round((sale*1.0)/fs):0;
+		pmr=(int)pmr1;
+
 		return  pmr;
 	}
 
@@ -96,10 +99,17 @@ public class AppCalculationUtils {
 	public static long calculatePmr(long sale,long fs)
 	{
 		long pmr=0;  
-//		pmr=fs!=0?Math.round(((sale*1.0)/fs)*100.0)/100.0:0;
 		pmr=fs!=0?Math.round(((sale)/fs)*100)/100:0;
 		return  pmr;
 	}
+	
+	public static double calculateExpiryRatio(long expiry,long sale)
+	{
+		double expiryratio=0.00;  
+		expiryratio=sale!=0?Math.round(((expiry*1.0/sale)*100)*100)/100.0:0;
+		return  expiryratio;
+	}
+
 	
 	public static double addDouble(double doubleVal1,double doubleVal2)
 	{

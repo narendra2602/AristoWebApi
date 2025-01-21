@@ -50,4 +50,7 @@ public interface DashBoardService {
 
 	ApiResponse<StockiestResponse> getStockiestList(int myear,int div_code, int depo_code,int utype,int login_id);
 	
+	
+	ApiResponse<DashBoardDataResponse> getSampleProductList(int div_code,int utype,int login_id);
+	
 }

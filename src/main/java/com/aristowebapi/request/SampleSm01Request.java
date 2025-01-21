@@ -1,23 +1,17 @@
-package com.aristowebapi.response;
-
-import java.util.Map;
+package com.aristowebapi.request;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
 @NoArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class MktRepo2MultipleGroupTrendResponse {
-	
-	private String branch;
-	private String hqName;
-	private int fs;
-	private String name;
-	private Map<String,Long> months;
-	private int color;
-
+public class SampleSm01Request extends ViewRequest{
+	private int uv;
+	private int code;
 }

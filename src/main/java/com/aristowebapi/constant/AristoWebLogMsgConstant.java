@@ -11,6 +11,11 @@ public class AristoWebLogMsgConstant {
 	public static final String LOGIN_SERVICE="LoginServiceImpl:: {} method execution started";
 
 	
+	public static final String SAMPLE_REPORT_CONTROLLER_01="SampleSm01Controller:: {} method execution started, myear : {} , div_code: {}, depo_code: {} , user_type: {} , login_id: {}";
+	public static final String SAMPLE_REPORT_SERVICE_01="SampleSm0ServiceImpl:: {} method execution started";
+
+	
+	
 	public static final String MKT_REPORT_CONTROLLER_01="MktRepo1Controller:: {} method execution started, myear : {} , div_code: {}, depo_code: {} , user_type: {} , login_id: {}";
 	public static final String MKT_REPORT_SERVICE_01="MktRepo1ServiceImpl:: {} method execution started";
 

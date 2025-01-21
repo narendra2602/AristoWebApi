@@ -11,13 +11,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class MktRepo2MultipleGroupTrendResponse {
-	
-	private String branch;
-	private String hqName;
-	private int fs;
-	private String name;
-	private Map<String,Long> months;
-	private int color;
 
+public class SampleSm01Response {
+	private int code;
+	private String name;
+	private int color;
+	private Map<String,Long> branches;
 }

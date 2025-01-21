@@ -27,6 +27,9 @@ public interface MktRepo2New {
 	public String getEmname();
 	public String getBrname();
 	public int getNrep();
-	public int getMnth_code();
+	public int getExpiry_qty();
+	public int getExpiry_val();
+	public int getCumexpiry_qty();
+	public int getCumexpiry_val();
 
 }

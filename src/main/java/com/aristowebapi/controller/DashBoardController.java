@@ -27,6 +27,7 @@ import com.aristowebapi.utility.AppRequestParameterUtils;
 
 @RestController
 @CrossOrigin
+//@CrossOrigin(origins = "*")
 @RequestMapping("/api/mis")
 public class DashBoardController {
 
@@ -355,6 +356,20 @@ public class DashBoardController {
 	
 	}
 
+	
+	@GetMapping("${mrc_dashboardSampleProductCombo_path}")
+	public ResponseEntity<ApiResponse<DashBoardDataResponse>> getSampleProductList(@PathVariable("divCode") int divCode,HttpServletRequest request)
+	{
+
+        int loginId=getLoginIdFromToken(request)[0];
+        int uType=getLoginIdFromToken(request)[1];
+
+		logger.info(AristoWebLogMsgConstant.DASH_BOARD_CONTROLLER,"getSampleProductList");
+		return new ResponseEntity<ApiResponse<DashBoardDataResponse>>(dashBoardService.getSampleProductList(divCode,uType,loginId), HttpStatus.OK);
+
+	}
+
+	
     private int[] getLoginIdFromToken(HttpServletRequest request)
     {
 		String authHeader = request.getHeader("Authorization");

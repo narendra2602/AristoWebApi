@@ -645,5 +645,17 @@ public class DashBoardChartServiceImpl implements DashBoardService {
 
 	}
 
+	@Override
+	public ApiResponse<DashBoardDataResponse> getSampleProductList(int div_code, int utype, int login_id) {
+		List<DashBoardData> dataList= dashBoardDao.getSampleProductList(div_code,utype, login_id);
+		List<DashBoardDataResponse> saleList = getResponseData(dataList);
+		String title="Product List ";
+
+		
+		int size=dataList.size();
+		
+		ApiResponse<DashBoardDataResponse> apiResponse = new ApiResponse<>(title!=null?title.toString():"", size,saleList);
+		return apiResponse;	}
+
 
 }

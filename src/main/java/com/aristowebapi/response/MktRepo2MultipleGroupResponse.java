@@ -11,21 +11,33 @@ import lombok.NoArgsConstructor;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class MktRepo2MultipleGroupResponse {
 
-	private String name;
+	
 	private String branch;
 	private String hqName;
 	private int fs;
+	private String name;
 	private long mthBudget;
 	private long mthSale;
+	private long mthLys;
 	private double  mthAchPer;
+	private double  mthGthPer;
 	private long mthSurSlashDef;
+	private long mthIncr;
+	
 	private long cumBudget;
 	private long cumSale;
-	private double cumAchPer;
-	private long cumSurSlashDef;
 	private long cumLys;
+	private long cumExpiry;
+	private double cumAchPer;
 	private double gthPer;
+	private long cumSurSlashDef;
+	private long cumIncr;
 	private int pmr;
+	private int lysPmr;
+	private int incrPmr;
+	private double expiryRatio;
+
+	
 		private int color;
 	
 }
