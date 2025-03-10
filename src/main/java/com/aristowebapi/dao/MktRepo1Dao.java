@@ -11,9 +11,11 @@ import com.aristowebapi.dto.DashBoardData;
 import com.aristowebapi.dto.MktDataDto;
 import com.aristowebapi.dto.MktRepo1;
 import com.aristowebapi.dto.MktRepo1Ach;
+import com.aristowebapi.dto.MtbStockiestDto;
 
 public interface MktRepo1Dao extends JpaRepository<MktDataDto, Integer>{
 	
+	// this is also for mtb report
 	@Query(value="CALL web_report_gross(:myear,:div_code,:depo_code,:smon,:emon,:utype,:login_id,:rep_type,:data_type);", nativeQuery=true)
 	List<MktRepo1> getWebReportGross(@Param("myear") int myear,@Param("div_code") int div_code,@Param("depo_code") int depo_code,
 			@Param("smon") int smon,@Param("emon") int emon,@Param("utype") int utype,@Param("login_id") int login_id,
@@ -74,5 +76,10 @@ public interface MktRepo1Dao extends JpaRepository<MktDataDto, Integer>{
 
 	@Query(value = "SELECT depo_name FROM branch_comp where depo_code=:depo", nativeQuery = true)
 	String getBranch(@Param("depo") int depo);
+
+	
+	@Query(value="CALL web_stockist_mtb(:myear,:smon,:emon,:login_id);", nativeQuery=true)
+	List<MtbStockiestDto> getWebStockiestMtb(@Param("myear") int myear,
+			@Param("smon") int smon,@Param("emon") int emon,@Param("login_id") int login_id);
 
 }

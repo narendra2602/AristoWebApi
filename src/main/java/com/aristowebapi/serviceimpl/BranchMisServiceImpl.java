@@ -16,6 +16,7 @@ import com.aristowebapi.dao.BranchMisDao;
 import com.aristowebapi.dto.BranchMisRepo5;
 import com.aristowebapi.dto.BranchMisRepo6;
 import com.aristowebapi.dto.BranchMisRepo8;
+import com.aristowebapi.dto.BranchMisRepo8Ach;
 import com.aristowebapi.dto.MonthDto;
 import com.aristowebapi.exception.ApiException;
 import com.aristowebapi.request.BranchMisRepo5Request;
@@ -24,6 +25,7 @@ import com.aristowebapi.request.BranchMisRepo8Request;
 import com.aristowebapi.response.ApiResponse;
 import com.aristowebapi.response.BranchMisRepo5Response;
 import com.aristowebapi.response.BranchMisRepo6Response;
+import com.aristowebapi.response.BranchMisRepo8AchResponse;
 import com.aristowebapi.response.BranchMisRepo8Response;
 import com.aristowebapi.service.BranchMisservice;
 import com.aristowebapi.utility.AppCalculationUtils;
@@ -470,6 +472,21 @@ public class BranchMisServiceImpl implements BranchMisservice{
 		    case 5: title.append("(BRK/SPOILED) FROM ");
 		    		break;
 		    case 6: title.append("(NET) FROM ");
+		    		break;
+		    case 7: title.append("(TARGET) FROM ");
+		    		break;
+		    case 8: title.append("(LAST YEAR SALE) FROM ");
+		    		break;
+		    case 9: title.append("(ACHIEVEMENT) FROM ");
+    				break;
+		    case 10: title.append("(GROWTH) FROM ");
+    				break;
+		    case 11: title.append("(PMR) FROM ");
+		    		break;
+		    case 12: title.append("(FIELD STRENGTH) FROM ");
+		    		break;
+		    case 13: title.append("(EXPIRY RATIO) FROM ");
+
 		}
 
 		title.append(data.getSmname());
@@ -483,7 +500,7 @@ public class BranchMisServiceImpl implements BranchMisservice{
 	
 	@Override
 	public ApiResponse<BranchMisRepo8Response> getBranchMisRepo8(BranchMisRepo8Request request) {
-		logger.info(AristoWebLogMsgConstant.STK_REPO10_SERVICE,"getStkRepo10");
+		logger.info(AristoWebLogMsgConstant.STK_REPO10_SERVICE,"getBranchMisRepo8");
 
 
 		List<MonthDto> monthData = branchMisDao.getAllMonth(request.getMyear());
@@ -889,5 +906,579 @@ public class BranchMisServiceImpl implements BranchMisservice{
 			response.setColor(2);
 			saleList.add(response);		
 		return new ApiResponse<BranchMisRepo8Response>(title.toString(),size,saleList);
+	}
+
+
+	
+	private String getTitle(BranchMisRepo8Request request,BranchMisRepo8Ach data)
+	{
+
+		
+		StringBuilder title=new StringBuilder();
+		title.append(" PRODUCT -> : ");
+		title.append(data.getPname());
+		title.append(" ");
+		title.append(request.getOpt()==1?" - H.Q. WISE ":request.getOpt()==2?" REGION WISE ":request.getOpt()==3?" AREA WISE ":" BRANCH WISE ");
+		title.append(request.getUv()==1?" UNIT SALES TREND ":" VALUE SALES TREND ");
+		switch(request.getRepType())
+		{
+		    case 1:	title.append("(GROSS) FROM ");
+		            break;
+		    case 2: title.append("(Total Credit) FROM ");
+		    		break;
+		    case 3: title.append("(EXPIRY) FROM ");
+		    		break;
+		    case 4: title.append("(SALEABLE) FROM ");
+		    		break;
+		    case 5: title.append("(BRK/SPOILED) FROM ");
+		    		break;
+		    case 6: title.append("(NET) FROM ");
+		    		break;
+		    case 7: title.append("(TARGET) FROM ");
+		    		break;
+		    case 8: title.append("(LAST YEAR SALE) FROM ");
+		    		break;
+		    case 9: title.append("(ACHIEVEMENT) FROM ");
+    				break;
+		    case 10: title.append("(GROWTH) FROM ");
+    				break;
+		    case 11: title.append("(PMR) FROM ");
+		    		break;
+		    case 12: title.append("(FIELD STRENGTH) FROM ");
+		    		break;
+		    case 13: title.append("(EXPIRY RATIO) FROM ");
+
+		}
+
+		title.append(data.getSmname());
+		title.append(" To ");
+		title.append(data.getEmname());
+
+		return title.toString();
+
+	}
+
+	
+	
+	@Override
+	public ApiResponse<BranchMisRepo8AchResponse> getBranchMisRepo8Ach(BranchMisRepo8Request request) {
+		logger.info(AristoWebLogMsgConstant.STK_REPO10_SERVICE,"getBranchMisRepo8");
+
+
+		List<MonthDto> monthData = branchMisDao.getAllMonth(request.getMyear());
+		int sz=monthData.size();
+		int k=0;
+		int z=0;
+		sz=request.getEmon();
+
+		 System.out.println(request.getMyear()+" "+request.getDivCode()+" "+request.getDepoCode()+" "+request.getSmon()+" "+request.getEmon()+" "+request.getRepType()+" "+request.getLoginId()+" "+request.getUtype()+" "+request.getCode());
+		// opt==1 hq   and opt==4 branch
+		String title=null;
+		List<BranchMisRepo8Ach> BranchMisRepo8List=null;
+		int size = 0;
+		if(request.getRepTypePgwise()==2)
+			request.setUv(2);
+		
+		if(request.getDepoCode()==0 && request.getOpt()==1 && request.getRepTypePgwise()==2) // branch
+			BranchMisRepo8List=branchMisDao.getBranchMisRepo8HQGroupAch(request.getMyear(),request.getDivCode(),request.getDepoCode(),request.getSmon(),request.getEmon(),request.getRepType(),request.getLoginId(),request.getUtype(),request.getCode());
+		else if(request.getDepoCode()==0 && request.getOpt()==1) // branch
+			BranchMisRepo8List=branchMisDao.getBranchMisRepo8HQAch(request.getMyear(),request.getDivCode(),request.getDepoCode(),request.getSmon(),request.getEmon(),request.getRepType(),request.getLoginId(),request.getUtype(),request.getCode());
+		else if(request.getDepoCode()==0 && request.getRepTypePgwise()==2)
+			BranchMisRepo8List=branchMisDao.getBranchMisRepo8BranchGroupAch(request.getMyear(),request.getDivCode(),request.getDepoCode(),request.getSmon(),request.getEmon(),request.getRepType(),request.getLoginId(),request.getUtype(),request.getCode());
+		else if(request.getDepoCode()==0)
+			BranchMisRepo8List=branchMisDao.getBranchMisRepo8BranchAch(request.getMyear(),request.getDivCode(),request.getDepoCode(),request.getSmon(),request.getEmon(),request.getRepType(),request.getLoginId(),request.getUtype(),request.getCode());
+		else if(request.getOpt()==1 && request.getRepTypePgwise()==2) // hqwise
+			BranchMisRepo8List=branchMisDao.getBranchMisRepo8HQGroupAch(request.getMyear(),request.getDivCode(),request.getDepoCode(),request.getSmon(),request.getEmon(),request.getRepType(),request.getLoginId(),request.getUtype(),request.getCode());
+		else if(request.getOpt()==1) // hqwise
+			BranchMisRepo8List=branchMisDao.getBranchMisRepo8HQAch(request.getMyear(),request.getDivCode(),request.getDepoCode(),request.getSmon(),request.getEmon(),request.getRepType(),request.getLoginId(),request.getUtype(),request.getCode());
+		else if(request.getDepoCode()>0 && request.getRepTypePgwise()==2 && request.getOpt()==4)
+			BranchMisRepo8List=branchMisDao.getBranchMisRepo8BranchGroupAch(request.getMyear(),request.getDivCode(),request.getDepoCode(),request.getSmon(),request.getEmon(),request.getRepType(),request.getLoginId(),request.getUtype(),request.getCode());
+		else if(request.getOpt()==4) // branch
+			BranchMisRepo8List=branchMisDao.getBranchMisRepo8BranchAch(request.getMyear(),request.getDivCode(),request.getDepoCode(),request.getSmon(),request.getEmon(),request.getRepType(),request.getLoginId(),request.getUtype(),request.getCode());
+
+		size = BranchMisRepo8List.size();
+		logger.info("size of the data is {}",size);
+
+		
+		BranchMisRepo8AchResponse response=null;
+
+		Map<String, Double> months=null;
+		Map<String, Double> total=null;
+		Map<String, Double> group=null;
+		
+		
+		Map<String, Long> saletotal=null;
+		Map<String, Long> targettotal=null;
+		
+		List<BranchMisRepo8AchResponse> saleList = new ArrayList();
+
+		
+		System.out.println("value of uv method ach"+request.getUv());
+		System.out.println("size is "+size);
+		
+		double columnTotal=0;
+		double columnTotalTarget=0;
+		double columnTotalVal=0;
+		double columnTotalValTarget=0;
+		double groupColumnTotalVal=0;
+		double groupColumnTotalValTarget=0;
+		double groupColumnTotal=0;
+		double groupColumnTotalTarget=0;
+		double grandColumnTotal=0;
+		long grandColumnTotalVal=0;
+		long grandColumnTotalTarget=0;
+		long grandColumnTotalValTarget=0;
+		double vgrandColumnTotal=0;
+		double vgrandColumnTotalTarget=0;
+
+		boolean first=true;
+		int depo_code=0;
+		int ter_code=0;
+		String name="";
+		String ter_name="";
+		int fs=0;
+		int gfs=0;
+		String pcode="";
+		String branch="";
+		for (int i=0;i<size;i++)
+		{
+			BranchMisRepo8Ach data = BranchMisRepo8List.get(i);
+			
+			if(first)
+			{
+				response=new BranchMisRepo8AchResponse();
+				ter_code=data.getTerr_cd();
+				ter_name=data.getTer_name();
+				branch=data.getDepo_name();
+				months=new LinkedHashMap();
+				group=new LinkedHashMap();
+				total=new LinkedHashMap();
+				saletotal=new LinkedHashMap();
+				targettotal=new LinkedHashMap();
+				first=false;
+				
+				title = getTitle(request, data); 
+			}
+
+			if(ter_code!=data.getTerr_cd())
+			{
+				
+				response.setBranch(branch==null?ter_name:branch);
+				response.setHqName(request.getDepoCode()>0 || request.getOpt()==1 ?ter_name:"");
+				response.setHqName(request.getDepoCode()>0 && request.getOpt()==4 ?"":ter_name);
+				z=k;
+				for(int b=k;b<sz;b++)
+				{
+					MonthDto mn=monthData.get(b);
+					if(request.getUv()==1)
+						months.put((mn.getMnth_abbr()+" UNITS"), 0D);
+					else if(request.getUv()==2)
+						months.put((mn.getMnth_abbr()+" VALUE"), 0D);
+					else
+					{
+						months.put((mn.getMnth_abbr()+" UNITS"), 0D);
+						months.put((mn.getMnth_abbr()+" VALUE"), 0D);
+					}
+					k++;
+				}
+
+				
+				if(request.getRepType()==9)
+				{
+					if(request.getUv()==1)
+						columnTotal=AppCalculationUtils.calculateAch(columnTotal, columnTotalTarget);
+						else
+						columnTotalVal=AppCalculationUtils.calculateAch(columnTotalVal, columnTotalValTarget);
+				}
+				else if(request.getRepType()==10)
+				{
+					if(request.getUv()==1)
+						columnTotal=AppCalculationUtils.calculateGth(columnTotal, columnTotalTarget);
+						else
+						columnTotalVal=AppCalculationUtils.calculateGth(columnTotalVal, columnTotalValTarget);
+				}
+
+				else if(request.getRepType()==13)
+				{
+					if(request.getUv()==1)
+						columnTotal=AppCalculationUtils.calculateExpiryRatio(columnTotalTarget,columnTotal );
+						else
+						columnTotalVal=AppCalculationUtils.calculateGth(columnTotalValTarget,columnTotalVal );
+				}
+			
+				if(request.getUv()==1)
+					months.put("TOTAL UNITS", columnTotal);
+				else if(request.getUv()==2)
+					months.put("TOTAL VALUE", columnTotalVal);
+				else
+				{
+					months.put("TOTAL UNITS", columnTotal);
+					months.put("TOTAL VALUE", columnTotalVal);
+					
+				}
+				response.setMonths(months);
+				response.setCumFs(fs);
+				
+				saleList.add(response);
+				ter_code=data.getTerr_cd();
+				ter_name=data.getTer_name();
+				branch=data.getDepo_name();
+				columnTotal=0;
+				columnTotalVal=0;
+				columnTotalTarget=0;
+				columnTotalValTarget=0;
+				gfs+=fs;
+				k=0;
+				fs=0;
+				response=new BranchMisRepo8AchResponse();
+				months=new LinkedHashMap();
+
+			}
+
+			
+		
+			// before put please check depo code in branch list if not found put 0 value in map otherwise actual zero
+			for(int b=k;b<sz;b++)
+			{
+				MonthDto mn=monthData.get(b);
+				if(mn.getMnth_code()==data.getMnth_code())
+				{
+					//months.put(data.getMnth_abbr(), request.getUv()==2?data.getSales_val():data.getSales());
+					//columnTotal+=request.getUv()==2?data.getSales_val():data.getSales();
+					fs+=data.getFs();
+///
+					if(request.getUv()==1)
+					{
+						months.put((data.getMnth_abbr()+" UNITS"),data.getAch_qty());
+						columnTotal+=data.getSales();
+						groupColumnTotal+=data.getSales();
+						grandColumnTotal+=data.getSales();
+
+						columnTotalTarget+=data.getTarget_qty();
+						groupColumnTotalTarget+=data.getTarget_qty();
+						grandColumnTotalTarget+=data.getTarget_qty();
+					}
+					else if(request.getUv()==2)
+					{
+						months.put((data.getMnth_abbr()+" VALUE"),data.getAch_val());
+						columnTotalVal+=data.getSales_val();
+						groupColumnTotalVal+=data.getSales_val();
+						grandColumnTotalVal+=data.getSales_val();
+						columnTotalValTarget+=data.getTarget_val();
+						groupColumnTotalValTarget+=data.getTarget_val();
+						grandColumnTotalValTarget+=data.getTarget_val();
+					}
+					else if(request.getUv()==3)
+					{
+						months.put((data.getMnth_abbr()+" UNITS"),data.getAch_qty());
+						months.put((data.getMnth_abbr()+" VALUE"),data.getAch_val());
+						columnTotal+=data.getSales();
+						columnTotalVal+=data.getSales_val();
+						groupColumnTotal+=data.getSales();
+						groupColumnTotalVal+=data.getSales_val();
+						grandColumnTotal+=data.getSales();
+						grandColumnTotalVal+=data.getSales_val();
+						
+						columnTotalTarget+=data.getTarget_qty();
+						groupColumnTotalTarget+=data.getTarget_qty();
+						grandColumnTotalTarget+=data.getTarget_qty();
+						columnTotalValTarget+=data.getTarget_val();
+						groupColumnTotalValTarget+=data.getTarget_val();
+						grandColumnTotalValTarget+=data.getTarget_val();
+					}
+
+					
+					long ggval=0;
+					double gtval=0.00;
+
+					if(request.getUv()==1)
+					{
+						if(saletotal.containsKey((data.getMnth_abbr()+" UNITS")))
+						{
+							
+							ggval = saletotal.get((data.getMnth_abbr()+" UNITS"))+data.getSales_val();
+							saletotal.put((data.getMnth_abbr()+" UNITS"), ggval);
+							ggval = targettotal.get((data.getMnth_abbr()+" UNITS"))+data.getTarget_val();
+							targettotal.put((data.getMnth_abbr()+" UNITS"), ggval);
+
+						}
+						else
+						{
+							saletotal.put((data.getMnth_abbr()+" UNITS"), data.getSales_val());
+							targettotal.put((data.getMnth_abbr()+" UNITS"), data.getTarget_val());
+						}
+						
+					}
+					if(request.getUv()==2)
+					{
+						if(saletotal.containsKey((data.getMnth_abbr()+" VALUE")))
+						{
+							
+							ggval = saletotal.get((data.getMnth_abbr()+" VALUE"))+data.getSales_val();
+							saletotal.put((data.getMnth_abbr()+" VALUE"), ggval);
+							ggval = targettotal.get((data.getMnth_abbr()+" VALUE"))+data.getTarget_val();
+							targettotal.put((data.getMnth_abbr()+" VALUE"), ggval);
+
+						}
+						else
+						{
+							saletotal.put((data.getMnth_abbr()+" VALUE"), data.getSales_val());
+							targettotal.put((data.getMnth_abbr()+" VALUE"), data.getTarget_val());
+						}
+						
+					}
+					if(request.getUv()==3)
+					{
+						if(saletotal.containsKey((data.getMnth_abbr()+" UNITS")))
+						{
+							
+							ggval = saletotal.get((data.getMnth_abbr()+" UNITS"))+data.getSales_val();
+							saletotal.put((data.getMnth_abbr()+" UNITS"), ggval);
+							ggval = targettotal.get((data.getMnth_abbr()+" UNITS"))+data.getTarget_val();
+							targettotal.put((data.getMnth_abbr()+" UNITS"), ggval);
+
+						}
+						else
+						{
+							saletotal.put((data.getMnth_abbr()+" UNITS"), data.getSales_val());
+							targettotal.put((data.getMnth_abbr()+" UNITS"), data.getTarget_val());
+						}
+
+						if(saletotal.containsKey((data.getMnth_abbr()+" VALUE")))
+						{
+							
+							ggval = saletotal.get((data.getMnth_abbr()+" VALUE"))+data.getSales_val();
+							saletotal.put((data.getMnth_abbr()+" VALUE"), ggval);
+							ggval = targettotal.get((data.getMnth_abbr()+" VALUE"))+data.getTarget_val();
+							targettotal.put((data.getMnth_abbr()+" VALUE"), ggval);
+
+						}
+						else
+						{
+							saletotal.put((data.getMnth_abbr()+" VALUE"), data.getSales_val());
+							targettotal.put((data.getMnth_abbr()+" VALUE"), data.getTarget_val());
+						}
+					
+					}
+
+					
+
+///					
+					k++;
+					break;
+				}
+				else
+				{
+					if(request.getUv()==1)
+						months.put((mn.getMnth_abbr()+" UNITS"), 0D);
+					else if(request.getUv()==2)
+						months.put((mn.getMnth_abbr()+" VALUE"), 0D);
+					else
+					{
+						months.put((mn.getMnth_abbr()+" UNITS"), 0D);
+						months.put((mn.getMnth_abbr()+" VALUE"), 0D);
+						
+					}
+
+					
+					if(saletotal.containsKey(mn.getMnth_abbr()+" UNITS"))
+					{
+						// do nothing
+					}
+					else if(saletotal.containsKey(mn.getMnth_abbr()+" VALUE"))
+					{
+						// do nothing
+					}
+					else
+					{
+						if(request.getUv()==1)
+						{
+							saletotal.put(mn.getMnth_abbr()+" UNITS", 0L);
+							targettotal.put(mn.getMnth_abbr()+" UNITS", 0L);
+						}
+						if(request.getUv()==2)
+						{
+							saletotal.put(mn.getMnth_abbr()+" VALUE", 0L);
+							targettotal.put(mn.getMnth_abbr()+" VALUE", 0L);
+						}
+						if(request.getUv()==3)
+						{
+							saletotal.put(mn.getMnth_abbr()+" UNITS", 0L);
+							targettotal.put(mn.getMnth_abbr()+" UNITS", 0L);
+							saletotal.put(mn.getMnth_abbr()+" VALUE", 0L);
+							targettotal.put(mn.getMnth_abbr()+" VALUE", 0L);
+
+						}
+
+					}
+
+					
+					k++;
+				}
+			}
+			
+		}			
+			response=new BranchMisRepo8AchResponse();
+			response.setBranch(branch);
+			response.setHqName(request.getDepoCode()>0 || request.getOpt()==1 ?ter_name:"");
+			response.setHqName(request.getDepoCode()>0 && request.getOpt()==4 ?"":ter_name);
+			gfs+=fs;
+			z=k;
+			for(int b=k;b<sz;b++)
+			{
+				MonthDto mn=monthData.get(b);
+				if(request.getUv()==1)
+					months.put((mn.getMnth_abbr()+" UNITS"), 0D);
+				else if(request.getUv()==2)
+					months.put((mn.getMnth_abbr()+" VALUE"), 0D);
+				else
+				{
+					months.put((mn.getMnth_abbr()+" UNITS"), 0D);
+					months.put((mn.getMnth_abbr()+" VALUE"), 0D);
+				}
+				k++;
+			}
+			if(request.getRepType()==9)
+			{
+				if(request.getUv()==1)
+					columnTotal=AppCalculationUtils.calculateAch(columnTotal, columnTotalTarget);
+					else
+					columnTotalVal=AppCalculationUtils.calculateAch(columnTotalVal, columnTotalValTarget);
+			}
+			else if(request.getRepType()==10)
+			{
+				if(request.getUv()==1)
+					columnTotal=AppCalculationUtils.calculateGth(columnTotal, columnTotalTarget);
+					else
+					columnTotalVal=AppCalculationUtils.calculateGth(columnTotalVal, columnTotalValTarget);
+			}
+			else if(request.getRepType()==13)
+			{
+				if(request.getUv()==1)
+					columnTotal=AppCalculationUtils.calculateExpiryRatio(columnTotalTarget,columnTotal );
+					else
+					columnTotalVal=AppCalculationUtils.calculateGth(columnTotalValTarget,columnTotalVal );
+			}
+
+			
+			if(request.getUv()==1)
+				months.put("TOTAL UNITS", columnTotal);
+			else if(request.getUv()==2)
+				months.put("TOTAL VALUE", columnTotalVal);
+			else
+			{
+				months.put("TOTAL UNITS", columnTotal);
+				months.put("TOTAL VALUE", columnTotalVal);
+				
+			}
+			response.setMonths(months);
+			response.setCumFs(fs);
+			saleList.add(response);
+
+			
+
+			
+			months=new LinkedHashMap();
+			double newtotal=0.00;
+			for(int b=0;b<sz;b++)
+			{
+				MonthDto mn=monthData.get(b);
+				
+				
+				
+				if(request.getUv()==1)
+				{
+					if(request.getRepType()==9)
+							newtotal=AppCalculationUtils.calculateAch(saletotal.get(mn.getMnth_abbr()+"UNITS"), targettotal.get(mn.getMnth_abbr()+" UNITS"));
+					if(request.getRepType()==10)
+						newtotal=AppCalculationUtils.calculateGth(saletotal.get(mn.getMnth_abbr()+"UNITS"), targettotal.get(mn.getMnth_abbr()+" UNITS"));
+					if(request.getRepType()==13)
+						newtotal=AppCalculationUtils.calculateExpiryRatio(targettotal.get(mn.getMnth_abbr()+" UNITS"),saletotal.get(mn.getMnth_abbr()+"UNITS") );
+					
+					
+					months.put((mn.getMnth_abbr()+" UNITS"), newtotal);
+				}
+				else if(request.getUv()==2)
+				{
+					
+					if(request.getRepType()==9)
+						newtotal=AppCalculationUtils.calculateAch(saletotal.get(mn.getMnth_abbr()+" VALUE"), targettotal.get(mn.getMnth_abbr()+" VALUE"));
+					if(request.getRepType()==10)
+						newtotal=AppCalculationUtils.calculateGth(saletotal.get(mn.getMnth_abbr()+" VALUE"), targettotal.get(mn.getMnth_abbr()+" VALUE"));
+					if(request.getRepType()==13)
+						newtotal=AppCalculationUtils.calculateExpiryRatio(targettotal.get(mn.getMnth_abbr()+" VALUE"),saletotal.get(mn.getMnth_abbr()+" VALUE") );
+
+					months.put((mn.getMnth_abbr()+" VALUE"), newtotal);
+				}
+				else
+				{
+					if(request.getRepType()==9)
+						newtotal=AppCalculationUtils.calculateAch(saletotal.get(mn.getMnth_abbr()+"UNITS"), targettotal.get(mn.getMnth_abbr()+" UNITS"));
+				if(request.getRepType()==10)
+					newtotal=AppCalculationUtils.calculateGth(saletotal.get(mn.getMnth_abbr()+"UNITS"), targettotal.get(mn.getMnth_abbr()+" UNITS"));
+				if(request.getRepType()==13)
+					newtotal=AppCalculationUtils.calculateExpiryRatio(targettotal.get(mn.getMnth_abbr()+" UNITS"),saletotal.get(mn.getMnth_abbr()+"UNITS") );
+
+					months.put((mn.getMnth_abbr()+" UNITS"), newtotal);
+
+					if(request.getRepType()==9)
+						newtotal=AppCalculationUtils.calculateAch(saletotal.get(mn.getMnth_abbr()+" VALUE"), targettotal.get(mn.getMnth_abbr()+" VALUE"));
+					if(request.getRepType()==10)
+						newtotal=AppCalculationUtils.calculateGth(saletotal.get(mn.getMnth_abbr()+" VALUE"), targettotal.get(mn.getMnth_abbr()+" VALUE"));
+					if(request.getRepType()==13)
+						newtotal=AppCalculationUtils.calculateExpiryRatio(targettotal.get(mn.getMnth_abbr()+" VALUE"),saletotal.get(mn.getMnth_abbr()+" VALUE") );
+
+					months.put((mn.getMnth_abbr()+" VALUE"), newtotal);
+				}
+				
+			}
+
+			
+			
+			if(request.getRepType()==9)
+			{
+				if(request.getUv()==1)
+					newtotal=AppCalculationUtils.calculateAch(grandColumnTotal, grandColumnTotalTarget);
+					else
+					newtotal=AppCalculationUtils.calculateAch(grandColumnTotalVal, grandColumnTotalValTarget);
+			}
+			else if(request.getRepType()==10)
+			{
+				if(request.getUv()==1)
+					newtotal=AppCalculationUtils.calculateGth(grandColumnTotal, grandColumnTotalTarget);
+					else
+					newtotal=AppCalculationUtils.calculateGth(grandColumnTotalVal, grandColumnTotalValTarget);
+			}
+			else if(request.getRepType()==13)
+			{
+				if(request.getUv()==1)
+					newtotal=AppCalculationUtils.calculateExpiryRatio(grandColumnTotalTarget,grandColumnTotal );
+					else
+					newtotal=AppCalculationUtils.calculateGth(grandColumnTotalValTarget,grandColumnTotalVal );
+			}
+
+			
+			if(request.getUv()==1)
+				total.put("TOTAL UNITS", newtotal);
+			else if(request.getUv()==2)
+				total.put("TOTAL VALUE", newtotal);
+			else
+			{
+				total.put("TOTAL UNITS", newtotal);
+				total.put("TOTAL VALUE", newtotal);
+				
+			}
+
+
+
+			months.putAll(total);
+			response=new BranchMisRepo8AchResponse();
+			response.setBranch(request.getDepoCode()==0?"All India":branch);
+			response.setHqName("Total");
+			response.setMonths(months);
+			response.setCumFs(gfs);
+			response.setColor(2);
+			saleList.add(response);		
+		return new ApiResponse<BranchMisRepo8AchResponse>(title.toString(),size,saleList);
 	}
 }

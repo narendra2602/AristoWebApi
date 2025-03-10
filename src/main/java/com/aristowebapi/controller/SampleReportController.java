@@ -18,6 +18,7 @@ import com.aristowebapi.request.SampleSm01Request;
 import com.aristowebapi.response.ApiResponse;
 import com.aristowebapi.response.SampleSm01Response;
 import com.aristowebapi.response.SampleSm02Response;
+import com.aristowebapi.response.SampleSm03Response;
 import com.aristowebapi.service.SampleSm01Service;
 import com.aristowebapi.utility.AppRequestParameterUtils;
 
@@ -60,6 +61,20 @@ public class SampleReportController {
 		logger.info(AristoWebLogMsgConstant.SAMPLE_REPORT_CONTROLLER_01,"getSampleSm02", request.getMyear(),request.getDivCode(),request.getDepoCode(),request.getUtype(),request.getLoginId());
 		
 		return new ResponseEntity<ApiResponse<SampleSm02Response>>(sampleSm01Service.getSampleSm02(request), HttpStatus.OK);
+		
+	
+	}
+	@PostMapping("${mrc_samplesm03_path}")
+	public ResponseEntity<ApiResponse<SampleSm03Response>> getSampleSm03(@RequestBody SampleSm01Request request,HttpServletRequest req)
+	{
+
+		int requestValues[]=getRequestData(req);
+		request.setLoginId(requestValues[0]);
+		request.setUtype(requestValues[1]);
+
+		logger.info(AristoWebLogMsgConstant.SAMPLE_REPORT_CONTROLLER_01,"getSampleSm03", request.getMyear(),request.getDivCode(),request.getDepoCode());
+		
+		return new ResponseEntity<ApiResponse<SampleSm03Response>>(sampleSm01Service.getSampleSm03(request), HttpStatus.OK);
 		
 	
 	}

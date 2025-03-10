@@ -40,6 +40,7 @@ import com.aristowebapi.response.MktRepo6Response;
 import com.aristowebapi.response.MktRepo7Response;
 import com.aristowebapi.response.MktRepo8Response;
 import com.aristowebapi.response.MktRepo9Response;
+import com.aristowebapi.response.MtbStockiestResponse;
 import com.aristowebapi.service.MktRepo10Service;
 import com.aristowebapi.service.MktRepo11Service;
 import com.aristowebapi.service.MktRepo1Service;
@@ -101,6 +102,22 @@ public class MktReportController {
 	@Autowired
 	private MktRepo11Service mktRepo11Service;
 
+	
+	@GetMapping("${mrc_mtbstkrepo_path}")
+	public ResponseEntity<ApiResponse<MtbStockiestResponse>> getMtbStockiestReport(@RequestBody MktRepo1Request request,HttpServletRequest req)
+	{
+
+		int requestValues[]=getRequestData(req);
+		request.setLoginId(requestValues[0]);
+		request.setUtype(requestValues[1]);
+
+		logger.info(AristoWebLogMsgConstant.MTB_STOCKIEST_CONTROLLER,"getMtbStockiestReport", request.getMyear(),request.getSmon(),request.getEmon(),request.getLoginId());
+		
+		return new ResponseEntity<ApiResponse<MtbStockiestResponse>>(mktRepo1Service.getMtbStockiestReport(request), HttpStatus.OK);
+	
+	}
+
+	
 	
 	@GetMapping("${mrc_repo1_path}")
 	public ResponseEntity<ApiResponse<MktRepo1Response>> getMktRepo1(@RequestBody MktRepo1Request request,HttpServletRequest req)

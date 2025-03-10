@@ -17,12 +17,12 @@ import com.aristowebapi.dto.BranchMasterDto;
 import com.aristowebapi.dto.BranchMisRepo8;
 import com.aristowebapi.dto.MktRepo1;
 import com.aristowebapi.dto.MonthDto;
-import com.aristowebapi.request.BranchMisRepo8Request;
+import com.aristowebapi.dto.SampleSalesRatioDto;
 import com.aristowebapi.request.SampleSm01Request;
 import com.aristowebapi.response.ApiResponse;
-import com.aristowebapi.response.BranchMisRepo8Response;
 import com.aristowebapi.response.SampleSm01Response;
 import com.aristowebapi.response.SampleSm02Response;
+import com.aristowebapi.response.SampleSm03Response;
 import com.aristowebapi.service.SampleSm01Service;
 
 @Service
@@ -490,7 +490,9 @@ public class SampleSm01ServiceImpl implements SampleSm01Service {
 				}
 			}
 			
-		}			
+		}		
+		if(!first)
+		{
 			response=new SampleSm02Response();
 			response.setBranch(branch);
 			gfs+=fs;
@@ -545,7 +547,74 @@ public class SampleSm01ServiceImpl implements SampleSm01Service {
 			response.setMonths(months);
 			response.setColor(2);
 			saleList.add(response);		
-		return new ApiResponse<SampleSm02Response>(title.toString(),size,saleList);
+		}
+		return new ApiResponse<SampleSm02Response>(title!=null?title.toString():"",size,saleList);
+
 	}
 
+	private String getTitle(SampleSm01Request request,SampleSalesRatioDto data)
+	{
+		
+		
+		StringBuilder title=new StringBuilder();
+		title.append(data.getDiv_name());
+		title.append(" - ");
+		title.append(data.getDepo_name());
+		title.append(" Productwise Sales/Sample Ratio for the Month of ");
+		title.append(data.getSmname());
+		title.append(" To ");
+		title.append(data.getEmname());
+		return title.toString();
+
+	}
+	
+	@Override
+	public ApiResponse<SampleSm03Response> getSampleSm03(SampleSm01Request request) {
+		logger.info(AristoWebLogMsgConstant.SAMPLE_REPORT_SERVICE_01,"getSampleSm03");
+
+
+		
+
+		String title=null;
+		List<SampleSalesRatioDto> SampleSm03List=null;
+		int size = 0;
+		
+		SampleSm03List=sampleSm01Dao.getSampleSm03(request.getMyear(),request.getDivCode(),request.getDepoCode(),request.getSmon(),request.getEmon());
+
+		size = SampleSm03List.size();
+		logger.info("size of the data is {}",size);
+
+		
+		SampleSm03Response response=null;
+
+		
+		List<SampleSm03Response> saleList = new ArrayList();
+
+		
+
+		boolean first=true;
+		for (int i=0;i<size;i++)
+		{
+			SampleSalesRatioDto data = SampleSm03List.get(i);
+			
+			if(first)
+			{
+				
+				first=false;
+				
+				title = getTitle(request, data); 
+			}
+
+				response=new SampleSm03Response();
+				response.setGroupName(data.getGroup_name());
+				response.setProductName(data.getProduct_name());
+				response.setSalesValue(data.getSales_value());
+				response.setSampleValue(data.getSample_value());
+				response.setRatio(data.getRatio());
+				saleList.add(response);
+
+			}
+			
+		return new ApiResponse<SampleSm03Response>(title!=null?title.toString():"",size,saleList);
+	}
 }

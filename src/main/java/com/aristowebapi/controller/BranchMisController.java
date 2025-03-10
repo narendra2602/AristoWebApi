@@ -21,6 +21,7 @@ import com.aristowebapi.request.MisRepo31Request;
 import com.aristowebapi.response.ApiResponse;
 import com.aristowebapi.response.BranchMisRepo5Response;
 import com.aristowebapi.response.BranchMisRepo6Response;
+import com.aristowebapi.response.BranchMisRepo8AchResponse;
 import com.aristowebapi.response.BranchMisRepo8Response;
 import com.aristowebapi.response.MisRepo31Response;
 import com.aristowebapi.service.BranchMisservice;
@@ -86,6 +87,22 @@ public class BranchMisController {
 		return new ResponseEntity<ApiResponse<BranchMisRepo8Response>>(branchMisService.getBranchMisRepo8(request), HttpStatus.OK);
 	
 	}
+
+	@GetMapping("${mrc_branch_mis_repo8Ach_path}")
+	public ResponseEntity<ApiResponse<BranchMisRepo8AchResponse>> getBranchMisRepo8Ach(@RequestBody BranchMisRepo8Request request,HttpServletRequest req)
+	{
+		
+
+		int requestValues[]=getRequestData(req);
+		request.setLoginId(requestValues[0]);
+		request.setUtype(requestValues[1]);
+		logger.info(AristoWebLogMsgConstant.BRANCH_MIS_REPORT_8_CONTROLLER,"getBranchMisRepo8Ach", request.getMyear(),request.getDivCode(),request.getDepoCode(),request.getUtype(),request.getLoginId());
+		
+		return new ResponseEntity<ApiResponse<BranchMisRepo8AchResponse>>(branchMisService.getBranchMisRepo8Ach(request), HttpStatus.OK);
+	
+	}
+
+	
 	
 	@GetMapping("${mrc_mis_repo31_path}")
 	public ResponseEntity<ApiResponse<MisRepo31Response>> getMisRepo31(@RequestBody MisRepo31Request request,HttpServletRequest req)

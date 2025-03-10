@@ -91,6 +91,10 @@ public class AristoWebLogMsgConstant {
 	public static final String NEAR_EXPIRY_CONTROLLER="NearExpiryController {} method execution started, div_code: {} , login_id: {}";
 	public static final String NEAR_EXPIRY_SERVICE="NeareXPIRYServiceImpl:: {} method execution started, div_code: {} , login_id: {}";
 
+	public static final String MTB_STOCKIEST_CONTROLLER="MarketingController {} method execution started, div_code: {} , login_id: {}";
+	public static final String MTB_STOCKIEST_SERVICE="MktRepo1ServiceImpl:: {} method execution started, div_code: {} , login_id: {}";
+
+	
 	public static final String HO_MARKEING_REPO1_CONTROLLER="HOMarketingRepo1Controller {} method execution started, myear : {} , div_code: {} , depo_code: {} , user_type: {} , login_id: {}";
 	public static final String HO_MARKEING_REPO1_SERVICE="HOMarketingRepo1ServiceImpl:: {} method execution started, myear : {} , div_code: {} , depo_code: {} , user_type: {} , login_id: {}";
 	public static final String HO_MARKEING_REPO1_SERVICE_01="HOMarketingRepo1ServiceImpl:: {} method execution started , myear : {} , div_code: {} , depo_code: {} , user_type: {} , login_id: {}";

@@ -80,6 +80,8 @@ public class AppCalculationUtils {
 		return gth;
 	}
 
+	
+	
 	public static double calculateSdf(double sale,double target)
 	{
 		double sdf=0.00;  
@@ -110,6 +112,12 @@ public class AppCalculationUtils {
 		return  expiryratio;
 	}
 
+	public static double calculateExpiryRatio(double expiry,double sale)
+	{
+		double expiryratio=0.00;  
+		expiryratio=sale!=0?Math.round(((expiry*1.0/sale)*100)*100)/100.0:0;
+		return  expiryratio;
+	}
 	
 	public static double addDouble(double doubleVal1,double doubleVal2)
 	{

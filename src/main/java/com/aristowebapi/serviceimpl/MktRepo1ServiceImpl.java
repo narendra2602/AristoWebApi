@@ -1,5 +1,6 @@
 package com.aristowebapi.serviceimpl;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -17,10 +18,15 @@ import com.aristowebapi.dto.BranchMasterDto;
 import com.aristowebapi.dto.DashBoardData;
 import com.aristowebapi.dto.MktRepo1;
 import com.aristowebapi.dto.MktRepo1Ach;
+import com.aristowebapi.dto.MtbStockiestDto;
+import com.aristowebapi.dto.NearExpiry;
 import com.aristowebapi.request.MktRepo1Request;
+import com.aristowebapi.request.NearExpiryRequest;
 import com.aristowebapi.response.ApiResponse;
 import com.aristowebapi.response.MktRepo1AchResponse;
 import com.aristowebapi.response.MktRepo1Response;
+import com.aristowebapi.response.MtbStockiestResponse;
+import com.aristowebapi.response.NearExpiryResponse;
 import com.aristowebapi.service.MktRepo1Service;
 import com.aristowebapi.utility.AppCalculationUtils;
 
@@ -1205,6 +1211,76 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 		saleList.add(response);
 
 		return new ApiResponse<MktRepo1Response>(title.toString(),size,lupdate,saleList);
+	}
+
+	private String getTitle(MktRepo1Request request,MtbStockiestDto data)
+	{
+		StringBuilder title=new StringBuilder();
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+
+		title.append("All India Stockiest/Invoicewise MTB Report from  ");
+		title.append(data.getSmname());
+		title.append(" To ");
+		title.append(data.getEmname());
+		return title.toString();
+
+	}
+
+
+	
+	
+	@Override
+	public ApiResponse<MtbStockiestResponse> getMtbStockiestReport(MktRepo1Request request) {
+		
+		logger.info(AristoWebLogMsgConstant.MTB_STOCKIEST_SERVICE,"getMtbStockiestReport");
+		List<MtbStockiestDto> mtbstockiestList=null;
+		int size = 0;
+		mtbstockiestList=mktRepo1Dao.getWebStockiestMtb(request.getMyear(),request.getSmon(),request.getEmon(),request.getLoginId());
+		size=mtbstockiestList.size();
+		logger.info("size of the data is {}",size);
+		
+		MtbStockiestResponse response=null;
+		List<MtbStockiestResponse> saleList = new ArrayList();
+		
+		boolean first=true;
+		String title=null;
+		
+		for (int i=0;i<size;i++)
+		{
+			MtbStockiestDto data = mtbstockiestList.get(i);
+			
+			
+			if(first)
+			{
+				title = getTitle(request, data);
+				
+				first=false;
+			}
+			
+			response=new MtbStockiestResponse();
+			response.setDivName(data.getDiv_name());
+			response.setDepoName(data.getDepo_name());
+			response.setStockiestName(data.getCust_name());
+			response.setCity(data.getMcity());
+			response.setGstNo(data.getGst_no());
+			response.setPanNo(data.getPan_no());
+			response.setProductName(data.getPname());
+			response.setInvoiceNo(data.getSinv_no());
+			response.setSapDocNo(data.getSap_doc_no());
+			response.setInvoiceDate(data.getSinv_dt());
+			response.setBatchNo(data.getSbatch_no());
+			response.setQuantity(data.getSaleqty());
+			response.setSchemeQty(data.getScheme_qty());
+			response.setValue(data.getSalesval());
+			response.setPaymentTag(data.getPay_tag());
+			saleList.add(response);
+
+		} //end of for loop
+
+
+		ApiResponse<MtbStockiestResponse> apiResponse = new ApiResponse<>(title!=null?title.toString():"", size,saleList);
+		return apiResponse;
+
 	}
 
 
