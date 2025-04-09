@@ -590,6 +590,8 @@ public class BranchMisServiceImpl implements BranchMisservice{
 			{
 				response.setBranch(branch);
 				response.setHqName(request.getDepoCode()>0 || request.getOpt()==1 ?ter_name:"");
+				if(ter_name.contains("Total"))
+					response.setColor(1);
 				z=k;
 				for(int b=k;b<sz;b++)
 				{
@@ -849,6 +851,8 @@ public class BranchMisServiceImpl implements BranchMisservice{
 			response=new BranchMisRepo8Response();
 			response.setBranch(branch);
 			response.setHqName(request.getDepoCode()>0 || request.getOpt()==1 ?ter_name:"");
+			if(ter_name.contains("Total"))
+				response.setColor(1);
 			gfs+=fs;
 			z=k;
 			for(int b=k;b<sz;b++)

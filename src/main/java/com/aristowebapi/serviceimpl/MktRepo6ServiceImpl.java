@@ -84,8 +84,12 @@ public class MktRepo6ServiceImpl implements MktRepo6Service  {
 				mktRepo6SaleList=mktRepo6Dao.getWebReportHqSaleTrendPack(request.getMyear(),request.getDivCode(),request.getDepoCode()
 						,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId(),request.getGpCode());
 			else
+			{
 			mktRepo6SaleList=mktRepo6Dao.getWebReportHqSaleTrend(request.getMyear(),request.getDivCode(),request.getDepoCode()
 					,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId(),request.getGpCode());
+			System.out.println("iske andar aaya");
+			
+			}
 		}
 		else
 		{
@@ -103,8 +107,22 @@ public class MktRepo6ServiceImpl implements MktRepo6Service  {
 		
 		int size = mktRepo6SaleList.size();
 		double columnTotal=0;
+		double targetTotal=0;
+		double lysTotal=0;
+		double achPer=0;
+		double gthPer=0;
+		double surdef=0;
+		double icrsls=0;
+		double pmr=0;
 		double branchcolumnTotal=0;
+		double branchtargetTotal=0;
+		double branchlysTotal=0;
+
 		double grandColumnTotal=0;
+		double grandtargetTotal=0;
+		double grandlysTotal=0;
+		
+		
 		boolean first=true;
 		int depo_code=0;
 		int sdepo_code=0;
@@ -136,7 +154,7 @@ public class MktRepo6ServiceImpl implements MktRepo6Service  {
 			
 			if(depo_code!=data.getDepo_code())
 			{
-				System.out.println(branch);
+				
 				response.setBranch(branch);
 				if(request.getOption()==2 || request.getDepoCode()>0)
 					response.setHqName(name);
@@ -154,18 +172,41 @@ public class MktRepo6ServiceImpl implements MktRepo6Service  {
 
 				columnTotal=Math.round(columnTotal*100.0)/100.00;
 				months.put(request.getUv()==1?"TOTAL":"total", columnTotal);
+
+				if(request.getRepType()==1)
+				{
+					targetTotal=Math.round(targetTotal*100.0)/100.00;
+					months.put(request.getUv()==1?"cumBudget":"cumBudget", targetTotal);
+					columnTotal=Math.round(columnTotal*100.0)/100.00;
+					months.put(request.getUv()==1?"cumSale":"cumSale", columnTotal);
+					lysTotal=Math.round(lysTotal*100.0)/100.00;
+					months.put(request.getUv()==1?"cumLys":"cumLys", lysTotal);
+					achPer=AppCalculationUtils.calculateAch(columnTotal, targetTotal);
+					months.put(request.getUv()==1?"cumAchPe":"cumAchPer", achPer);
+					gthPer=AppCalculationUtils.calculateGth(columnTotal, lysTotal);
+					months.put(request.getUv()==1?"cumGthPer":"cumGthPer", gthPer);
+					surdef=AppCalculationUtils.calculateSdf(columnTotal, targetTotal);
+					months.put(request.getUv()==1?"cumSurSlashDef":"cumSurSlashDef", surdef);
+					icrsls=Math.round(columnTotal-lysTotal);
+					months.put(request.getUv()==1?"cumIncrSale":"cumIncrSale", icrsls);
+					pmr=AppCalculationUtils.calculatePmr(columnTotal, fs);
+					months.put(request.getUv()==1?"cumPmr":"cumPmr", pmr);
+				}
 				response.setMonths(months);
-				
 				saleList.add(response);
 				depo_code=data.getDepo_code();
 				name=data.getDepo_name();
-				branch=data.getBranch_name();
+				
 				fs=0;
 				columnTotal=0;
+				targetTotal=0;
+				lysTotal=0;
 				
 				k=0;
 				response=new MktRepo6Response();
 				months=new LinkedHashMap();
+				if(request.getOption()==1)
+					branch=data.getBranch_name();
 
 			}
 
@@ -179,9 +220,28 @@ public class MktRepo6ServiceImpl implements MktRepo6Service  {
 				branchcolumnTotal = branchtotal.values().stream().mapToDouble(d -> d).sum();
 				branchcolumnTotal=Math.round(branchcolumnTotal*100.0)/100.00;
 
-				branchtotal.put(request.getUv()==1?"TOTAL":"TOTAL", branchcolumnTotal);
-
+				branchtotal.put(request.getUv()==1?"TOTAL":"total", branchcolumnTotal);
 				
+				if(request.getRepType()==1)
+				{
+					targetTotal=Math.round(branchtargetTotal*100.0)/100.00;
+					branchtotal.put(request.getUv()==1?"cumBudget":"cumBudget", targetTotal);
+					columnTotal=Math.round(branchcolumnTotal*100.0)/100.00;
+					branchtotal.put(request.getUv()==1?"cumSale":"cumSale", columnTotal);
+					lysTotal=Math.round(branchlysTotal*100.0)/100.00;
+					branchtotal.put(request.getUv()==1?"cumLys":"cumLys", lysTotal);
+					achPer=AppCalculationUtils.calculateAch(columnTotal, targetTotal);
+					branchtotal.put(request.getUv()==1?"cumAchPer":"cumAchPer", achPer);
+					gthPer=AppCalculationUtils.calculateGth(columnTotal, lysTotal);
+					branchtotal.put(request.getUv()==1?"cumGthPer":"cumGthPer", gthPer);
+					surdef=AppCalculationUtils.calculateSdf(columnTotal, targetTotal);
+					branchtotal.put(request.getUv()==1?"cumSurSlashDef":"cumSurSlashDef", surdef);
+					icrsls=columnTotal-lysTotal;
+					icrsls=AppCalculationUtils.roundToDecimal2Places(icrsls);
+					branchtotal.put(request.getUv()==1?"cumIncrSale":"cumIncrSale", icrsls);
+					pmr=AppCalculationUtils.calculatePmr(columnTotal, bfs);
+					branchtotal.put(request.getUv()==1?"cumPmr":"cumPmr", pmr);
+				}
 				response.setMonths(branchtotal);
 				response.setColor(1);
 				saleList.add(response);
@@ -189,6 +249,8 @@ public class MktRepo6ServiceImpl implements MktRepo6Service  {
 				sdepo_code=data.getSdepo_code();
 				bfs=0;
 				branchcolumnTotal=0;
+				branchtargetTotal=0;
+				branchlysTotal=0;
 				response=new MktRepo6Response();
 				branchtotal=new LinkedHashMap();
 
@@ -210,12 +272,25 @@ public class MktRepo6ServiceImpl implements MktRepo6Service  {
 					{
 						months.put(data.getMnth_abbr(), data.getSales_qty());
 						columnTotal = AppCalculationUtils.addDouble(columnTotal, data.getSales_qty());
+						targetTotal = AppCalculationUtils.addDouble(targetTotal, data.getTarget_qty());
+						branchtargetTotal= AppCalculationUtils.addDouble(branchtargetTotal, data.getTarget_qty());
+						lysTotal = AppCalculationUtils.addDouble(lysTotal, data.getLys_qty());
+						branchlysTotal = AppCalculationUtils.addDouble(branchlysTotal, data.getLys_qty());
+						grandtargetTotal= AppCalculationUtils.addDouble(grandtargetTotal, data.getTarget_qty());
+						grandlysTotal = AppCalculationUtils.addDouble(grandlysTotal, data.getLys_qty());
 
 					}
 					else
 					{
 						months.put(data.getMnth_abbr(), data.getSales_val());
 						columnTotal = AppCalculationUtils.addDouble(columnTotal, data.getSales_val());
+						targetTotal = AppCalculationUtils.addDouble(targetTotal, data.getTarget_val());
+						branchtargetTotal= AppCalculationUtils.addDouble(branchtargetTotal, data.getTarget_val());
+						lysTotal = AppCalculationUtils.addDouble(lysTotal, data.getLys_val());
+						branchlysTotal = AppCalculationUtils.addDouble(branchlysTotal, data.getLys_val());
+						grandtargetTotal= AppCalculationUtils.addDouble(grandtargetTotal, data.getTarget_val());
+						grandlysTotal = AppCalculationUtils.addDouble(grandlysTotal, data.getLys_val());
+
 
 					}
 					gfs+=data.getFs();
@@ -231,6 +306,8 @@ public class MktRepo6ServiceImpl implements MktRepo6Service  {
 							else
 								ggval = AppCalculationUtils.addDouble(branchtotal.get(data.getMnth_abbr()), data.getSales_val());
 							branchtotal.put(data.getMnth_abbr(), ggval);
+
+							
 						}
 						else
 						{
@@ -260,6 +337,7 @@ public class MktRepo6ServiceImpl implements MktRepo6Service  {
 							double ggval =0;
 							ggval = AppCalculationUtils.addDouble(total.get(data.getMnth_abbr()), data.getSales_val());
 							total.put(data.getMnth_abbr(), ggval);
+							
 						}
 						else
 						{
@@ -326,6 +404,7 @@ public class MktRepo6ServiceImpl implements MktRepo6Service  {
 						else
 						{
 							total.put(mn.getMnth_abbr(), 0.0);
+							
 
 						}
 					}				
@@ -352,8 +431,26 @@ public class MktRepo6ServiceImpl implements MktRepo6Service  {
 			k++;
 		}
 		columnTotal=Math.round(columnTotal*100.0)/100.00;
-		months.put(request.getUv()==1?"TOTAL":"TOTAL", columnTotal);
-
+		months.put(request.getUv()==1?"TOTAL":"total", columnTotal);
+		if(request.getRepType()==1)
+		{
+			targetTotal=Math.round(targetTotal*100.0)/100.00;
+			months.put(request.getUv()==1?"cumBudget":"cumBudget", targetTotal);
+			columnTotal=Math.round(columnTotal*100.0)/100.00;
+			months.put(request.getUv()==1?"cumSale":"cumSale", columnTotal);
+			lysTotal=Math.round(lysTotal*100.0)/100.00;
+			months.put(request.getUv()==1?"cumLys":"cumLys", lysTotal);
+			achPer=AppCalculationUtils.calculateAch(columnTotal, targetTotal);
+			months.put(request.getUv()==1?"cumAchPe":"cumAchPer", achPer);
+			gthPer=AppCalculationUtils.calculateGth(columnTotal, lysTotal);
+			months.put(request.getUv()==1?"cumGthPer":"cumGthPer", gthPer);
+			surdef=AppCalculationUtils.calculateSdf(columnTotal, targetTotal);
+			months.put(request.getUv()==1?"cumSurSlashDef":"cumSurSlashDef", surdef);
+			icrsls=Math.round(columnTotal-lysTotal);
+			months.put(request.getUv()==1?"cumIncrSale":"cumIncrSale", icrsls);
+			pmr=AppCalculationUtils.calculatePmr(columnTotal, fs);
+			months.put(request.getUv()==1?"cumPmr":"cumPmr", pmr);
+		}
 		response.setMonths(months);
 		saleList.add(response);
 		
@@ -366,28 +463,71 @@ public class MktRepo6ServiceImpl implements MktRepo6Service  {
 			branchcolumnTotal = branchtotal.values().stream().mapToDouble(d -> d).sum();
 			branchcolumnTotal=Math.round(branchcolumnTotal*100.0)/100.00;
 
-			branchtotal.put(request.getUv()==1?"TOTAL":"TOTAL", branchcolumnTotal);
+			branchtotal.put(request.getUv()==1?"TOTAL":"total", branchcolumnTotal);
+			if(request.getRepType()==1)
+			{
+				targetTotal=Math.round(branchtargetTotal*100.0)/100.00;
+				branchtotal.put(request.getUv()==1?"cumBudget":"cumBudget", targetTotal);
+				columnTotal=Math.round(branchcolumnTotal*100.0)/100.00;
+				branchtotal.put(request.getUv()==1?"cumSale":"cumSale", columnTotal);
+				lysTotal=Math.round(branchlysTotal*100.0)/100.00;
+				branchtotal.put(request.getUv()==1?"cumLys":"cumLys", lysTotal);
+				achPer=AppCalculationUtils.calculateAch(columnTotal, targetTotal);
+				branchtotal.put(request.getUv()==1?"cumAchPer":"cumAchPer", achPer);
+				gthPer=AppCalculationUtils.calculateGth(columnTotal, lysTotal);
+				branchtotal.put(request.getUv()==1?"cumGthPer":"cumGthPer", gthPer);
+				surdef=AppCalculationUtils.calculateSdf(columnTotal, targetTotal);
+				branchtotal.put(request.getUv()==1?"cumSurSlashDef":"cumSurSlashDef", surdef);
+				icrsls=columnTotal-lysTotal;
+				icrsls=AppCalculationUtils.roundToDecimal2Places(icrsls);
+				branchtotal.put(request.getUv()==1?"cumIncrSale":"cumIncrSale", icrsls);
+				pmr=AppCalculationUtils.calculatePmr(columnTotal, bfs);
+				branchtotal.put(request.getUv()==1?"cumPmr":"cumPmr", pmr);
+			}			
+
 			response.setMonths(branchtotal);
 			response.setColor(1);
 			saleList.add(response);
 		}
 		
 		
-		grandColumnTotal = total.values().stream().mapToDouble(d -> d).sum();
-		grandColumnTotal=Math.round(grandColumnTotal*100.0)/100.00;
-		months=new LinkedHashMap();
-		total.put(request.getUv()==1?"TOTAL":"TOTAL", grandColumnTotal);
-		
-		total.keySet().stream().forEach(d->System.out.print(d));
-
-		months.putAll(total);
+		// Final row for "Grand Total"
 		response=new MktRepo6Response();
 		response.setBranch("Grand Total");
 		response.setHqName("");
 		response.setFs(gfs);
-		response.setMonths(months);
-		response.setColor(2);
-		saleList.add(response);
+
+		
+		grandColumnTotal = total.values().stream().mapToDouble(d -> d).sum();
+		grandColumnTotal=Math.round(grandColumnTotal*100.0)/100.00;
+		
+		total.put(request.getUv()==1?"TOTAL":"total", grandColumnTotal);
+		if(request.getRepType()==1)
+		{
+			targetTotal=Math.round(grandtargetTotal*100.0)/100.00;
+			total.put(request.getUv()==1?"cumBudget":"cumBudget", targetTotal);
+			columnTotal=Math.round(grandColumnTotal*100.0)/100.00;
+			total.put(request.getUv()==1?"cumSale":"cumSale", columnTotal);
+			lysTotal=Math.round(grandlysTotal*100.0)/100.00;
+			total.put(request.getUv()==1?"cumLys":"cumLys", lysTotal);
+			achPer=AppCalculationUtils.calculateAch(columnTotal, targetTotal);
+			total.put(request.getUv()==1?"cumAchPer":"cumAchPer", achPer);
+			gthPer=AppCalculationUtils.calculateGth(columnTotal, lysTotal);
+			total.put(request.getUv()==1?"cumGthPer":"cumGthPer", gthPer);
+			surdef=AppCalculationUtils.calculateSdf(columnTotal, targetTotal);
+			total.put(request.getUv()==1?"cumSurSlashDef":"cumSurSlashDef", surdef);
+			icrsls=columnTotal-lysTotal;
+			icrsls=AppCalculationUtils.roundToDecimal2Places(icrsls);
+			total.put(request.getUv()==1?"cumIncrSale":"cumIncrSale", icrsls);
+			pmr=AppCalculationUtils.calculatePmr(columnTotal, gfs);
+			total.put(request.getUv()==1?"cumPmr":"cumPmr", pmr);
+		}
+		
+		
+		
+		response.setMonths(total);  // 🔥 Set the month-wise values
+		response.setColor(2);       // Optional: special styling
+		saleList.add(response);     // ✅ ADD to output
 
 		return new ApiResponse<MktRepo6Response>(title.toString(),size,lupdate,saleList);
 
