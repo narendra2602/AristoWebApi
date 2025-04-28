@@ -1,5 +1,6 @@
 package com.aristowebapi.response;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -21,6 +22,7 @@ public class ApiResponse<T> {
 	@JsonIgnore
 	private String lastUpdate;
 	private int index;
+	private List<String> decimalKeys;
 	private List<T> data;
 	
 	
@@ -41,6 +43,8 @@ public class ApiResponse<T> {
 		this.data=data;
 	}
 
+
+
 	public ApiResponse(String title,int noOfRecords,List<T> data,int index)
 	{
 		this.title=title;
@@ -49,4 +53,19 @@ public class ApiResponse<T> {
 		this.index=index;
 
 	}
+	
+	 
+	 
+	public ApiResponse(String title,int noOfRecords,List<String> decimalKeys,List<T> data)
+	{
+		this.title=title;
+		this.noOfRecords=noOfRecords;
+		this.decimalKeys=decimalKeys;
+		this.data=data;
+		
+	}
+
+
+	
+	
 }
