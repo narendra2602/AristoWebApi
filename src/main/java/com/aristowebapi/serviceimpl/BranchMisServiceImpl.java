@@ -84,18 +84,31 @@ public class BranchMisServiceImpl implements BranchMisservice{
 		long gross=0;
 		long credit=0;
 		long net=0;
+		long exp200=0;
+		long sexp200=0;
+		long net200=0;
+		long ach200=0;
 		long lys=0;
 		long abudget=0;
 		long agross=0;
 		long acredit=0;
 		long anet=0;
 		long alys=0;
+		long aexp200=0;
+		long asexp200=0;
+		long anet200=0;
+		long aach200=0;
 
 		long gbudget=0;
 		long ggross=0;
 		long gcredit=0;
 		long gnet=0;
 		long glys=0;
+		long gexp200=0;
+		long gsexp200=0;
+		long gnet200=0;
+		long gach200=0;
+		ArrayList<String> decimalKeys = new ArrayList<>();
 		String branch="";
 		for (int i=0;i<size;i++)
 		{
@@ -112,12 +125,14 @@ public class BranchMisServiceImpl implements BranchMisservice{
 				branch=data.getDepo_name();
 				name=data.getTer_name();
 				first=false;
+				decimalKeys.add("ach_per");
+				decimalKeys.add("ach200");
 			}
 			
 			if(reg_code!=data.getReg_cd())
 			{
 				
-				saleList.add(getResponse(branch,reg_name,budget,gross,credit,lys,net,1));
+				saleList.add(getResponse(branch,reg_name,budget,gross,credit,lys,net,1,exp200,sexp200,net200,ach200));
 				reg_code=data.getReg_cd();
 				reg_name=data.getReg_name();
 				budget=0;
@@ -125,13 +140,18 @@ public class BranchMisServiceImpl implements BranchMisservice{
 				credit=0;
 				net=0;
 				lys=0;
+				exp200=0;
+				sexp200=0;
+				net200=0;
+				ach200=0;
+
 				
 			}
 
 			if(area_code!=data.getArea_cd())
 			{
 				
-				saleList.add(getResponse(branch,area_name,abudget,agross,acredit,alys,anet,2));
+				saleList.add(getResponse(branch,area_name,abudget,agross,acredit,alys,anet,2,aexp200,asexp200,anet200,aach200));
 				area_code=data.getArea_cd();
 				area_name=data.getArea_name();
 				abudget=0;
@@ -139,6 +159,10 @@ public class BranchMisServiceImpl implements BranchMisservice{
 				acredit=0;
 				anet=0;
 				alys=0;
+				aexp200=0;
+				asexp200=0;
+				anet200=0;
+				aach200=0;
 				
 			}
 
@@ -146,18 +170,22 @@ public class BranchMisServiceImpl implements BranchMisservice{
 			if(!branch.equalsIgnoreCase(data.getDepo_name()) && request.getRepType()==2)
 			{
 				
-				saleList.add(getResponse(branch,"Total",budget,gross,credit,lys,net,2));
+				saleList.add(getResponse(branch,"Total",budget,gross,credit,lys,net,2,exp200,sexp200,net200,ach200));
 				branch=data.getDepo_name();
 				budget=0;
 				gross=0;
 				credit=0;
 				net=0;
 				lys=0;
+				exp200=0;
+				sexp200=0;
+				net200=0;
+				ach200=0;
 				
 			}
 
 			
-			saleList.add(getResponse(data.getDepo_name(),request.getDepoCode()>0 || request.getRepType()==2?data.getTer_name():"",data.getBudget(),data.getGross(),data.getCredit(),data.getLysval(),data.getNet(),0));
+			saleList.add(getResponse(data.getDepo_name(),request.getDepoCode()>0 || request.getRepType()==2?data.getTer_name():"",data.getBudget(),data.getGross(),data.getCredit(),data.getLysval(),data.getNet(),0,data.getExp200(),data.getSexp200(),data.getNet200(),data.getAch200()));
 
 	    	
 	    	budget+=data.getBudget();
@@ -165,38 +193,51 @@ public class BranchMisServiceImpl implements BranchMisservice{
 	    	credit+=data.getCredit();
 	    	lys+=data.getLysval();
 	    	net+=data.getNet();
+			exp200+=data.getExp200();
+			sexp200+=data.getSexp200();
+			net200+=data.getNet200();
+			ach200+=data.getAch200();
+
 	    	
 	    	abudget+=data.getBudget();
 	    	agross+=data.getGross();
 	    	acredit+=data.getCredit();
 	    	alys+=data.getLysval();
 	    	anet+=data.getNet();
+			aexp200+=data.getExp200();
+			asexp200+=data.getSexp200();
+			anet200+=data.getNet200();
+			aach200+=data.getAch200();
 
 	    	gbudget+=data.getBudget();
 	    	ggross+=data.getGross();
 	    	gcredit+=data.getCredit();
 	    	glys+=data.getLysval();
 	    	gnet+=data.getNet();
-	    	
+			gexp200+=data.getExp200();
+			gsexp200+=data.getSexp200();
+			gnet200+=data.getNet200();
+			gach200+=data.getAch200();
+
 		} //end of for loop
 		
 			if(request.getDepoCode()>0)
 			{
-			saleList.add(getResponse(branch,reg_name,budget,gross,credit,lys,net,1));
-			saleList.add(getResponse(branch,area_name,abudget,agross,acredit,alys,anet,2));
-			saleList.add(getResponse(branch," Total",gbudget,ggross,gcredit,glys,gnet,3));
+			saleList.add(getResponse(branch,reg_name,budget,gross,credit,lys,net,1,exp200,sexp200,net200,ach200));
+			saleList.add(getResponse(branch,area_name,abudget,agross,acredit,alys,anet,2,aexp200,asexp200,anet200,aach200));
+			saleList.add(getResponse(branch," Total",gbudget,ggross,gcredit,glys,gnet,3,gexp200,gsexp200,gnet200,gach200));
 			}
 			else if(request.getDepoCode()==0 && request.getRepType()==1)
 			{
-			saleList.add(getResponse("All India"," Total",gbudget,ggross,gcredit,glys,gnet,3));
+			saleList.add(getResponse("All India"," Total",gbudget,ggross,gcredit,glys,gnet,3,gexp200,gsexp200,gnet200,gach200));
 			}
 			else if(request.getDepoCode()==0 && request.getRepType()==2)
 			{
-				saleList.add(getResponse(branch," Total",budget,gross,credit,lys,net,2));
-				saleList.add(getResponse("All India"," Total",gbudget,ggross,gcredit,glys,gnet,3));
+				saleList.add(getResponse(branch," Total",budget,gross,credit,lys,net,2,exp200,sexp200,net200,ach200));
+				saleList.add(getResponse("All India"," Total",gbudget,ggross,gcredit,glys,gnet,3,gexp200,gsexp200,gnet200,gach200));
 			}
 
-		ApiResponse<BranchMisRepo5Response> apiResponse = new ApiResponse<>(title!=null?title.toString():"", size,saleList);
+		ApiResponse<BranchMisRepo5Response> apiResponse = new ApiResponse<>(title!=null?title.toString():"", size,decimalKeys,saleList);
 		return apiResponse;
 		
 		} catch (Exception e) {
@@ -208,7 +249,7 @@ public class BranchMisServiceImpl implements BranchMisservice{
 	}
 
 
-	private BranchMisRepo5Response getResponse(String branch,String name,long budget,long gross,long credit,long lastYearSale,long net, int color)
+	private BranchMisRepo5Response getResponse(String branch,String name,long budget,long gross,long credit,long lastYearSale,long net, int color,long exp200,long sexp200,long net200, double ach200)
 	{
 		BranchMisRepo5Response response=new BranchMisRepo5Response();
 		response.setBranch(branch);
@@ -227,6 +268,12 @@ public class BranchMisServiceImpl implements BranchMisservice{
 		response.setNetSale(net);
 		response.setAchPer(AppCalculationUtils.calculateAch(net, budget));
 		response.setSurSlashdef(net-budget);
+		response.setExp200(exp200);
+		response.setSexp200(sexp200);
+		response.setNet200(net200);
+		response.setAch200(AppCalculationUtils.calculateAch(net200, budget));
+
+		
 
 		response.setColor(color);
 		return response;
@@ -458,7 +505,7 @@ public class BranchMisServiceImpl implements BranchMisservice{
 		title.append(data.getPname());
 		title.append(" ");
 		title.append(request.getOpt()==1?" - H.Q. WISE ":request.getOpt()==2?" REGION WISE ":request.getOpt()==3?" AREA WISE ":" BRANCH WISE ");
-		title.append(request.getUv()==1?" UNIT SALES TREND ":" VALUE SALES TREND ");
+		title.append(request.getUv()==1?" UNIT SALES TREND ":"_VALUE SALES TREND ");
 		switch(request.getRepType())
 		{
 		    case 1:	title.append("(GROSS) FROM ");
@@ -597,13 +644,13 @@ public class BranchMisServiceImpl implements BranchMisservice{
 				{
 					MonthDto mn=monthData.get(b);
 					if(request.getUv()==1)
-						months.put((mn.getMnth_abbr()+" UNITS"), 0L);
+						months.put((mn.getMnth_abbr()+"_UNITS"), 0L);
 					else if(request.getUv()==2)
-						months.put((mn.getMnth_abbr()+" VALUE"), 0L);
+						months.put((mn.getMnth_abbr()+"_VALUE"), 0L);
 					else
 					{
-						months.put((mn.getMnth_abbr()+" UNITS"), 0L);
-						months.put((mn.getMnth_abbr()+" VALUE"), 0L);
+						months.put((mn.getMnth_abbr()+"_UNITS"), 0L);
+						months.put((mn.getMnth_abbr()+"_VALUE"), 0L);
 					}
 					k++;
 				}
@@ -649,22 +696,22 @@ public class BranchMisServiceImpl implements BranchMisservice{
 ///
 					if(request.getUv()==1)
 					{
-						months.put((data.getMnth_abbr()+" UNITS"),data.getSales());
+						months.put((data.getMnth_abbr()+"_UNITS"),data.getSales());
 						columnTotal+=data.getSales();
 						groupColumnTotal+=data.getSales();
 						grandColumnTotal+=data.getSales();
 					}
 					else if(request.getUv()==2)
 					{
-						months.put((data.getMnth_abbr()+" VALUE"),data.getSales_val());
+						months.put((data.getMnth_abbr()+"_VALUE"),data.getSales_val());
 						columnTotalVal+=data.getSales_val();
 						groupColumnTotalVal+=data.getSales_val();
 						grandColumnTotalVal+=data.getSales_val();
 					}
 					else if(request.getUv()==3)
 					{
-						months.put((data.getMnth_abbr()+" UNITS"),data.getSales());
-						months.put((data.getMnth_abbr()+" VALUE"),data.getSales_val());
+						months.put((data.getMnth_abbr()+"_UNITS"),data.getSales());
+						months.put((data.getMnth_abbr()+"_VALUE"),data.getSales_val());
 						columnTotal+=data.getSales();
 						columnTotalVal+=data.getSales_val();
 						groupColumnTotal+=data.getSales();
@@ -674,49 +721,49 @@ public class BranchMisServiceImpl implements BranchMisservice{
 					}
 
 					
-					if(group.containsKey(data.getMnth_abbr()+" UNITS"))
+					if(group.containsKey(data.getMnth_abbr()+"_UNITS"))
 					{
 						long gval = 0;
 
 						if(request.getUv()==1)
 						{
-							gval = group.get(data.getMnth_abbr()+" UNITS")+data.getSales();
-							group.put(data.getMnth_abbr()+" UNITS", gval);
+							gval = group.get(data.getMnth_abbr()+"_UNITS")+data.getSales();
+							group.put(data.getMnth_abbr()+"_UNITS", gval);
 						}
 						if(request.getUv()==2)
 						{
-							gval = group.get(data.getMnth_abbr()+" VALUE")+data.getSales_val();
-							group.put(data.getMnth_abbr()+" VALUE", gval);
+							gval = group.get(data.getMnth_abbr()+"_VALUE")+data.getSales_val();
+							group.put(data.getMnth_abbr()+"_VALUE", gval);
 						}
 						if(request.getUv()==3)
 						{
-							gval = group.get(data.getMnth_abbr()+" UNITS")+data.getSales();
-							group.put(data.getMnth_abbr()+" UNITS", gval);
-							gval = group.get(data.getMnth_abbr()+" VALUE")+data.getSales_val();
-							group.put(data.getMnth_abbr()+" VALUE", gval);
+							gval = group.get(data.getMnth_abbr()+"_UNITS")+data.getSales();
+							group.put(data.getMnth_abbr()+"_UNITS", gval);
+							gval = group.get(data.getMnth_abbr()+"_VALUE")+data.getSales_val();
+							group.put(data.getMnth_abbr()+"_VALUE", gval);
 						}
 						
 					}
-					else if(group.containsKey(data.getMnth_abbr()+" VALUE"))
+					else if(group.containsKey(data.getMnth_abbr()+"_VALUE"))
 					{
 						long gval = 0;
 
 						if(request.getUv()==1)
 						{
-							gval = group.get(data.getMnth_abbr()+" UNITS")+data.getSales();
-							group.put(data.getMnth_abbr()+" UNITS", gval);
+							gval = group.get(data.getMnth_abbr()+"_UNITS")+data.getSales();
+							group.put(data.getMnth_abbr()+"_UNITS", gval);
 						}
 						if(request.getUv()==2)
 						{
-							gval = group.get(data.getMnth_abbr()+" VALUE")+data.getSales_val();
-							group.put(data.getMnth_abbr()+" VALUE", gval);
+							gval = group.get(data.getMnth_abbr()+"_VALUE")+data.getSales_val();
+							group.put(data.getMnth_abbr()+"_VALUE", gval);
 						}
 						if(request.getUv()==3)
 						{
-							gval = group.get(data.getMnth_abbr()+" UNITS")+data.getSales();
-							group.put(data.getMnth_abbr()+" UNITS", gval);
-							gval = group.get(data.getMnth_abbr()+" VALUE")+data.getSales_val();
-							group.put(data.getMnth_abbr()+" VALUE", gval);
+							gval = group.get(data.getMnth_abbr()+"_UNITS")+data.getSales();
+							group.put(data.getMnth_abbr()+"_UNITS", gval);
+							gval = group.get(data.getMnth_abbr()+"_VALUE")+data.getSales_val();
+							group.put(data.getMnth_abbr()+"_VALUE", gval);
 						}
 						
 					}
@@ -725,63 +772,63 @@ public class BranchMisServiceImpl implements BranchMisservice{
 					{
 						if(request.getUv()==1)
 						{
-							group.put(data.getMnth_abbr()+" UNITS", data.getSales());
+							group.put(data.getMnth_abbr()+"_UNITS", data.getSales());
 						}
 						if(request.getUv()==2)
 						{
-							group.put(data.getMnth_abbr()+" VALUE", data.getSales_val());
+							group.put(data.getMnth_abbr()+"_VALUE", data.getSales_val());
 						}
 						if(request.getUv()==3)
 						{
-							group.put(data.getMnth_abbr()+" UNITS", data.getSales());
-							group.put(data.getMnth_abbr()+" VALUE", data.getSales_val());
+							group.put(data.getMnth_abbr()+"_UNITS", data.getSales());
+							group.put(data.getMnth_abbr()+"_VALUE", data.getSales_val());
 						}
 					}
 					
 					if(request.getUv()==1)
 					{
-						if(total.containsKey((data.getMnth_abbr()+" UNITS")))
+						if(total.containsKey((data.getMnth_abbr()+"_UNITS")))
 						{
-							long ggval = total.get(data.getMnth_abbr()+" UNITS")+data.getSales();
-							total.put((data.getMnth_abbr()+" UNITS"), ggval);
+							long ggval = total.get(data.getMnth_abbr()+"_UNITS")+data.getSales();
+							total.put((data.getMnth_abbr()+"_UNITS"), ggval);
 						}
 						else
 						{
-							total.put((data.getMnth_abbr()+" UNITS"), data.getSales());
+							total.put((data.getMnth_abbr()+"_UNITS"), data.getSales());
 						}
 					}
 					if(request.getUv()==2)
 					{
-						if(total.containsKey((data.getMnth_abbr()+" VALUE")))
+						if(total.containsKey((data.getMnth_abbr()+"_VALUE")))
 						{
-							long ggval = total.get((data.getMnth_abbr()+" VALUE"))+data.getSales_val();
-							total.put((data.getMnth_abbr()+" VALUE"), ggval);
+							long ggval = total.get((data.getMnth_abbr()+"_VALUE"))+data.getSales_val();
+							total.put((data.getMnth_abbr()+"_VALUE"), ggval);
 						}
 						else
 						{
-							total.put((data.getMnth_abbr()+" VALUE"), data.getSales_val());
+							total.put((data.getMnth_abbr()+"_VALUE"), data.getSales_val());
 						}
 					}
 					if(request.getUv()==3)
 					{
-						if(total.containsKey((data.getMnth_abbr()+" UNITS")))
+						if(total.containsKey((data.getMnth_abbr()+"_UNITS")))
 						{
-							long ggval = total.get(data.getMnth_abbr()+" UNITS")+data.getSales();
-							total.put((data.getMnth_abbr()+" UNITS"), ggval);
+							long ggval = total.get(data.getMnth_abbr()+"_UNITS")+data.getSales();
+							total.put((data.getMnth_abbr()+"_UNITS"), ggval);
 						}
 						else
 						{
-							total.put((data.getMnth_abbr()+" UNITS"), data.getSales());
+							total.put((data.getMnth_abbr()+"_UNITS"), data.getSales());
 						}
 
-						if(total.containsKey((data.getMnth_abbr()+" VALUE")))
+						if(total.containsKey((data.getMnth_abbr()+"_VALUE")))
 						{
-							long ggval = total.get((data.getMnth_abbr()+" VALUE"))+data.getSales_val();
-							total.put((data.getMnth_abbr()+" VALUE"), ggval);
+							long ggval = total.get((data.getMnth_abbr()+"_VALUE"))+data.getSales_val();
+							total.put((data.getMnth_abbr()+"_VALUE"), ggval);
 						}
 						else
 						{
-							total.put((data.getMnth_abbr()+" VALUE"), data.getSales_val());
+							total.put((data.getMnth_abbr()+"_VALUE"), data.getSales_val());
 						}
 					}
 
@@ -794,51 +841,51 @@ public class BranchMisServiceImpl implements BranchMisservice{
 				else
 				{
 					if(request.getUv()==1)
-						months.put((mn.getMnth_abbr()+" UNITS"), 0L);
+						months.put((mn.getMnth_abbr()+"_UNITS"), 0L);
 					else if(request.getUv()==2)
-						months.put((mn.getMnth_abbr()+" VALUE"), 0L);
+						months.put((mn.getMnth_abbr()+"_VALUE"), 0L);
 					else
 					{
-						months.put((mn.getMnth_abbr()+" UNITS"), 0L);
-						months.put((mn.getMnth_abbr()+" VALUE"), 0L);
+						months.put((mn.getMnth_abbr()+"_UNITS"), 0L);
+						months.put((mn.getMnth_abbr()+"_VALUE"), 0L);
 						
 					}
 
-					if(group.containsKey(mn.getMnth_abbr()+" UNITS"))
+					if(group.containsKey(mn.getMnth_abbr()+"_UNITS"))
 					{
 						// do nothing
 					}
 					else
 					{
 						if(request.getUv()==1)
-						group.put(mn.getMnth_abbr()+" UNITS", 0L);
+						group.put(mn.getMnth_abbr()+"_UNITS", 0L);
 						if(request.getUv()==2)
-							group.put(mn.getMnth_abbr()+" VALUE", 0L);
+							group.put(mn.getMnth_abbr()+"_VALUE", 0L);
 						if(request.getUv()==3)
 						{
-							group.put(mn.getMnth_abbr()+" UNITS", 0L);
-							group.put(mn.getMnth_abbr()+" VALUE", 0L);
+							group.put(mn.getMnth_abbr()+"_UNITS", 0L);
+							group.put(mn.getMnth_abbr()+"_VALUE", 0L);
 						}
 					}
 
-					if(total.containsKey(mn.getMnth_abbr()+" UNITS"))
+					if(total.containsKey(mn.getMnth_abbr()+"_UNITS"))
 					{
 						// do nothing
 					}
-					else if(total.containsKey(mn.getMnth_abbr()+" VALUE"))
+					else if(total.containsKey(mn.getMnth_abbr()+"_VALUE"))
 					{
 						// do nothing
 					}
 					else
 					{
 						if(request.getUv()==1)
-							total.put(mn.getMnth_abbr()+" UNITS", 0L);
+							total.put(mn.getMnth_abbr()+"_UNITS", 0L);
 						if(request.getUv()==2)
-							total.put(mn.getMnth_abbr()+" VALUE", 0L);
+							total.put(mn.getMnth_abbr()+"_VALUE", 0L);
 						if(request.getUv()==3)
 						{
-							total.put(mn.getMnth_abbr()+" UNITS", 0L);
-							total.put(mn.getMnth_abbr()+" VALUE", 0L);
+							total.put(mn.getMnth_abbr()+"_UNITS", 0L);
+							total.put(mn.getMnth_abbr()+"_VALUE", 0L);
 						}
 
 					}
@@ -859,13 +906,13 @@ public class BranchMisServiceImpl implements BranchMisservice{
 			{
 				MonthDto mn=monthData.get(b);
 				if(request.getUv()==1)
-					months.put((mn.getMnth_abbr()+" UNITS"), 0L);
+					months.put((mn.getMnth_abbr()+"_UNITS"), 0L);
 				else if(request.getUv()==2)
-					months.put((mn.getMnth_abbr()+" VALUE"), 0L);
+					months.put((mn.getMnth_abbr()+"_VALUE"), 0L);
 				else
 				{
-					months.put((mn.getMnth_abbr()+" UNITS"), 0L);
-					months.put((mn.getMnth_abbr()+" VALUE"), 0L);
+					months.put((mn.getMnth_abbr()+"_UNITS"), 0L);
+					months.put((mn.getMnth_abbr()+"_VALUE"), 0L);
 				}
 				k++;
 			}
@@ -923,7 +970,7 @@ public class BranchMisServiceImpl implements BranchMisservice{
 		title.append(data.getPname());
 		title.append(" ");
 		title.append(request.getOpt()==1?" - H.Q. WISE ":request.getOpt()==2?" REGION WISE ":request.getOpt()==3?" AREA WISE ":" BRANCH WISE ");
-		title.append(request.getUv()==1?" UNIT SALES TREND ":" VALUE SALES TREND ");
+		title.append(request.getUv()==1?" UNIT SALES TREND ":"_VALUE SALES TREND ");
 		switch(request.getRepType())
 		{
 		    case 1:	title.append("(GROSS) FROM ");
@@ -1044,6 +1091,8 @@ public class BranchMisServiceImpl implements BranchMisservice{
 		int gfs=0;
 		String pcode="";
 		String branch="";
+		ArrayList<String> decimalKeys = new ArrayList<>();
+		boolean second=true;
 		for (int i=0;i<size;i++)
 		{
 			BranchMisRepo8Ach data = BranchMisRepo8List.get(i);
@@ -1066,7 +1115,7 @@ public class BranchMisServiceImpl implements BranchMisservice{
 
 			if(ter_code!=data.getTerr_cd())
 			{
-				
+				second=false;
 				response.setBranch(branch==null?ter_name:branch);
 				response.setHqName(request.getDepoCode()>0 || request.getOpt()==1 ?ter_name:"");
 				response.setHqName(request.getDepoCode()>0 && request.getOpt()==4 ?"":ter_name);
@@ -1075,13 +1124,13 @@ public class BranchMisServiceImpl implements BranchMisservice{
 				{
 					MonthDto mn=monthData.get(b);
 					if(request.getUv()==1)
-						months.put((mn.getMnth_abbr()+" UNITS"), 0D);
+						months.put((mn.getMnth_abbr()+"_UNITS"), 0D);
 					else if(request.getUv()==2)
-						months.put((mn.getMnth_abbr()+" VALUE"), 0D);
+						months.put((mn.getMnth_abbr()+"_VALUE"), 0D);
 					else
 					{
-						months.put((mn.getMnth_abbr()+" UNITS"), 0D);
-						months.put((mn.getMnth_abbr()+" VALUE"), 0D);
+						months.put((mn.getMnth_abbr()+"_UNITS"), 0D);
+						months.put((mn.getMnth_abbr()+"_VALUE"), 0D);
 					}
 					k++;
 				}
@@ -1111,13 +1160,13 @@ public class BranchMisServiceImpl implements BranchMisservice{
 				}
 			
 				if(request.getUv()==1)
-					months.put("TOTAL UNITS", columnTotal);
+					months.put("TOTAL_UNITS", columnTotal);
 				else if(request.getUv()==2)
-					months.put("TOTAL VALUE", columnTotalVal);
+					months.put("TOTAL_VALUE", columnTotalVal);
 				else
 				{
-					months.put("TOTAL UNITS", columnTotal);
-					months.put("TOTAL VALUE", columnTotalVal);
+					months.put("TOTAL_UNITS", columnTotal);
+					months.put("TOTAL_VALUE", columnTotalVal);
 					
 				}
 				response.setMonths(months);
@@ -1150,10 +1199,14 @@ public class BranchMisServiceImpl implements BranchMisservice{
 					//months.put(data.getMnth_abbr(), request.getUv()==2?data.getSales_val():data.getSales());
 					//columnTotal+=request.getUv()==2?data.getSales_val():data.getSales();
 					fs+=data.getFs();
+					 	if(second)
+					 		decimalKeys.add(data.getMnth_abbr()+"_VALUE");
+					 	if(b==sz-1 && second) 
+					 		decimalKeys.add("TOTAL_VALUE");
 ///
 					if(request.getUv()==1)
 					{
-						months.put((data.getMnth_abbr()+" UNITS"),data.getAch_qty());
+						months.put((data.getMnth_abbr()+"_UNITS"),data.getAch_qty());
 						columnTotal+=data.getSales();
 						groupColumnTotal+=data.getSales();
 						grandColumnTotal+=data.getSales();
@@ -1164,7 +1217,7 @@ public class BranchMisServiceImpl implements BranchMisservice{
 					}
 					else if(request.getUv()==2)
 					{
-						months.put((data.getMnth_abbr()+" VALUE"),data.getAch_val());
+						months.put((data.getMnth_abbr()+"_VALUE"),data.getAch_val());
 						columnTotalVal+=data.getSales_val();
 						groupColumnTotalVal+=data.getSales_val();
 						grandColumnTotalVal+=data.getSales_val();
@@ -1174,8 +1227,8 @@ public class BranchMisServiceImpl implements BranchMisservice{
 					}
 					else if(request.getUv()==3)
 					{
-						months.put((data.getMnth_abbr()+" UNITS"),data.getAch_qty());
-						months.put((data.getMnth_abbr()+" VALUE"),data.getAch_val());
+						months.put((data.getMnth_abbr()+"_UNITS"),data.getAch_qty());
+						months.put((data.getMnth_abbr()+"_VALUE"),data.getAch_val());
 						columnTotal+=data.getSales();
 						columnTotalVal+=data.getSales_val();
 						groupColumnTotal+=data.getSales();
@@ -1197,70 +1250,70 @@ public class BranchMisServiceImpl implements BranchMisservice{
 
 					if(request.getUv()==1)
 					{
-						if(saletotal.containsKey((data.getMnth_abbr()+" UNITS")))
+						if(saletotal.containsKey((data.getMnth_abbr()+"_UNITS")))
 						{
 							
-							ggval = saletotal.get((data.getMnth_abbr()+" UNITS"))+data.getSales_val();
-							saletotal.put((data.getMnth_abbr()+" UNITS"), ggval);
-							ggval = targettotal.get((data.getMnth_abbr()+" UNITS"))+data.getTarget_val();
-							targettotal.put((data.getMnth_abbr()+" UNITS"), ggval);
+							ggval = saletotal.get((data.getMnth_abbr()+"_UNITS"))+data.getSales_val();
+							saletotal.put((data.getMnth_abbr()+"_UNITS"), ggval);
+							ggval = targettotal.get((data.getMnth_abbr()+"_UNITS"))+data.getTarget_val();
+							targettotal.put((data.getMnth_abbr()+"_UNITS"), ggval);
 
 						}
 						else
 						{
-							saletotal.put((data.getMnth_abbr()+" UNITS"), data.getSales_val());
-							targettotal.put((data.getMnth_abbr()+" UNITS"), data.getTarget_val());
+							saletotal.put((data.getMnth_abbr()+"_UNITS"), data.getSales_val());
+							targettotal.put((data.getMnth_abbr()+"_UNITS"), data.getTarget_val());
 						}
 						
 					}
 					if(request.getUv()==2)
 					{
-						if(saletotal.containsKey((data.getMnth_abbr()+" VALUE")))
+						if(saletotal.containsKey((data.getMnth_abbr()+"_VALUE")))
 						{
 							
-							ggval = saletotal.get((data.getMnth_abbr()+" VALUE"))+data.getSales_val();
-							saletotal.put((data.getMnth_abbr()+" VALUE"), ggval);
-							ggval = targettotal.get((data.getMnth_abbr()+" VALUE"))+data.getTarget_val();
-							targettotal.put((data.getMnth_abbr()+" VALUE"), ggval);
+							ggval = saletotal.get((data.getMnth_abbr()+"_VALUE"))+data.getSales_val();
+							saletotal.put((data.getMnth_abbr()+"_VALUE"), ggval);
+							ggval = targettotal.get((data.getMnth_abbr()+"_VALUE"))+data.getTarget_val();
+							targettotal.put((data.getMnth_abbr()+"_VALUE"), ggval);
 
 						}
 						else
 						{
-							saletotal.put((data.getMnth_abbr()+" VALUE"), data.getSales_val());
-							targettotal.put((data.getMnth_abbr()+" VALUE"), data.getTarget_val());
+							saletotal.put((data.getMnth_abbr()+"_VALUE"), data.getSales_val());
+							targettotal.put((data.getMnth_abbr()+"_VALUE"), data.getTarget_val());
 						}
 						
 					}
 					if(request.getUv()==3)
 					{
-						if(saletotal.containsKey((data.getMnth_abbr()+" UNITS")))
+						if(saletotal.containsKey((data.getMnth_abbr()+"_UNITS")))
 						{
 							
-							ggval = saletotal.get((data.getMnth_abbr()+" UNITS"))+data.getSales_val();
-							saletotal.put((data.getMnth_abbr()+" UNITS"), ggval);
-							ggval = targettotal.get((data.getMnth_abbr()+" UNITS"))+data.getTarget_val();
-							targettotal.put((data.getMnth_abbr()+" UNITS"), ggval);
+							ggval = saletotal.get((data.getMnth_abbr()+"_UNITS"))+data.getSales_val();
+							saletotal.put((data.getMnth_abbr()+"_UNITS"), ggval);
+							ggval = targettotal.get((data.getMnth_abbr()+"_UNITS"))+data.getTarget_val();
+							targettotal.put((data.getMnth_abbr()+"_UNITS"), ggval);
 
 						}
 						else
 						{
-							saletotal.put((data.getMnth_abbr()+" UNITS"), data.getSales_val());
-							targettotal.put((data.getMnth_abbr()+" UNITS"), data.getTarget_val());
+							saletotal.put((data.getMnth_abbr()+"_UNITS"), data.getSales_val());
+							targettotal.put((data.getMnth_abbr()+"_UNITS"), data.getTarget_val());
 						}
 
-						if(saletotal.containsKey((data.getMnth_abbr()+" VALUE")))
+						if(saletotal.containsKey((data.getMnth_abbr()+"_VALUE")))
 						{
 							
-							ggval = saletotal.get((data.getMnth_abbr()+" VALUE"))+data.getSales_val();
-							saletotal.put((data.getMnth_abbr()+" VALUE"), ggval);
-							ggval = targettotal.get((data.getMnth_abbr()+" VALUE"))+data.getTarget_val();
-							targettotal.put((data.getMnth_abbr()+" VALUE"), ggval);
+							ggval = saletotal.get((data.getMnth_abbr()+"_VALUE"))+data.getSales_val();
+							saletotal.put((data.getMnth_abbr()+"_VALUE"), ggval);
+							ggval = targettotal.get((data.getMnth_abbr()+"_VALUE"))+data.getTarget_val();
+							targettotal.put((data.getMnth_abbr()+"_VALUE"), ggval);
 
 						}
 						else
 						{
-							saletotal.put((data.getMnth_abbr()+" VALUE"), data.getSales_val());
-							targettotal.put((data.getMnth_abbr()+" VALUE"), data.getTarget_val());
+							saletotal.put((data.getMnth_abbr()+"_VALUE"), data.getSales_val());
+							targettotal.put((data.getMnth_abbr()+"_VALUE"), data.getTarget_val());
 						}
 					
 					}
@@ -1274,22 +1327,22 @@ public class BranchMisServiceImpl implements BranchMisservice{
 				else
 				{
 					if(request.getUv()==1)
-						months.put((mn.getMnth_abbr()+" UNITS"), 0D);
+						months.put((mn.getMnth_abbr()+"_UNITS"), 0D);
 					else if(request.getUv()==2)
-						months.put((mn.getMnth_abbr()+" VALUE"), 0D);
+						months.put((mn.getMnth_abbr()+"_VALUE"), 0D);
 					else
 					{
-						months.put((mn.getMnth_abbr()+" UNITS"), 0D);
-						months.put((mn.getMnth_abbr()+" VALUE"), 0D);
+						months.put((mn.getMnth_abbr()+"_UNITS"), 0D);
+						months.put((mn.getMnth_abbr()+"_VALUE"), 0D);
 						
 					}
 
 					
-					if(saletotal.containsKey(mn.getMnth_abbr()+" UNITS"))
+					if(saletotal.containsKey(mn.getMnth_abbr()+"_UNITS"))
 					{
 						// do nothing
 					}
-					else if(saletotal.containsKey(mn.getMnth_abbr()+" VALUE"))
+					else if(saletotal.containsKey(mn.getMnth_abbr()+"_VALUE"))
 					{
 						// do nothing
 					}
@@ -1297,20 +1350,20 @@ public class BranchMisServiceImpl implements BranchMisservice{
 					{
 						if(request.getUv()==1)
 						{
-							saletotal.put(mn.getMnth_abbr()+" UNITS", 0L);
-							targettotal.put(mn.getMnth_abbr()+" UNITS", 0L);
+							saletotal.put(mn.getMnth_abbr()+"_UNITS", 0L);
+							targettotal.put(mn.getMnth_abbr()+"_UNITS", 0L);
 						}
 						if(request.getUv()==2)
 						{
-							saletotal.put(mn.getMnth_abbr()+" VALUE", 0L);
-							targettotal.put(mn.getMnth_abbr()+" VALUE", 0L);
+							saletotal.put(mn.getMnth_abbr()+"_VALUE", 0L);
+							targettotal.put(mn.getMnth_abbr()+"_VALUE", 0L);
 						}
 						if(request.getUv()==3)
 						{
-							saletotal.put(mn.getMnth_abbr()+" UNITS", 0L);
-							targettotal.put(mn.getMnth_abbr()+" UNITS", 0L);
-							saletotal.put(mn.getMnth_abbr()+" VALUE", 0L);
-							targettotal.put(mn.getMnth_abbr()+" VALUE", 0L);
+							saletotal.put(mn.getMnth_abbr()+"_UNITS", 0L);
+							targettotal.put(mn.getMnth_abbr()+"_UNITS", 0L);
+							saletotal.put(mn.getMnth_abbr()+"_VALUE", 0L);
+							targettotal.put(mn.getMnth_abbr()+"_VALUE", 0L);
 
 						}
 
@@ -1332,13 +1385,13 @@ public class BranchMisServiceImpl implements BranchMisservice{
 			{
 				MonthDto mn=monthData.get(b);
 				if(request.getUv()==1)
-					months.put((mn.getMnth_abbr()+" UNITS"), 0D);
+					months.put((mn.getMnth_abbr()+"_UNITS"), 0D);
 				else if(request.getUv()==2)
-					months.put((mn.getMnth_abbr()+" VALUE"), 0D);
+					months.put((mn.getMnth_abbr()+"_VALUE"), 0D);
 				else
 				{
-					months.put((mn.getMnth_abbr()+" UNITS"), 0D);
-					months.put((mn.getMnth_abbr()+" VALUE"), 0D);
+					months.put((mn.getMnth_abbr()+"_UNITS"), 0D);
+					months.put((mn.getMnth_abbr()+"_VALUE"), 0D);
 				}
 				k++;
 			}
@@ -1366,13 +1419,13 @@ public class BranchMisServiceImpl implements BranchMisservice{
 
 			
 			if(request.getUv()==1)
-				months.put("TOTAL UNITS", columnTotal);
+				months.put("TOTAL_UNITS", columnTotal);
 			else if(request.getUv()==2)
-				months.put("TOTAL VALUE", columnTotalVal);
+				months.put("TOTAL_VALUE", columnTotalVal);
 			else
 			{
-				months.put("TOTAL UNITS", columnTotal);
-				months.put("TOTAL VALUE", columnTotalVal);
+				months.put("TOTAL_UNITS", columnTotal);
+				months.put("TOTAL_VALUE", columnTotalVal);
 				
 			}
 			response.setMonths(months);
@@ -1393,46 +1446,46 @@ public class BranchMisServiceImpl implements BranchMisservice{
 				if(request.getUv()==1)
 				{
 					if(request.getRepType()==9)
-							newtotal=AppCalculationUtils.calculateAch(saletotal.get(mn.getMnth_abbr()+"UNITS"), targettotal.get(mn.getMnth_abbr()+" UNITS"));
+							newtotal=AppCalculationUtils.calculateAch(saletotal.get(mn.getMnth_abbr()+"UNITS"), targettotal.get(mn.getMnth_abbr()+"_UNITS"));
 					if(request.getRepType()==10)
-						newtotal=AppCalculationUtils.calculateGth(saletotal.get(mn.getMnth_abbr()+"UNITS"), targettotal.get(mn.getMnth_abbr()+" UNITS"));
+						newtotal=AppCalculationUtils.calculateGth(saletotal.get(mn.getMnth_abbr()+"UNITS"), targettotal.get(mn.getMnth_abbr()+"_UNITS"));
 					if(request.getRepType()==13)
-						newtotal=AppCalculationUtils.calculateExpiryRatio(targettotal.get(mn.getMnth_abbr()+" UNITS"),saletotal.get(mn.getMnth_abbr()+"UNITS") );
+						newtotal=AppCalculationUtils.calculateExpiryRatio(targettotal.get(mn.getMnth_abbr()+"_UNITS"),saletotal.get(mn.getMnth_abbr()+"UNITS") );
 					
 					
-					months.put((mn.getMnth_abbr()+" UNITS"), newtotal);
+					months.put((mn.getMnth_abbr()+"_UNITS"), newtotal);
 				}
 				else if(request.getUv()==2)
 				{
 					
 					if(request.getRepType()==9)
-						newtotal=AppCalculationUtils.calculateAch(saletotal.get(mn.getMnth_abbr()+" VALUE"), targettotal.get(mn.getMnth_abbr()+" VALUE"));
+						newtotal=AppCalculationUtils.calculateAch(saletotal.get(mn.getMnth_abbr()+"_VALUE"), targettotal.get(mn.getMnth_abbr()+"_VALUE"));
 					if(request.getRepType()==10)
-						newtotal=AppCalculationUtils.calculateGth(saletotal.get(mn.getMnth_abbr()+" VALUE"), targettotal.get(mn.getMnth_abbr()+" VALUE"));
+						newtotal=AppCalculationUtils.calculateGth(saletotal.get(mn.getMnth_abbr()+"_VALUE"), targettotal.get(mn.getMnth_abbr()+"_VALUE"));
 					if(request.getRepType()==13)
-						newtotal=AppCalculationUtils.calculateExpiryRatio(targettotal.get(mn.getMnth_abbr()+" VALUE"),saletotal.get(mn.getMnth_abbr()+" VALUE") );
+						newtotal=AppCalculationUtils.calculateExpiryRatio(targettotal.get(mn.getMnth_abbr()+"_VALUE"),saletotal.get(mn.getMnth_abbr()+"_VALUE") );
 
-					months.put((mn.getMnth_abbr()+" VALUE"), newtotal);
+					months.put((mn.getMnth_abbr()+"_VALUE"), newtotal);
 				}
 				else
 				{
 					if(request.getRepType()==9)
-						newtotal=AppCalculationUtils.calculateAch(saletotal.get(mn.getMnth_abbr()+"UNITS"), targettotal.get(mn.getMnth_abbr()+" UNITS"));
+						newtotal=AppCalculationUtils.calculateAch(saletotal.get(mn.getMnth_abbr()+"UNITS"), targettotal.get(mn.getMnth_abbr()+"_UNITS"));
 				if(request.getRepType()==10)
-					newtotal=AppCalculationUtils.calculateGth(saletotal.get(mn.getMnth_abbr()+"UNITS"), targettotal.get(mn.getMnth_abbr()+" UNITS"));
+					newtotal=AppCalculationUtils.calculateGth(saletotal.get(mn.getMnth_abbr()+"UNITS"), targettotal.get(mn.getMnth_abbr()+"_UNITS"));
 				if(request.getRepType()==13)
-					newtotal=AppCalculationUtils.calculateExpiryRatio(targettotal.get(mn.getMnth_abbr()+" UNITS"),saletotal.get(mn.getMnth_abbr()+"UNITS") );
+					newtotal=AppCalculationUtils.calculateExpiryRatio(targettotal.get(mn.getMnth_abbr()+"_UNITS"),saletotal.get(mn.getMnth_abbr()+"UNITS") );
 
-					months.put((mn.getMnth_abbr()+" UNITS"), newtotal);
+					months.put((mn.getMnth_abbr()+"_UNITS"), newtotal);
 
 					if(request.getRepType()==9)
-						newtotal=AppCalculationUtils.calculateAch(saletotal.get(mn.getMnth_abbr()+" VALUE"), targettotal.get(mn.getMnth_abbr()+" VALUE"));
+						newtotal=AppCalculationUtils.calculateAch(saletotal.get(mn.getMnth_abbr()+"_VALUE"), targettotal.get(mn.getMnth_abbr()+"_VALUE"));
 					if(request.getRepType()==10)
-						newtotal=AppCalculationUtils.calculateGth(saletotal.get(mn.getMnth_abbr()+" VALUE"), targettotal.get(mn.getMnth_abbr()+" VALUE"));
+						newtotal=AppCalculationUtils.calculateGth(saletotal.get(mn.getMnth_abbr()+"_VALUE"), targettotal.get(mn.getMnth_abbr()+"_VALUE"));
 					if(request.getRepType()==13)
-						newtotal=AppCalculationUtils.calculateExpiryRatio(targettotal.get(mn.getMnth_abbr()+" VALUE"),saletotal.get(mn.getMnth_abbr()+" VALUE") );
+						newtotal=AppCalculationUtils.calculateExpiryRatio(targettotal.get(mn.getMnth_abbr()+"_VALUE"),saletotal.get(mn.getMnth_abbr()+"_VALUE") );
 
-					months.put((mn.getMnth_abbr()+" VALUE"), newtotal);
+					months.put((mn.getMnth_abbr()+"_VALUE"), newtotal);
 				}
 				
 			}
@@ -1463,13 +1516,13 @@ public class BranchMisServiceImpl implements BranchMisservice{
 
 			
 			if(request.getUv()==1)
-				total.put("TOTAL UNITS", newtotal);
+				total.put("TOTAL_UNITS", newtotal);
 			else if(request.getUv()==2)
-				total.put("TOTAL VALUE", newtotal);
+				total.put("TOTAL_VALUE", newtotal);
 			else
 			{
-				total.put("TOTAL UNITS", newtotal);
-				total.put("TOTAL VALUE", newtotal);
+				total.put("TOTAL_UNITS", newtotal);
+				total.put("TOTAL_VALUE", newtotal);
 				
 			}
 
@@ -1483,6 +1536,6 @@ public class BranchMisServiceImpl implements BranchMisservice{
 			response.setCumFs(gfs);
 			response.setColor(2);
 			saleList.add(response);		
-		return new ApiResponse<BranchMisRepo8AchResponse>(title.toString(),size,saleList);
+		return new ApiResponse<BranchMisRepo8AchResponse>(title.toString(),size,decimalKeys,saleList);
 	}
 }

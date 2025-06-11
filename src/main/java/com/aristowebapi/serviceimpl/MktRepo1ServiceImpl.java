@@ -516,6 +516,8 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 		String gname=null;
 		int size = grossSaleList.size();
 		System.out.println("size of gross list in ach menthod "+size);
+		ArrayList<String> decimalKeys = new ArrayList<>();
+		boolean second=true;
 		//create ReportTitleResponse class object and set title with Report heading
 		for (int i=0;i<size;i++)
 		{
@@ -546,6 +548,10 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 			}
 			if(pcode!=data.getMcode())
 			{
+				if(second)
+					decimalKeys.add("TOTAL");
+
+				second=false;
 				response.setPcode(pcode);
 				response.setPname(pname);
 				response.setPack(pack);
@@ -658,7 +664,8 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 				BranchMasterDto bm=branchData.get(b);
 				if(bm.getDepo_code()==data.getDepo_code())
 				{
-					
+					if(second)
+						decimalKeys.add(data.getDepo_name());
 					branches.put(data.getDepo_name(), request.getUv()==2?data.getAchval():data.getAchqty());
 					
 	        		 horizontalSalqty+= data.getSales();
@@ -829,8 +836,6 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 			BranchMasterDto bm=branchData.get(b);
 			double sale =0;
 			double target=0;
-			System.out.println("bm ki value "+bm.getDepo_name());
-			System.out.println(bottomVerticalSalval.get(bm.getDepo_name()));
 			if(bottomVerticalSalval.get(bm.getDepo_name())==null)
 				System.out.println(bottomVerticalSalval.get(bm.getDepo_name()));
 			else
@@ -872,7 +877,7 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 		response.setColor(2);
 		saleList.add(response);
 
-		return new ApiResponse<MktRepo1AchResponse>(title.toString(),size,lupdate,saleList);
+		return new ApiResponse<MktRepo1AchResponse>(title.toString(),size,decimalKeys,saleList);
 	}
 
 	@Override

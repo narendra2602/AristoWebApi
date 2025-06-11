@@ -69,6 +69,7 @@ public class MisRepo31ServiceImpl implements MisRepo31Service{
 	long expvalue=0;
 	boolean first=true;
 	String title=null;
+	ArrayList<String> decimalKeys = new ArrayList<>();
 	for (int i=0;i<size;i++)
 	{
 		MisRepo31 data = MisRepo31List.get(i);
@@ -144,8 +145,8 @@ public class MisRepo31ServiceImpl implements MisRepo31Service{
      response.setNetValue(netvalue+expvalue);
 	response.setColor(3);
 	saleList.add(response);
-	
-	ApiResponse<MisRepo31Response> apiResponse = new ApiResponse<>(title!=null?title.toString():"", size,saleList);
+	decimalKeys.add("ach_per");
+	ApiResponse<MisRepo31Response> apiResponse = new ApiResponse<>(title!=null?title.toString():"", size,decimalKeys,saleList);
 	return apiResponse;
 
 

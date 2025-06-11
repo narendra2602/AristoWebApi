@@ -120,7 +120,7 @@ public class MktRepo5ServiceImpl  implements MktRepo5Service  {
 		double lval=0;
 		int fs=0;
 
-		
+		ArrayList<String> decimalKeys = new ArrayList<>();
 		for (int i=0;i<size;i++)
 		{
 			MktRepo5 data = MktRepo5List.get(i);
@@ -132,6 +132,30 @@ public class MktRepo5ServiceImpl  implements MktRepo5Service  {
 			{
 				title = getTitle(request, data);
 				first=false;
+				
+				decimalKeys.add("mth_budget");
+				decimalKeys.add("mth_gross");
+				decimalKeys.add("mth_credit");
+				decimalKeys.add("mth_net");
+				decimalKeys.add("mth_ach_per");
+				decimalKeys.add("mth_lys");
+				decimalKeys.add("mth_gth_per");
+				decimalKeys.add("mth_pmr");
+				decimalKeys.add("mth_sur_slashdeff");
+				decimalKeys.add("mth_incr_sale");
+				decimalKeys.add("mth_pending_pi");
+				decimalKeys.add("cum_budget");
+				decimalKeys.add("cum_gross");
+				decimalKeys.add("cum_credit");
+				decimalKeys.add("cum_net");
+				decimalKeys.add("cum_lys");
+				decimalKeys.add("cum_ach_per");
+				decimalKeys.add("cum_gth_per");
+				decimalKeys.add("cum_pmr");
+				decimalKeys.add("cum_sur_slashdeff");
+				decimalKeys.add("cum_incr_sale(");
+				decimalKeys.add("cum_pending_pi");
+
 			}
 			
 			response=new MktRepo5Response();
@@ -283,7 +307,7 @@ public class MktRepo5ServiceImpl  implements MktRepo5Service  {
 		}
 
 		
-		ApiResponse<MktRepo5Response> apiResponse = new ApiResponse<>(title!=null?title.toString():"",size,lupdate, saleList);
+		ApiResponse<MktRepo5Response> apiResponse = new ApiResponse<>(title!=null?title.toString():"",size,decimalKeys, saleList);
 		return apiResponse;
 		
 		} catch (Exception e) {

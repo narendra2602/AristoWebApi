@@ -100,6 +100,8 @@ public class MktRepo4ServiceImpl implements MktRepo4Service{
 		logger.info("size of the data is {}",size);
 		//create ReportTitleResponse class object and set title with Report heading
 		int i=0;
+		ArrayList<String> decimalKeys = new ArrayList<>();
+		boolean second=true;
 		for (i=0;i<size;i++)
 		{
 			MktRepo4 data = MktRepo4SaleList.get(i);
@@ -122,7 +124,7 @@ public class MktRepo4ServiceImpl implements MktRepo4Service{
 				first=false;
 				title = getTitle(request, data); 
 			}
-
+			
 			rankach.put(data.getDepo_name(), 0);
 			rankpmr.put(data.getDepo_name(), 0);
 			fs.put(data.getDepo_name(), data.getFs());
@@ -182,7 +184,7 @@ public class MktRepo4ServiceImpl implements MktRepo4Service{
 		response.setRankPmr(rankpmr);
 		
 		saleList.add(response);
-		return new ApiResponse<MktRepo4Response>(title.toString(),size,lupdate,saleList);
+		return new ApiResponse<MktRepo4Response>(title.toString(),size,saleList);
 	}
 	
 	

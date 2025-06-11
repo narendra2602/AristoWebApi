@@ -73,6 +73,8 @@ Logger logger = LoggerFactory.getLogger(MktRepo9ServiceImpl.class);
 			MktRepo10SaleList=mktRepo10Dao.getWebReportBrHqTrend(request.getMyear(),request.getDivCode(),request.getDepoCode()
 					,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId());
 		
+			System.out.println(request.getMyear()+" "+request.getDivCode()+" "+request.getDepoCode()
+			+" "+request.getSmon()+" "+request.getEmon()+" "+request.getUtype()+" "+request.getLoginId());
 		MktRepo9Response response=null;   // response is same for repor 9 and 10
 		
 		List<MktRepo9Response> saleList = new ArrayList();

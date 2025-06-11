@@ -88,6 +88,8 @@ public class PendingServiceImpl implements PendingService {
 		int depo_code=0;
 		String branch="";
 		double columnTotal=0;
+		ArrayList<String> decimalKeys = new ArrayList<>();
+		boolean second=true;
 		for (int i=0;i<size;i++)
 		{
 			PendingData data = reportList.get(i);
@@ -105,6 +107,10 @@ public class PendingServiceImpl implements PendingService {
 			}
 			if(depo_code!=data.getDepo_code())
 			{
+				if(second) 
+			 		decimalKeys.add("TOTAL");
+
+				second=false;
 				response.setDesc(branch);
 				z=k;
 				for(int b=k;b<sz;b++)
@@ -137,6 +143,13 @@ public class PendingServiceImpl implements PendingService {
 				DivisionMasterDto bm=divData.get(b);
 				if(bm.getDiv_code()==data.getDiv_code())
 				{
+					if(second)
+					{
+						decimalKeys.add(data.getDiv_name());
+						
+					}
+				 	
+				 	
 					division.put(data.getDiv_name(), data.getVal());
 					columnTotal+=data.getVal();
 					
@@ -206,7 +219,7 @@ public class PendingServiceImpl implements PendingService {
 			response.setColor(2);
 			saleList.add(response);
 		}
-		return new ApiResponse<PendingResponse>(title!=null?title.toString():"",size,saleList);
+		return new ApiResponse<PendingResponse>(title!=null?title.toString():"",size,decimalKeys,saleList);
 
 
 		

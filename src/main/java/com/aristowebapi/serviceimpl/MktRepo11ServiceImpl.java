@@ -77,7 +77,7 @@ public class MktRepo11ServiceImpl implements MktRepo11Service{
 		double monthSale=0;
 		double monthLys=0;
 
-		
+		ArrayList<String> decimalKeys = new ArrayList<>();
 		for (int i=0;i<size;i++)
 		{
 			MktRepo11 data = MktRepo11List.get(i);
@@ -87,6 +87,22 @@ public class MktRepo11ServiceImpl implements MktRepo11Service{
 			{
 				title = getTitle(request, data);
 				first=false;
+				decimalKeys.add("mth_budget");
+				decimalKeys.add("mth_sale");
+				decimalKeys.add("mth_lys");
+				decimalKeys.add("mth_ach_per");
+				decimalKeys.add("mth_gth_per");
+				decimalKeys.add("mth_pmr");
+				decimalKeys.add("mth_sur_slashdef");
+				decimalKeys.add("cum_budget");
+				decimalKeys.add("cum_sale");
+				decimalKeys.add("cum_lys");
+				decimalKeys.add("cum_ach_per");
+				decimalKeys.add("cum_gth_per");
+				decimalKeys.add("cum_pmr");
+				decimalKeys.add("cum_sur_slashdef");
+				decimalKeys.add("cum_incr_sale(");
+
 			}
 			
 			response=new MktRepo11Response();
@@ -162,7 +178,7 @@ public class MktRepo11ServiceImpl implements MktRepo11Service{
 		}
 
 		
-		ApiResponse<MktRepo11Response> apiResponse = new ApiResponse<>(title!=null?title.toString():"", size,lupdate,saleList);
+		ApiResponse<MktRepo11Response> apiResponse = new ApiResponse<>(title!=null?title.toString():"", size,decimalKeys,saleList);
 		return apiResponse;
 		
 		} catch (Exception e) {

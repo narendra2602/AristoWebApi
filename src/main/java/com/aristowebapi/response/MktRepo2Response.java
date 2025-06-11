@@ -25,7 +25,7 @@ public class MktRepo2Response {
 	private double cumAchPer;
 	private long cumSurSlashDef;
 	private long cumLys;
-	private double gthPer;
+	private double cumGthPer;
 	private int pmr;
 	private int rankAch;
 	private int rankPmr;

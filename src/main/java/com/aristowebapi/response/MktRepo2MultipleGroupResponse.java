@@ -29,7 +29,7 @@ public class MktRepo2MultipleGroupResponse {
 	private long cumLys;
 	private long cumExpiry;
 	private double cumAchPer;
-	private double gthPer;
+	private double cumGthPer;
 	private long cumSurSlashDef;
 	private long cumIncr;
 	private int pmr;

@@ -180,6 +180,7 @@ public class MktRepo2ServiceImpl implements MktRepo2Service {
 		long gcumlysval=0;
 
 		int nrep=0;
+		ArrayList<String> decimalKeys = new ArrayList<>();
 		for (int i=0;i<size;i++)
 		{
 			MktRepo2 data = MktRepo2List.get(i);
@@ -195,6 +196,10 @@ public class MktRepo2ServiceImpl implements MktRepo2Service {
 				rankMap = new LinkedHashMap<Integer, Integer>();
 				rankMapPmr = new LinkedHashMap<Integer, Integer>();
 				first=false;
+				decimalKeys.add("mth_ach_per");
+				decimalKeys.add("cum_ach_per");
+				decimalKeys.add("cum_gth_per");
+				decimalKeys.add("rank_ach");
 			}
 			
 			if(mgrp!=data.getMgrp())
@@ -212,7 +217,7 @@ public class MktRepo2ServiceImpl implements MktRepo2Service {
  				response.setCumAchPer(cumtval!=0?AppCalculationUtils.calculateAch(cumsval, cumtval):0);
 		    	response.setCumSurSlashDef(cumsval-cumtval);
 		    	response.setCumLys(cumlysval);
-		    	response.setGthPer(cumlysval!=0?AppCalculationUtils.calculateGth(cumsval, cumlysval):0.0);
+		    	response.setCumGthPer(cumlysval!=0?AppCalculationUtils.calculateGth(cumsval, cumlysval):0.0);
 		    	response.setPmr(nrep!=0?AppCalculationUtils.calculatePmr(cumsval, nrep):0);
 		    	response.setColor(1);
 		    	saleList.add(response);
@@ -245,7 +250,7 @@ public class MktRepo2ServiceImpl implements MktRepo2Service {
  				response.setCumAchPer(data.getCumtarqty()!=0?AppCalculationUtils.calculateAch(data.getCummsaleqty(), data.getCumtarqty()):0);
 		    	response.setCumSurSlashDef(data.getCummsaleqty()-data.getCumtarqty());
 		    	response.setCumLys(data.getCumlysqty());
-		    	response.setGthPer(data.getCumlysqty()!=0?AppCalculationUtils.calculateGth(data.getCummsaleqty(), data.getCumlysqty()):0.0);
+		    	response.setCumGthPer(data.getCumlysqty()!=0?AppCalculationUtils.calculateGth(data.getCummsaleqty(), data.getCumlysqty()):0.0);
 		    	response.setPmr(data.getnrep()!=0?AppCalculationUtils.calculatePmr(data.getCummsaleqty(), data.getnrep()):0);
 		    	rankAchMap.put(data.getMcode(),response.getCumAchPer());
 		    	rankPmrMap.put(data.getMcode(),response.getPmr());
@@ -261,7 +266,7 @@ public class MktRepo2ServiceImpl implements MktRepo2Service {
  				response.setCumAchPer(data.getCumtarval()!=0?AppCalculationUtils.calculateAch(data.getCummsaleval(), data.getCumtarval()):0);
 		    	response.setCumSurSlashDef(data.getCummsaleval()-data.getCumtarval());
 		    	response.setCumLys(data.getCumlysval());
-		    	response.setGthPer(data.getCumlysval()!=0?AppCalculationUtils.calculateGth(data.getCummsaleval(), data.getCumlysval()):0.0);
+		    	response.setCumGthPer(data.getCumlysval()!=0?AppCalculationUtils.calculateGth(data.getCummsaleval(), data.getCumlysval()):0.0);
 		    	response.setPmr(data.getnrep()!=0?AppCalculationUtils.calculatePmr(data.getCummsaleval(), data.getnrep()):0);
 		    	rankAchMap.put(data.getMcode(),response.getCumAchPer());
 		    	rankPmrMap.put(data.getMcode(),response.getPmr());
@@ -311,7 +316,7 @@ public class MktRepo2ServiceImpl implements MktRepo2Service {
 			response.setCumAchPer(cumtval!=0?AppCalculationUtils.calculateAch(cumsval, cumtval):0);
 			response.setCumSurSlashDef(cumsval-cumtval);
 			response.setCumLys(cumlysval);
-			response.setGthPer(cumlysval!=0?AppCalculationUtils.calculateGth(cumsval, cumlysval):0.0);
+			response.setCumGthPer(cumlysval!=0?AppCalculationUtils.calculateGth(cumsval, cumlysval):0.0);
 			response.setPmr(nrep!=0?AppCalculationUtils.calculatePmr(cumsval, nrep):0);
 			response.setColor(1);
 
@@ -331,7 +336,7 @@ public class MktRepo2ServiceImpl implements MktRepo2Service {
 			response.setCumAchPer(gcumtval!=0?AppCalculationUtils.calculateAch(gcumsval, gcumtval):0);
 			response.setCumSurSlashDef(gcumsval-gcumtval);
 			response.setCumLys(gcumlysval);
-			response.setGthPer(gcumlysval!=0?AppCalculationUtils.calculateGth(gcumsval, gcumlysval):0.0);
+			response.setCumGthPer(gcumlysval!=0?AppCalculationUtils.calculateGth(gcumsval, gcumlysval):0.0);
 			response.setPmr(nrep!=0?AppCalculationUtils.calculatePmr(gcumsval, nrep):0);
 			response.setColor(2);
 
@@ -339,7 +344,7 @@ public class MktRepo2ServiceImpl implements MktRepo2Service {
 		}
 
 		
-		ApiResponse<MktRepo2Response> apiResponse = new ApiResponse<>(title!=null?title.toString():"", size,lupdate,saleList);
+		ApiResponse<MktRepo2Response> apiResponse = new ApiResponse<>(title!=null?title.toString():"", size,decimalKeys,saleList);
 		return apiResponse;
 		
 		} catch (Exception e) {
@@ -467,6 +472,7 @@ public class MktRepo2ServiceImpl implements MktRepo2Service {
 		int grep=0;
 
 		int nrep=0;
+		ArrayList<String> decimalKeys = new ArrayList<>();
 		for (int i=0;i<size;i++)
 		{
 			MktRepo2 data = MktRepo2List.get(i);
@@ -478,6 +484,10 @@ public class MktRepo2ServiceImpl implements MktRepo2Service {
 				gpname=data.getGp_name();
 				nrep=data.getnrep();
 					first=false;
+					decimalKeys.add("mth_ach_per");
+					decimalKeys.add("cum_ach_per");
+					decimalKeys.add("cum_gth_per");
+					
 			}
 			
 				
@@ -505,7 +515,7 @@ public class MktRepo2ServiceImpl implements MktRepo2Service {
  				response.setCumAchPer(data.getCumtarqty()!=0?AppCalculationUtils.calculateAch(data.getCummsaleqty(), data.getCumtarqty()):0);
 		    	response.setCumSurSlashDef(data.getCummsaleqty()-data.getCumtarqty());
 		    	response.setCumLys(data.getCumlysqty());
-		    	response.setGthPer(data.getCumlysqty()!=0?AppCalculationUtils.calculateGth(data.getCummsaleqty(), data.getCumlysqty()):0.0);
+		    	response.setCumGthPer(data.getCumlysqty()!=0?AppCalculationUtils.calculateGth(data.getCummsaleqty(), data.getCumlysqty()):0.0);
 		    	response.setPmr(data.getnrep()!=0?AppCalculationUtils.calculatePmr(data.getCummsaleqty(), data.getnrep()):0);
 		    }
 		    else if (request.getUv()==2)
@@ -519,7 +529,7 @@ public class MktRepo2ServiceImpl implements MktRepo2Service {
  				response.setCumAchPer(data.getCumtarval()!=0?AppCalculationUtils.calculateAch(data.getCummsaleval(), data.getCumtarval()):0);
 		    	response.setCumSurSlashDef(data.getCummsaleval()-data.getCumtarval());
 		    	response.setCumLys(data.getCumlysval());
-		    	response.setGthPer(data.getCumlysval()!=0?AppCalculationUtils.calculateGth(data.getCummsaleval(), data.getCumlysval()):0.0);
+		    	response.setCumGthPer(data.getCumlysval()!=0?AppCalculationUtils.calculateGth(data.getCummsaleval(), data.getCumlysval()):0.0);
 		    	response.setPmr(data.getnrep()!=0?AppCalculationUtils.calculatePmr(data.getCummsaleval(), data.getnrep()):0);
 		    }
 		    if(data.getBrname().contains("Total"))
@@ -602,7 +612,7 @@ public class MktRepo2ServiceImpl implements MktRepo2Service {
 			response.setCumAchPer(gcumtval!=0?AppCalculationUtils.calculateAch(gcumsval, gcumtval):0);
 			response.setCumSurSlashDef(gcumsval-gcumtval);
 			response.setCumLys(gcumlysval);
-			response.setGthPer(gcumlysval!=0?AppCalculationUtils.calculateGth(gcumsval, gcumlysval):0.0);
+			response.setCumGthPer(gcumlysval!=0?AppCalculationUtils.calculateGth(gcumsval, gcumlysval):0.0);
 			response.setPmr(nrep!=0?AppCalculationUtils.calculatePmr(gcumsval, grep):0);
 			response.setColor(2);
 
@@ -610,7 +620,7 @@ public class MktRepo2ServiceImpl implements MktRepo2Service {
 		}
 
 		
-		ApiResponse<MktRepo2SelectiveItemResponse> apiResponse = new ApiResponse<>(title!=null?title.toString():"", size,saleList);
+		ApiResponse<MktRepo2SelectiveItemResponse> apiResponse = new ApiResponse<>(title!=null?title.toString():"", size,decimalKeys,saleList);
 		return apiResponse;
 		
 		} catch (Exception e) {
@@ -681,8 +691,10 @@ public class MktRepo2ServiceImpl implements MktRepo2Service {
 		long gcumexpiryval=0;
 
 		int grep=0;
-
+		int depo_code=0;
+		int ter_code=0;
 		int nrep=0;
+		ArrayList<String> decimalKeys = new ArrayList<>();
 		for (int i=0;i<size;i++)
 		{
 			MktRepo2New data = MktRepo2List.get(i);
@@ -695,9 +707,29 @@ public class MktRepo2ServiceImpl implements MktRepo2Service {
 				gpname=data.getGp_name();
 				
 					first=false;
+					decimalKeys.add("mth_ach_per");
+					decimalKeys.add("mth_gth_per");
+					decimalKeys.add("cum_ach_per");
+					decimalKeys.add("cum_gth_per");
+					decimalKeys.add("expiry_ratio");
+
 			}
 			
+			if(request.getDepoCode()==0  && data.getSdepo_code()!=depo_code )
+			{
 				
+	    		grep+=data.getNrep();
+	    		nrep+=data.getNrep();
+				depo_code=data.getSdepo_code();
+			}
+			if(request.getDepoCode()>0 && data.getTerr_cd()!=ter_code  )
+			{
+				
+	    		grep+=data.getNrep();
+	    		nrep+=data.getNrep();
+				ter_code=data.getTerr_cd();
+				
+			}
 			
 			if(mgrp!=data.getMgrp())
 			{
@@ -722,7 +754,7 @@ public class MktRepo2ServiceImpl implements MktRepo2Service {
 
 				response.setCumAchPer(cumtval!=0?AppCalculationUtils.calculateAch(cumsval, cumtval):0);
 				response.setCumSurSlashDef(cumsval-cumtval);
-				response.setGthPer(cumlysval!=0?AppCalculationUtils.calculateGth(cumsval, cumlysval):0.0);
+				response.setCumGthPer(cumlysval!=0?AppCalculationUtils.calculateGth(cumsval, cumlysval):0.0);
 				response.setPmr(nrep!=0?AppCalculationUtils.calculatePmr(cumsval, nrep):0);
 		    	response.setLysPmr(nrep!=0?AppCalculationUtils.calculatePmr(cumlysval, nrep):0);
 		    	response.setIncrPmr(response.getPmr()-response.getLysPmr());
@@ -734,6 +766,9 @@ public class MktRepo2ServiceImpl implements MktRepo2Service {
 				saleList.add(response);
 				gpname=data.getGp_name();
 				mgrp=data.getMgrp();
+				
+
+				
 	    		tval=0;
 	    		sval=0;
 	    		lysval=0;
@@ -756,8 +791,13 @@ public class MktRepo2ServiceImpl implements MktRepo2Service {
 				response.setBranch(data.getBrname());
 				response.setHqName(data.getTer_name());
 			}	
+    		
+    		
 				response.setFs(data.getNrep());
 				response.setName(data.getPname());
+				
+				if(data.getPname().contains("TOTAL"))
+					response.setColor(1);
 //		    if (request.getUv()==1)
 		    {
 		    	
@@ -777,7 +817,7 @@ public class MktRepo2ServiceImpl implements MktRepo2Service {
 		    	response.setCumIncr(data.getCummsaleqty()-data.getCumlysqty());
 
 		    	response.setCumLys(data.getCumlysqty());
-		    	response.setGthPer(data.getCumlysqty()!=0?AppCalculationUtils.calculateGth(data.getCummsaleqty(), data.getCumlysqty()):0.0);
+		    	response.setCumGthPer(data.getCumlysqty()!=0?AppCalculationUtils.calculateGth(data.getCummsaleqty(), data.getCumlysqty()):0.0);
 		    	response.setPmr(data.getNrep()!=0?AppCalculationUtils.calculatePmr(data.getCummsaleqty(), data.getNrep()):0);
 		    	response.setLysPmr(data.getNrep()!=0?AppCalculationUtils.calculatePmr(data.getCumlysqty(), data.getNrep()):0);
 		    	response.setIncrPmr(response.getPmr()-response.getLysPmr());
@@ -804,11 +844,20 @@ public class MktRepo2ServiceImpl implements MktRepo2Service {
 	    	saleList.add(response);
 
 	    	
+	    	
 		    if(!data.getBrname().equalsIgnoreCase("Total : "))
 		    {
-				grep+=data.getNrep();
-				nrep+=data.getNrep();
+		    	
+		    	if(data.getPname().contains("TOTAL"))
+		    	{
 
+		    	}
+		    	else
+		    	{
+		    		
+/*		    		grep+=data.getNrep();
+		    		nrep+=data.getNrep();
+*/
 		    		tval+=data.getTargetval();
 		    		sval+=data.getSaleval();
 		    		lysval+=data.getLysval();
@@ -818,12 +867,12 @@ public class MktRepo2ServiceImpl implements MktRepo2Service {
 		    		cumexpiryval+=data.getCumexpiry_val();
 		    		gtval+=data.getTargetval();
 		    		gsval+=data.getSaleval();
-		    		glysval+=data.getSaleval();
+		    		glysval+=data.getLysval();
 		    		gcumtval+=data.getCumtarval();
 		    		gcumsval+=data.getCummsaleval();
 		    		gcumlysval+=data.getCumlysval();
 		    		gcumexpiryval+=data.getCumexpiry_val();
-
+		    	}
 		    }
 		} //end of for loop
 		
@@ -854,8 +903,9 @@ public class MktRepo2ServiceImpl implements MktRepo2Service {
 	    	response.setCumIncr(cumsval-cumlysval);
 
 			response.setCumAchPer(cumtval!=0?AppCalculationUtils.calculateAch(cumsval, cumtval):0);
+			
 			response.setCumSurSlashDef(cumsval-cumtval);
-			response.setGthPer(cumlysval!=0?AppCalculationUtils.calculateGth(cumsval, cumlysval):0.0);
+			response.setCumGthPer(cumlysval!=0?AppCalculationUtils.calculateGth(cumsval, cumlysval):0.0);
 			response.setPmr(nrep!=0?AppCalculationUtils.calculatePmr(cumsval, nrep):0);
 	    	response.setLysPmr(nrep!=0?AppCalculationUtils.calculatePmr(cumlysval, nrep):0);
 	    	response.setIncrPmr(response.getPmr()-response.getLysPmr());
@@ -874,7 +924,7 @@ public class MktRepo2ServiceImpl implements MktRepo2Service {
 			response.setMthSale(gsval);
 			response.setMthLys(glysval);
 			response.setMthAchPer(gtval!=0?AppCalculationUtils.calculateAch(gsval, gtval):0);
-			response.setGthPer(glysval!=0?AppCalculationUtils.calculateGth(gsval, glysval):0.0);
+			response.setMthGthPer(glysval!=0?AppCalculationUtils.calculateGth(gsval, glysval):0.0);
 			response.setMthSurSlashDef(gsval-gtval);
 	    	response.setMthIncr(gsval-glysval);
 
@@ -886,7 +936,7 @@ public class MktRepo2ServiceImpl implements MktRepo2Service {
 			response.setCumExpiry(gcumexpiryval);
 	    	response.setCumIncr(gcumsval-gcumlysval);
 
-			response.setGthPer(gcumlysval!=0?AppCalculationUtils.calculateGth(gcumsval, gcumlysval):0.0);
+			response.setCumGthPer(gcumlysval!=0?AppCalculationUtils.calculateGth(gcumsval, gcumlysval):0.0);
 			response.setPmr(grep!=0?AppCalculationUtils.calculatePmr(gcumsval, grep):0);
 	    	response.setLysPmr(grep!=0?AppCalculationUtils.calculatePmr(gcumlysval, grep):0);
 	    	response.setIncrPmr(response.getPmr()-response.getLysPmr());
@@ -898,7 +948,7 @@ public class MktRepo2ServiceImpl implements MktRepo2Service {
 		}
 
 		
-		ApiResponse<MktRepo2MultipleGroupResponse> apiResponse = new ApiResponse<>(title!=null?title.toString():"", size,saleList);
+		ApiResponse<MktRepo2MultipleGroupResponse> apiResponse = new ApiResponse<>(title!=null?title.toString():"", size,decimalKeys,saleList);
 		return apiResponse;
 		
 		} catch (Exception e) {

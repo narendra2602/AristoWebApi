@@ -24,7 +24,7 @@ public class MktRepo2SelectiveItemResponse {
 	private double cumAchPer;
 	private long cumSurSlashDef;
 	private long cumLys;
-	private double gthPer;
+	private double cumGthPer;
 	private int pmr;
 		private int color;
 	

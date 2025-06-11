@@ -23,6 +23,11 @@ public interface BranchMisRepo5 {
 	public long getPisale();
 	public String getSmname();
 	public String getEmname();
+	public long getExp200();
+	public long getSexp200();
+	public long getNet200();
+	public double getAch200();
+	
 
 
 

@@ -71,7 +71,7 @@ public class MktReport8ServiceImpl implements MktRepo8Service{
 		long  bval=0;
 		long  tval=0;
 
-
+		ArrayList<String> decimalKeys = new ArrayList<>();
 		for (int i=0;i<size;i++)
 		{
 			MktRepo8 data = MktRepo8List.get(i);
@@ -83,6 +83,7 @@ public class MktReport8ServiceImpl implements MktRepo8Service{
 			{
 				title = getTitle(request, data);
 				first=false;
+				decimalKeys.add("expiry_ratio");
 			}
 			
 			response=new MktRepo8Response();
@@ -115,7 +116,7 @@ public class MktReport8ServiceImpl implements MktRepo8Service{
 		}
 
 		
-		ApiResponse<MktRepo8Response> apiResponse = new ApiResponse<>(title!=null?title.toString():"", size,lupdate,saleList);
+		ApiResponse<MktRepo8Response> apiResponse = new ApiResponse<>(title!=null?title.toString():"", size,decimalKeys,saleList);
 		return apiResponse;
 		
 		} catch (Exception e) {

@@ -21,6 +21,10 @@ public class BranchMisRepo5Response {
 	private long netSale;
 	private double achPer;
 	private long surSlashdef;
+	private long exp200;
+	private long sexp200;
+	private long net200;
+	private double ach200;
 	private long lastYearSale;
 	private int color;
 
