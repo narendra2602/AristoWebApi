@@ -88,6 +88,9 @@ public class BranchMisServiceImpl implements BranchMisservice{
 		long sexp200=0;
 		long net200=0;
 		long ach200=0;
+		long pinCodeBudget=0;
+		long pinCodeSale=0;
+		long pinCodeAchPer=0;
 		long lys=0;
 		long abudget=0;
 		long agross=0;
@@ -98,6 +101,9 @@ public class BranchMisServiceImpl implements BranchMisservice{
 		long asexp200=0;
 		long anet200=0;
 		long aach200=0;
+		long apinCodeBudget=0;
+		long apinCodeSale=0;
+		long apinCodeAchPer=0;
 
 		long gbudget=0;
 		long ggross=0;
@@ -108,6 +114,10 @@ public class BranchMisServiceImpl implements BranchMisservice{
 		long gsexp200=0;
 		long gnet200=0;
 		long gach200=0;
+		long gpinCodeBudget=0;
+		long gpinCodeSale=0;
+		long gpinCodeAchPer=0;
+
 		ArrayList<String> decimalKeys = new ArrayList<>();
 		String branch="";
 		for (int i=0;i<size;i++)
@@ -127,12 +137,13 @@ public class BranchMisServiceImpl implements BranchMisservice{
 				first=false;
 				decimalKeys.add("ach_per");
 				decimalKeys.add("ach200");
+//				decimalKeys.add("pin_code_sale_ach_per");
 			}
 			
 			if(reg_code!=data.getReg_cd())
 			{
 				
-				saleList.add(getResponse(branch,reg_name,budget,gross,credit,lys,net,1,exp200,sexp200,net200,ach200));
+				saleList.add(getResponse(branch,reg_name,budget,gross,credit,lys,net,1,exp200,sexp200,net200,ach200,pinCodeBudget,pinCodeSale,pinCodeAchPer));
 				reg_code=data.getReg_cd();
 				reg_name=data.getReg_name();
 				budget=0;
@@ -144,6 +155,9 @@ public class BranchMisServiceImpl implements BranchMisservice{
 				sexp200=0;
 				net200=0;
 				ach200=0;
+				pinCodeBudget=0;
+				pinCodeSale=0;
+				pinCodeAchPer=0;
 
 				
 			}
@@ -151,7 +165,7 @@ public class BranchMisServiceImpl implements BranchMisservice{
 			if(area_code!=data.getArea_cd())
 			{
 				
-				saleList.add(getResponse(branch,area_name,abudget,agross,acredit,alys,anet,2,aexp200,asexp200,anet200,aach200));
+				saleList.add(getResponse(branch,area_name,abudget,agross,acredit,alys,anet,2,aexp200,asexp200,anet200,aach200,apinCodeBudget,apinCodeSale,apinCodeAchPer));
 				area_code=data.getArea_cd();
 				area_name=data.getArea_name();
 				abudget=0;
@@ -163,6 +177,9 @@ public class BranchMisServiceImpl implements BranchMisservice{
 				asexp200=0;
 				anet200=0;
 				aach200=0;
+				apinCodeBudget=0;
+				apinCodeSale=0;
+				apinCodeAchPer=0;
 				
 			}
 
@@ -170,7 +187,7 @@ public class BranchMisServiceImpl implements BranchMisservice{
 			if(!branch.equalsIgnoreCase(data.getDepo_name()) && request.getRepType()==2)
 			{
 				
-				saleList.add(getResponse(branch,"Total",budget,gross,credit,lys,net,2,exp200,sexp200,net200,ach200));
+				saleList.add(getResponse(branch,"Total",budget,gross,credit,lys,net,2,exp200,sexp200,net200,ach200,pinCodeBudget,pinCodeSale,pinCodeAchPer));
 				branch=data.getDepo_name();
 				budget=0;
 				gross=0;
@@ -181,11 +198,14 @@ public class BranchMisServiceImpl implements BranchMisservice{
 				sexp200=0;
 				net200=0;
 				ach200=0;
-				
+				pinCodeBudget=0;
+				pinCodeSale=0;
+				pinCodeAchPer=0;
+
 			}
 
 			
-			saleList.add(getResponse(data.getDepo_name(),request.getDepoCode()>0 || request.getRepType()==2?data.getTer_name():"",data.getBudget(),data.getGross(),data.getCredit(),data.getLysval(),data.getNet(),0,data.getExp200(),data.getSexp200(),data.getNet200(),data.getAch200()));
+			saleList.add(getResponse(data.getDepo_name(),request.getDepoCode()>0 || request.getRepType()==2?data.getTer_name():"",data.getBudget(),data.getGross(),data.getCredit(),data.getLysval(),data.getNet(),0,data.getExp200(),data.getSexp200(),data.getNet200(),data.getAch200(),data.getMtb_val(),data.getMtb_val(),data.getMtb_ach_val()));
 
 	    	
 	    	budget+=data.getBudget();
@@ -197,6 +217,8 @@ public class BranchMisServiceImpl implements BranchMisservice{
 			sexp200+=data.getSexp200();
 			net200+=data.getNet200();
 			ach200+=data.getAch200();
+			pinCodeBudget+=data.getMtb_val();
+			pinCodeSale+=data.getMtb_val();
 
 	    	
 	    	abudget+=data.getBudget();
@@ -208,6 +230,8 @@ public class BranchMisServiceImpl implements BranchMisservice{
 			asexp200+=data.getSexp200();
 			anet200+=data.getNet200();
 			aach200+=data.getAch200();
+			apinCodeBudget+=data.getMtb_val();
+			apinCodeSale+=data.getMtb_val();
 
 	    	gbudget+=data.getBudget();
 	    	ggross+=data.getGross();
@@ -218,23 +242,25 @@ public class BranchMisServiceImpl implements BranchMisservice{
 			gsexp200+=data.getSexp200();
 			gnet200+=data.getNet200();
 			gach200+=data.getAch200();
+			gpinCodeBudget+=data.getMtb_val();
+			gpinCodeSale+=data.getMtb_val();
 
 		} //end of for loop
 		
 			if(request.getDepoCode()>0)
 			{
-			saleList.add(getResponse(branch,reg_name,budget,gross,credit,lys,net,1,exp200,sexp200,net200,ach200));
-			saleList.add(getResponse(branch,area_name,abudget,agross,acredit,alys,anet,2,aexp200,asexp200,anet200,aach200));
-			saleList.add(getResponse(branch," Total",gbudget,ggross,gcredit,glys,gnet,3,gexp200,gsexp200,gnet200,gach200));
+			saleList.add(getResponse(branch,reg_name,budget,gross,credit,lys,net,1,exp200,sexp200,net200,ach200,pinCodeBudget,pinCodeSale,pinCodeAchPer));
+			saleList.add(getResponse(branch,area_name,abudget,agross,acredit,alys,anet,2,aexp200,asexp200,anet200,aach200,apinCodeBudget,apinCodeSale,apinCodeAchPer));
+			saleList.add(getResponse(branch," Total",gbudget,ggross,gcredit,glys,gnet,3,gexp200,gsexp200,gnet200,gach200,gpinCodeBudget,gpinCodeSale,gpinCodeAchPer));
 			}
 			else if(request.getDepoCode()==0 && request.getRepType()==1)
 			{
-			saleList.add(getResponse("All India"," Total",gbudget,ggross,gcredit,glys,gnet,3,gexp200,gsexp200,gnet200,gach200));
+			saleList.add(getResponse("All India"," Total",gbudget,ggross,gcredit,glys,gnet,3,gexp200,gsexp200,gnet200,gach200,gpinCodeBudget,gpinCodeSale,gpinCodeAchPer));
 			}
 			else if(request.getDepoCode()==0 && request.getRepType()==2)
 			{
-				saleList.add(getResponse(branch," Total",budget,gross,credit,lys,net,2,exp200,sexp200,net200,ach200));
-				saleList.add(getResponse("All India"," Total",gbudget,ggross,gcredit,glys,gnet,3,gexp200,gsexp200,gnet200,gach200));
+				saleList.add(getResponse(branch," Total",budget,gross,credit,lys,net,2,exp200,sexp200,net200,ach200,pinCodeBudget,pinCodeSale,pinCodeAchPer));
+				saleList.add(getResponse("All India"," Total",gbudget,ggross,gcredit,glys,gnet,3,gexp200,gsexp200,gnet200,gach200,gpinCodeBudget,gpinCodeSale,gpinCodeAchPer));
 			}
 
 		ApiResponse<BranchMisRepo5Response> apiResponse = new ApiResponse<>(title!=null?title.toString():"", size,decimalKeys,saleList);
@@ -249,7 +275,7 @@ public class BranchMisServiceImpl implements BranchMisservice{
 	}
 
 
-	private BranchMisRepo5Response getResponse(String branch,String name,long budget,long gross,long credit,long lastYearSale,long net, int color,long exp200,long sexp200,long net200, double ach200)
+	private BranchMisRepo5Response getResponse(String branch,String name,long budget,long gross,long credit,long lastYearSale,long net, int color,long exp200,long sexp200,long net200, double ach200,long pinCodeBudget,long pinCodeSale,double pinCodeAchPer)
 	{
 		BranchMisRepo5Response response=new BranchMisRepo5Response();
 		response.setBranch(branch);
@@ -272,7 +298,9 @@ public class BranchMisServiceImpl implements BranchMisservice{
 		response.setSexp200(sexp200);
 		response.setNet200(net200);
 		response.setAch200(AppCalculationUtils.calculateAch(net200, budget));
-
+		response.setPinCodeBudget(pinCodeSale);
+		response.setPinCodeSale(pinCodeSale);
+//		response.setPinCodeSaleAchPer(AppCalculationUtils.calculateAch(pinCodeSale, pinCodeSale));  // budgt and target is same
 		
 
 		response.setColor(color);

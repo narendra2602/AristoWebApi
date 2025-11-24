@@ -56,11 +56,11 @@ public interface MktRepo1Dao extends JpaRepository<MktDataDto, Integer>{
 			@Param("smon") int smon,@Param("emon") int emon,@Param("utype") int utype,@Param("login_id") int login_id);
 
 	
-	@Query(value = "SELECT depo_code,depo_name FROM branch_comp where depo_code <>32 order by depo_code", nativeQuery = true)
+	@Query(value = "SELECT depo_code,depo_name FROM branch_comp where depo_code not in(90,32) order by depo_code", nativeQuery = true)
 	List<BranchMasterDto> getAllBranch();
 
 	
-	@Query(value = "SELECT ter_code depo_code,ter_name depo_name FROM hqmast  where mkt_year=:myear and div_code=:div_code and depo_code=:depo and ter_code<>0",  nativeQuery = true)
+	@Query(value = "SELECT ter_code depo_code,ter_name depo_name FROM hqmast  where mkt_year=:myear and div_code=:div_code and depo_code=:depo and ter_code<>0 order by ter_code ",  nativeQuery = true)
 	List<BranchMasterDto> getAllHq(@Param("myear") int myear,@Param("div_code") int div_code,@Param("depo") int depo);
 
 	
@@ -81,5 +81,8 @@ public interface MktRepo1Dao extends JpaRepository<MktDataDto, Integer>{
 	@Query(value="CALL web_stockist_mtb(:myear,:smon,:emon,:login_id);", nativeQuery=true)
 	List<MtbStockiestDto> getWebStockiestMtb(@Param("myear") int myear,
 			@Param("smon") int smon,@Param("emon") int emon,@Param("login_id") int login_id);
+	
+	@Query(value = "SELECT rep_name FROM optionmast where rep_type=:reporttype", nativeQuery = true)
+	String getReporName(@Param("reporttype") int reporttype);
 
 }

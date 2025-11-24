@@ -53,7 +53,7 @@ public class SampleSm01ServiceImpl implements SampleSm01Service {
 		
 		StringBuilder title=new StringBuilder();
 		title.append(aristoWebMessageConstant.divisionMap.get(String.valueOf(data.getDiv_code())));
-		title.append("All India Productwise Sample Report for the Month of ");
+		title.append("All India Productwise Sample Isuue to FS Report for the Month of ");
 		title.append(data.getSmname());
 		title.append(" To ");
 		title.append(data.getEmname());
@@ -246,7 +246,7 @@ public class SampleSm01ServiceImpl implements SampleSm01Service {
 		title.append(data.getPname());
 		title.append(" ");
 		title.append(" BRANCH WISE ");
-		title.append(request.getUv()==1?" UNIT SALES TREND ":" VALUE SALES TREND FROM ");
+		title.append(request.getUv()==1?" UNIT ISSUE TO FS TREND ":" VALUE ISSUE TO FS TREND FROM ");
 		title.append(data.getSmname());
 		title.append(" To ");
 		title.append(data.getEmname());

@@ -18,8 +18,7 @@ import com.aristowebapi.dto.DashBoardData;
 import com.aristowebapi.dto.DashBoardDataAchGTh;
 import com.aristowebapi.dto.DashBoardDataDouble;
 import com.aristowebapi.dto.DashBoardSalesChart;
-import com.aristowebapi.dto.MktRepo9;
-import com.aristowebapi.dto.MonthDto;
+import com.aristowebapi.dto.OptionMasterDto;
 import com.aristowebapi.dto.StockiestMaster;
 import com.aristowebapi.response.ApiResponse;
 import com.aristowebapi.response.DashBoardAchGthResponse;
@@ -28,7 +27,6 @@ import com.aristowebapi.response.DashBoardDataResponse;
 import com.aristowebapi.response.DashBoardDataResponseDouble;
 import com.aristowebapi.response.DashBoardPanelDataResponse;
 import com.aristowebapi.response.DataSetResponse;
-import com.aristowebapi.response.MktRepo9Response;
 import com.aristowebapi.response.StockiestResponse;
 import com.aristowebapi.service.DashBoardService;
 import com.aristowebapi.utility.AppCalculationUtils;
@@ -656,6 +654,25 @@ public class DashBoardChartServiceImpl implements DashBoardService {
 		
 		ApiResponse<DashBoardDataResponse> apiResponse = new ApiResponse<>(title!=null?title.toString():"", size,saleList);
 		return apiResponse;	}
+
+	@Override
+	public ApiResponse<DashBoardDataResponse> getOptionCombo() {
+		List<OptionMasterDto> optionlist=dashBoardDao.getAllOption();
+		List<DashBoardDataResponse> optionResponseList=new ArrayList<>();
+		
+		    int size=optionlist.size();
+		    
+		    optionlist.forEach(data->{
+
+			DashBoardDataResponse option=new DashBoardDataResponse();
+			option.setValue(data.getRep_type());
+			option.setName(data.getRep_name());
+			optionResponseList.add(option);
+		});
+	
+		ApiResponse<DashBoardDataResponse> apiResponse = new ApiResponse<>("Option",size,optionResponseList);
+		return apiResponse;
+	}
 
 
 }

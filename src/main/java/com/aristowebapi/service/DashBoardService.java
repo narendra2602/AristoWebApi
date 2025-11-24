@@ -31,6 +31,7 @@ public interface DashBoardService {
 	ApiResponse<DashBoardDataResponseDouble> getDashboardTop5Products(int myear,int div_code, int depo_code,int cmon,int login_id);
 	ApiResponse<DashBoardDataResponse> getDashboardMonthCombo(int myear,int div_code, int depo_code,int login_id,int usertype);
 	ApiResponse<DashBoardDataResponse> getDashboardYearCombo();
+	ApiResponse<DashBoardDataResponse> getOptionCombo();
 	
 	ApiResponse<DashBoardDataResponse> getDivisionList(int loginId);
 

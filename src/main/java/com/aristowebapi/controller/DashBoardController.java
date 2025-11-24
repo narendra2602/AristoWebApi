@@ -248,6 +248,22 @@ public class DashBoardController {
 	
 	}
 
+	
+	@GetMapping("${mrc_dashboardOptionCombo_path}")
+	public ResponseEntity<ApiResponse<DashBoardDataResponse>> getOptionList(HttpServletRequest request)
+	{
+
+        int loginId=getLoginIdFromToken(request)[0];
+
+		logger.info(AristoWebLogMsgConstant.DASH_BOARD_CONTROLLER,"getOptionList");
+        
+		return new ResponseEntity<ApiResponse<DashBoardDataResponse>>(dashBoardService.getOptionCombo(), HttpStatus.OK);
+
+	
+	}
+
+	
+	
 	@GetMapping("${mrc_dashboardHoBranch_path}")
 	public ResponseEntity<ApiResponse<DashBoardDataResponse>> getHoBranchList(@PathVariable("divCode") int divCode,HttpServletRequest request)
 	{

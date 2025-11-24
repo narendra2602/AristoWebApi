@@ -44,7 +44,7 @@ public class NearExpiryController {
         int uType=getLoginIdFromToken(req)[1];
 
         request.setLoginId(loginId);
-        
+        request.setUserType(uType);
         logger.info(AristoWebLogMsgConstant.NEAR_EXPIRY_CONTROLLER,"getExpiryReport", request.getDivCode(),loginId);
 		return new ResponseEntity<ApiResponse<NearExpiryResponse>>(nearExpiryService.getExpiryReport(request), HttpStatus.OK);
 	
@@ -60,9 +60,10 @@ public class NearExpiryController {
         int uType=getLoginIdFromToken(req)[1];
 
         request.setLoginId(loginId);
+        request.setUserType(uType);
         
-        logger.info(AristoWebLogMsgConstant.NEAR_EXPIRY_CONTROLLER,"getExpiryReportBranchwise", request.getDivCode(),loginId);
-		return new ResponseEntity<ApiResponse<NearExpiryBranchWiseResponse>>(nearExpiryService.getExpiryReporBranchwiset(request), HttpStatus.OK);
+        logger.info(AristoWebLogMsgConstant.NEAR_EXPIRY_CONTROLLER,"getExpiryReportBranchwise", request.getDivCode(),loginId,uType);
+		return new ResponseEntity<ApiResponse<NearExpiryBranchWiseResponse>>(nearExpiryService.getExpiryReporBranchwise(request), HttpStatus.OK);
 	
 	}
 

@@ -8,6 +8,6 @@ import com.aristowebapi.response.NearExpiryResponse;
 public interface NearExpiryService { 
 	
 	ApiResponse<NearExpiryResponse> getExpiryReport(NearExpiryRequest request);
-	ApiResponse<NearExpiryBranchWiseResponse> getExpiryReporBranchwiset(NearExpiryRequest request);
+	ApiResponse<NearExpiryBranchWiseResponse> getExpiryReporBranchwise(NearExpiryRequest request);
 
 }

@@ -9,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,11 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.aristowebapi.constant.AristoWebLogMsgConstant;
 import com.aristowebapi.request.LoginRequest;
 import com.aristowebapi.response.ApiResponse;
-import com.aristowebapi.response.BranchResponse;
 import com.aristowebapi.response.DataUploadMessageResponse;
-import com.aristowebapi.response.DivResponse;
 import com.aristowebapi.response.LoginResponse;
 import com.aristowebapi.response.ReportTabResponse;
+import com.aristowebapi.response.VersionResponse;
 import com.aristowebapi.service.LoginService;
 import com.aristowebapi.utility.AppRequestParameterUtils;
 
@@ -81,6 +79,19 @@ public class LoginController {
 	
 	}
 
+	
+	   @GetMapping("/uploadstatus")
+		public ResponseEntity<VersionResponse> getVersion()
+		{
+
+			logger.info(AristoWebLogMsgConstant.LOGIN_CONTROLLER,"getVersion");
+
+			
+			return new ResponseEntity<VersionResponse>(loginService.getVersion(), HttpStatus.OK);
+		
+		}
+
+	
      private int getLoginIdFromToken(HttpServletRequest request)
      {
  		String authHeader = request.getHeader("Authorization");

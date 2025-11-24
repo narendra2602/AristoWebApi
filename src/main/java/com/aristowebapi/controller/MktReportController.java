@@ -22,6 +22,7 @@ import com.aristowebapi.request.MktRepo3Request;
 import com.aristowebapi.request.MktRepo4Request;
 import com.aristowebapi.request.MktRepo5Request;
 import com.aristowebapi.request.MktRepo6Request;
+import com.aristowebapi.request.MktRepo6aRequest;
 import com.aristowebapi.request.MktRepo7Request;
 import com.aristowebapi.request.MktRepo8Request;
 import com.aristowebapi.request.MktRepo9Request;
@@ -37,6 +38,7 @@ import com.aristowebapi.response.MktRepo3Response;
 import com.aristowebapi.response.MktRepo4Response;
 import com.aristowebapi.response.MktRepo5Response;
 import com.aristowebapi.response.MktRepo6Response;
+import com.aristowebapi.response.MktRepo6aResponse;
 import com.aristowebapi.response.MktRepo7Response;
 import com.aristowebapi.response.MktRepo8Response;
 import com.aristowebapi.response.MktRepo9Response;
@@ -269,6 +271,21 @@ public class MktReportController {
 		return new ResponseEntity<ApiResponse<MktRepo6Response>>(mktRepo6Service.getMktRepo6(request), HttpStatus.OK);
 	
 	}
+	
+	@GetMapping("${mrc_repo6a_path}")
+	public ResponseEntity<ApiResponse<MktRepo6aResponse>> getMktRepo6a(@RequestBody MktRepo6aRequest request ,HttpServletRequest req)
+	{
+		System.out.println("yeha per aaya kya");
+		int requestValues[]=getRequestData(req);
+		request.setLoginId(requestValues[0]);
+		request.setUtype(requestValues[1]);
+		logger.info(AristoWebLogMsgConstant.MKT_REPORT_CONTROLLER_06,"getMktRepo6a", request.getMyear(),request.getDivCode(),request.getDepoCode(),request.getUtype(),request.getLoginId());
+
+		return new ResponseEntity<ApiResponse<MktRepo6aResponse>>(mktRepo6Service.getMktRepo6a(request), HttpStatus.OK);
+	
+	}
+
+	
 	
 	@GetMapping("${mrc_repo7_path}")
 	public ResponseEntity<ApiResponse<MktRepo7Response>> getMktRepo7(@RequestBody MktRepo7Request request ,HttpServletRequest req)

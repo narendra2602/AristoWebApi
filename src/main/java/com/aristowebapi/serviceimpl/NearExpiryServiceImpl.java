@@ -45,7 +45,8 @@ public class NearExpiryServiceImpl implements NearExpiryService{
 		title.append("[");
 		title.append(request.getDepoCode()>0?data.getBranch_name():data.getPname());
 		title.append("]- NEAR EXPIRY/EXPIRED BATCHWISE STOCK AS ON : ");
-		title.append(sdf.format(request.getCurrDate()));
+//		title.append(sdf.format(data.getFiledate()));
+		title.append((data.getFiledate()));
 		
 		return title.toString();
 
@@ -60,12 +61,15 @@ public class NearExpiryServiceImpl implements NearExpiryService{
 		int size = 0;
 		try {
 
-			System.out.println(request.getMktYear()+" "+request.getCode()+" "+request.getLoginId()+" "+new java.sql.Date(request.getCurrDate().getTime())+" "+request.getDivCode());
+			System.out.println(request.getDepoCode()+" "+request.getLoginId()+" "+request.getDivCode()+" "+request.getCode()+" "+request.getUserType()+" "+request.getReportType());
 			
-			nearExpiryList=nearExpiryDao.getNearExpiryReport(request.getMktYear(),request.getCode(),request.getLoginId(),new java.sql.Date(request.getCurrDate().getTime()),request.getDivCode());
+			nearExpiryList=nearExpiryDao.getNearExpiryReport(request.getDepoCode(),request.getLoginId(),request.getDivCode(),request.getCode(),request.getUserType(),request.getReportType());
+			
 
+
+			
 			size=nearExpiryList.size();
-		logger.info("size of the data is {}",size);
+		logger.info("size of the Near expiry data data is {}",size);
 
 		NearExpiryResponse response=null;
 		List<NearExpiryResponse> saleList = new ArrayList();
@@ -77,12 +81,14 @@ public class NearExpiryServiceImpl implements NearExpiryService{
 		int expired90=0;
 		int expired180=0;
 		int expiredabove180=0;
+		int expiredabove365=0;
 		double total=0.00;
 
 		int gexpired_stock=0;
 		int gexpired90=0;
 		int gexpired180=0;
 		int gexpiredabove180=0;
+		int gexpiredabove365=0;
 		double gtotal=0.00;
 
 		for (int i=0;i<size;i++)
@@ -107,7 +113,8 @@ public class NearExpiryServiceImpl implements NearExpiryService{
 				response.setExpiredStock(expired_stock);
 				response.setExpired_0To_90Days(expired90);
 				response.setExpiry_90To_180Days(expired180);
-				response.setAbove_180Days(expiredabove180);
+				response.setExpiry_181To_365Days(expiredabove180);
+				response.setAbove_365Days(expiredabove365);
 				response.setTotalValue(total);
 				response.setColor(1);
 		    	saleList.add(response);
@@ -116,6 +123,7 @@ public class NearExpiryServiceImpl implements NearExpiryService{
 				expired90=0;
 				expired180=0;
 				expiredabove180=0;
+				expiredabove365=0;
 				total=0.00;
 
 				branch=data.getBranch_name();
@@ -130,19 +138,22 @@ public class NearExpiryServiceImpl implements NearExpiryService{
 			response.setExpiredStock(data.getExpired_stock());
 			response.setExpired_0To_90Days(data.getExpired90());
 			response.setExpiry_90To_180Days(data.getExpired180());
-			response.setAbove_180Days(data.getExpiredAbove180());
+			response.setExpiry_181To_365Days(data.getExpiredAbove180());
+			response.setAbove_365Days(data.getAbove365());
 			response.setTotalValue(data.getTotal_value());
 			
 			expired_stock+=data.getExpired_stock();
 			expired90+=data.getExpired90();
 			expired180+=data.getExpired180();
 			expiredabove180+=data.getExpiredAbove180();
+			expiredabove365+=data.getAbove365();
 			total+=data.getTotal_value();
 
 			gexpired_stock+=data.getExpired_stock();
 			gexpired90+=data.getExpired90();
 			gexpired180+=data.getExpired180();
 			gexpiredabove180+=data.getExpiredAbove180();
+			gexpiredabove365+=data.getAbove365();
 			gtotal=AppCalculationUtils.addDouble(gtotal, data.getTotal_value());
 //			gtotal+=data.getTotal_value();
 
@@ -158,7 +169,8 @@ public class NearExpiryServiceImpl implements NearExpiryService{
 		response.setExpiredStock(expired_stock);
 		response.setExpired_0To_90Days(expired90);
 		response.setExpiry_90To_180Days(expired180);
-		response.setAbove_180Days(expiredabove180);
+		response.setExpiry_181To_365Days(expiredabove180);
+		response.setAbove_365Days(expiredabove365);
 		response.setTotalValue(total);
 		response.setColor(1);
     	saleList.add(response);
@@ -171,7 +183,8 @@ public class NearExpiryServiceImpl implements NearExpiryService{
 		response.setExpiredStock(gexpired_stock);
 		response.setExpired_0To_90Days(gexpired90);
 		response.setExpiry_90To_180Days(gexpired180);
-		response.setAbove_180Days(gexpiredabove180);
+		response.setExpiry_181To_365Days(gexpiredabove180);
+		response.setAbove_365Days(gexpiredabove365);
 		response.setTotalValue(gtotal);
 		response.setColor(2);
     	saleList.add(response);
@@ -190,16 +203,18 @@ public class NearExpiryServiceImpl implements NearExpiryService{
 
 
 	@Override
-	public ApiResponse<NearExpiryBranchWiseResponse> getExpiryReporBranchwiset(NearExpiryRequest request) {
-		logger.info(AristoWebLogMsgConstant.NEAR_EXPIRY_SERVICE,"getExpiryReport");
+	public ApiResponse<NearExpiryBranchWiseResponse> getExpiryReporBranchwise(NearExpiryRequest request) {
+		logger.info(AristoWebLogMsgConstant.NEAR_EXPIRY_SERVICE,"getExpiryReporBranchwise");
 		List<NearExpiry> nearExpiryList=null;
 		int size = 0;
+		
 		try {
 
-			System.out.println(request.getMktYear()+" "+request.getCode()+" "+request.getLoginId()+" "+new java.sql.Date(request.getCurrDate().getTime())+" "+request.getDivCode());
+			System.out.println(request.getDepoCode()+" "+request.getLoginId()+" "+request.getDivCode()+" "+request.getReportType()+" "+request.getUserType());
 			
-			nearExpiryList=nearExpiryDao.getNearExpiryReportBranchwise(request.getMktYear(),request.getDepoCode(),request.getLoginId(),new java.sql.Date(request.getCurrDate().getTime()),request.getDivCode());
-
+			nearExpiryList=nearExpiryDao.getNearExpiryReportBranchwise(request.getDepoCode(),request.getLoginId(),request.getDivCode(),request.getReportType(),request.getUserType());
+			
+			
 			size=nearExpiryList.size();
 		logger.info("size of the data is {}",size);
 
@@ -213,18 +228,19 @@ public class NearExpiryServiceImpl implements NearExpiryService{
 		int expired90=0;
 		int expired180=0;
 		int expiredabove180=0;
+		int expiredabove365=0;
 		double total=0.00;
 
 		int gexpired_stock=0;
 		int gexpired90=0;
 		int gexpired180=0;
 		int gexpiredabove180=0;
+		int gexpiredabove365=0;
 		double gtotal=0.00;
 
 		for (int i=0;i<size;i++)
 		{
 			NearExpiry data = nearExpiryList.get(i);
-			
 			
 			if(first)
 			{
@@ -233,7 +249,7 @@ public class NearExpiryServiceImpl implements NearExpiryService{
 				first=false;
 			}
 			
-			if(!pname.equalsIgnoreCase(data.getPname()))
+			if(!pname.equalsIgnoreCase(data.getPname()) && request.getReportType()==1)
 			{
 				response=new NearExpiryBranchWiseResponse();
 				response.setProduct(pname+" Total");
@@ -243,7 +259,8 @@ public class NearExpiryServiceImpl implements NearExpiryService{
 				response.setExpiredStock(expired_stock);
 				response.setExpired_0To_90Days(expired90);
 				response.setExpiry_90To_180Days(expired180);
-				response.setAbove_180Days(expiredabove180);
+				response.setExpiry_181To_365Days(expiredabove180);
+				response.setAbove_365Days(expiredabove365);
 				response.setTotalValue(total);
 				response.setColor(1);
 		    	saleList.add(response);
@@ -252,13 +269,15 @@ public class NearExpiryServiceImpl implements NearExpiryService{
 				expired90=0;
 				expired180=0;
 				expiredabove180=0;
+				expiredabove365=0;
 				total=0.00;
 
 				pname=data.getPname();
 				
 			}
-			
+
 			response=new NearExpiryBranchWiseResponse();
+			response.setBranch(data.getBranch_name());
 			response.setProduct(data.getPname());
 			response.setBatchNo(data.getBatch_no());
 			response.setExpiryDate(data.getExpiry_date());
@@ -266,38 +285,46 @@ public class NearExpiryServiceImpl implements NearExpiryService{
 			response.setExpiredStock(data.getExpired_stock());
 			response.setExpired_0To_90Days(data.getExpired90());
 			response.setExpiry_90To_180Days(data.getExpired180());
-			response.setAbove_180Days(data.getExpiredAbove180());
+			response.setExpiry_181To_365Days(data.getExpiredAbove180());
+			response.setAbove_365Days(data.getAbove365());
 			response.setTotalValue(data.getTotal_value());
 			
 			expired_stock+=data.getExpired_stock();
 			expired90+=data.getExpired90();
 			expired180+=data.getExpired180();
 			expiredabove180+=data.getExpiredAbove180();
+			expiredabove365+=data.getAbove365();
 			total+=data.getTotal_value();
 
 			gexpired_stock+=data.getExpired_stock();
 			gexpired90+=data.getExpired90();
 			gexpired180+=data.getExpired180();
 			gexpiredabove180+=data.getExpiredAbove180();
+			gexpiredabove365+=data.getAbove365();
 			gtotal=AppCalculationUtils.addDouble(gtotal, data.getTotal_value());
 //			gtotal+=data.getTotal_value();
 
 			saleList.add(response);
 
+
 		} //end of for loop
 
-		response=new NearExpiryBranchWiseResponse();
-		response.setProduct(pname+" Total");
-		response.setBatchNo("");
-		response.setExpiryDate("");
-		response.setNetRate(0.00);
-		response.setExpiredStock(expired_stock);
-		response.setExpired_0To_90Days(expired90);
-		response.setExpiry_90To_180Days(expired180);
-		response.setAbove_180Days(expiredabove180);
-		response.setTotalValue(total);
-		response.setColor(1);
-    	saleList.add(response);
+		if(request.getReportType()==1)
+		{
+			response=new NearExpiryBranchWiseResponse();
+			response.setProduct(pname+" Total");
+			response.setBatchNo("");
+			response.setExpiryDate("");
+			response.setNetRate(0.00);
+			response.setExpiredStock(expired_stock);
+			response.setExpired_0To_90Days(expired90);
+			response.setExpiry_90To_180Days(expired180);
+			response.setExpiry_181To_365Days(expiredabove180);
+			response.setAbove_365Days(expiredabove365);
+			response.setTotalValue(total);
+			response.setColor(1);
+			saleList.add(response);
+		}
     	
 		response=new NearExpiryBranchWiseResponse();
 		response.setProduct("Grand Total");
@@ -307,7 +334,8 @@ public class NearExpiryServiceImpl implements NearExpiryService{
 		response.setExpiredStock(gexpired_stock);
 		response.setExpired_0To_90Days(gexpired90);
 		response.setExpiry_90To_180Days(gexpired180);
-		response.setAbove_180Days(gexpiredabove180);
+		response.setExpiry_181To_365Days(gexpiredabove180);
+		response.setAbove_365Days(gexpiredabove365);
 		response.setTotalValue(gtotal);
 		response.setColor(2);
     	saleList.add(response);

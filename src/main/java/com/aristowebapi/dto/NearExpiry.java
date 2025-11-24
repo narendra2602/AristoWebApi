@@ -12,5 +12,7 @@ public interface NearExpiry {
 	public int getExpiredAbove180();
 	public double getTotal_value();
 	public String getPname();
+	public int getAbove365();
+	public String getFiledate();
 
 }

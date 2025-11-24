@@ -88,8 +88,8 @@ public class AristoWebLogMsgConstant {
 	public static final String BRANCH_MIS_REPORT_8_SERVICE_021="BranchMisRepo8ServiceImpl:: {} method occurred exception while fetching data from the database, kindly check store procedure ::getBranchMisRepo8";
 
 	
-	public static final String NEAR_EXPIRY_CONTROLLER="NearExpiryController {} method execution started, div_code: {} , login_id: {}";
-	public static final String NEAR_EXPIRY_SERVICE="NeareXPIRYServiceImpl:: {} method execution started, div_code: {} , login_id: {}";
+	public static final String NEAR_EXPIRY_CONTROLLER="NearExpiryController {} method execution started, div_code: {} , login_id: {}, user_type: {}";
+	public static final String NEAR_EXPIRY_SERVICE="NeareXPIRYServiceImpl:: {} method execution started, div_code: {} , login_id: {}, user_type: {}";
 
 	public static final String MTB_STOCKIEST_CONTROLLER="MarketingController {} method execution started, div_code: {} , login_id: {}";
 	public static final String MTB_STOCKIEST_SERVICE="MktRepo1ServiceImpl:: {} method execution started, div_code: {} , login_id: {}";

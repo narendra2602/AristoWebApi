@@ -1,6 +1,6 @@
-package com.aristowebapi.request;
+package com.aristowebapi.response;
 
-import java.util.Date;
+import java.util.HashMap;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -10,17 +10,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class NearExpiryRequest { 
+public class StkRepo5ResponseNew {
 	
-	private int divCode;
-	private int depoCode;
-	private int loginId;
-	private int userType;
-	private Date currDate;
-	private int code;
-	private int mktYear;
-	private int reportType;
+	private HashMap<String,Object> dataMap;
+
 }

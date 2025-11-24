@@ -27,7 +27,10 @@ public interface BranchMisRepo5 {
 	public long getSexp200();
 	public long getNet200();
 	public double getAch200();
-	
+	public long getMtb_unit();
+	public long getMtb_val();
+	public double getMtb_ach_unit();
+	public double getMtb_ach_val();
 
 
 

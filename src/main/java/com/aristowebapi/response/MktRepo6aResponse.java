@@ -1,29 +1,23 @@
 package com.aristowebapi.response;
 
-import java.util.HashMap;
+import java.util.Map;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class StkRepo5Response {
-	private String branch;
+public class MktRepo6aResponse {
 	private String name;
-	private String invoiceNo;
-	private String invoiceDate;
-	private String batchNo;
-	private double supplyRate;
-	private int salesQty;
-	private long salesVal;
-	private int color;
+	private String pack;
+	private int fs;
 	
+	private int color;
+	private Map<String,Double> months;
 	
 	
 

@@ -13,6 +13,7 @@ import com.aristowebapi.constant.AristoWebMessageConstant;
 import com.aristowebapi.dao.LoginDao;
 import com.aristowebapi.dto.LoginDto;
 import com.aristowebapi.dto.ReportMenuDto;
+import com.aristowebapi.dto.VersionDto;
 import com.aristowebapi.request.LoginRequest;
 import com.aristowebapi.response.BranchResponse;
 import com.aristowebapi.response.DataUploadMessageResponse;
@@ -20,6 +21,7 @@ import com.aristowebapi.response.DivResponse;
 import com.aristowebapi.response.LoginResponse;
 import com.aristowebapi.response.ReportMenuResponse;
 import com.aristowebapi.response.ReportTabResponse;
+import com.aristowebapi.response.VersionResponse;
 import com.aristowebapi.service.LoginService;
 
 @Service
@@ -197,6 +199,21 @@ public class LoginServiceImpl implements LoginService {
 //		ApiResponse<ReportTabResponse> apiResponse = new ApiResponse<>(fname, reportTabResponseList);
 		return reportTabResponseList;
 
+	}
+
+	@Override
+	public VersionResponse getVersion() {
+        logger.info(AristoWebLogMsgConstant.LOGIN_SERVICE,"getVersion");
+		
+		VersionDto vdto=loginDao.getVersion();
+		VersionResponse response = new VersionResponse();
+		response.setUploadStatus(vdto.getUpload_status());
+		if(vdto.getUpload_status().equalsIgnoreCase("Y"))
+			response.setMsg(vdto.getMsg());
+		else
+			response.setMsg("");
+		
+		return response;
 	}
 
 }

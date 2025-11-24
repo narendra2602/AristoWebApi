@@ -1,6 +1,8 @@
 package com.aristowebapi.controller;
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.aristowebapi.constant.AristoWebLogMsgConstant;
 import com.aristowebapi.entity.UserInfo;
 import com.aristowebapi.request.ChangePasswordRequest;
 import com.aristowebapi.request.LoginRequest;
@@ -25,6 +28,8 @@ import com.aristowebapi.response.ApiResponse;
 import com.aristowebapi.response.TokenResponse;
 import com.aristowebapi.response.UserApiResponse;
 import com.aristowebapi.response.UserResponse;
+import com.aristowebapi.response.VersionResponse;
+import com.aristowebapi.service.LoginService;
 import com.aristowebapi.service.TokenBlacklist;
 import com.aristowebapi.serviceimpl.JwtService;
 import com.aristowebapi.serviceimpl.UserInfoDetails;
@@ -37,6 +42,9 @@ import com.aristowebapi.utility.AppRequestParameterUtils;
 @RequestMapping("/auth") 
 public class UserController { 
   
+	
+	Logger logger = LoggerFactory.getLogger(LoginController.class);
+	
     @Autowired
     private UserInfoService service; 
   
@@ -53,6 +61,9 @@ public class UserController {
 	private AppRequestParameterUtils appRequestParameterUtils;
 
     
+	@Autowired
+	private LoginService loginService;
+	
     @GetMapping("/welcome") 
     public String welcome() { 
         return "Welcome this endpoint is not secure"; 
@@ -179,6 +190,8 @@ public class UserController {
         return null;
     }
     
+    
+     
     
 	private int[] getRequestData(HttpServletRequest req)
 	{

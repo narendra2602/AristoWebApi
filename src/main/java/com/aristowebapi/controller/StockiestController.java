@@ -23,11 +23,13 @@ import com.aristowebapi.response.StkRepo10Response;
 import com.aristowebapi.response.StkRepo2Response;
 import com.aristowebapi.response.StkRepo3Response;
 import com.aristowebapi.response.StkRepo5Response;
+import com.aristowebapi.response.StkRepo5ResponseNew;
 import com.aristowebapi.response.StkRepo9Response;
 import com.aristowebapi.service.StkRepo10Service;
 import com.aristowebapi.service.StkRepo2Service;
 import com.aristowebapi.service.StkRepo3Service;
 import com.aristowebapi.service.StkRepo9Service;
+import com.aristowebapi.serviceimpl.StkRepo5ServiceImpl;
 import com.aristowebapi.utility.AppRequestParameterUtils;
 
 @RestController
@@ -50,6 +52,11 @@ public class StockiestController {
 
 	@Autowired
 	private StkRepo3Service stkRepo3Service;
+	
+	
+	@Autowired
+	private StkRepo5ServiceImpl stkRepo5ServiceImpl;
+
 	
 	@Autowired
 	private StkRepo9Service stkRepo9Service;
@@ -115,9 +122,25 @@ public class StockiestController {
 		logger.info(AristoWebLogMsgConstant.STK_REPO5_CONTROLLER,"getStkRepo5",request.getMyear(),request.getDivCode(),request.getDepoCode(),request.getUtype(),request.getLoginId());
 
 		return new ResponseEntity<ApiResponse<StkRepo5Response>>(stkRepo9Service.getStkRepo5(request), HttpStatus.OK);
+
 	
 	}
 
+	// this is new jdbc templet service
+/*	@GetMapping("${mrc_stk_rep5_path}")
+	public ResponseEntity<ApiResponse<StkRepo5ResponseNew>> getStkRepo5(@RequestBody StkRepo9Request request ,HttpServletRequest req)
+	{
+		
+		int requestValues[]=getRequestData(req);
+		request.setLoginId(requestValues[0]);
+		request.setUtype(requestValues[1]);
+
+		logger.info(AristoWebLogMsgConstant.STK_REPO5_CONTROLLER,"getStkRepo5",request.getMyear(),request.getDivCode(),request.getDepoCode(),request.getUtype(),request.getLoginId());
+//		return new ResponseEntity<ApiResponse<StkRepo5ResponseNew>>(stkRepo5ServiceImpl.getStkRepo5(request), HttpStatus.OK);
+	
+	}
+*/
+	
 	@GetMapping("${mrc_stk_rep9_path}")
 	public ResponseEntity<ApiResponse<StkRepo9Response>> getStkRepo9(@RequestBody StkRepo9Request request ,HttpServletRequest req)
 	{

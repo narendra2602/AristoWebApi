@@ -13,7 +13,7 @@ import com.aristowebapi.dto.DashBoardDataAchGTh;
 import com.aristowebapi.dto.DashBoardDataDouble;
 import com.aristowebapi.dto.DashBoardSalesChart;
 import com.aristowebapi.dto.MktDataDto;
-import com.aristowebapi.dto.MonthDto;
+import com.aristowebapi.dto.OptionMasterDto;
 import com.aristowebapi.dto.StockiestMaster;
 
 public interface DashBoardDao extends JpaRepository<MktDataDto, Integer> { 
@@ -86,6 +86,8 @@ public interface DashBoardDao extends JpaRepository<MktDataDto, Integer> {
 	@Query(value = "CALL daily_entry_branch(:userId,:divCode);", nativeQuery=true)
 	List<DashBoardData> getHoBranchList(@Param("userId") int userId,@Param("divCode") int divCode);
 
+	@Query(value = "SELECT rep_type,rep_name FROM optionmast order by rep_type", nativeQuery = true)
+	List<OptionMasterDto> getAllOption();
 	
 	
 	@Query(value="CALL getHqList(:myear,:div_code,:depo_code,:utype,:login_id);", nativeQuery=true)

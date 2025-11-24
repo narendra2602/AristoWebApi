@@ -132,6 +132,8 @@ public class DailyReportServiceImpl  implements DailyReportService{
 			if(request.getRepType()==1)	
 			{		
 
+				
+					System.out.println("value of tp "+data.getTp()+" status is value "+data.getStatus()+" "+data.getBr_name());
 				if(data.getTp()<50)
 				{
 					if(branchMap.containsKey(data.getDepo_code()))
@@ -175,6 +177,8 @@ public class DailyReportServiceImpl  implements DailyReportService{
 					response.setBr(0);
 				else if(data.getBr_name().equalsIgnoreCase("ALL INDIA") && data.getTp()==990)
 					response.setBr(0);
+				else if(data.getBr_name().equalsIgnoreCase("NEPAL"))
+					response.setBr(0);
 
 				response.setBranch(data.getBr_name());
 				response.setDivision(data.getDiv_name());
@@ -199,12 +203,15 @@ public class DailyReportServiceImpl  implements DailyReportService{
 					response.setStatus(status?"Open":"Close");
 */
 				
-				if(data.getTp()<302 || data.getTp()==970 || data.getTp()==990 | data.getTp()==980)
+				if(data.getTp()<302 || data.getTp()==970 || data.getTp()==990 || data.getTp()==980)
+					response.setStatus(data.getStatus());
+				else if(data.getTp()==995 || data.getTp()==996 || data.getTp()==997 || data.getTp()==998 || data.getTp()==999)
 					response.setStatus(data.getStatus());
 				else if(data.getTp()==970)
 					response.setStatus(branchMap.get(data.getDepo_code()));
 				else if(data.getTp()==980)
-					response.setStatus(divMap.get(data.getDiv_code()));
+					response.setStatus(status1?"Open":"Close");
+//					response.setStatus(divMap.get(data.getDiv_code()));
 				else 
 					response.setStatus(status1?"Open":"Close");
 
@@ -224,6 +231,8 @@ public class DailyReportServiceImpl  implements DailyReportService{
 				if(data.getDepo_code()==99)
 					response.setColor(1);
 				if(data.getDepo_code()==0 || data.getBr_name().equalsIgnoreCase("ALL INDIA"))
+					response.setColor(2);
+				if(data.getDepo_code()==0 || data.getBr_name().equalsIgnoreCase("NEPAL"))
 					response.setColor(2);
 
 				saleList.add(response);
@@ -297,6 +306,8 @@ public class DailyReportServiceImpl  implements DailyReportService{
 					response.setBr(0);
 				else if(data.getBr_name().equalsIgnoreCase("ALL INDIA") && data.getTp()==990)
 					response.setBr(0);
+				else if(data.getBr_name().equalsIgnoreCase("NEPAL"))
+					response.setBr(0);
 
 				response.setBranch(data.getBr_name());
 				response.setDivision(data.getDiv_name());
@@ -314,6 +325,8 @@ public class DailyReportServiceImpl  implements DailyReportService{
 				response.setOsAsOn(data.getOutstand());
 //				if(data.getTp()<50)
 				if(data.getTp()<302 || data.getTp()==970 || data.getTp()==990 | data.getTp()==980)
+					response.setStatus(data.getStatus());
+				else if(data.getTp()==995 || data.getTp()==996 || data.getTp()==997 || data.getTp()==998 || data.getTp()==999)
 					response.setStatus(data.getStatus());
 				else if(data.getTp()==970)
 					response.setStatus(branchMap.get(data.getDepo_code()));
