@@ -663,6 +663,7 @@ public class BranchMisServiceImpl implements BranchMisservice{
 
 			if(ter_code!=data.getTerr_cd())
 			{
+				
 				response.setBranch(branch);
 				response.setHqName(request.getDepoCode()>0 || request.getOpt()==1 ?ter_name:"");
 				if(ter_name.contains("Total"))

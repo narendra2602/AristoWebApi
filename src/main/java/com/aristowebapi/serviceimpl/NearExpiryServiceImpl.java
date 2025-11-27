@@ -44,6 +44,8 @@ public class NearExpiryServiceImpl implements NearExpiryService{
 
 		title.append("[");
 		title.append(request.getDepoCode()>0?data.getBranch_name():data.getPname());
+		title.append(",");
+		title.append(data.getPack());
 		title.append("]- NEAR EXPIRY/EXPIRED BATCHWISE STOCK AS ON : ");
 //		title.append(sdf.format(data.getFiledate()));
 		title.append((data.getFiledate()));
@@ -107,12 +109,13 @@ public class NearExpiryServiceImpl implements NearExpiryService{
 			{
 				response=new NearExpiryResponse();
 				response.setBranch(branch+" Total");
+				response.setPname("");
 				response.setBatchNo("");
 				response.setExpiryDate("");
 				response.setNetRate(0.00);
 				response.setExpiredStock(expired_stock);
-				response.setExpired_0To_90Days(expired90);
-				response.setExpiry_90To_180Days(expired180);
+				response.setExpiry_31To_90Days(expired90);
+				response.setExpiry_91To_180Days(expired180);
 				response.setExpiry_181To_365Days(expiredabove180);
 				response.setAbove_365Days(expiredabove365);
 				response.setTotalValue(total);
@@ -132,12 +135,13 @@ public class NearExpiryServiceImpl implements NearExpiryService{
 			
 			response=new NearExpiryResponse();
 			response.setBranch(data.getBranch_name());
+			response.setPname("");
 			response.setBatchNo(data.getBatch_no());
 			response.setExpiryDate(data.getExpiry_date());
 			response.setNetRate(data.getNet_rate());
 			response.setExpiredStock(data.getExpired_stock());
-			response.setExpired_0To_90Days(data.getExpired90());
-			response.setExpiry_90To_180Days(data.getExpired180());
+			response.setExpiry_31To_90Days(data.getExpired90());
+			response.setExpiry_91To_180Days(data.getExpired180());
 			response.setExpiry_181To_365Days(data.getExpiredAbove180());
 			response.setAbove_365Days(data.getAbove365());
 			response.setTotalValue(data.getTotal_value());
@@ -163,12 +167,13 @@ public class NearExpiryServiceImpl implements NearExpiryService{
 
 		response=new NearExpiryResponse();
 		response.setBranch(branch+" Total");
+		response.setPname("");
 		response.setBatchNo("");
 		response.setExpiryDate("");
 		response.setNetRate(0.00);
 		response.setExpiredStock(expired_stock);
-		response.setExpired_0To_90Days(expired90);
-		response.setExpiry_90To_180Days(expired180);
+		response.setExpiry_31To_90Days(expired90);
+		response.setExpiry_91To_180Days(expired180);
 		response.setExpiry_181To_365Days(expiredabove180);
 		response.setAbove_365Days(expiredabove365);
 		response.setTotalValue(total);
@@ -177,12 +182,13 @@ public class NearExpiryServiceImpl implements NearExpiryService{
     	
 		response=new NearExpiryResponse();
 		response.setBranch("Grand Total");
+		response.setPname("");
 		response.setBatchNo("");
 		response.setExpiryDate("");
 		response.setNetRate(0.00);
 		response.setExpiredStock(gexpired_stock);
-		response.setExpired_0To_90Days(gexpired90);
-		response.setExpiry_90To_180Days(gexpired180);
+		response.setExpiry_31To_90Days(gexpired90);
+		response.setExpiry_91To_180Days(gexpired180);
 		response.setExpiry_181To_365Days(gexpiredabove180);
 		response.setAbove_365Days(gexpiredabove365);
 		response.setTotalValue(gtotal);
@@ -237,7 +243,7 @@ public class NearExpiryServiceImpl implements NearExpiryService{
 		int gexpiredabove180=0;
 		int gexpiredabove365=0;
 		double gtotal=0.00;
-
+		String branch="";
 		for (int i=0;i<size;i++)
 		{
 			NearExpiry data = nearExpiryList.get(i);
@@ -246,19 +252,22 @@ public class NearExpiryServiceImpl implements NearExpiryService{
 			{
 				title = getTitle(request, data);
 				pname=data.getPname();
+				branch=data.getBranch_name();
 				first=false;
 			}
 			
 			if(!pname.equalsIgnoreCase(data.getPname()) && request.getReportType()==1)
 			{
 				response=new NearExpiryBranchWiseResponse();
+				response.setBranch(data.getBranch_name());
 				response.setProduct(pname+" Total");
+				response.setPack("");
 				response.setBatchNo("");
 				response.setExpiryDate("");
 				response.setNetRate(0.00);
 				response.setExpiredStock(expired_stock);
-				response.setExpired_0To_90Days(expired90);
-				response.setExpiry_90To_180Days(expired180);
+				response.setExpiry_31To_90Days(expired90);
+				response.setExpiry_91To_180Days(expired180);
 				response.setExpiry_181To_365Days(expiredabove180);
 				response.setAbove_365Days(expiredabove365);
 				response.setTotalValue(total);
@@ -273,18 +282,20 @@ public class NearExpiryServiceImpl implements NearExpiryService{
 				total=0.00;
 
 				pname=data.getPname();
+				branch=data.getBranch_name();
 				
 			}
 
 			response=new NearExpiryBranchWiseResponse();
 			response.setBranch(data.getBranch_name());
 			response.setProduct(data.getPname());
+			response.setPack(data.getPack());
 			response.setBatchNo(data.getBatch_no());
 			response.setExpiryDate(data.getExpiry_date());
 			response.setNetRate(data.getNet_rate());
 			response.setExpiredStock(data.getExpired_stock());
-			response.setExpired_0To_90Days(data.getExpired90());
-			response.setExpiry_90To_180Days(data.getExpired180());
+			response.setExpiry_31To_90Days(data.getExpired90());
+			response.setExpiry_91To_180Days(data.getExpired180());
 			response.setExpiry_181To_365Days(data.getExpiredAbove180());
 			response.setAbove_365Days(data.getAbove365());
 			response.setTotalValue(data.getTotal_value());
@@ -312,13 +323,15 @@ public class NearExpiryServiceImpl implements NearExpiryService{
 		if(request.getReportType()==1)
 		{
 			response=new NearExpiryBranchWiseResponse();
+			response.setBranch(branch);
 			response.setProduct(pname+" Total");
+			response.setPack("");
 			response.setBatchNo("");
 			response.setExpiryDate("");
 			response.setNetRate(0.00);
 			response.setExpiredStock(expired_stock);
-			response.setExpired_0To_90Days(expired90);
-			response.setExpiry_90To_180Days(expired180);
+			response.setExpiry_31To_90Days(expired90);
+			response.setExpiry_91To_180Days(expired180);
 			response.setExpiry_181To_365Days(expiredabove180);
 			response.setAbove_365Days(expiredabove365);
 			response.setTotalValue(total);
@@ -327,13 +340,15 @@ public class NearExpiryServiceImpl implements NearExpiryService{
 		}
     	
 		response=new NearExpiryBranchWiseResponse();
+		response.setBranch(branch);
 		response.setProduct("Grand Total");
+		response.setPack("");
 		response.setBatchNo("");
 		response.setExpiryDate("");
 		response.setNetRate(0.00);
 		response.setExpiredStock(gexpired_stock);
-		response.setExpired_0To_90Days(gexpired90);
-		response.setExpiry_90To_180Days(gexpired180);
+		response.setExpiry_31To_90Days(gexpired90);
+		response.setExpiry_91To_180Days(gexpired180);
 		response.setExpiry_181To_365Days(gexpiredabove180);
 		response.setAbove_365Days(gexpiredabove365);
 		response.setTotalValue(gtotal);

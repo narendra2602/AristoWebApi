@@ -14,8 +14,8 @@ public interface MktRepo1 {
 	public String getMname();
 	public String getPack();
 	public long getSales();
-	public int getCr_u();
-	public int getNet_u();
+	public long getCr_u();
+	public long getNet_u();
 	public long getSales_val();
 	public String getSmname();
 	public String getEmname();

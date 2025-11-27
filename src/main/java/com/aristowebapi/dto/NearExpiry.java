@@ -14,5 +14,5 @@ public interface NearExpiry {
 	public String getPname();
 	public int getAbove365();
 	public String getFiledate();
-
+	public String getPack();
 }
