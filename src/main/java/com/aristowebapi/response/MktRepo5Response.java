@@ -25,6 +25,8 @@ public class MktRepo5Response {
 	private double mthSurSlashDeff;
 	private double mthIncrSale;
 	private double mthPendingPi;
+	private double mthExpiryValue;
+	private double mthExpiryRatio;
 	
 	private int cumFs;
 	private double cumBudget;
@@ -38,5 +40,8 @@ public class MktRepo5Response {
 	private double cumSurSlashDef;
 	private double cumIncrSale;
 	private double cumPendingPi;
+	private double cumExpiryValue;
+	private double cumExpiryRatio;
+
 	private int color;
 }

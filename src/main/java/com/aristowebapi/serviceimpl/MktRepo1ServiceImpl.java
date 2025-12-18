@@ -586,13 +586,21 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 					k++;
 				}
 
-				if(request.getOptType()==8)  // ach%
+				if(request.getOptType()==8 )  // ach% 
 				{
 					if(request.getUv()==1)
 						columnTotal=AppCalculationUtils.calculateAch(horizontalSalqty, horizontalTarqty);
 						else
 						columnTotal=AppCalculationUtils.calculateAch(horizontalSalval, horizontalTarval);
 				}
+				else if(request.getOptType()==18) // exp ratio%
+				{
+					if(request.getUv()==1)
+						columnTotal=AppCalculationUtils.calculateExpiryRatio(horizontalTarqty,horizontalSalqty);
+						else
+						columnTotal=AppCalculationUtils.calculateExpiryRatio(horizontalTarval,horizontalSalval);
+				}
+				
 
 				else if(request.getOptType()==9) // gth%
 				{
@@ -685,12 +693,14 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 					
 
 
-					if(request.getOptType()==8 )
+					if(request.getOptType()==8  )
 						group.put(bm.getDepo_name(), AppCalculationUtils.calculateAch(sale, target));
 					else if(request.getOptType()==17 )
 						group.put(bm.getDepo_name(), sale);
 					else if(request.getOptType()==9)
 						group.put(bm.getDepo_name(), AppCalculationUtils.calculateGth(sale, target));
+					else if(request.getOptType()==18)
+						group.put(bm.getDepo_name(), AppCalculationUtils.calculateExpiryRatio(target, sale));
 					
 					
 				}
@@ -700,6 +710,8 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 					groupColumnTotal=AppCalculationUtils.calculateAch(gsale, gtarget);
 				else if(request.getOptType()==9)
 					groupColumnTotal=AppCalculationUtils.calculateGth(gsale, gtarget);
+				else if(request.getOptType()==18)
+					groupColumnTotal= AppCalculationUtils.calculateExpiryRatio(gtarget, gsale);
 				else if(request.getOptType()==17)
 					groupColumnTotal=gsale;
 					
@@ -880,6 +892,13 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 				else
 					columnTotal=AppCalculationUtils.calculateAch(horizontalSalval, horizontalTarval);
 		}
+		else if(request.getOptType()==18) // exp ratio%
+		{
+			if(request.getUv()==1)
+				columnTotal=AppCalculationUtils.calculateExpiryRatio(horizontalTarqty,horizontalSalqty);
+				else
+				columnTotal=AppCalculationUtils.calculateExpiryRatio(horizontalTarval,horizontalSalval);
+		}
 
 		else if(request.getOptType()==9)
 		{
@@ -955,20 +974,24 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 			gtarget += grVerticalTarval.get(bm.getDepo_name())==null?0:grVerticalTarval.get(bm.getDepo_name());
 
 			
-			if(request.getOptType()==8)
+			if(request.getOptType()==8 )
 				group.put(bm.getDepo_name(), AppCalculationUtils.calculateAch(sale, target));
 			else if(request.getOptType()==17 )
 				group.put(bm.getDepo_name(), sale);
 			else if(request.getOptType()==9 )
 				group.put(bm.getDepo_name(), AppCalculationUtils.calculateGth(sale, target));
-				
+			else if(request.getOptType()==18)
+				group.put(bm.getDepo_name(), AppCalculationUtils.calculateExpiryRatio(target, sale));
+	
 		}
 
 		
-		if(request.getOptType()==8)
+		if(request.getOptType()==8 )
 			groupColumnTotal=AppCalculationUtils.calculateAch(gsale, gtarget);
 		else if(request.getOptType()==9)
 			groupColumnTotal=AppCalculationUtils.calculateGth(gsale, gtarget);
+		else if(request.getOptType()==18)
+			groupColumnTotal= AppCalculationUtils.calculateExpiryRatio(gtarget, gsale);
 		else if(request.getOptType()==17)
 			groupColumnTotal=gsale;
 			
@@ -1037,10 +1060,12 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 				target = bottomVerticalTarval.get(bm.getDepo_name());
 				gtarget += bottomVerticalTarval.get(bm.getDepo_name());
 			}
-			if(request.getOptType()==8)
+			if(request.getOptType()==8 )
 				total.put(bm.getDepo_name(), AppCalculationUtils.calculateAch(sale, target));
 			else if(request.getOptType()==9)
 				total.put(bm.getDepo_name(), AppCalculationUtils.calculateGth(sale, target));
+			else if(request.getOptType()==18)
+				total.put(bm.getDepo_name(), AppCalculationUtils.calculateExpiryRatio(target, sale));
 			else if(request.getOptType()==17)
 				total.put(bm.getDepo_name(), sale);
 			
@@ -1050,6 +1075,8 @@ public class MktRepo1ServiceImpl implements MktRepo1Service{
 			grandColumnTotal=AppCalculationUtils.calculateAch(gsale, gtarget);
 		else if(request.getOptType()==9)
 			grandColumnTotal=AppCalculationUtils.calculateGth(gsale, gtarget);
+		else if(request.getOptType()==18)
+			grandColumnTotal=AppCalculationUtils.calculateExpiryRatio(gtarget,gsale);
 		else if(request.getOptType()==17)
 			grandColumnTotal=gsale;
 		

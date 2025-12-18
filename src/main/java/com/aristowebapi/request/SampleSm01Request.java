@@ -14,4 +14,6 @@ import lombok.NoArgsConstructor;
 public class SampleSm01Request extends ViewRequest{
 	private int uv;
 	private int code;
+	private int repType;
+	private int hqCode;
 }

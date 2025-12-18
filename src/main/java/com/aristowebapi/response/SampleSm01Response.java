@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 public class SampleSm01Response {
 	private int code;
 	private String name;
+	private String dataType;
 	private int color;
 	private Map<String,Long> branches;
 }

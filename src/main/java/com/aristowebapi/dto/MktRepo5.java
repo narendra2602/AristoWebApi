@@ -36,6 +36,14 @@ public interface MktRepo5 {
 	public double getCrqty();
 	public double getPisaleqty();
 	public String getBranch_name();
+	public double getMexpiry_val();
+	public double getMexp_ratio();
+	public double getExpiry_val();
+	public double getExp_ratio();
+	public double getMexpiryqty();
+	public double getExpiryqty();
+	public double getMexp_ratio_qty();
+	public double getExp_ratio_qty();
 
 	
 

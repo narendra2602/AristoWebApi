@@ -5,7 +5,7 @@ public interface MktRepo1 {
 	public int getUtype();
 	public int getDiv_code();
 	public int getSdepo_code();
-	public int getSdoc_type();
+	public int getDoc_type();
 	public int getDepo_code();
 	public String getDepo_name();
 	public int getMcode();

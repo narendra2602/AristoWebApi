@@ -13,7 +13,7 @@ public class MktRepo8Response {
 	
 	private String branch;
 	private String hqName;
-	private long gross;
+	private long grossSale;
 	private long expiry;
 	private double expiryRatio;
 	private int color;

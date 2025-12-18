@@ -111,6 +111,8 @@ public class MktRepo5ServiceImpl  implements MktRepo5Service  {
 		double mcval=0;
 		double mpval=0;
 		double mlval=0;
+		double mexpval=0;
+		double expval=0;
 		int mfs=0;
 
 		double tval=0;
@@ -144,6 +146,8 @@ public class MktRepo5ServiceImpl  implements MktRepo5Service  {
 				decimalKeys.add("mth_sur_slashdeff");
 				decimalKeys.add("mth_incr_sale");
 				decimalKeys.add("mth_pending_pi");
+				decimalKeys.add("mth_expiry_value");
+				decimalKeys.add("mth_exp_ratio");
 				decimalKeys.add("cum_budget");
 				decimalKeys.add("cum_gross");
 				decimalKeys.add("cum_credit");
@@ -155,6 +159,9 @@ public class MktRepo5ServiceImpl  implements MktRepo5Service  {
 				decimalKeys.add("cum_sur_slashdeff");
 				decimalKeys.add("cum_incr_sale(");
 				decimalKeys.add("cum_pending_pi");
+				decimalKeys.add("cum_expiry_value");
+				decimalKeys.add("cum_exp_ratio");
+
 
 			}
 			
@@ -181,7 +188,9 @@ public class MktRepo5ServiceImpl  implements MktRepo5Service  {
 				response.setMthIncrSale(AppCalculationUtils.calculateSdf(response.getMthNet(), data.getMlysqty()));
 				response.setMthPmr(AppCalculationUtils.calculatePmr(response.getMthNet(), data.getMfs()));
 				response.setMthPendingPi(data.getMpisaleqty());
-
+				response.setMthExpiryValue(data.getMexpiryqty());
+				response.setMthExpiryRatio(data.getMexp_ratio_qty());
+				
 				response.setCumFs(data.getfs());
 				response.setCumBudget(data.getTargetqty());
 				response.setCumGross(data.getSaleqty());
@@ -195,6 +204,8 @@ public class MktRepo5ServiceImpl  implements MktRepo5Service  {
 				response.setCumIncrSale(AppCalculationUtils.calculateSdf(response.getCumNet(), data.getLysqty()));
 				response.setCumPmr(AppCalculationUtils.calculatePmr(response.getCumNet(), data.getfs()));
 				response.setCumPendingPi(data.getPisaleqty());
+				response.setCumExpiryValue(data.getExpiryqty());
+				response.setCumExpiryRatio(data.getExp_ratio_qty());
 
 			}
 			else
@@ -210,6 +221,8 @@ public class MktRepo5ServiceImpl  implements MktRepo5Service  {
 				response.setMthIncrSale(AppCalculationUtils.calculateSdf(response.getMthNet(), data.getMlysval()));
 				response.setMthPmr(AppCalculationUtils.calculatePmr(response.getMthNet(), data.getMfs()));
 				response.setMthPendingPi(data.getMpisale());
+				response.setMthExpiryValue(data.getMexpiry_val());
+				response.setMthExpiryRatio(data.getMexp_ratio());
 
 				response.setCumFs(data.getfs());
 				response.setCumBudget(data.getTargetval());
@@ -224,6 +237,9 @@ public class MktRepo5ServiceImpl  implements MktRepo5Service  {
 				response.setCumIncrSale(AppCalculationUtils.calculateSdf(response.getCumNet(), data.getLysval()));
 				response.setCumPmr(AppCalculationUtils.calculatePmr(response.getCumNet(), data.getfs()));
 				response.setCumPendingPi(data.getPisale());
+				response.setCumExpiryValue(data.getExpiry_val());
+				response.setCumExpiryRatio(data.getExp_ratio());
+
 			}
 	    	response.setColor(0);
 	    	if(data.getDepo_code()==9996)
@@ -241,12 +257,14 @@ public class MktRepo5ServiceImpl  implements MktRepo5Service  {
 	    			mcval = AppCalculationUtils.addDouble(mcval, data.getMcrqty());
 	    			mpval = AppCalculationUtils.addDouble(mpval, data.getMpisaleqty());
 	    			mlval = AppCalculationUtils.addDouble(mlval, data.getMlysqty());
+	    			mexpval = AppCalculationUtils.addDouble(mlval, data.getMexpiryqty());
 	    			mfs+=data.getMfs();
 	    			tval = AppCalculationUtils.addDouble(tval, data.getTargetqty());
 	    			sval = AppCalculationUtils.addDouble(sval, data.getSaleqty());
 	    			cval = AppCalculationUtils.addDouble(cval, data.getCrqty());
 	    			pval = AppCalculationUtils.addDouble(pval, data.getPisaleqty());
 	    			lval = AppCalculationUtils.addDouble(lval, data.getLysqty());
+	    			expval = AppCalculationUtils.addDouble(lval, data.getExpiryqty());
 	    			fs+=data.getfs();
 	    			
 	    		}
@@ -257,19 +275,21 @@ public class MktRepo5ServiceImpl  implements MktRepo5Service  {
 	    			mcval = AppCalculationUtils.addDouble(mcval, data.getMcrval());
 	    			mpval = AppCalculationUtils.addDouble(mpval, data.getMpisale());
 	    			mlval = AppCalculationUtils.addDouble(mlval, data.getMlysval());
+	    			mexpval = AppCalculationUtils.addDouble(mlval, data.getMexpiry_val());
 	    			mfs+=data.getMfs();
 	    			tval = AppCalculationUtils.addDouble(tval, data.getTargetval());
 	    			sval = AppCalculationUtils.addDouble(sval, data.getSaleval());
 	    			cval = AppCalculationUtils.addDouble(cval, data.getCrval());
 	    			pval = AppCalculationUtils.addDouble(pval, data.getPisale());
 	    			lval = AppCalculationUtils.addDouble(lval, data.getLysval());
+	    			expval = AppCalculationUtils.addDouble(lval, data.getExpiry_val());
 	    			fs+=data.getfs();
 	    		}
 	    	}
 
 		} //end of for loop
 
-		if(!first)
+		if(!first && request.getDepoCode()==0)
 		{
 
 			response=new MktRepo5Response();
@@ -287,7 +307,8 @@ public class MktRepo5ServiceImpl  implements MktRepo5Service  {
 	    	response.setMthIncrSale(AppCalculationUtils.calculateSdf(response.getMthNet(), mlval));
 	    	response.setMthPmr(AppCalculationUtils.calculatePmr(response.getMthNet(), mfs));
 			response.setMthPendingPi(mpval);
-
+			response.setMthExpiryValue(mexpval);
+			response.setMthExpiryRatio(AppCalculationUtils.calculateExpiryRatio(mexpval, msval));
 			
 			response.setCumFs(fs);
 			response.setCumBudget(tval);
@@ -301,6 +322,9 @@ public class MktRepo5ServiceImpl  implements MktRepo5Service  {
 	    	response.setCumIncrSale(AppCalculationUtils.calculateSdf(response.getCumNet(), lval));
 	    	response.setCumPmr(AppCalculationUtils.calculatePmr(response.getCumNet(), fs));
 			response.setCumPendingPi(pval);
+			response.setCumExpiryValue(expval);
+			response.setCumExpiryRatio(AppCalculationUtils.calculateExpiryRatio(expval, sval));
+
 			response.setColor(3);
 
 			saleList.add(response);

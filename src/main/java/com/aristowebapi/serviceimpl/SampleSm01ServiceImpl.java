@@ -53,7 +53,13 @@ public class SampleSm01ServiceImpl implements SampleSm01Service {
 		
 		StringBuilder title=new StringBuilder();
 		title.append(aristoWebMessageConstant.divisionMap.get(String.valueOf(data.getDiv_code())));
-		title.append("All India Productwise Sample Isuue to FS Report for the Month of ");
+		if(request.getRepType()==1)
+			title.append("All India Productwise Sample Isuue to FS Report for the Month of ");
+		if(request.getRepType()==2)
+			title.append("All India Productwise Sample Allocation Report for the Month of ");
+		if(request.getRepType()==3)
+			title.append("All India Productwise Sample Allocation/Issue  Report for the Month of ");
+		
 		title.append(data.getSmname());
 		title.append(" To ");
 		title.append(data.getEmname());
@@ -65,8 +71,9 @@ public class SampleSm01ServiceImpl implements SampleSm01Service {
 	{
 		List<MktRepo1> reportList = null;
 		reportList=sampleSm01Dao.getWebSampleSm01(request.getMyear(),request.getDivCode(),request.getDepoCode()
-				,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId());
+				,request.getSmon(),request.getEmon(),request.getUtype(),request.getLoginId(),request.getRepType(),request.getHqCode());
 
+		System.out.println("reportlst ka size "+reportList.size());
 		return reportList;
 		
 	}
@@ -78,13 +85,23 @@ public class SampleSm01ServiceImpl implements SampleSm01Service {
 		
 		
 		logger.info(AristoWebLogMsgConstant.SAMPLE_REPORT_SERVICE_01,"getSampleSm01");
-		List<BranchMasterDto> branchData = getBranchData(request);
+		if(request.getRepType()>1)
+			request.setDepoCode(0);
+		List<BranchMasterDto> branchData=null;
+		if (request.getDepoCode()==0)
+			branchData = getBranchData(request);
+		else if (request.getHqCode()>0)
+			branchData = sampleSm01Dao.getAllRm(request.getMyear(),request.getDivCode(),request.getDepoCode(),request.getHqCode(),request.getSmon(),request.getEmon());
+		else
+			branchData = sampleSm01Dao.getAllHq(request.getMyear(),request.getDivCode(),request.getDepoCode());
 
+		
 		int sz=branchData.size();
 		int k=0;
 		int z=0;
 		String title=null;
 		
+		System.out.println("size of branch data is "+sz);
 		
 		List<MktRepo1> grossSaleList=getReport(request);
 
@@ -99,10 +116,12 @@ public class SampleSm01ServiceImpl implements SampleSm01Service {
 		int mgrp=0;
 		long columnTotal=0;
 		long grandColumnTotal=0;
-
+		int doctype=0;
 		String pname=null;
 		String pack=null;
 		int size = grossSaleList.size();
+		
+		System.out.println("size of list is "+size);
 		//create ReportTitleResponse class object and set title with Report heading
 		for (int i=0;i<size;i++)
 		{
@@ -113,6 +132,7 @@ public class SampleSm01ServiceImpl implements SampleSm01Service {
 			{
 				pcode=data.getMcode();
 				pname=data.getMname();
+				doctype=data.getDoc_type();
 				response=new SampleSm01Response();
 				branches=new LinkedHashMap();
 				total=new LinkedHashMap();
@@ -121,11 +141,13 @@ public class SampleSm01ServiceImpl implements SampleSm01Service {
 				title = getTitle(request, data); 
 				
 			}
-			if(pcode!=data.getMcode())
+			if(pcode!=data.getMcode() || doctype!=data.getDoc_type() )
 			{
+				
+				response.setDataType(doctype==1?"FS":doctype==0?"Allocation":"Issue");
 				response.setCode(pcode);
 				response.setName(pname);
-			
+				response.setColor(doctype==0?1:0);
 				z=k;
 				for(int b=k;b<sz;b++)
 				{
@@ -142,6 +164,7 @@ public class SampleSm01ServiceImpl implements SampleSm01Service {
 				pcode=data.getMcode();
 				pname=data.getMname();
 				pack=data.getPack();
+				doctype=data.getDoc_type();
 				columnTotal=0;
 				
 				k=0;
@@ -201,7 +224,8 @@ public class SampleSm01ServiceImpl implements SampleSm01Service {
 		response=new SampleSm01Response();
 		response.setCode(pcode);
 		response.setName(pname);
-		
+		response.setDataType(doctype==1?"FS":doctype==0?"Allocation":"Issue");
+		response.setColor(doctype==0?1:0);
 		z=k;
 		for(int b=k;b<sz;b++)
 		{
@@ -227,6 +251,7 @@ public class SampleSm01ServiceImpl implements SampleSm01Service {
 		response=new SampleSm01Response();
 		response.setCode(0);
 		response.setName("Grand Total");
+		response.setDataType("");
 			response.setBranches(branches);
 		response.setColor(2);
 		saleList.add(response);
@@ -237,6 +262,8 @@ public class SampleSm01ServiceImpl implements SampleSm01Service {
 
 
 	
+
+
 	private String getTitle(SampleSm01Request request,BranchMisRepo8 data)
 	{
 
@@ -272,7 +299,10 @@ public class SampleSm01ServiceImpl implements SampleSm01Service {
 		List<BranchMisRepo8> SampleSm02List=null;
 		int size = 0;
 		
-		SampleSm02List=sampleSm01Dao.getSampleSm02(request.getMyear(),request.getDivCode(),request.getDepoCode(),request.getSmon(),request.getEmon(),request.getLoginId(),request.getUtype(),request.getCode());
+		if(request.getDepoCode()>0)
+			request.setRepType(0);
+		
+		SampleSm02List=sampleSm01Dao.getSampleSm02(request.getMyear(),request.getDivCode(),request.getDepoCode(),request.getSmon(),request.getEmon(),request.getLoginId(),request.getUtype(),request.getCode(),request.getRepType());
 
 		size = SampleSm02List.size();
 		logger.info("size of the data is {}",size);
@@ -301,6 +331,7 @@ public class SampleSm01ServiceImpl implements SampleSm01Service {
 		int gfs=0;
 		String pcode="";
 		String branch="";
+		
 		for (int i=0;i<size;i++)
 		{
 			BranchMisRepo8 data = SampleSm02List.get(i);
@@ -318,9 +349,17 @@ public class SampleSm01ServiceImpl implements SampleSm01Service {
 				title = getTitle(request, data); 
 			}
 
-			if(ter_code!=data.getTerr_cd())
+
+			
+			if(!ter_name.trim().equalsIgnoreCase(data.getTer_name().trim()))
 			{
+				
 				response.setBranch(branch);
+				if(request.getDepoCode()>0 || request.getRepType()==1)
+					response.setHqName(ter_name);
+				else
+					response.setHqName("");
+					
 			
 				z=k;
 				for(int b=k;b<sz;b++)
@@ -371,11 +410,13 @@ public class SampleSm01ServiceImpl implements SampleSm01Service {
 			for(int b=k;b<sz;b++)
 			{
 				MonthDto mn=monthData.get(b);
+				
 				if(mn.getMnth_code()==data.getMnth_code())
 				{
 					fs+=data.getFs();
 					if(request.getUv()==1)
 					{
+						
 						months.put((data.getMnth_abbr()+" UNITS"),data.getSales());
 						columnTotal+=data.getSales();
 						grandColumnTotal+=data.getSales();
@@ -495,6 +536,11 @@ public class SampleSm01ServiceImpl implements SampleSm01Service {
 		{
 			response=new SampleSm02Response();
 			response.setBranch(branch);
+			if(request.getDepoCode()>0 || request.getRepType()==1)
+				response.setHqName(ter_name);
+			else
+				response.setHqName("");
+
 			gfs+=fs;
 			z=k;
 			for(int b=k;b<sz;b++)
@@ -543,7 +589,8 @@ public class SampleSm01ServiceImpl implements SampleSm01Service {
 
 			months.putAll(total);
 			response=new SampleSm02Response();
-			response.setBranch("All India");
+			response.setBranch(request.getDepoCode()==0?"All India":branch);
+			response.setHqName("");
 			response.setMonths(months);
 			response.setColor(2);
 			saleList.add(response);		

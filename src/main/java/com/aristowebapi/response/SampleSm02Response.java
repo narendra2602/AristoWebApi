@@ -16,6 +16,7 @@ import lombok.NoArgsConstructor;
 public class SampleSm02Response {
 	
 	private String branch;
+	private String hqName;
 	private Map<String,Long> months;
 	private int color;
 
