@@ -16,4 +16,5 @@ public class SampleSm01Request extends ViewRequest{
 	private int code;
 	private int repType;
 	private int hqCode;
+	private int optn;
 }

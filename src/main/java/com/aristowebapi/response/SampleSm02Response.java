@@ -17,6 +17,7 @@ public class SampleSm02Response {
 	
 	private String branch;
 	private String hqName;
+	private String dataType;
 	private Map<String,Long> months;
 	private int color;
 

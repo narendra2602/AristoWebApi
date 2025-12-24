@@ -144,7 +144,7 @@ public class SampleSm01ServiceImpl implements SampleSm01Service {
 			if(pcode!=data.getMcode() || doctype!=data.getDoc_type() )
 			{
 				
-				response.setDataType(doctype==1?"FS":doctype==0?"Allocation":"Issue");
+				response.setDataType(doctype==1?"FS":doctype==0?"Alloc Per Man":"Issue");
 				response.setCode(pcode);
 				response.setName(pname);
 				response.setColor(doctype==0?1:0);
@@ -224,7 +224,7 @@ public class SampleSm01ServiceImpl implements SampleSm01Service {
 		response=new SampleSm01Response();
 		response.setCode(pcode);
 		response.setName(pname);
-		response.setDataType(doctype==1?"FS":doctype==0?"Allocation":"Issue");
+		response.setDataType(doctype==1?"FS":doctype==0?"Alloc Per Man":"Issue");
 		response.setColor(doctype==0?1:0);
 		z=k;
 		for(int b=k;b<sz;b++)
@@ -242,7 +242,7 @@ public class SampleSm01ServiceImpl implements SampleSm01Service {
 		
 		
 		
-		grandColumnTotal = total.values().stream().mapToLong(d -> d).sum();
+/*		grandColumnTotal = total.values().stream().mapToLong(d -> d).sum();
 		
 		branches=new LinkedHashMap();
 		total.put("TOTAL", grandColumnTotal);
@@ -255,7 +255,7 @@ public class SampleSm01ServiceImpl implements SampleSm01Service {
 			response.setBranches(branches);
 		response.setColor(2);
 		saleList.add(response);
-
+*/
 		return new ApiResponse<SampleSm01Response>(title.toString(),size,saleList);
 
 	}
@@ -302,7 +302,7 @@ public class SampleSm01ServiceImpl implements SampleSm01Service {
 		if(request.getDepoCode()>0)
 			request.setRepType(0);
 		
-		SampleSm02List=sampleSm01Dao.getSampleSm02(request.getMyear(),request.getDivCode(),request.getDepoCode(),request.getSmon(),request.getEmon(),request.getLoginId(),request.getUtype(),request.getCode(),request.getRepType());
+		SampleSm02List=sampleSm01Dao.getSampleSm02(request.getMyear(),request.getDivCode(),request.getDepoCode(),request.getSmon(),request.getEmon(),request.getLoginId(),request.getUtype(),request.getCode(),request.getRepType(),request.getOptn());
 
 		size = SampleSm02List.size();
 		logger.info("size of the data is {}",size);
@@ -312,12 +312,17 @@ public class SampleSm01ServiceImpl implements SampleSm01Service {
 
 		Map<String, Long> months=null;
 		Map<String, Long> total=null;
+		Map<String, Long> gtotal=null;
 		
 		List<SampleSm02Response> saleList = new ArrayList();
 
 		
 		long columnTotal=0;
 		long columnTotalVal=0;
+
+		long tcolumnTotal=0;
+		long tcolumnTotalVal=0;
+
 		long grandColumnTotal=0;
 		long grandColumnTotalVal=0;
 		long vgrandColumnTotal=0;
@@ -340,27 +345,123 @@ public class SampleSm01ServiceImpl implements SampleSm01Service {
 			{
 				response=new SampleSm02Response();
 				ter_code=data.getTerr_cd();
+				fs=data.getFs();
 				ter_name=data.getTer_name();
 				branch=data.getDepo_name();
 				months=new LinkedHashMap();
 				total=new LinkedHashMap();
+				gtotal=new LinkedHashMap();
 				first=false;
 				
 				title = getTitle(request, data); 
 			}
 
-
-			
-			if(!ter_name.trim().equalsIgnoreCase(data.getTer_name().trim()))
+			if(!branch.trim().equalsIgnoreCase(data.getDepo_name().trim()) && request.getRepType()==1 )
 			{
+				
 				
 				response.setBranch(branch);
 				if(request.getDepoCode()>0 || request.getRepType()==1)
 					response.setHqName(ter_name);
 				else
 					response.setHqName("");
+				response.setDataType("Issue");
+				if(request.getRepType()==0 && request.getOptn()==1 && request.getDepoCode()==0)
+					response.setDataType(fs==1?"FS":fs==2?"Alloc Per Man":fs==3?"Total Alloc.":fs==4?"Issue":"Diff.");
+				
+				if(fs==5)
+					response.setColor(1);
+				else
+					response.setColor(0);
 					
+				z=k;
+				for(int b=k;b<sz;b++)
+				{
+					MonthDto mn=monthData.get(b);
+					if(request.getUv()==1)
+						months.put((mn.getMnth_abbr()+" UNITS"), 0L);
+					else if(request.getUv()==2)
+						months.put((mn.getMnth_abbr()+" VALUE"), 0L);
+					else
+					{
+						months.put((mn.getMnth_abbr()+" UNITS"), 0L);
+						months.put((mn.getMnth_abbr()+" VALUE"), 0L);
+					}
+					k++;
+				}
+
+				if(request.getUv()==1)
+					months.put("TOTAL UNITS", columnTotal);
+				else if(request.getUv()==2)
+					months.put("TOTAL VALUE", columnTotalVal);
+				else
+				{
+					months.put("TOTAL UNITS", columnTotal);
+					months.put("TOTAL VALUE", columnTotalVal);
+					
+				}
+				response.setMonths(months);
+				
+				
+				saleList.add(response);
+				ter_code=data.getTerr_cd();
+				ter_name=data.getTer_name();
+				columnTotal=0;
+				columnTotalVal=0;
+				gfs+=fs;
+				k=0;
+//				fs=0;
+				fs=data.getFs();
+				response=new SampleSm02Response();
+				months=new LinkedHashMap();
+
+				
+				
+				    response.setBranch(branch);
+					response.setHqName("Total");
+					response.setColor(1);
+					response.setDataType("Issue");
+					if(request.getUv()==1)
+					total.put("TOTAL UNITS", tcolumnTotal);
+				else if(request.getUv()==2)
+					total.put("TOTAL VALUE", tcolumnTotalVal);
+				else
+				{
+					total.put("TOTAL UNITS", tcolumnTotal);
+					total.put("TOTAL VALUE", tcolumnTotalVal);
+					
+				}
+				response.setMonths(total);
+				
+				
+				saleList.add(response);
+				branch=data.getDepo_name();
+				tcolumnTotal=0;
+				tcolumnTotalVal=0;
+
+				response=new SampleSm02Response();
+				total=new LinkedHashMap();
+
+			}
+
 			
+			if(!ter_name.trim().equalsIgnoreCase(data.getTer_name().trim()) || fs!=data.getFs() )
+			{
+				
+				response.setBranch(branch);
+				if(request.getDepoCode()>0 || request.getRepType()==1 )
+					response.setHqName(ter_name);
+				else
+					response.setHqName("");
+				response.setDataType("Issue");
+				if(request.getRepType()==0 && request.getOptn()==1 && request.getDepoCode()==0)
+					response.setDataType(fs==1?"FS":fs==2?"Alloc Per Man":fs==3?"Total Alloc.":fs==4?"Issue":"Diff.");
+				
+				if(fs==5)
+					response.setColor(1);
+				else
+					response.setColor(0);
+					
 				z=k;
 				for(int b=k;b<sz;b++)
 				{
@@ -398,13 +499,15 @@ public class SampleSm01ServiceImpl implements SampleSm01Service {
 				columnTotalVal=0;
 				gfs+=fs;
 				k=0;
-				fs=0;
+//				fs=0;
+				fs=data.getFs();
 				response=new SampleSm02Response();
 				months=new LinkedHashMap();
 
 			}
 
-			
+
+
 		
 			// before put please check depo code in branch list if not found put 0 value in map otherwise actual zero
 			for(int b=k;b<sz;b++)
@@ -413,18 +516,20 @@ public class SampleSm01ServiceImpl implements SampleSm01Service {
 				
 				if(mn.getMnth_code()==data.getMnth_code())
 				{
-					fs+=data.getFs();
+//					fs+=data.getFs();
 					if(request.getUv()==1)
 					{
 						
 						months.put((data.getMnth_abbr()+" UNITS"),data.getSales());
 						columnTotal+=data.getSales();
+						tcolumnTotal+=data.getSales();
 						grandColumnTotal+=data.getSales();
 					}
 					else if(request.getUv()==2)
 					{
 						months.put((data.getMnth_abbr()+" VALUE"),data.getSales_val());
 						columnTotalVal+=data.getSales_val();
+						tcolumnTotalVal+=data.getSales_val();
 						grandColumnTotalVal+=data.getSales_val();
 					}
 					else if(request.getUv()==3)
@@ -433,6 +538,9 @@ public class SampleSm01ServiceImpl implements SampleSm01Service {
 						months.put((data.getMnth_abbr()+" VALUE"),data.getSales_val());
 						columnTotal+=data.getSales();
 						columnTotalVal+=data.getSales_val();
+						tcolumnTotal+=data.getSales();
+						tcolumnTotalVal+=data.getSales_val();
+
 						grandColumnTotal+=data.getSales();
 						grandColumnTotalVal+=data.getSales_val();
 					}
@@ -485,6 +593,55 @@ public class SampleSm01ServiceImpl implements SampleSm01Service {
 						}
 					}
 
+
+					
+					if(request.getUv()==1)
+					{
+						if(gtotal.containsKey((data.getMnth_abbr()+" UNITS")))
+						{
+							long ggval = gtotal.get(data.getMnth_abbr()+" UNITS")+data.getSales();
+							gtotal.put((data.getMnth_abbr()+" UNITS"), ggval);
+						}
+						else
+						{
+							gtotal.put((data.getMnth_abbr()+" UNITS"), data.getSales());
+						}
+					}
+					if(request.getUv()==2)
+					{
+						if(gtotal.containsKey((data.getMnth_abbr()+" VALUE")))
+						{
+							long ggval = gtotal.get((data.getMnth_abbr()+" VALUE"))+data.getSales_val();
+							gtotal.put((data.getMnth_abbr()+" VALUE"), ggval);
+						}
+						else
+						{
+							gtotal.put((data.getMnth_abbr()+" VALUE"), data.getSales_val());
+						}
+					}
+					if(request.getUv()==3)
+					{
+						if(gtotal.containsKey((data.getMnth_abbr()+" UNITS")))
+						{
+							long ggval = gtotal.get(data.getMnth_abbr()+" UNITS")+data.getSales();
+							gtotal.put((data.getMnth_abbr()+" UNITS"), ggval);
+						}
+						else
+						{
+							gtotal.put((data.getMnth_abbr()+" UNITS"), data.getSales());
+						}
+
+						if(gtotal.containsKey((data.getMnth_abbr()+" VALUE")))
+						{
+							long ggval = gtotal.get((data.getMnth_abbr()+" VALUE"))+data.getSales_val();
+							gtotal.put((data.getMnth_abbr()+" VALUE"), ggval);
+						}
+						else
+						{
+							gtotal.put((data.getMnth_abbr()+" VALUE"), data.getSales_val());
+						}
+					}
+
 					
 
 ///					
@@ -527,6 +684,29 @@ public class SampleSm01ServiceImpl implements SampleSm01Service {
 
 					}
 					
+					if(gtotal.containsKey(mn.getMnth_abbr()+" UNITS"))
+					{
+						// do nothing
+					}
+					else if(gtotal.containsKey(mn.getMnth_abbr()+" VALUE"))
+					{
+						// do nothing
+					}
+					else
+					{
+						if(request.getUv()==1)
+							gtotal.put(mn.getMnth_abbr()+" UNITS", 0L);
+						if(request.getUv()==2)
+							gtotal.put(mn.getMnth_abbr()+" VALUE", 0L);
+						if(request.getUv()==3)
+						{
+							gtotal.put(mn.getMnth_abbr()+" UNITS", 0L);
+							gtotal.put(mn.getMnth_abbr()+" VALUE", 0L);
+						}
+
+					}
+
+					
 					k++;
 				}
 			}
@@ -540,7 +720,15 @@ public class SampleSm01ServiceImpl implements SampleSm01Service {
 				response.setHqName(ter_name);
 			else
 				response.setHqName("");
+			response.setDataType("Issue");
+			if(request.getRepType()==0 && request.getOptn()==1 && request.getDepoCode()==0)
+				response.setDataType(fs==1?"FS":fs==2?"Alloc Per Man":fs==3?"Total Alloc.":fs==4?"Issue":"Diff.");
+			if(fs==5)
+				response.setColor(1);
+			else
+				response.setColor(0);
 
+			
 			gfs+=fs;
 			z=k;
 			for(int b=k;b<sz;b++)
@@ -571,26 +759,49 @@ public class SampleSm01ServiceImpl implements SampleSm01Service {
 			response.setMonths(months);
 			saleList.add(response);
 
-			
+			if(request.getRepType()==1 && request.getDepoCode()==0 )
+			{
+				response=new SampleSm02Response();
+				response.setBranch(branch);
+				response.setHqName("Total");
+				response.setColor(1);
+				response.setDataType("Issue");
+				if(request.getUv()==1)
+					total.put("TOTAL UNITS", tcolumnTotal);
+				else if(request.getUv()==2)
+					total.put("TOTAL VALUE", tcolumnTotalVal);
+				else
+				{
+					total.put("TOTAL UNITS", tcolumnTotal);
+					total.put("TOTAL VALUE", tcolumnTotalVal);
+
+				}
+				response.setMonths(total);
+
+
+				saleList.add(response);
+
+			}
 			
 			months=new LinkedHashMap();
 			if(request.getUv()==1)
-				total.put("TOTAL UNITS", grandColumnTotal);
+				gtotal.put("TOTAL UNITS", grandColumnTotal);
 			else if(request.getUv()==2)
-				total.put("TOTAL VALUE", grandColumnTotalVal);
+				gtotal.put("TOTAL VALUE", grandColumnTotalVal);
 			else
 			{
-				total.put("TOTAL UNITS", grandColumnTotal);
-				total.put("TOTAL VALUE", grandColumnTotalVal);
+				gtotal.put("TOTAL UNITS", grandColumnTotal);
+				gtotal.put("TOTAL VALUE", grandColumnTotalVal);
 				
 			}
 
 
 
-			months.putAll(total);
+			months.putAll(gtotal);
 			response=new SampleSm02Response();
 			response.setBranch(request.getDepoCode()==0?"All India":branch);
-			response.setHqName("");
+			response.setDataType("Issue");
+			response.setHqName("Total");
 			response.setMonths(months);
 			response.setColor(2);
 			saleList.add(response);		

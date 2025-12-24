@@ -17,13 +17,15 @@ public class NearExpiryResponse {
 	private String pname;
 	private String batchNo;
 	private String expiryDate;
-	private double netRate;
+	private double ptsRate;
 	private int expiredStock;
 	private int expiry_31To_90Days;
 	private int expiry_91To_180Days;
-	private int expiry_181To_365Days;
+	private int expiry_181To_240Days;
+	private int expiry_241To_300Days;
+	private int expiry_301To_365Days;
 	private int above_365Days;
-	private double totalValue;
+	private double totalQty;
 	
 	
 	
