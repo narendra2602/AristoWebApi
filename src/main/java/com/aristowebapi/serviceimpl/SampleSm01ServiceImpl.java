@@ -269,10 +269,16 @@ public class SampleSm01ServiceImpl implements SampleSm01Service {
 
 		
 		StringBuilder title=new StringBuilder();
-		title.append(" PRODUCT -> : ");
+		if(request.getRepType()==0 && request.getDepoCode()>0 && request.getOptn()==1)
+			title.append(" Branch -> : ");
+		else	
+			title.append(" PRODUCT -> : ");
 		title.append(data.getPname());
 		title.append(" ");
-		title.append(" BRANCH WISE ");
+		if(request.getRepType()==0 && request.getDepoCode()>0 && request.getOptn()==1)
+			title.append(" PRODUCT WISE ");
+		else	
+			title.append(" BRANCH WISE ");
 		title.append(request.getUv()==1?" UNIT ISSUE TO FS TREND ":" VALUE ISSUE TO FS TREND FROM ");
 		title.append(data.getSmname());
 		title.append(" To ");
@@ -307,14 +313,16 @@ public class SampleSm01ServiceImpl implements SampleSm01Service {
 		size = SampleSm02List.size();
 		logger.info("size of the data is {}",size);
 
-		
 		SampleSm02Response response=null;
+		
+			
 
 		Map<String, Long> months=null;
 		Map<String, Long> total=null;
 		Map<String, Long> gtotal=null;
 		
 		List<SampleSm02Response> saleList = new ArrayList();
+		
 
 		
 		long columnTotal=0;
@@ -344,6 +352,10 @@ public class SampleSm01ServiceImpl implements SampleSm01Service {
 			if(first)
 			{
 				response=new SampleSm02Response();
+				if (request.getDepoCode() > 0 && request.getRepType() == 0 && request.getOptn() == 1) {
+				    response.setRenameFields(true);
+				}
+
 				ter_code=data.getTerr_cd();
 				fs=data.getFs();
 				ter_name=data.getTer_name();
@@ -365,9 +377,12 @@ public class SampleSm01ServiceImpl implements SampleSm01Service {
 					response.setHqName(ter_name);
 				else
 					response.setHqName("");
+				if(request.getRepType()==0 && request.getOptn()==1 )
+					response.setHqName("");
+				
 				response.setDataType("Issue");
-				if(request.getRepType()==0 && request.getOptn()==1 && request.getDepoCode()==0)
-					response.setDataType(fs==1?"FS":fs==2?"Alloc Per Man":fs==3?"Total Alloc.":fs==4?"Issue":"Diff.");
+				if(request.getRepType()==0 && request.getOptn()==1 )
+					response.setDataType(fs==1?"FS":fs==2?"Alloc Per Man":fs==3?"Total Alloc.":fs==4?"Issue Per Man":"Diff. Per Man");
 				
 				if(fs==5)
 					response.setColor(1);
@@ -413,6 +428,10 @@ public class SampleSm01ServiceImpl implements SampleSm01Service {
 //				fs=0;
 				fs=data.getFs();
 				response=new SampleSm02Response();
+				if (request.getDepoCode() > 0 && request.getRepType() == 0 && request.getOptn() == 1) {
+				    response.setRenameFields(true);
+				}
+
 				months=new LinkedHashMap();
 
 				
@@ -440,6 +459,10 @@ public class SampleSm01ServiceImpl implements SampleSm01Service {
 				tcolumnTotalVal=0;
 
 				response=new SampleSm02Response();
+				if (request.getDepoCode() > 0 && request.getRepType() == 0 && request.getOptn() == 1) {
+				    response.setRenameFields(true);
+				}
+
 				total=new LinkedHashMap();
 
 			}
@@ -453,9 +476,14 @@ public class SampleSm01ServiceImpl implements SampleSm01Service {
 					response.setHqName(ter_name);
 				else
 					response.setHqName("");
+				
+				if(request.getRepType()==0 && request.getOptn()==1 )
+					response.setHqName("");
+
 				response.setDataType("Issue");
-				if(request.getRepType()==0 && request.getOptn()==1 && request.getDepoCode()==0)
-					response.setDataType(fs==1?"FS":fs==2?"Alloc Per Man":fs==3?"Total Alloc.":fs==4?"Issue":"Diff.");
+//				if(request.getRepType()==0 && request.getOptn()==1 && request.getDepoCode()==0)
+					if(request.getRepType()==0 && request.getOptn()==1 )
+					response.setDataType(fs==1?"FS":fs==2?"Alloc Per Man":fs==3?"Total Alloc.":fs==4?"Issue Per Man":"Diff. Per Man");
 				
 				if(fs==5)
 					response.setColor(1);
@@ -502,6 +530,10 @@ public class SampleSm01ServiceImpl implements SampleSm01Service {
 //				fs=0;
 				fs=data.getFs();
 				response=new SampleSm02Response();
+				if (request.getDepoCode() > 0 && request.getRepType() == 0 && request.getOptn() == 1) {
+				    response.setRenameFields(true);
+				}
+
 				months=new LinkedHashMap();
 
 			}
@@ -715,14 +747,22 @@ public class SampleSm01ServiceImpl implements SampleSm01Service {
 		if(!first)
 		{
 			response=new SampleSm02Response();
+			if (request.getDepoCode() > 0 && request.getRepType() == 0 && request.getOptn() == 1) {
+			    response.setRenameFields(true);
+			}
+
 			response.setBranch(branch);
 			if(request.getDepoCode()>0 || request.getRepType()==1)
 				response.setHqName(ter_name);
 			else
 				response.setHqName("");
+			if(request.getRepType()==0 && request.getOptn()==1 )
+				response.setHqName("");
+
+			
 			response.setDataType("Issue");
-			if(request.getRepType()==0 && request.getOptn()==1 && request.getDepoCode()==0)
-				response.setDataType(fs==1?"FS":fs==2?"Alloc Per Man":fs==3?"Total Alloc.":fs==4?"Issue":"Diff.");
+			if(request.getRepType()==0 && request.getOptn()==1 )
+				response.setDataType(fs==1?"FS":fs==2?"Alloc Per Man":fs==3?"Total Alloc.":fs==4?"Issue Per Man":"Diff. Per Man");
 			if(fs==5)
 				response.setColor(1);
 			else
@@ -762,6 +802,7 @@ public class SampleSm01ServiceImpl implements SampleSm01Service {
 			if(request.getRepType()==1 && request.getDepoCode()==0 )
 			{
 				response=new SampleSm02Response();
+
 				response.setBranch(branch);
 				response.setHqName("Total");
 				response.setColor(1);
@@ -799,12 +840,24 @@ public class SampleSm01ServiceImpl implements SampleSm01Service {
 
 			months.putAll(gtotal);
 			response=new SampleSm02Response();
+			if (request.getDepoCode() > 0 && request.getRepType() == 0 && request.getOptn() == 1) {
+			    response.setRenameFields(true);
+			}
+
+			if (request.getDepoCode() > 0 && request.getRepType() == 0 && request.getOptn() == 1) 
+			{
+				System.out.println("do nothing");
+			}
+			else
+			{
+			
 			response.setBranch(request.getDepoCode()==0?"All India":branch);
 			response.setDataType("Issue");
 			response.setHqName("Total");
 			response.setMonths(months);
 			response.setColor(2);
-			saleList.add(response);		
+			saleList.add(response);
+			}
 		}
 		return new ApiResponse<SampleSm02Response>(title!=null?title.toString():"",size,saleList);
 

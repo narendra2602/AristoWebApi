@@ -1,5 +1,7 @@
 package com.aristowebapi.serviceimpl;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -388,7 +390,20 @@ public class DashBoardChartServiceImpl implements DashBoardService {
 	@Override
 	public ApiResponse<DashBoardDataResponse> getDashboardMonthCombo(int myear, int div_code, int depo_code,int login_id, int usertype) 
 	{
+		Instant startTime = Instant.now();
+		System.out.println("startTime "+startTime);
 		int monthIndex= dashBoardDao.getDashboardMonthIndex(myear,div_code, depo_code, login_id,usertype);
+		
+		Instant endTime = Instant.now();
+
+		System.out.println("endTime "+endTime);
+
+		// Calculate the duration between the two instants
+        Duration timeElapsed = Duration.between(startTime, endTime);
+
+        System.out.println("Time taken: " + timeElapsed.toMillis() + " milliseconds");
+        System.out.println("Time taken: " + timeElapsed.getSeconds() + " seconds");
+        System.out.println("Time taken: " + timeElapsed.toMinutes() + " minutes");
 		
 		List<DashBoardDataResponse> monthList = new ArrayList<>();
 		for(int i=1;i<monthArray.length;i++)

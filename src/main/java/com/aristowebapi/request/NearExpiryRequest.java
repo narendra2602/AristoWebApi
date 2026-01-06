@@ -23,4 +23,5 @@ public class NearExpiryRequest {
 	private int code;
 	private int mktYear;
 	private int reportType;
+	private int optn;
 }

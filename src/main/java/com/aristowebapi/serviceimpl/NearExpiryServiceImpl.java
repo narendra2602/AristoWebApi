@@ -44,9 +44,9 @@ public class NearExpiryServiceImpl implements NearExpiryService{
 
 		title.append("[");
 		title.append(request.getDepoCode()>0?data.getBranch_name():data.getPname());
-		title.append(",");
-		title.append(data.getPack());
-		title.append("]- NEAR EXPIRY/EXPIRED BATCHWISE STOCK AS ON : ");
+		title.append(request.getOptn()==1?",":"");
+		title.append(request.getOptn()==1?data.getPack():" ");
+		title.append("]- STOCK AS ON : ");
 //		title.append(sdf.format(data.getFiledate()));
 		title.append((data.getFiledate()));
 		
@@ -65,7 +65,7 @@ public class NearExpiryServiceImpl implements NearExpiryService{
 
 			System.out.println(request.getDepoCode()+" "+request.getLoginId()+" "+request.getDivCode()+" "+request.getCode()+" "+request.getUserType()+" "+request.getReportType());
 			
-			nearExpiryList=nearExpiryDao.getNearExpiryReport(request.getDepoCode(),request.getLoginId(),request.getDivCode(),request.getCode(),request.getUserType(),request.getReportType());
+			nearExpiryList=nearExpiryDao.getNearExpiryReport(request.getDepoCode(),request.getLoginId(),request.getDivCode(),request.getCode(),request.getUserType(),request.getReportType(),request.getOptn());
 			
 
 
@@ -239,7 +239,7 @@ public class NearExpiryServiceImpl implements NearExpiryService{
 
 			System.out.println(request.getDepoCode()+" "+request.getLoginId()+" "+request.getDivCode()+" "+request.getReportType()+" "+request.getUserType());
 			
-			nearExpiryList=nearExpiryDao.getNearExpiryReportBranchwise(request.getDepoCode(),request.getLoginId(),request.getDivCode(),request.getReportType(),request.getUserType());
+			nearExpiryList=nearExpiryDao.getNearExpiryReportBranchwise(request.getDepoCode(),request.getLoginId(),request.getDivCode(),request.getReportType(),request.getUserType(),request.getOptn());
 			
 			
 			size=nearExpiryList.size();

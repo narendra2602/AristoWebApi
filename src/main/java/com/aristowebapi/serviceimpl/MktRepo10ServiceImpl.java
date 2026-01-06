@@ -17,6 +17,7 @@ import com.aristowebapi.dto.MktRepo10;
 import com.aristowebapi.dto.MonthDto;
 import com.aristowebapi.request.MktRepo10Request;
 import com.aristowebapi.response.ApiResponse;
+import com.aristowebapi.response.MktRepo2MultipleGroupResponse;
 import com.aristowebapi.response.MktRepo9Response;
 import com.aristowebapi.service.MktRepo10Service;
 import com.aristowebapi.utility.AppCalculationUtils;
@@ -101,7 +102,9 @@ Logger logger = LoggerFactory.getLogger(MktRepo9ServiceImpl.class);
 		int i=0;
 		int depo_code=0;
 		String mname="";
-
+		ArrayList<String> decimalKeys = new ArrayList<>();
+		boolean second=true;
+		int wmonth=0;
 		for (i=0;i<size;i++)
 		{
 			MktRepo10 data = MktRepo10SaleList.get(i);
@@ -123,12 +126,22 @@ Logger logger = LoggerFactory.getLogger(MktRepo9ServiceImpl.class);
 				sd=new LinkedHashMap();
 				total=new LinkedHashMap();
 
+/*				decimalKeys.add("budget");
+				decimalKeys.add("sales");
+				decimalKeys.add("lys");
+				decimalKeys.add("ach_per");
+				decimalKeys.add("gth_per");
+				decimalKeys.add("pmr");
+				decimalKeys.add("incr_sale");
+				decimalKeys.add("sur_slashdef");
+*/			
 				first=false;
 				title = getTitle(request, data); 
 			}
 
 			if(depo_code!=data.getDepo_code())
 			{
+			
 				for(int b=k;b<sz;b++)
 				{
 					MonthDto mn=monthData.get(b);
@@ -166,10 +179,10 @@ Logger logger = LoggerFactory.getLogger(MktRepo9ServiceImpl.class);
 				incr.put("TOTAL",incrColumnTotal);
 				response.setIncrSale(incr);
 
-				ach.put("TOTAL", Math.round(((salesColumnTotal*1.0/tgtColumnTotal)*100)*100.0)/100.0);
+				ach.put("TOTAL", tgtColumnTotal!=0?Math.round(((salesColumnTotal*1.0/tgtColumnTotal)*100)*100.0)/100.0:0.00);
 				response.setAchPer(ach);
 
-				gth.put("TOTAL", Math.round((((salesColumnTotal*1.0/lysColumnTotal)*100)-100)*100.0)/100.0);
+				gth.put("TOTAL", lysColumnTotal!=0?Math.round((((salesColumnTotal*1.0/lysColumnTotal)*100)-100)*100.0)/100.0:0.00);
 				response.setGthPer(gth);
 
 				pmr.put("TOTAL", fsColumnTotal!=0?Math.round((salesColumnTotal/fsColumnTotal)):0);
@@ -206,6 +219,10 @@ Logger logger = LoggerFactory.getLogger(MktRepo9ServiceImpl.class);
 				sd=new LinkedHashMap();
 				total=new LinkedHashMap();
 				k=0;
+				if(second && wmonth==0)
+					decimalKeys.add("Total");
+
+				wmonth=1;
 
 			}
 			
@@ -213,8 +230,17 @@ Logger logger = LoggerFactory.getLogger(MktRepo9ServiceImpl.class);
 			for(int b=k;b<sz;b++)
 			{
 				MonthDto mn=monthData.get(b);
-				if(mn.getMnth_code()==data.getMnth_code())
+				if(mn.getMnth_code()>data.getMnth_code())
 				{
+					second=false;
+					break;
+				}
+				
+				if(second && wmonth==0)
+					decimalKeys.add(mn.getMnth_abbr());
+
+				if(mn.getMnth_code()==data.getMnth_code())
+				{  
 					fs.put(data.getMnth_abbr(), data.getFs());
 					tgt.put(data.getMnth_abbr(), data.getTgt_val());
 					sales.put(data.getMnth_abbr(), data.getSales_val());
@@ -299,6 +325,7 @@ Logger logger = LoggerFactory.getLogger(MktRepo9ServiceImpl.class);
 		response.setGthPer(gth);
 		response.setPmr(pmr);
 		response.setSurSlashdef(sd);
+
 		saleList.add(response);
 
 		
@@ -323,10 +350,10 @@ Logger logger = LoggerFactory.getLogger(MktRepo9ServiceImpl.class);
 		incr.put("TOTAL",incrColumnTotal);
 		response.setIncrSale(incr);
 
-		ach.put("TOTAL", Math.round(((salesColumnTotal*1.0/tgtColumnTotal)*100)*100.0)/100.0);
+		ach.put("TOTAL", salesColumnTotal!=0?Math.round(((salesColumnTotal*1.0/tgtColumnTotal)*100)*100.0)/100.0:0.00);
 		response.setAchPer(ach);
 
-		gth.put("TOTAL", Math.round((((salesColumnTotal*1.0/lysColumnTotal)*100)-100)*100.0)/100.0);
+		gth.put("TOTAL", lysColumnTotal!=0?Math.round((((salesColumnTotal*1.0/lysColumnTotal)*100)-100)*100.0)/100.0:0.00);
 		response.setGthPer(gth);
 
 //		pmr.put("TOTAL", fsColumnTotal!=0?Math.round((salesColumnTotal*1.0/fsColumnTotal)*100.0)/100.0:0.00);
@@ -337,8 +364,9 @@ Logger logger = LoggerFactory.getLogger(MktRepo9ServiceImpl.class);
 		sd.put("TOTAL", salesColumnTotal-tgtColumnTotal);
 		response.setSurSlashdef(sd);
 
-		saleList.add(response);
-		return new ApiResponse<MktRepo9Response>(title.toString(),size,lupdate,saleList);
+//		saleList.add(response);
+		return new ApiResponse<MktRepo9Response>(title.toString(),size,decimalKeys,saleList);
+
 	}
 
 }
