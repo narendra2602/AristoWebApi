@@ -689,5 +689,20 @@ public class DashBoardChartServiceImpl implements DashBoardService {
 		return apiResponse;
 	}
 
+	@Override
+	public ApiResponse<DashBoardDataResponse> getPsrList(int loginId) {
+		List<DashBoardData> dataList= dashBoardDao.getPsrList( loginId);
+		List<DashBoardDataResponse> saleList = getResponseData(dataList);
+		String title="Psr List ";
+
+		
+		int size=dataList.size();
+		System.out.println("size is "+size+" id "+loginId);
+		
+		ApiResponse<DashBoardDataResponse> apiResponse = new ApiResponse<>(title!=null?title.toString():"", size,saleList);
+		return apiResponse;
+
+	}
+
 
 }

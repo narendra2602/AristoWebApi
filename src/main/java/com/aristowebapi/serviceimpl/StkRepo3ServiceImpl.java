@@ -18,6 +18,7 @@ import com.aristowebapi.dto.StkRepo3;
 import com.aristowebapi.request.StkRepo3Request;
 import com.aristowebapi.response.ApiResponse;
 import com.aristowebapi.response.StkRepo3Response;
+import com.aristowebapi.response.StkRepo9Response;
 import com.aristowebapi.service.StkRepo3Service;
 
 @Service
@@ -93,7 +94,7 @@ public class StkRepo3ServiceImpl implements StkRepo3Service{
 		int k=0;
 		int z=0;
 		sz=request.getEmon();
-
+		System.out.println("emon ki value ***** "+request.getEmon());
 		
 		Map<String, Long> months=null;
 		Map<String, Long> total=null;
@@ -107,12 +108,15 @@ public class StkRepo3ServiceImpl implements StkRepo3Service{
 			 stkRepo3SaleList=stkRepo3Dao.getStockiestRepo3(request.getMyear(),request.getDivCode(),request.getDepoCode()
 				,request.getSmon(),request.getEmon(),request.getRepType(),request.getLoginId());
 		
+		System.out.println("rep_type  "+request.getRepType()+" depo "+request.getDepoCode()+" "+request.getLoginId());
+		System.out.println("myeare  "+request.getMyear()+" div "+request.getDivCode()+" "+request.getSmon()+" "+request.getEmon()+" "+request.getCreditNoteType());
 		
 		StkRepo3Response response=null;
 		
 		List<StkRepo3Response> saleList = new ArrayList();
 
 		int size = stkRepo3SaleList.size();
+		System.out.println("size is "+size);
 		long columnTotal=0;
 		long groupColumnTotal=0;
 
@@ -330,7 +334,8 @@ public class StkRepo3ServiceImpl implements StkRepo3Service{
 			return new ApiResponse<StkRepo3Response>(title.toString(),size,lupdate,saleList);
 			}
 			else
-			return null;	
+			return new ApiResponse<StkRepo3Response>("",size,lupdate,saleList);	
+				
 	}
 	
 	

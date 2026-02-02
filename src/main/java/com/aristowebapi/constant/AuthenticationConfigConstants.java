@@ -4,6 +4,7 @@ public class AuthenticationConfigConstants {
 //    public static final long EXPIRATION_TIME = 864000000; // 10 days
 //    public static final long EXPIRATION_TIME = 86400000; // 1 day
    public static final long EXPIRATION_TIME = 3600000; // 60 mins (1000 * 60 * 60)
+// public static final long EXPIRATION_TIME = 28800000; // 8 hours  (1000 * 60 * 60 * 8)
 //   public static final long EXPIRATION_TIME = 1800000; // 30 mins (1000 * 60 * 30)
 //     public static final long EXPIRATION_TIME = 60000; // 1mins (1000 * 60 * 1) 
     public static final String TOKEN_PREFIX = "Bearer ";

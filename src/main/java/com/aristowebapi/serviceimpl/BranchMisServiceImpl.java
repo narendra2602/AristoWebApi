@@ -64,7 +64,7 @@ public class BranchMisServiceImpl implements BranchMisservice{
 			BranchMisRepo5List=branchMisDao.getBranchMisRepo5(request.getMyear(),request.getDivCode(),request.getDepoCode(),request.getSmon(),request.getEmon(),request.getRepType(),request.getLoginId(),request.getUtype(),request.getCode());
 			size = BranchMisRepo5List.size();
 			logger.info("size of the data is {}",size);
-			System.out.println("rep_type  "+request.getRepType()+" depo "+request.getDepoCode());
+			System.out.println("rep_type  "+request.getRepType()+" depo "+request.getDepoCode()+" "+request.getLoginId());
 			
 /*			if(size==0)
 				throw new DataNotFoundException(AristoWebLogMsgConstant.MKT_REPORT_SERVICE_022);

@@ -318,7 +318,7 @@ public class StkRepo2ServiceImpl implements StkRepo2Service{
 						{
 							total.put((data.getMnth_abbr()+" VALUE"), data.getSales_val());
 						}
-						System.out.println("total ke liye yeha per aaya "+data.getSales_val()+" "+data.getMnth_abbr());
+						
 
 					}
 					if(request.getUv()==3)

@@ -62,7 +62,7 @@ public class StkRepo5ServiceImpl {
 			List<HashMap<String, Object>> StkRepo5List =  stkRepo5Repository.getStockiestRepo5(request.getMyear(),request.getDivCode(),request.getDepoCode()
 					,request.getSmon(),request.getEmon(),request.getCode(),request.getLoginId());
 			size = StkRepo5List.size();
-			
+		
 			logger.info("size of the data is {}",size);
 		
 			String pname="";
