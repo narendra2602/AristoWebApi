@@ -9,6 +9,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.aristowebapi.dto.AbmDraftReportingDto;
+import com.aristowebapi.dto.AbmReportingDto;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -33,4 +36,19 @@ public class AbmDraftReportEntity {
 	@Column(columnDefinition = "TEXT")
 	private String draftJson;
 
+	public AbmDraftReportEntity(AbmDraftReportingDto abmDraftReportingDto) {
+		
+//		this.draftId = abmDraftReportingDto.getDraftId();
+		this.draftStatus = abmDraftReportingDto.getDraftStatus();
+		this.mnthCode = abmDraftReportingDto.getMnthCode();
+		this.myear = abmDraftReportingDto.getMyear();
+		this.entryDate = abmDraftReportingDto.getEntryDate();
+		this.loginId = abmDraftReportingDto.getLoginId();
+//		this.draftJson = abmDraftReportingDto.getDraftJson();
+	}
+
+	
+
+	
+	
 }

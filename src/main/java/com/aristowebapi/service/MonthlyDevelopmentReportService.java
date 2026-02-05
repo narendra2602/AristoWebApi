@@ -17,7 +17,9 @@ public interface MonthlyDevelopmentReportService {
     		List<MrDto> mrs,List<DoctorPrescriptionDto> doctors,SelfAssessmentDto selfAssessment,
             HeaderDto header);
 	
-	ApiResponse<FullReportResponse> getFullReport(Long reportId);
+	FullReportResponse getFullReport(Long reportId);
 	
-
+	String saveFinalDraftReport(Long draftId) throws Exception;
+	
+	String deleteReportByReportId(Long reportId);
 }

@@ -11,5 +11,5 @@ public interface HeaderRepository extends JpaRepository<HeaderEntity, Long> {
 
     // ✅ Find header by reportId
     Optional<HeaderEntity> findByReportId(Long reportId);
-
+    void deleteByReportId(Long reportId);
 }

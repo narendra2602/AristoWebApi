@@ -16,4 +16,7 @@ public interface AbmReportingDao  extends JpaRepository<MktDataDto, Integer> {
 	
 	@Query(value = "select mnth_code from perdmast where mkt_year=:myear and mkt_ord=:emon", nativeQuery = true)
 	int getMonthCode(@Param("myear") int myear,@Param("emon") int emon);
+	
+	@Query(value = "select ter_name from hqmast where mkt_year=:myear and div_Code=:div_code and depo_code=:depo_code and ter_code=:hq_code", nativeQuery = true)
+	String getTerName(@Param("myear") int myear,@Param("div_code") int div_code,@Param("depo_code") int depo_code,@Param("hq_code") int hq_code);
 }

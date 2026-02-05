@@ -11,5 +11,6 @@ public interface SelfAssessmentRepository extends JpaRepository<SelfAssessmentEn
 
     // ✅ Find self-assessment by reportId
     Optional<SelfAssessmentEntity> findByReportId(Long reportId);
+    void deleteByReportId(Long reportId);
 
 }

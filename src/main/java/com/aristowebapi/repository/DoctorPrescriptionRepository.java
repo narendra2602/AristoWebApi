@@ -11,5 +11,6 @@ public interface DoctorPrescriptionRepository extends JpaRepository<DoctorPrescr
 
     // ✅ Find all doctor prescriptions for a given reportId
     List<DoctorPrescriptionEntity> findAllByReportId(Long reportId);
+    void deleteByReportId(Long reportId);
 
 }

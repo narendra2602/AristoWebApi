@@ -10,7 +10,10 @@ import java.util.Optional;
 public interface MonthlyDevelopmentReportRepository extends JpaRepository<MonthlyDevelopmentReportEntity, Long> {
 
     // ✅ Finds a report by the common reportId
-    Optional<MonthlyDevelopmentReportEntity> findByReportId(Long reportId);
+    Optional<MonthlyDevelopmentReportEntity> findByDraftId(Long draftId);
     Long findByReportMonthAndReportYearAndCreatedBy(int month,int year,int loginId);
+    boolean existsByDraftId(Long draftId);
+    
+    void deleteByReportId(Long reportId);
 
 }

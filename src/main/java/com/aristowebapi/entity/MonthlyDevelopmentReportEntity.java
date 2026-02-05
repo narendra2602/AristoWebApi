@@ -28,7 +28,14 @@ public class MonthlyDevelopmentReportEntity {
 	private int createdBy;
 	private int divCode;
 	private int depoCode;
+	private int hqCode;
     private Long draftId;
+    private int line1EmpCode;
+    private String  line1EmpName;
+    private int line2EmpCode;
+    private String  line2EmpName;
+    private int line3EmpCode;
+    private String  line3EmpName;
 
 	
 	
@@ -40,7 +47,15 @@ public class MonthlyDevelopmentReportEntity {
 		this.createdBy = mDevelopmentReportDto.getCreatedBy();
 		this.divCode = mDevelopmentReportDto.getDivCode();
 		this.depoCode = mDevelopmentReportDto.getDepoCode();
-//		this.draftId=mDevelopmentReportDto.getDraftId();
+		this.hqCode=mDevelopmentReportDto.getHqCode();
+		this.line1EmpCode=mDevelopmentReportDto.getLine1EmpCode();
+		this.line1EmpName=mDevelopmentReportDto.getLine1EmpName();
+		this.line2EmpCode=mDevelopmentReportDto.getLine2EmpCode();
+		this.line2EmpName=mDevelopmentReportDto.getLine2EmpName();
+		this.line3EmpCode=mDevelopmentReportDto.getLine3EmpCode();
+		this.line3EmpName=mDevelopmentReportDto.getLine3EmpName();
+
+		//		this.draftId=mDevelopmentReportDto.getDraftId();
 	}
 	
 	

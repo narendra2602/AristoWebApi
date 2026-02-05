@@ -11,5 +11,6 @@ public interface MrRepository extends JpaRepository<MrEntity, Long> {
 
     // ✅ Find all MRs for a specific report using the common reportId
     List<MrEntity> findAllByReportId(Long reportId);
+    void deleteByReportId(Long reportId);
 
 }

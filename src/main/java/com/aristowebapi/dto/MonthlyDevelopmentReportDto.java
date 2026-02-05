@@ -22,10 +22,16 @@ public class MonthlyDevelopmentReportDto {
 	private String reportTitle;
 	private int divCode;
     private int depoCode;
+    private int hqCode;
     private int month;
     private int year;
     private int createdBy;
-    
+    private int line1EmpCode;
+    private String  line1EmpName;
+    private int line2EmpCode;
+    private String  line2EmpName;
+    private int line3EmpCode;
+    private String  line3EmpName;    
 
     
 	
