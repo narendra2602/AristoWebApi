@@ -19,7 +19,7 @@ public class AbmDraftReportingDto {
     private int myear;
     private String entryDate;
     private int loginId;
-
+    private String loginName;
     @JsonIgnore
     private String draftJson;
 

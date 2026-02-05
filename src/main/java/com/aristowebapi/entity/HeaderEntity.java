@@ -8,7 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "header")
+@Table(name = "abm_header")
 @Data
 @NoArgsConstructor
 public class HeaderEntity {

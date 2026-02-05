@@ -13,7 +13,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "monthly_development_report")
+@Table(name = "abm_monthly_development_report")
 @Data
 @NoArgsConstructor
 public class MonthlyDevelopmentReportEntity {

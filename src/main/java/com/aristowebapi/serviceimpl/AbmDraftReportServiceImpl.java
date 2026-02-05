@@ -156,10 +156,27 @@ public class AbmDraftReportServiceImpl implements AbmDraftReportService {
     // LIST BY MONTH & YEAR
     // =====================================================
     @Override
-    public List<AbmDraftReportingDto> getByMonthAndYearAndLoginId(int month, int year,int loginId) {
-        return reportRepository.findByMnthCodeAndMyearAndLoginId(month, year,loginId)
+    public List<AbmDraftReportingDto> getByMonthAndYearAndLoginId(
+            int month, int year, int loginId) {
+
+        List<AbmReportingDto> reportingList =
+                abmReportingDao.getLine1Reporting(loginId);
+
+        final String loginName =
+                (reportingList != null && !reportingList.isEmpty())
+                        ? reportingList.get(0).getLine1_empname()
+                        : null;
+
+        return reportRepository
+                .findByMnthCodeAndMyearAndLoginId(month, year, loginId)
                 .stream()
-                .map(AbmDraftReportingDto::new)
+                .map(entity -> {
+                    AbmDraftReportingDto dto = new AbmDraftReportingDto(entity);
+                    dto.setLoginName(loginName);   // ✅ NO ERROR
+                    return dto;
+                })
                 .collect(Collectors.toList());
     }
+
+
 }

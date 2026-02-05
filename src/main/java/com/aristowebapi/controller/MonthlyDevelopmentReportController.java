@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.aristowebapi.dao.AbmReportingDao;
 import com.aristowebapi.dto.AbmDraftReportingDto;
 import com.aristowebapi.entity.MonthlyDevelopmentReportEntity;
 import com.aristowebapi.request.AbmReportingDraftRequest;
@@ -40,7 +41,7 @@ public class MonthlyDevelopmentReportController {
     private final MonthlyDevelopmentReportService reportService;
     private final AbmDraftReportService draftReportService;
     private final ObjectMapper objectMapper;
-    
+    private final AbmReportingDao abmReportingDao;
     private final AppRequestParameterUtils appRequestParameterUtils;
     
     @PostMapping("${mrc_abmreport_savepath}")
@@ -124,7 +125,9 @@ public class MonthlyDevelopmentReportController {
 
     	int requestValues[]=getRequestData(req);
 		int loginId=requestValues[0];
-        return draftReportService.getByMonthAndYearAndLoginId(mnth, myear,loginId);
+		int mnthCode = abmReportingDao.getMonthCode(myear,mnth);
+		
+        return draftReportService.getByMonthAndYearAndLoginId(mnthCode, myear,loginId);
     }
     
  

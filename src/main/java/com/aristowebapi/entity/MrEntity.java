@@ -20,7 +20,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "mr")
+@Table(name = "abm_mr")
 @Data
 @NoArgsConstructor
 public class MrEntity {
@@ -46,7 +46,7 @@ public class MrEntity {
     // ✅ MR PRIORITIES
     @ElementCollection
     @CollectionTable(
-            name = "mr_priorities",
+            name = "abm_mr_priorities",
             joinColumns = @JoinColumn(name = "mr_pk_id")
     )
     @Column(name = "priority")
@@ -55,7 +55,7 @@ public class MrEntity {
     // ✅ MR ADVICE
     @ElementCollection
     @CollectionTable(
-            name = "mr_advice",
+            name = "abm_mr_advice",
             joinColumns = @JoinColumn(name = "mr_pk_id")
     )
     @Column(name = "advice")
