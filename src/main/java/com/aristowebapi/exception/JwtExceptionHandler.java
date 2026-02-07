@@ -41,7 +41,7 @@ public class JwtExceptionHandler extends ResponseEntityExceptionHandler {
         response.put("status", "FAIL");
         response.put("message", ex.getMessage());
 
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
         
     }
     

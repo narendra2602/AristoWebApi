@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.aristowebapi.dao.AbmReportingDao;
 import com.aristowebapi.dto.AbmDraftReportingDto;
 import com.aristowebapi.entity.MonthlyDevelopmentReportEntity;
+import com.aristowebapi.exception.DataNotFoundException;
 import com.aristowebapi.request.AbmReportingDraftRequest;
 import com.aristowebapi.request.MonthlyReportRequest;
 import com.aristowebapi.response.FullReportResponse;
@@ -72,8 +73,13 @@ public class MonthlyDevelopmentReportController {
     	
     	int requestValues[]=getRequestData(req);
 		request.setLoginId(requestValues[0]);
-		
-        return draftReportService.saveAbmDraftReport(request);
+		FullReportResponse response = draftReportService.saveAbmDraftReport(request);
+
+	    if (response == null) {
+	        throw new DataNotFoundException("Duplicate Entry");
+	    }
+
+	    return response;
     }
 
     
@@ -82,7 +88,7 @@ public class MonthlyDevelopmentReportController {
     public ResponseEntity<JsonNode>  updateDraftReport(@RequestBody String  jsonRequest ) throws Exception {
     	
     	String returnJson = draftReportService.updateAbmDraftReport(jsonRequest);
-        return ResponseEntity.ok(new ObjectMapper().readTree(returnJson));
+        return ResponseEntity.ok(objectMapper.readTree(returnJson));
     }
 
     
@@ -91,7 +97,7 @@ public class MonthlyDevelopmentReportController {
     public ResponseEntity<JsonNode> saveFinalNewReport(@PathVariable Long draftId) throws Exception {
 
         String returnJson = reportService.saveFinalDraftReport(draftId);
-        JsonNode response = new ObjectMapper().readTree(returnJson);
+        JsonNode response = objectMapper.readTree(returnJson);
 
         return ResponseEntity.ok(response);
     }
@@ -130,7 +136,20 @@ public class MonthlyDevelopmentReportController {
         return draftReportService.getByMonthAndYearAndLoginId(mnthCode, myear,loginId);
     }
     
- 
+    @GetMapping("${mrc_abmdraftlist_path}")
+    public List<AbmDraftReportingDto> getDraftList(
+    	 @PathVariable("divCode") int divCode,
+    	 @PathVariable("depoCode") int depoCode,
+         @PathVariable("mnth") int mnth,
+         @PathVariable("myear") int myear, HttpServletRequest req) {
+
+    	int requestValues[]=getRequestData(req);
+		int loginId=requestValues[0];
+		int mnthCode = abmReportingDao.getMonthCode(myear,mnth);
+		
+        return draftReportService.getByDivCodeAndDepoCodeAndMnthCodeAndMyear(divCode,depoCode,mnthCode, myear);
+    }
+
     
 
     @GetMapping(value = "${mrc_abmreport_path}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -146,6 +165,29 @@ public class MonthlyDevelopmentReportController {
                         "Invalid JSON stored for draftId " + draftId, e);
             }
         }    
+    
+    @GetMapping("${mrc_abmjsonreport_path}")
+    public ResponseEntity<List<FullReportResponse>> getFullReport(
+            @PathVariable Integer divCode,
+            @PathVariable Integer depoCode,
+            @PathVariable Integer mnthCode,
+            @PathVariable Integer myear,
+            @PathVariable Integer hqCode) {
+
+        List<FullReportResponse> response =
+                reportService.getAllReportJson(
+                        divCode,
+                        depoCode,
+                        mnthCode,
+                        myear,
+                        hqCode
+                );
+
+        return ResponseEntity.ok(response);
+    }
+
+    
+    
     
     private int[] getRequestData(HttpServletRequest req)
 	{

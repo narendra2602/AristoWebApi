@@ -1,5 +1,6 @@
 package com.aristowebapi.serviceimpl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -302,5 +303,96 @@ public class MonthlyDevelopmentReportServiceImpl implements MonthlyDevelopmentRe
         
         return "Delete Successfully";
     }
+
+
+
+	@Override
+	public List<FullReportResponse> getAllReportJson(int divCode, int depoCode, int mnthCode, int myear, int hqCode) {
+		// 1️⃣ Fetch ALL matching reports
+	    List<MonthlyDevelopmentReportEntity> reports =
+	            reportRepository
+	                    .findAllByDivCodeAndDepoCodeAndReportMonthAndReportYearAndHqCode(divCode, depoCode, mnthCode, myear, hqCode);
+
+	    if (reports.isEmpty()) {
+	        throw new DataNotFoundException("No reports found");
+	    }
+
+	    List<FullReportResponse> responseList = new ArrayList<>();
+
+	    // 2️⃣ Loop each report and build JSON
+	    for (MonthlyDevelopmentReportEntity report : reports) {
+
+	        Long reportId = report.getReportId();
+
+	        // Fetch related data
+	        List<MrEntity> mrs = mrRepository.findAllByReportId(reportId);
+	        List<DoctorPrescriptionEntity> doctors =
+	                doctorRepository.findAllByReportId(reportId);
+
+	        SelfAssessmentEntity selfAssessment =
+	                selfAssessmentRepository.findByReportId(reportId).orElse(null);
+
+	        HeaderEntity header =
+	                headerRepository.findByReportId(reportId).orElse(null);
+
+	        // Report DTO
+	        MonthlyDevelopmentReportDto reportDto = new MonthlyDevelopmentReportDto();
+	        reportDto.setCompany("Aristo");
+	        reportDto.setMonth(report.getReportMonth());
+	        reportDto.setYear(report.getReportYear());
+	        reportDto.setReportTitle("ABM");
+	        reportDto.setCreatedBy(report.getCreatedBy());
+	        reportDto.setReportId(report.getReportId());
+	        reportDto.setDivCode(report.getDivCode());
+	        reportDto.setDepoCode(report.getDepoCode());
+
+	        // MR DTO
+	        List<MrDto> mrDtoList = mrs.stream()
+	                .map(MrDto::new)
+	                .collect(Collectors.toList());
+
+	        // Doctor DTO
+	        List<DoctorPrescriptionDto> drDtoList = doctors.stream()
+	                .map(DoctorPrescriptionDto::new)
+	                .collect(Collectors.toList());
+
+	        // Self Assessment DTO
+	        SelfAssessmentDto selfDto = null;
+	        if (selfAssessment != null) {
+	            selfDto = new SelfAssessmentDto();
+	            selfDto.setSelfRating(selfAssessment.getSelfRating());
+	            selfDto.setSelfImprovementPlan(
+	                    selfAssessment.getSelfImprovementPlan());
+	        }
+
+	        // Header DTO
+	        HeaderDto headerDto = null;
+	        if (header != null) {
+	            headerDto = new HeaderDto();
+	            headerDto.setFromName(header.getFromName());
+	            headerDto.setDesignation(header.getDesignation());
+	            headerDto.setHq(header.getHq());
+	            headerDto.setTo(header.getToName());
+	            headerDto.setRef(header.getReference());
+	            headerDto.setCc(header.getCc());
+	            headerDto.setDate(header.getRefDate());
+	        }
+
+	        // Build Response
+	        FullReportResponse response = new FullReportResponse();
+//	        response.setReport(reportDto);
+	        response.setMrs(mrDtoList);
+	        response.setDoctors(drDtoList);
+	        response.setSelfAssessment(selfDto);
+	        response.setHeader(headerDto);
+	        response.setAbmDraftId(report.getDraftId());
+	        response.setAbmDraftStatus("Final");
+
+	        responseList.add(response);
+	    }
+
+	    return responseList;
+
+	}
  
 }

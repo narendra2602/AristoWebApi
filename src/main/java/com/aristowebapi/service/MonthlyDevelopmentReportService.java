@@ -22,4 +22,6 @@ public interface MonthlyDevelopmentReportService {
 	String saveFinalDraftReport(Long draftId) throws Exception;
 	
 	String deleteReportByReportId(Long reportId);
+	
+	List<FullReportResponse> getAllReportJson(int divCode,int  depoCode,int  mnthCode,int myear, int hqCode);
 }

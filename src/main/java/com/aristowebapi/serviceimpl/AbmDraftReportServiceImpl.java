@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,6 +44,19 @@ public class AbmDraftReportServiceImpl implements AbmDraftReportService {
                 abmReportingDraftRequest.getMyear(),
                 abmReportingDraftRequest.getMnthCode());
 
+    	
+    	boolean exists = reportRepository
+                .existsByLoginIdAndMnthCodeAndMyear(
+                		abmReportingDraftRequest.getLoginId(),
+                        mnthCode,
+                        abmReportingDraftRequest.getMyear()
+                );
+
+        if (exists) {
+            return null; // NO exception → NO rollback
+        }
+    	
+ 
         String terName = abmReportingDao.getTerName(
                 abmReportingDraftRequest.getMyear(),
                 abmReportingDraftRequest.getDivCode(),
@@ -88,7 +102,7 @@ public class AbmDraftReportServiceImpl implements AbmDraftReportService {
         response.setSelfAssessment(new SelfAssessmentDto());
 
         try {
-            String jsonString = objectMapper.writeValueAsString(response);
+            String jsonString = null;
 
             AbmDraftReportEntity entity = new AbmDraftReportEntity();
             entity.setDraftJson(jsonString);
@@ -97,13 +111,24 @@ public class AbmDraftReportServiceImpl implements AbmDraftReportService {
             entity.setLoginId(abmReportingDraftRequest.getLoginId());
             entity.setMnthCode(mnthCode);
             entity.setMyear(abmReportingDraftRequest.getMyear());
+            entity.setDivCode(abmReportingDraftRequest.getDivCode());
+            entity.setDepoCode(abmReportingDraftRequest.getDepoCode());
+            entity.setHqCode(abmReportingDraftRequest.getHqCode());
+            entity.setEmpCode(abmReportingDto.getLine1_empcode());
 
             AbmDraftReportEntity saved = reportRepository.save(entity);
             response.setAbmDraftId(saved.getDraftId());
-
+            jsonString = objectMapper.writeValueAsString(response);
+            entity.setDraftJson(jsonString);
+            saved = reportRepository.save(entity);
             return response;
 
-        } catch (Exception e) {
+        } 
+        catch (DataIntegrityViolationException e) {
+            // duplicate entry
+            return null;
+        }
+        catch (Exception e) {
             throw new RuntimeException("Error saving draft report", e);
         }
     }
@@ -159,24 +184,50 @@ public class AbmDraftReportServiceImpl implements AbmDraftReportService {
     public List<AbmDraftReportingDto> getByMonthAndYearAndLoginId(
             int month, int year, int loginId) {
 
-        List<AbmReportingDto> reportingList =
-                abmReportingDao.getLine1Reporting(loginId);
-
+        List<AbmReportingDto> reportingList = abmReportingDao.getLine1Reporting(loginId);
         final String loginName =
                 (reportingList != null && !reportingList.isEmpty())
                         ? reportingList.get(0).getLine1_empname()
                         : null;
+
 
         return reportRepository
                 .findByMnthCodeAndMyearAndLoginId(month, year, loginId)
                 .stream()
                 .map(entity -> {
                     AbmDraftReportingDto dto = new AbmDraftReportingDto(entity);
-                    dto.setLoginName(loginName);   // ✅ NO ERROR
+                     dto.setLoginName(loginName);   // ✅ NO ERROR
                     return dto;
                 })
                 .collect(Collectors.toList());
     }
+
+    // =====================================================
+    // LIST BY DIV_CODE & DEPO_cODE AND MONTH & YEAR
+    // =====================================================
+
+	@Override
+	public List<AbmDraftReportingDto> getByDivCodeAndDepoCodeAndMnthCodeAndMyear(int divCode, int depoCode,
+			int mnthCode, int myear) {
+		
+		
+  
+        return reportRepository
+                .findByDivCodeAndDepoCodeAndMnthCodeAndMyear(divCode,depoCode,mnthCode,myear)
+                .stream()
+                .map(entity -> {
+                    AbmDraftReportingDto dto = new AbmDraftReportingDto(entity);
+                    List<AbmReportingDto> reportingList = abmReportingDao.getLine1Reporting(dto.getLoginId());
+                    final String loginName =
+                            (reportingList != null && !reportingList.isEmpty())
+                                    ? reportingList.get(0).getLine1_empname()
+                                    : null;
+                    dto.setLoginName(loginName);   // ✅ NO ERROR
+                    return dto;
+                })
+                .collect(Collectors.toList());
+    
+	}
 
 
 }
