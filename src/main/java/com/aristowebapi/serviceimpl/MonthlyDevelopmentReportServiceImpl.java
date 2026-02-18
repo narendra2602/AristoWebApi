@@ -1,5 +1,6 @@
 package com.aristowebapi.serviceimpl;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,7 +33,6 @@ import com.aristowebapi.repository.SelfAssessmentRepository;
 import com.aristowebapi.request.MonthlyReportRequest;
 import com.aristowebapi.response.FullReportResponse;
 import com.aristowebapi.service.MonthlyDevelopmentReportService;
-import com.aristowebapi.utility.DraftStatus;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
@@ -178,9 +178,18 @@ public class MonthlyDevelopmentReportServiceImpl implements MonthlyDevelopmentRe
     
     {
      	
+    	 // 1️⃣ Fetch draft properly (PRIMARY KEY)
     	
     	AbmDraftReportEntity entity = abmReportRepository.findByDraftId(draftId);
     	
+    	// 2️⃣ Check if final already created
+    	
+    	if (reportRepository.existsByDraftId(draftId)) {
+    	    throw new DataAlreadyException("Final report already created for draftId " + draftId);
+    	}
+
+    	
+    	// 3️⃣ Get reporting data
         List<AbmReportingDto> reportingList =
                 abmReportingDao.getLine1Reporting(entity.getLoginId());
 
@@ -195,14 +204,7 @@ public class MonthlyDevelopmentReportServiceImpl implements MonthlyDevelopmentRe
     	}
 
     	
-    	if (reportRepository.existsByDraftId(draftId)) {
-    	    throw new DataAlreadyException("Final report already created for draftId " + draftId);
-    	}
-    	
-
-    	entity.setDraftStatus(DraftStatus.FINAL.name());
-
-    	entity = abmReportRepository.save(entity);
+    	// 4️⃣ Read stored JSON
     	
     	String jsonRequest= entity.getDraftJson();
 
@@ -214,8 +216,20 @@ public class MonthlyDevelopmentReportServiceImpl implements MonthlyDevelopmentRe
 
     	MonthlyReportRequest reportRequest = objectMapper.readValue(jsonRequest, MonthlyReportRequest.class);
 
-   	
+    	// 5️⃣ 🔥 UPDATE STATUS IN BOTH PLACES
+        entity.setDraftStatus("FINAL");
+        reportRequest.setAbmDraftStatus("FINAL");
 
+     // 6️⃣ Convert updated object back to JSON
+        String updatedJson = objectMapper.writeValueAsString(reportRequest);
+        entity.setDraftJson(updatedJson);
+
+        // 7️⃣ Save updated draft entity
+        abmReportRepository.saveAndFlush(entity);
+
+        // ===============================
+        // 8️⃣ Now create final report
+        // ===============================
 
     	
     	
@@ -234,11 +248,11 @@ public class MonthlyDevelopmentReportServiceImpl implements MonthlyDevelopmentRe
         reportEntity.setLine2EmpName(abmReportingDto.getLine2_empname());
         reportEntity.setLine3EmpCode(abmReportingDto.getLine3_empcode());
         reportEntity.setLine3EmpName(abmReportingDto.getLine3_empname());
+        reportEntity.setCreatedDate(LocalDateTime.now());
 
     	
         // 1️⃣ Save Master Report first to generate reportId
         MonthlyDevelopmentReportEntity savedReport = reportRepository.save(reportEntity);
-
         Long reportId = savedReport.getReportId();
 
         // 2️⃣ Set reportId in all child entities
@@ -265,7 +279,8 @@ public class MonthlyDevelopmentReportServiceImpl implements MonthlyDevelopmentRe
         if(header!=null)
         	headerRepository.save(new HeaderEntity(header));
         
-        return jsonRequest;
+     // 🔟 Return updated JSON (NOT old jsonRequest)
+        return updatedJson;
         
 
     }
@@ -287,7 +302,7 @@ public class MonthlyDevelopmentReportServiceImpl implements MonthlyDevelopmentRe
         AbmDraftReportEntity draftEntity = abmReportRepository.findByDraftId(draftId);
 
         if (draftEntity != null) {
-            draftEntity.setDraftStatus(DraftStatus.DRAFT.name());
+            draftEntity.setDraftStatus("Draft");
             abmReportRepository.save(draftEntity);
         }
     	

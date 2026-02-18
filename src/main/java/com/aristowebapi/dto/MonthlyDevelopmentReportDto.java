@@ -1,10 +1,10 @@
 package com.aristowebapi.dto;
-import lombok.Data;
-import java.util.List;
+import java.time.LocalDateTime;
 
-import com.aristowebapi.entity.MonthlyDevelopmentReportEntity;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+
+import lombok.Data;
 
 @Data
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
@@ -32,8 +32,8 @@ public class MonthlyDevelopmentReportDto {
     private String  line2EmpName;
     private int line3EmpCode;
     private String  line3EmpName;    
-
-    
+    private LocalDateTime createdDate;
+    private LocalDateTime modifiedDate;
 	
     
     

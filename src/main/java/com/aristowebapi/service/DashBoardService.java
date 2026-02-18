@@ -40,7 +40,7 @@ public interface DashBoardService {
 	ApiResponse<DashBoardDataResponse> getHqList(int myear,int div_code, int depo_code,int utype,int login_id);
 	ApiResponse<DashBoardDataResponse> getRegionList(int myear,int div_code, int depo_code,int utype,int login_id);
 	ApiResponse<DashBoardDataResponse> getAreaList(int myear,int div_code, int depo_code,int utype,int login_id);
-	ApiResponse<DashBoardDataResponse> getPsrList(int loginId);
+	
 	
 	
 	ApiResponse<DashBoardDataResponse> getProductList(int div_code,int utype,int login_id,int myear,int gp_code);

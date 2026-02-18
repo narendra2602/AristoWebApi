@@ -1,11 +1,17 @@
 package com.aristowebapi.entity;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import com.aristowebapi.dto.MonthlyDevelopmentReportDto;
 
@@ -37,7 +43,12 @@ public class MonthlyDevelopmentReportEntity {
     private int line3EmpCode;
     private String  line3EmpName;
 
-	
+    @CreatedDate
+    @Column(updatable = false)
+    private LocalDateTime createdDate;
+
+    @LastModifiedDate
+    private LocalDateTime modifiedDate;
 	
 	public MonthlyDevelopmentReportEntity(MonthlyDevelopmentReportDto mDevelopmentReportDto) {
 //		this.reportId = mDevelopmentReportDto.getReportId();
@@ -54,7 +65,9 @@ public class MonthlyDevelopmentReportEntity {
 		this.line2EmpName=mDevelopmentReportDto.getLine2EmpName();
 		this.line3EmpCode=mDevelopmentReportDto.getLine3EmpCode();
 		this.line3EmpName=mDevelopmentReportDto.getLine3EmpName();
-
+		this.createdDate=mDevelopmentReportDto.getCreatedDate();
+		this.modifiedDate=mDevelopmentReportDto.getModifiedDate();
+		
 		//		this.draftId=mDevelopmentReportDto.getDraftId();
 	}
 	

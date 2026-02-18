@@ -12,4 +12,5 @@ public interface AbmReportingDto {
 	public int getLine3_empcode();
 	public String getLine3_empname();
 	public String getLine3_desg();
+	public String getLine1_name();
 }

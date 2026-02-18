@@ -18,5 +18,6 @@ public class HeaderDto {
     private String cc;
     private String ref;
     private String date;
+
     
 }

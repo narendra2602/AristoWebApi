@@ -105,8 +105,7 @@ public interface DashBoardDao extends JpaRepository<MktDataDto, Integer> {
 			@Param("depo_code") int depo_code,@Param("utype") int utype,@Param("login_id") int login_id);
 
 	
-	@Query(value="CALL getPsrList(:login_id);", nativeQuery=true)
-	List<DashBoardData> getPsrList(@Param("login_id") int login_id);
+	
 
 	
 	@Query(value="CALL getProductList(:div_code,:utype,:login_id,:myear,:gp_code);", nativeQuery=true)

@@ -69,6 +69,7 @@ public class MrEntity {
     private String monthTarget;
     
     private String secondarySalesAsOn30;
+    private String closingStockAsOn30;
     private String expectedSalesNextMonth;
 	public MrEntity(MrDto mrDto) {
 
@@ -82,6 +83,7 @@ public class MrEntity {
 //		this.report = report;
 		this.monthTarget = mrDto.getMonthTarget();
 		this.secondarySalesAsOn30 = mrDto.getSecondarySalesAsOn30();
+		this.closingStockAsOn30=mrDto.getClosingStockAsOn30();
 		this.expectedSalesNextMonth = mrDto.getExpectedSalesNextMonth();
 	}
     

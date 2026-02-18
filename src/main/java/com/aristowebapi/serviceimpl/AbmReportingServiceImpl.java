@@ -12,8 +12,11 @@ import com.aristowebapi.constant.AristoWebLogMsgConstant;
 import com.aristowebapi.constant.AristoWebMessageConstant;
 import com.aristowebapi.dao.AbmReportingDao;
 import com.aristowebapi.dto.AbmReportingDto;
+import com.aristowebapi.dto.DashBoardData;
+import com.aristowebapi.dto.PsrDto;
 import com.aristowebapi.response.AbmReportingResponse;
 import com.aristowebapi.response.ApiResponse;
+import com.aristowebapi.response.PsrResponse;
 import com.aristowebapi.service.AbmReportingService;
 
 @Service
@@ -76,5 +79,42 @@ public class AbmReportingServiceImpl  implements AbmReportingService{
 
 	}
 
+	@Override
+	public ApiResponse<PsrResponse> getPsrList(int loginId) {
+		List<PsrDto> dataList= abmReportingDao.getPsrList( loginId);
+		List<PsrResponse> saleList = getResponseData(dataList);
+		String title="Psr List ";
+
+		
+		int size=dataList.size();
+		System.out.println("size is "+size+" id "+loginId);
+		
+		ApiResponse<PsrResponse> apiResponse = new ApiResponse<>(title!=null?title.toString():"", size,saleList);
+		return apiResponse;
+
+	}
 	
+	private List<PsrResponse> getResponseData(List<PsrDto> dataList)
+	{
+		List<PsrResponse> saleList = new ArrayList<PsrResponse>();
+		int size = dataList.size();
+		
+		PsrResponse response=null;
+		
+		
+		for(int i=0; i<size;i++)
+		{
+
+			PsrDto data = dataList.get(i);
+			response= new PsrResponse();
+			response.setName(data.getPsr_name());
+			response.setValue(data.getVal());
+			response.setHq(data.getTer_name());
+			saleList.add(response);
+		}
+		return saleList;
+
+	}
+
+
 }

@@ -139,7 +139,6 @@ public class MonthlyDevelopmentReportController {
     @GetMapping("${mrc_abmdraftlist_path}")
     public List<AbmDraftReportingDto> getDraftList(
     	 @PathVariable("divCode") int divCode,
-    	 @PathVariable("depoCode") int depoCode,
          @PathVariable("mnth") int mnth,
          @PathVariable("myear") int myear, HttpServletRequest req) {
 
@@ -147,7 +146,7 @@ public class MonthlyDevelopmentReportController {
 		int loginId=requestValues[0];
 		int mnthCode = abmReportingDao.getMonthCode(myear,mnth);
 		
-        return draftReportService.getByDivCodeAndDepoCodeAndMnthCodeAndMyear(divCode,depoCode,mnthCode, myear);
+        return draftReportService.getByDivCodeAndMnthCodeAndMyear(divCode,mnthCode, myear);
     }
 
     

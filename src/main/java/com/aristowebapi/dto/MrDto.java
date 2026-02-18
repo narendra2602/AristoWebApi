@@ -24,6 +24,7 @@ public class MrDto {
     private List<String> advice;
     private String monthTarget;
     private String secondarySalesAsOn30;
+    private String closingStockAsOn30;
     private String expectedSalesNextMonth;  
 //    private MonthlyDevelopmentReportDto report;
     
@@ -38,7 +39,9 @@ public class MrDto {
 		this.advice = mrEntity.getAdvice();
 		this.monthTarget = mrEntity.getMonthTarget();
 		this.secondarySalesAsOn30 = mrEntity.getSecondarySalesAsOn30();
+		this.closingStockAsOn30=mrEntity.getClosingStockAsOn30();
 		this.expectedSalesNextMonth = mrEntity.getExpectedSalesNextMonth();
+		
 		//this.report=new MonthlyDevelopmentReportDto(mrEntity.getReport());
 	}
     

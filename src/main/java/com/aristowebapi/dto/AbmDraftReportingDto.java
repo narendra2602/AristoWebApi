@@ -28,6 +28,7 @@ public class AbmDraftReportingDto {
     private int loginId;
     private int empCode;
     private String loginName;
+    private String terName;
     @JsonIgnore
     private String draftJson;
 

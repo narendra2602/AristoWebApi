@@ -57,12 +57,12 @@ public class AbmDraftReportServiceImpl implements AbmDraftReportService {
         }
     	
  
-        String terName = abmReportingDao.getTerName(
+ /*       String terName = abmReportingDao.getTerName(
                 abmReportingDraftRequest.getMyear(),
                 abmReportingDraftRequest.getDivCode(),
                 abmReportingDraftRequest.getDepoCode(),
                 abmReportingDraftRequest.getHqCode());
-
+*/
         abmReportingDraftRequest.setMnthCode(mnthCode);
 
         List<AbmReportingDto> reportingList =
@@ -77,7 +77,7 @@ public class AbmDraftReportServiceImpl implements AbmDraftReportService {
         if (abmReportingDto != null) {
             header.setFromName(abmReportingDto.getLine1_empname());
             header.setDesignation(abmReportingDto.getLine1_desg());
-            header.setHq(terName);
+            header.setHq(abmReportingDto.getLine1_name());
             header.setTo(abmReportingDto.getLine2_desg() + " :" + abmReportingDto.getLine2_empname());
             header.setCc(abmReportingDto.getLine3_desg() + " :" + abmReportingDto.getLine3_empname());
             header.setDate(abmReportingDraftRequest.getEntryDate());
@@ -189,14 +189,21 @@ public class AbmDraftReportServiceImpl implements AbmDraftReportService {
                 (reportingList != null && !reportingList.isEmpty())
                         ? reportingList.get(0).getLine1_empname()
                         : null;
+                        
+       final String terName =
+                (reportingList != null && !reportingList.isEmpty())
+                ? reportingList.get(0).getLine1_name()
+                : null;
+               
 
-
+                
         return reportRepository
                 .findByMnthCodeAndMyearAndLoginId(month, year, loginId)
                 .stream()
                 .map(entity -> {
                     AbmDraftReportingDto dto = new AbmDraftReportingDto(entity);
-                     dto.setLoginName(loginName);   // ✅ NO ERROR
+                     dto.setLoginName(loginName); 
+                     dto.setTerName(terName); // ✅ NO ERROR
                     return dto;
                 })
                 .collect(Collectors.toList());
@@ -207,13 +214,12 @@ public class AbmDraftReportServiceImpl implements AbmDraftReportService {
     // =====================================================
 
 	@Override
-	public List<AbmDraftReportingDto> getByDivCodeAndDepoCodeAndMnthCodeAndMyear(int divCode, int depoCode,
-			int mnthCode, int myear) {
+	public List<AbmDraftReportingDto> getByDivCodeAndMnthCodeAndMyear(int divCode, int mnthCode, int myear) {
 		
 		
   
         return reportRepository
-                .findByDivCodeAndDepoCodeAndMnthCodeAndMyear(divCode,depoCode,mnthCode,myear)
+                .findByDivCodeAndMnthCodeAndMyear(divCode,mnthCode,myear)
                 .stream()
                 .map(entity -> {
                     AbmDraftReportingDto dto = new AbmDraftReportingDto(entity);
@@ -222,7 +228,12 @@ public class AbmDraftReportServiceImpl implements AbmDraftReportService {
                             (reportingList != null && !reportingList.isEmpty())
                                     ? reportingList.get(0).getLine1_empname()
                                     : null;
-                    dto.setLoginName(loginName);   // ✅ NO ERROR
+                    dto.setLoginName(loginName); 
+                    final String terName =
+                            (reportingList != null && !reportingList.isEmpty())
+                                    ? reportingList.get(0).getLine1_name()
+                                    : null;
+                    dto.setTerName(terName); 
                     return dto;
                 })
                 .collect(Collectors.toList());
