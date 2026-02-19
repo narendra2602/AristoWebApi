@@ -39,6 +39,10 @@ public class ChemistAuditReport {
 
     
     
-    @OneToMany(mappedBy = "auditReport", cascade = CascadeType.ALL)
+    
+    @OneToMany(mappedBy = "auditReport",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
     private List<ChemistSheet> sheets;
+    
 }

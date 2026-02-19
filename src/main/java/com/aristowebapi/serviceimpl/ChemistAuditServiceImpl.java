@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -27,6 +28,9 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 @Transactional
 public class ChemistAuditServiceImpl implements ChemistAuditService {
 
+	
+
+	
 	private final ChemistAuditReportRepository repository;
     private final ObjectMapper objectMapper;
     private final AbmReportingDao abmReportingDao;
@@ -40,20 +44,31 @@ public class ChemistAuditServiceImpl implements ChemistAuditService {
 
     // ================= SAVE =================
 
+    @Transactional
     @Override
-    public ChemistAuditReportResponse saveAudit(JsonNode root,int loginId) {
+    public ChemistAuditReportResponse saveAudit(JsonNode root, int loginId) {
 
-    	
-    	List<AbmReportingDto> reportingList = abmReportingDao.getLine1Reporting(loginId);
-    	
-    	  AbmReportingDto abmReportingDto =
-                  reportingList != null && !reportingList.isEmpty()
-                          ? reportingList.get(0)
-                          : null;
-    	
-    	ChemistAuditReport auditReport = new ChemistAuditReport();
+        int reportId = root.get("autid_report_id").asInt();
+        Optional<ChemistAuditReport> existingOpt = repository.findByReportId(reportId);
+
+        ChemistAuditReport auditReport;
+
+        if (existingOpt.isPresent()) {
+            auditReport = existingOpt.get();
+        } else {
+            auditReport = new ChemistAuditReport();
+            auditReport.setSheets(new ArrayList<>()); // initialize once for new entity
+        }
+
+        List<AbmReportingDto> reportingList = abmReportingDao.getLine1Reporting(loginId);
+
+        AbmReportingDto abmReportingDto =
+                reportingList != null && !reportingList.isEmpty()
+                        ? reportingList.get(0)
+                        : null;
+
         auditReport.setTitle(root.get("audit_report_title").asText());
-        auditReport.setReportId(root.get("autid_report_id").asInt());
+        auditReport.setReportId(reportId);
         auditReport.setStatus(root.get("audit_report_status").asText());
         auditReport.setCreatedBy(loginId);
         auditReport.setLine1EmpCode(abmReportingDto.getLine1_empcode());
@@ -63,9 +78,11 @@ public class ChemistAuditServiceImpl implements ChemistAuditService {
         auditReport.setLine3EmpCode(abmReportingDto.getLine3_empcode());
         auditReport.setLine3EmpName(abmReportingDto.getLine3_empname());
 
+        JsonNode sheetsNode = root.get("sheets");
+
         List<ChemistSheet> sheetList = new ArrayList<>();
 
-        for (JsonNode sheetNode : root.get("sheets")) {
+        for (JsonNode sheetNode : sheetsNode) {
 
             ChemistSheet sheet = new ChemistSheet();
             sheet.setSheetName(sheetNode.get("sheet_name").asText());
@@ -80,7 +97,6 @@ public class ChemistAuditServiceImpl implements ChemistAuditService {
             List<ChemistBrand> brandList = new ArrayList<>();
 
             JsonNode aristoBrand = sheetNode.get("ARISTO Brand");
-
             Iterator<String> brandNames = aristoBrand.fieldNames();
 
             while (brandNames.hasNext()) {
@@ -101,7 +117,7 @@ public class ChemistAuditServiceImpl implements ChemistAuditService {
 
                 for (JsonNode dataNode : brandNode.get("data")) {
 
-                	ChemistCompetitor cd = new ChemistCompetitor();
+                    ChemistCompetitor cd = new ChemistCompetitor();
 
                     cd.setCompetitorTopSellingBrand(
                             dataNode.get("competitor_top_selling_brand").asText());
@@ -128,13 +144,22 @@ public class ChemistAuditServiceImpl implements ChemistAuditService {
             sheetList.add(sheet);
         }
 
-        auditReport.setSheets(sheetList);
+        // ✅ VERY IMPORTANT FIX
+        if (auditReport.getSheets() == null) {
+            auditReport.setSheets(new ArrayList<>());
+        } else {
+            auditReport.getSheets().clear();  // clear old children safely
+        }
 
-        ChemistAuditReportResponse response=new ChemistAuditReportResponse();
+        auditReport.getSheets().addAll(sheetList);  // keep same collection reference
+
+        repository.save(auditReport);
+
+        ChemistAuditReportResponse response = new ChemistAuditReportResponse();
         response.setMessage("Record Created Successfully");
         response.setStatus("Draft");
-        response.setTimestamp(LocalDateTime.now());        
-//        return repository.save(auditReport);
+        response.setTimestamp(LocalDateTime.now());
+
         return response;
     }
 

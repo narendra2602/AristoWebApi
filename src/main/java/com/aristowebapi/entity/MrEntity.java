@@ -74,7 +74,7 @@ public class MrEntity {
 	public MrEntity(MrDto mrDto) {
 
 		this.reportId = mrDto.getReportId();
-		this.mrId = mrDto.getId();
+		this.mrId = mrDto.getMrId();
 		this.name = mrDto.getName();
 		this.hq = mrDto.getHq();
 		this.communicationRating = mrDto.getCommunicationRating();

@@ -3,6 +3,7 @@ import java.util.List;
 
 import com.aristowebapi.entity.MrEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
@@ -16,7 +17,8 @@ public class MrDto {
 
 	@JsonIgnore
 	private long reportId;
-    private long id;
+	@JsonProperty("mr_id")
+    private Long mrId;
     private String name;
     private String hq;
     private List<String> priorities;
@@ -31,7 +33,7 @@ public class MrDto {
     
 	public MrDto(MrEntity mrEntity) {
 		this.reportId=mrEntity.getReportId();
-		this.id = mrEntity.getMrId();
+		this.mrId = mrEntity.getMrId();
 		this.name = mrEntity.getName();
 		this.hq = mrEntity.getHq();
 		this.priorities = mrEntity.getPriorities();

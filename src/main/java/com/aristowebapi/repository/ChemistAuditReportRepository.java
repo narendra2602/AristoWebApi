@@ -3,6 +3,7 @@ package com.aristowebapi.repository;
 
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -16,6 +17,13 @@ import com.aristowebapi.entity.ChemistAuditReport;
 public interface ChemistAuditReportRepository 
         extends JpaRepository<ChemistAuditReport, Long> {
 
+	
+	Optional<ChemistAuditReport> findByReportId(int reportId);
+
+	void deleteByReportId(int reportId);
+
+	
+	
     // Branch + HQ + Brand Wise Report
     @Query("SELECT new com.aristowebapi.dto.BrandReportDTO(" +
            "b.brandName, " +
