@@ -16,6 +16,7 @@ import com.aristowebapi.dto.DashBoardData;
 import com.aristowebapi.dto.PsrDto;
 import com.aristowebapi.response.AbmReportingResponse;
 import com.aristowebapi.response.ApiResponse;
+import com.aristowebapi.response.DashBoardDataResponse;
 import com.aristowebapi.response.PsrResponse;
 import com.aristowebapi.service.AbmReportingService;
 
@@ -114,6 +115,33 @@ public class AbmReportingServiceImpl  implements AbmReportingService{
 		}
 		return saleList;
 
+	}
+
+	@Override
+	public ApiResponse<DashBoardDataResponse> getAristoBrandList(int mktYear, int divCode) {
+		List<DashBoardData> dataList= abmReportingDao.getAristoBrandList(mktYear,divCode);
+		
+		List<DashBoardDataResponse> saleList = new ArrayList<DashBoardDataResponse>();
+		int size=dataList.size();
+		
+		DashBoardDataResponse response=null;
+		
+		
+		for(int i=0; i<size;i++)
+		{
+
+			DashBoardData data = dataList.get(i);
+			response= new DashBoardDataResponse();
+			response.setName(data.getName());
+			response.setValue(data.getVal());
+
+			saleList.add(response);
+		}
+
+		
+		
+		ApiResponse<DashBoardDataResponse> apiResponse = new ApiResponse<>("Aristo Brand List", size,saleList);
+		return apiResponse;
 	}
 
 

@@ -5,7 +5,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 public interface ChemistAuditService {
 
-	ChemistAuditReportResponse  saveAudit(JsonNode jsonNode, int loginId);
+	
 //	ApiResponse<ChemistAuditReportResponse> saveAudit(JsonNode jsonNode, int loginId);
     JsonNode getAuditById(Long id);
+
+	ChemistAuditReportResponse saveFinalAudit(JsonNode root, int loginId);
 }

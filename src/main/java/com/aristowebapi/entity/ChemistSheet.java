@@ -1,5 +1,6 @@
 package com.aristowebapi.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -37,11 +38,13 @@ public class ChemistSheet {
     private String area;
 
     @ManyToOne
-    @JoinColumn(name = "audit_report_id")
-    private ChemistAuditReport auditReport;
+    @JoinColumn(name = "report_id")
+    private ChemistAuditReportFinal auditReport;
 
-    @OneToMany(mappedBy = "sheet", cascade = CascadeType.ALL)
-    private List<ChemistBrand> brands;
+    @OneToMany(mappedBy = "sheet",
+               cascade = CascadeType.ALL,
+               orphanRemoval = true)
+    private List<ChemistBrand> brands = new ArrayList<>();
 
 	
 }

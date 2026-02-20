@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.aristowebapi.dto.AbmReportingDto;
+import com.aristowebapi.dto.DashBoardData;
 import com.aristowebapi.dto.MktDataDto;
 import com.aristowebapi.dto.PsrDto;
 
@@ -17,6 +18,10 @@ public interface AbmReportingDao  extends JpaRepository<MktDataDto, Integer> {
 	
 	@Query(value="CALL getPsrList(:login_id);", nativeQuery=true)
 	List<PsrDto> getPsrList(@Param("login_id") int login_id);
+	
+	@Query(value="CALL getAristoBrandList(:mkt_year,:div_code);", nativeQuery=true)
+	List<DashBoardData> getAristoBrandList(@Param("mkt_year") int mkt_year,@Param("div_code") int div_code);
+	
 	
 	
 	@Query(value = "select mnth_code from perdmast where mkt_year=:myear and mkt_ord=:emon", nativeQuery = true)

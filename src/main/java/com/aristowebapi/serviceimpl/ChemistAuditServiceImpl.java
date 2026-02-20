@@ -12,11 +12,12 @@ import org.springframework.stereotype.Service;
 
 import com.aristowebapi.dao.AbmReportingDao;
 import com.aristowebapi.dto.AbmReportingDto;
-import com.aristowebapi.entity.ChemistAuditReport;
+import com.aristowebapi.entity.ChemistAuditReportFinal;
 import com.aristowebapi.entity.ChemistBrand;
 import com.aristowebapi.entity.ChemistCompetitor;
 import com.aristowebapi.entity.ChemistSheet;
-import com.aristowebapi.repository.ChemistAuditReportRepository;
+import com.aristowebapi.repository.ChemistAuditReportRepositoryFinal;
+
 import com.aristowebapi.response.ChemistAuditReportResponse;
 import com.aristowebapi.service.ChemistAuditService;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -31,32 +32,32 @@ public class ChemistAuditServiceImpl implements ChemistAuditService {
 	
 
 	
-	private final ChemistAuditReportRepository repository;
+	private final ChemistAuditReportRepositoryFinal repository;
     private final ObjectMapper objectMapper;
     private final AbmReportingDao abmReportingDao;
     
-    public ChemistAuditServiceImpl(ChemistAuditReportRepository repository,
+    public ChemistAuditServiceImpl(ChemistAuditReportRepositoryFinal repository,
                                   ObjectMapper objectMapper, AbmReportingDao abmReportingDao) {
         this.repository = repository;
         this.objectMapper = objectMapper;
         this.abmReportingDao=abmReportingDao;
     }
 
-    // ================= SAVE =================
+    // ================= SAVE final  =================
 
     @Transactional
     @Override
-    public ChemistAuditReportResponse saveAudit(JsonNode root, int loginId) {
+    public ChemistAuditReportResponse saveFinalAudit(JsonNode root, int loginId) {
 
         int reportId = root.get("autid_report_id").asInt();
-        Optional<ChemistAuditReport> existingOpt = repository.findByReportId(reportId);
+        Optional<ChemistAuditReportFinal> existingOpt = repository.findByReportId(reportId);
 
-        ChemistAuditReport auditReport;
+        ChemistAuditReportFinal auditReport;
 
         if (existingOpt.isPresent()) {
             auditReport = existingOpt.get();
         } else {
-            auditReport = new ChemistAuditReport();
+            auditReport = new ChemistAuditReportFinal();
             auditReport.setSheets(new ArrayList<>()); // initialize once for new entity
         }
 
@@ -69,7 +70,7 @@ public class ChemistAuditServiceImpl implements ChemistAuditService {
 
         auditReport.setTitle(root.get("audit_report_title").asText());
         auditReport.setReportId(reportId);
-        auditReport.setStatus(root.get("audit_report_status").asText());
+//        auditReport.setStatus(root.get("audit_report_status").asText());
         auditReport.setCreatedBy(loginId);
         auditReport.setLine1EmpCode(abmReportingDto.getLine1_empcode());
         auditReport.setLine1EmpName(abmReportingDto.getLine1_empname());
@@ -168,14 +169,14 @@ public class ChemistAuditServiceImpl implements ChemistAuditService {
     @Override
     public JsonNode getAuditById(Long id) {
 
-        ChemistAuditReport report = repository.findById(id)
+        ChemistAuditReportFinal report = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Report not found"));
 
         ObjectNode root = objectMapper.createObjectNode();
 
         root.put("audit_report_title", report.getTitle());
         root.put("autid_report_id", report.getReportId());
-        root.put("audit_report_status", report.getStatus());
+ //       root.put("audit_report_status", report.getStatus());
 
         ArrayNode sheetArray = objectMapper.createArrayNode();
 

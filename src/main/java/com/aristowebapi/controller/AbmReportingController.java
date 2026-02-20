@@ -9,12 +9,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.aristowebapi.constant.AristoWebLogMsgConstant;
 import com.aristowebapi.response.AbmReportingResponse;
 import com.aristowebapi.response.ApiResponse;
+import com.aristowebapi.response.DashBoardDataResponse;
 import com.aristowebapi.response.PsrResponse;
 import com.aristowebapi.service.AbmReportingService;
 import com.aristowebapi.utility.AppRequestParameterUtils;
@@ -57,6 +59,16 @@ public class AbmReportingController {
 
 	
 	}
+	@GetMapping("${mrc_dashboardBrandCombo_path}")
+	public ResponseEntity<ApiResponse<DashBoardDataResponse>> getAristoBrandList(@PathVariable("myear") int myear,@PathVariable("divCode") int divCode,HttpServletRequest request)
+	{
+		logger.info(AristoWebLogMsgConstant.DASH_BOARD_CONTROLLER,"getAristoBrandList");
+        
+		return new ResponseEntity<ApiResponse<DashBoardDataResponse>>(abmReportingService.getAristoBrandList(myear,divCode), HttpStatus.OK);
+
+	
+	}
+
 	
 	private int[] getRequestData(HttpServletRequest req)
 	{
