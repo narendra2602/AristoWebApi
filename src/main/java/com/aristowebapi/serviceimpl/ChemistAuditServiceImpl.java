@@ -16,6 +16,7 @@ import com.aristowebapi.entity.ChemistAuditReportFinal;
 import com.aristowebapi.entity.ChemistBrand;
 import com.aristowebapi.entity.ChemistCompetitor;
 import com.aristowebapi.entity.ChemistSheet;
+import com.aristowebapi.exception.DataAlreadyException;
 import com.aristowebapi.repository.ChemistAuditReportRepositoryFinal;
 
 import com.aristowebapi.response.ChemistAuditReportResponse;
@@ -49,9 +50,14 @@ public class ChemistAuditServiceImpl implements ChemistAuditService {
     @Override
     public ChemistAuditReportResponse saveFinalAudit(JsonNode root, int loginId) {
 
-        int reportId = root.get("autid_report_id").asInt();
+        Long reportId = root.get("autid_report_id").asLong();
         Optional<ChemistAuditReportFinal> existingOpt = repository.findByReportId(reportId);
 
+        
+        if (repository.existsByReportId(reportId)) {
+    	    throw new DataAlreadyException("Final report already created for draftId " + reportId);
+    	}
+        
         ChemistAuditReportFinal auditReport;
 
         if (existingOpt.isPresent()) {

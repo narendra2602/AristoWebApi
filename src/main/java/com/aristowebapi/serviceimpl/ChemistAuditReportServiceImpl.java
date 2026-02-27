@@ -93,7 +93,7 @@ public class ChemistAuditReportServiceImpl implements ChemistAuditReportService 
         AuditSheetResponse response = new AuditSheetResponse();
 
         response.setAuditReportTitle(report.getAuditReportTitle());
-        response.setAutidReportId(report.getAuditReportId());
+        response.setAuditReportId(report.getAuditReportId());
         response.setAuditInnerSheetId(
                 report.getAuditInnerSheetIds().get(0)   // or null
         );
@@ -120,13 +120,16 @@ public class ChemistAuditReportServiceImpl implements ChemistAuditReportService 
     @Transactional(readOnly = true)
     public ChemistAuditMetaResponse getReportMeta(Long auditReportId,int loginId) {
 
-        ChemistAuditReport report = repository.findById(auditReportId)
-                .orElseThrow(() -> new RuntimeException("Audit report not found"));
+        ChemistAuditReport report = repository.findByAuditReportId(auditReportId)
+                .orElseThrow(() -> new RuntimeException("Chemist Audit report not found"));
 
         return mapToMetaResponse(report);
     }
 
 
+    
+    
+    
     private String generateTitle(InitChemistAuditRequest request) {
         return "CHEMIST AUDIT REPORT - "
                 + request.getMonthCode()
@@ -159,6 +162,7 @@ public class ChemistAuditReportServiceImpl implements ChemistAuditReportService 
 
         response.setAuditReportTitle(report.getAuditReportTitle());
         response.setAuditReportId(report.getAuditReportId());
+        response.setAuditDraftId(report.getAbmDraftId());
         response.setAuditInnerSheetIds(report.getAuditInnerSheetIds());
         response.setAuditReportStatus(report.getAuditReportStatus());
         response.setDivCode(report.getDivCode());
@@ -196,9 +200,10 @@ public class ChemistAuditReportServiceImpl implements ChemistAuditReportService 
                               AuditSheetResponse request) {
 
         ChemistAuditReport report = repository
-                .findById(auditReportId)
+                .findByAuditReportId(auditReportId)
                 .orElseThrow(() ->
                         new RuntimeException("Audit Report not found"));
+        System.out.println("id is ****"+report.getAuditReportId());
 
         try {
 
@@ -207,7 +212,7 @@ public class ChemistAuditReportServiceImpl implements ChemistAuditReportService 
                     objectMapper.writeValueAsString(request);
 
             report.setDraftJson(jsonString);
-
+            System.out.println(report.getDraftJson());
             // optional update status
             report.setAuditReportStatus(
                     request.getAuditReportStatus());
@@ -221,13 +226,14 @@ public class ChemistAuditReportServiceImpl implements ChemistAuditReportService 
 
     @Override
     @Transactional(readOnly = true)
-    public AuditSheetResponse getAuditJson(Long auditReportId,
-                                            Long auditInnerSheetId) {
+    public AuditSheetResponse getAuditJson(Long auditReportId,Long auditInnerSheetId) {
 
+    	
         ChemistAuditReport report = repository
-                .findById(auditReportId)
+                .findByAuditReportId(auditReportId)
                 .orElseThrow(() ->
                         new RuntimeException("Audit Report not found"));
+        
 
         try {
 
@@ -238,7 +244,7 @@ public class ChemistAuditReportServiceImpl implements ChemistAuditReportService 
                             AuditSheetResponse.class);
 
             // Validate inner sheet id
-            if (!auditInnerSheetId.equals(
+           if (!auditInnerSheetId.equals(
                     response.getAuditInnerSheetId())) {
 
                 throw new RuntimeException(
@@ -258,7 +264,12 @@ public class ChemistAuditReportServiceImpl implements ChemistAuditReportService 
     @Override
     public ChemistAuditReportResponse saveFinalAudit(JsonNode root, int loginId) {
 
-        int reportId = root.get("autid_report_id").asInt();
+        
+        Long reportId = root.get("autid_report_id").asLong();
+        
+        ChemistAuditReport report = repository.findByAuditReportId(reportId)
+                .orElseThrow(() -> new RuntimeException("Report not found"));
+        
         Optional<ChemistAuditReportFinal> existingOpt = finalrepository.findByReportId(reportId);
 
         ChemistAuditReportFinal auditReport;
@@ -281,12 +292,17 @@ public class ChemistAuditReportServiceImpl implements ChemistAuditReportService 
         auditReport.setReportId(reportId);
 //        auditReport.setStatus(root.get("audit_report_status").asText());
         auditReport.setCreatedBy(loginId);
+        auditReport.setDivCode(report.getDivCode());
+        auditReport.setDepoCode(report.getDepoCode());
+        auditReport.setReportMonth(report.getMonthCode());
+        auditReport.setReportYear(report.getMyear());
         auditReport.setLine1EmpCode(abmReportingDto.getLine1_empcode());
         auditReport.setLine1EmpName(abmReportingDto.getLine1_empname());
         auditReport.setLine2EmpCode(abmReportingDto.getLine2_empcode());
         auditReport.setLine2EmpName(abmReportingDto.getLine2_empname());
         auditReport.setLine3EmpCode(abmReportingDto.getLine3_empcode());
         auditReport.setLine3EmpName(abmReportingDto.getLine3_empname());
+        auditReport.setLine1Name(abmReportingDto.getLine1_name());
 
         JsonNode sheetsNode = root.get("sheets");
 
@@ -365,6 +381,10 @@ public class ChemistAuditReportServiceImpl implements ChemistAuditReportService 
 
         finalrepository.save(auditReport);
 
+        report.setAuditReportStatus("FINAL");
+        repository.saveAndFlush(report);
+        
+        
         ChemistAuditReportResponse response = new ChemistAuditReportResponse();
         response.setMessage("Record Created Successfully");
         response.setStatus("Draft");
@@ -373,6 +393,19 @@ public class ChemistAuditReportServiceImpl implements ChemistAuditReportService 
         return response;
     }
 
+    @Override
+    public void deleteByReportId(Long reportId) {
+        finalrepository.deleteByReportId(reportId);
+
+        ChemistAuditReport report = repository.findByAuditReportId(reportId)
+                .orElseThrow(() -> new RuntimeException("Report not found"));
+
+        report.setAuditReportStatus("DRAFT");
+        repository.save(report);
+    }
+    
+    
+    
     private String getText(JsonNode node, String fieldName) {
         JsonNode value = node.get(fieldName);
         return (value != null && !value.isNull()) ? value.asText() : null;

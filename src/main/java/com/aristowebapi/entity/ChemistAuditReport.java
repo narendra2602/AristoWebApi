@@ -32,6 +32,9 @@ public class ChemistAuditReport {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long auditReportId;
 
+    @Column(name = "abm_draft_id")
+    private Long abmDraftId;
+    
     private String auditReportTitle;
 
     private String auditReportStatus; // DRAFT, SUBMITTED, APPROVED

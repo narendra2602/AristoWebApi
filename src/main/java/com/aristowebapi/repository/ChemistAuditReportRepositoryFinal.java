@@ -12,9 +12,12 @@ import com.aristowebapi.entity.ChemistAuditReportFinal;
 
 public interface ChemistAuditReportRepositoryFinal  extends JpaRepository<ChemistAuditReportFinal, Long>{
 	
-	Optional<ChemistAuditReportFinal> findByReportId(int reportId);
+	Optional<ChemistAuditReportFinal> findByReportId(Long reportId);
 	
-	void deleteByReportId(int reportId);
+	void deleteByReportId(Long reportId);
+	
+	boolean existsByReportId(Long reportId);
+	
 	
     // Branch + HQ + Brand Wise Report
     @Query("SELECT new com.aristowebapi.dto.BrandReportDTO(" +
@@ -46,6 +49,8 @@ public interface ChemistAuditReportRepositoryFinal  extends JpaRepository<Chemis
            "WHERE b.brandName = :brand")
     List<Object[]> getFullReport(
             @Param("brand") String brand);
+
+	
 
 
 

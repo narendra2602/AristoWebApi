@@ -29,7 +29,7 @@ public class ChemistAuditReportFinal {
     private Long id;
 
     private String title;
-    private Integer reportId;
+    private Long reportId;
    
 	private int reportMonth;
 	private int reportYear;
@@ -43,7 +43,7 @@ public class ChemistAuditReportFinal {
     private String  line2EmpName;
     private int line3EmpCode;
     private String  line3EmpName;
-
+    private String  line1Name;
     
     
     

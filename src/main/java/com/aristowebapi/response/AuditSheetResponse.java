@@ -21,8 +21,8 @@ public class AuditSheetResponse {
     @JsonProperty("audit_report_title")
     private String auditReportTitle;
 
-    @JsonProperty("autid_report_id")
-    private Long autidReportId;
+    @JsonProperty("audit_report_id")
+    private Long auditReportId;
 
     @JsonProperty("audit_inner_sheet_id")
     private Long auditInnerSheetId;

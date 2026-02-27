@@ -1,9 +1,12 @@
 package com.aristowebapi.serviceimpl;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,10 +18,15 @@ import com.aristowebapi.dto.HeaderDto;
 import com.aristowebapi.dto.MonthlyDevelopmentReportDto;
 import com.aristowebapi.dto.SelfAssessmentDto;
 import com.aristowebapi.entity.AbmDraftReportEntity;
+import com.aristowebapi.entity.ChemistAuditReport;
 import com.aristowebapi.repository.AbmDraftReportRepository;
+import com.aristowebapi.repository.ChemistAuditReportRepository;
 import com.aristowebapi.request.AbmReportingDraftRequest;
+import com.aristowebapi.request.InitChemistAuditRequest;
+import com.aristowebapi.response.AuditSheetResponse;
 import com.aristowebapi.response.FullReportResponse;
 import com.aristowebapi.service.AbmDraftReportService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -31,6 +39,7 @@ public class AbmDraftReportServiceImpl implements AbmDraftReportService {
     private final ObjectMapper objectMapper;
     private final AbmDraftReportRepository reportRepository;
     private final AbmReportingDao abmReportingDao;
+    private final ChemistAuditReportRepository chemistRepository;
 
     // =====================================================
     // SAVE/INITIATE DRAFT
@@ -57,12 +66,7 @@ public class AbmDraftReportServiceImpl implements AbmDraftReportService {
         }
     	
  
- /*       String terName = abmReportingDao.getTerName(
-                abmReportingDraftRequest.getMyear(),
-                abmReportingDraftRequest.getDivCode(),
-                abmReportingDraftRequest.getDepoCode(),
-                abmReportingDraftRequest.getHqCode());
-*/
+ 
         abmReportingDraftRequest.setMnthCode(mnthCode);
 
         List<AbmReportingDto> reportingList =
@@ -121,6 +125,61 @@ public class AbmDraftReportServiceImpl implements AbmDraftReportService {
             jsonString = objectMapper.writeValueAsString(response);
             entity.setDraftJson(jsonString);
             saved = reportRepository.save(entity);
+            
+           
+            
+            // ============================
+            // 1️⃣ initiate chemist audit form  
+            // ============================
+            ChemistAuditReport report = new ChemistAuditReport();
+
+            report.setAbmDraftId(saved.getDraftId());
+            report.setEntryDate(abmReportingDraftRequest.getEntryDate());
+            report.setDivCode(abmReportingDraftRequest.getDivCode());
+            report.setDepoCode(abmReportingDraftRequest.getDepoCode());
+            report.setHq(abmReportingDraftRequest.getHqCode());
+            report.setMonthCode(mnthCode);
+            report.setMyear(abmReportingDraftRequest.getMyear());
+            report.setMonth(0);
+//            report.setMonth(abmReportingDraftRequest.getMonth());
+            report.setEmpCode(abmReportingDto.getLine1_empcode());
+            report.setLoginId(abmReportingDraftRequest.getLoginId());
+            report.setAuditReportStatus("DRAFT");
+            report.setAuditReportTitle("CHEMIST AUDIT REPORT - "+ mnthCode + " ABM");
+
+            report.setAuditInnerSheetIds(new ArrayList<Long>());
+
+            // save once to get ID
+            report = chemistRepository.save(report);
+
+            // ============================
+            // 2️⃣ Build JSON WITH ID
+            // ============================
+            AuditSheetResponse response1 = new AuditSheetResponse();
+
+            response1.setAuditReportTitle(report.getAuditReportTitle());
+            response1.setAuditReportId(report.getAuditReportId());
+            response1.setAuditInnerSheetId(0L); // or null    
+            response1.setAuditReportStatus(report.getAuditReportStatus());
+            response1.setSheets(new ArrayList<>());
+
+           
+            String draftJson=null;
+    		try {
+    			draftJson = objectMapper.writeValueAsString(response1);
+    		} catch (JsonProcessingException e) {
+    			// TODO Auto-generated catch block
+    			e.printStackTrace();
+    		}
+
+            // ============================
+            // 3️⃣ Update JSON
+            // ============================
+            report.setDraftJson(draftJson);
+
+            chemistRepository.save(report);
+
+            
             return response;
 
         } 
@@ -133,6 +192,9 @@ public class AbmDraftReportServiceImpl implements AbmDraftReportService {
         }
     }
 
+    
+
+    
     // =====================================================
     // UPDATE DRAFT
     // =====================================================
@@ -238,6 +300,40 @@ public class AbmDraftReportServiceImpl implements AbmDraftReportService {
                 })
                 .collect(Collectors.toList());
     
+	}
+
+	@Override
+	public List<AbmDraftReportingDto> getMissingAbmReportingList(int myear, int divCode,int depoCode, int mnthCode,int userType,int loginId) {
+
+		
+	       List<AbmReportingDto> psrdataList = abmReportingDao.getLine1Reporting(loginId);
+			int empCode=psrdataList.get(0).getLine1_empcode();
+
+		List<Object[]> reportingList = abmReportingDao.getMissingAbmReportingList(myear,divCode,depoCode,mnthCode,userType,empCode);
+		
+ 		   
+		List<AbmDraftReportingDto> dataList = new ArrayList();
+		int size=reportingList.size();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+		
+		 for (Object[] row : reportingList) {
+
+		        AbmDraftReportingDto dto = new AbmDraftReportingDto(); // ✅ inside loop
+
+		        dto.setHqCode(0);
+		        dto.setDivCode(divCode);
+		        dto.setMnthCode(mnthCode);
+		        dto.setMyear(myear);
+		        dto.setDepoCode(((Number) row[0]).intValue());
+		        dto.setEmpCode(Integer.parseInt(row[2].toString()));
+		        dto.setLoginName((String) row[3]);
+		        dto.setTerName((String) row[1]);
+		        dto.setDraftStatus("Pending");
+		        dto.setDraftId(0L);
+		        dto.setEntryDate(LocalDate.now().format(formatter));
+		        dataList.add(dto);
+		    }
+		return dataList;
 	}
 
 

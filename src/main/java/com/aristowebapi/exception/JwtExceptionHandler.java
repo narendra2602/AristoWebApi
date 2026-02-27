@@ -57,6 +57,16 @@ public class JwtExceptionHandler extends ResponseEntityExceptionHandler {
     }
  
     
-    
+  /*  @ExceptionHandler(value = {Exception.class})
+    protected ResponseEntity<Map<String, Object>>  handleGlobalException(Exception ex) {
+ 
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", "FAIL");
+        response.put("message", "An Unexpected Error Occured :"+ex.getMessage());
+
+        return ResponseEntity.internalServerError().body(response);
+        
+    }
+*/
     
 }

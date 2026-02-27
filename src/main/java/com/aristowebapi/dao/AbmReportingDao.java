@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import com.aristowebapi.dto.AbmReportingDto;
 import com.aristowebapi.dto.DashBoardData;
+import com.aristowebapi.dto.MissingAbmEntryDto;
 import com.aristowebapi.dto.MktDataDto;
 import com.aristowebapi.dto.PsrDto;
 
@@ -22,8 +23,19 @@ public interface AbmReportingDao  extends JpaRepository<MktDataDto, Integer> {
 	@Query(value="CALL getAristoBrandList(:mkt_year,:div_code);", nativeQuery=true)
 	List<DashBoardData> getAristoBrandList(@Param("mkt_year") int mkt_year,@Param("div_code") int div_code);
 	
-	
-	
+	   // missing employee code in monthly reporting table 
+
+	@Query(value = "CALL getMissingAbmReportingList(:myear,:div_code,:depo_code,:smon,:userType,:loginId)", 
+		       nativeQuery = true)
+		List<Object[]> getMissingAbmReportingList(
+		        @Param("myear") int myear,
+		        @Param("div_code") int div_code,
+		        @Param("depo_code") int depo_code,
+		        @Param("smon") int smon,
+		        @Param("userType") int userType,
+		        @Param("loginId") int loginId
+		);	
+		
 	@Query(value = "select mnth_code from perdmast where mkt_year=:myear and mkt_ord=:emon", nativeQuery = true)
 	int getMonthCode(@Param("myear") int myear,@Param("emon") int emon);
 	

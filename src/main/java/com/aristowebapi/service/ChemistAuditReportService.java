@@ -25,4 +25,6 @@ public interface ChemistAuditReportService {
     AuditSheetResponse getAuditJson(Long auditReportId,Long auditInnerSheetId);
     
     ChemistAuditReportResponse  saveFinalAudit(JsonNode jsonNode, int loginId);
+    
+    void deleteByReportId(Long reportId);
 }

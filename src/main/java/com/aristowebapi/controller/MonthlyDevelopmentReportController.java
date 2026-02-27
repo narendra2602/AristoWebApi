@@ -185,8 +185,43 @@ public class MonthlyDevelopmentReportController {
         return ResponseEntity.ok(response);
     }
 
+	
     
+    @GetMapping("${mrc_abmmissingreport_path}")
+    public ResponseEntity<List<AbmDraftReportingDto>> getMissingAbmReportingList(
+            @PathVariable int myear,
+            @PathVariable int divCode,
+            @PathVariable int depoCode,
+            @PathVariable int mnthCode,
+            HttpServletRequest req) {
+
+        int[] requestValues = getRequestData(req);
+        int loginId = requestValues[0];
+        int userType = requestValues[1];
+
+        List<AbmDraftReportingDto> list =
+                draftReportService.getMissingAbmReportingList(
+                        myear, divCode, depoCode, mnthCode, userType, loginId);
+
+        if (list.isEmpty()) {
+            return ResponseEntity.noContent().build(); // 204
+        }
+
+        return ResponseEntity.ok(list);
+    }
     
+/*	@GetMapping("${mrc_abmmissingreport_path}")
+    public List<AbmDraftReportingDto> getMissingAbmReportingList(@PathVariable("myear") int myear,@PathVariable("divCode") int divCode,@PathVariable("depoCode") int depoCode,@PathVariable("mnthCode") int mnthCode,HttpServletRequest req)
+	{
+
+    	int requestValues[]=getRequestData(req);
+		int loginId=requestValues[0];
+		int userType=requestValues[1];
+		System.out.println("PArameteres   myear "+myear+" divCode "+divCode+" depoCode "+depoCode+" mnthCode "+mnthCode+" loginId "+loginId+" userType "+userType);
+        return draftReportService.getMissingAbmReportingList(myear, divCode, depoCode,mnthCode,userType,loginId);
+    }
+
+*/    
     
     private int[] getRequestData(HttpServletRequest req)
 	{

@@ -17,6 +17,7 @@ public class ChemistAuditMetaResponse {
 
     private String auditReportTitle;
     private Long auditReportId;
+    private Long auditDraftId;
     private List<Long> auditInnerSheetIds;
     private String auditReportStatus;
     private Integer divCode;

@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,10 +16,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.aristowebapi.entity.AuditInnerSheet;
 import com.aristowebapi.entity.ChemistAuditReport;
+import com.aristowebapi.request.AuditInnerSheetRequest;
 import com.aristowebapi.request.InitChemistAuditRequest;
-import com.aristowebapi.response.AuditSheetResponse;
 import com.aristowebapi.response.ChemistAuditMetaResponse;
+import com.aristowebapi.service.AuditInnerSheetService;
 import com.aristowebapi.service.ChemistAuditReportService;
 import com.aristowebapi.utility.AppRequestParameterUtils;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -32,6 +35,8 @@ public class AbmChemistReportController {
 	@Autowired
     private ChemistAuditReportService service;
 	
+	@Autowired
+	 private  AuditInnerSheetService service1;
 
 	@Autowired
 	private AppRequestParameterUtils appRequestParameterUtils;
@@ -66,7 +71,7 @@ public class AbmChemistReportController {
 	
     
    
-    @PostMapping("${mrc_saveauditsheet}")
+ /*   @PostMapping("${mrc_saveauditsheet}")
     public ResponseEntity<?> saveAuditSheet(
             @PathVariable Long auditReportId,
             @RequestBody AuditSheetResponse request) {
@@ -75,16 +80,34 @@ public class AbmChemistReportController {
 
         return ResponseEntity.ok("Audit JSON Saved Successfully");
     }
-    
+*/    
    
-    @GetMapping("${mrc_chemistgetauditsheet_path}")
+//    @PostMapping("/save-or-update")
+    @PostMapping("${mrc_saveauditsheet}")
+    public AuditInnerSheet saveOrUpdate(
+            @RequestBody AuditInnerSheetRequest request) {
+
+        return service1.saveOrUpdate(request);
+    }
+    
+/*    @GetMapping("${mrc_chemistgetauditsheet_path}")
     public ResponseEntity<?> getAuditSheet(
             @PathVariable Long auditReportId,@PathVariable Long  auditInnerSheetId) {
 
         return ResponseEntity.ok(
                 service.getAuditJson(auditReportId, auditInnerSheetId));
     }
-    
+*/    
+//    @GetMapping("/by-report-and-inner")
+    @GetMapping("${mrc_chemistgetauditsheet_path}")
+    public Map<String, Object> getJsonOnly(
+            @PathVariable Long auditReportId,
+            @PathVariable Long auditInnerSheetId) {
+
+        return service1.getByReportIdAndInnerSheetId(
+                auditReportId,
+                auditInnerSheetId);    
+    }
     
 	 @PostMapping("${mrc_abmchemistreport_savepath}")
 	 public ResponseEntity<?> save(@RequestBody JsonNode jsonNode,HttpServletRequest req) {
@@ -92,6 +115,17 @@ public class AbmChemistReportController {
 		 	int loginId=requestValues[0];
 	        return ResponseEntity.ok(service.saveFinalAudit(jsonNode,loginId));
 	 }
+	 
+	
+	 @DeleteMapping("${mrc_abmchemistaudit_deletepath}")
+	    public ResponseEntity<String> deleteReport(
+	            @PathVariable Long reportId) {
+
+	        service.deleteByReportId(reportId);
+
+	        return ResponseEntity.ok("Report Deleted & Status Updated to DRAFT");
+	    }
+	 
 	 
   /*  @GetMapping("/getauditsheet/{reportId}/{sheetId}")
     public ResponseEntity<AuditSheetResponse> getAuditSheet(

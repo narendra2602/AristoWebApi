@@ -15,6 +15,7 @@ public interface AbmDraftReportRepository extends JpaRepository<AbmDraftReportEn
 	
 	List<AbmDraftReportEntity> findByMnthCodeAndMyearAndLoginId(int mnthCode, int myear, int loginId);
 	List<AbmDraftReportEntity> findByDivCodeAndMnthCodeAndMyear(int divCode,int mnthCode, int myear);
+	
 	boolean existsByLoginIdAndMnthCodeAndMyear(int loginId,int mnthCode,int myear);
 
 	
