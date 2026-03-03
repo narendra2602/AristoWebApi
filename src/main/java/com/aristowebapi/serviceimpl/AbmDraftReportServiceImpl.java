@@ -3,10 +3,11 @@ package com.aristowebapi.serviceimpl;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +23,6 @@ import com.aristowebapi.entity.ChemistAuditReport;
 import com.aristowebapi.repository.AbmDraftReportRepository;
 import com.aristowebapi.repository.ChemistAuditReportRepository;
 import com.aristowebapi.request.AbmReportingDraftRequest;
-import com.aristowebapi.request.InitChemistAuditRequest;
 import com.aristowebapi.response.AuditSheetResponse;
 import com.aristowebapi.response.FullReportResponse;
 import com.aristowebapi.service.AbmDraftReportService;
@@ -219,13 +219,48 @@ public class AbmDraftReportServiceImpl implements AbmDraftReportService {
     // GET RAW JSON BY DRAFT ID  ✅ USED BY CONTROLLER
     // =====================================================
     @Override
-    public String getDraftJsonByDraftId(Long draftId) {
-        return reportRepository.findById(draftId)
-                .map(AbmDraftReportEntity::getDraftJson)
+    public Map<String, Object> getDraftJsonByDraftId(Long draftId) {
+
+        AbmDraftReportEntity draft = reportRepository.findById(draftId)
                 .orElseThrow(() ->
                         new RuntimeException("Draft not found for id " + draftId));
-    }
 
+        Long auditReportId = chemistRepository
+                .findByAbmDraftId(draftId)
+                .map(ChemistAuditReport::getAuditReportId)
+                .orElse(null);
+
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+
+            // Read original JSON as LinkedHashMap (preserves order)
+            LinkedHashMap<String, Object> originalMap =
+                    mapper.readValue(draft.getDraftJson(), LinkedHashMap.class);
+
+            // Create new ordered map
+            LinkedHashMap<String, Object> orderedMap = new LinkedHashMap<>();
+
+            // 1️⃣ First two fields
+            orderedMap.put("abm_draft_id", originalMap.get("abm_draft_id"));
+            orderedMap.put("abm_draft_status", originalMap.get("abm_draft_status"));
+
+            // 2️⃣ Insert audit_report_id HERE
+            orderedMap.put("audit_report_id", auditReportId);
+
+            // 3️⃣ Add remaining fields except the first two
+            originalMap.forEach((key, value) -> {
+                if (!key.equals("abm_draft_id") &&
+                    !key.equals("abm_draft_status")) {
+                    orderedMap.put(key, value);
+                }
+            });
+
+            return orderedMap;
+
+        } catch (Exception e) {
+            throw new RuntimeException("Error parsing draft JSON", e);
+        }
+    }
     // =====================================================
     // HELPERS
     // =====================================================

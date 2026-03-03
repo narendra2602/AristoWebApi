@@ -13,6 +13,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,14 +31,19 @@ public class ChemistSheet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    
+    @JsonProperty("sheet_name")
     private String sheetName;
+    
     private String month;
     private String division;
     private String branch;
     private String hq;
     private String area;
-
+    private String chemistName;
+    private Long psrId;        
+    private String psrName;  
+    private String sheetStatus;
     @ManyToOne
     @JoinColumn(name = "report_id")
     private ChemistAuditReportFinal auditReport;

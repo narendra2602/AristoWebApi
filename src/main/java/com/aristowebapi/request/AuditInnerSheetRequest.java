@@ -23,6 +23,9 @@ public class AuditInnerSheetRequest {
     @JsonProperty("audit_report_id")
     private Long auditReportId;
 
+    @JsonProperty("psr_code")
+    private Long psrCode;
+    
     @JsonProperty("abm_draft_id")
     private Long abmDraftId;
 

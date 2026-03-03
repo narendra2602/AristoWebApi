@@ -45,11 +45,11 @@ public class ChemistAuditReportFinal {
     private String  line3EmpName;
     private String  line1Name;
     
-    
-    
     @OneToMany(mappedBy = "auditReport",
             cascade = CascadeType.ALL,
             orphanRemoval = true)
- private List<ChemistSheet> sheets = new ArrayList<>();
+     private List<ChemistSheet> sheets = new ArrayList<>();
+    
+  
     
 }

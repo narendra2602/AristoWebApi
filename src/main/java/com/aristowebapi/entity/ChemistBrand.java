@@ -25,12 +25,13 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ChemistBrand {
-
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String brandName;
+
     private Integer potentialPerMonthStrips;
     private Integer ourSalesPerMonthStrips;
 
@@ -42,4 +43,5 @@ public class ChemistBrand {
                cascade = CascadeType.ALL,
                orphanRemoval = true)
     private List<ChemistCompetitor> competitorDataList = new ArrayList<>();
+
 }

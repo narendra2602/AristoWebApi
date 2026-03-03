@@ -31,6 +31,9 @@ public class AuditInnerSheet {
 
     @Column(name = "audit_inner_sheet_id", nullable = false)
     private Long auditInnerSheetId;
+    
+    @Column(name = "psr_code", nullable = false)
+    private Long psrCode;
 
     @Column(name = "audit_report_status")
     private String auditReportStatus;

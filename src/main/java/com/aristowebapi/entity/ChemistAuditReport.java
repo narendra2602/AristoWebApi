@@ -59,9 +59,9 @@ public class ChemistAuditReport {
     private String draftJson;
 
     @ElementCollection
-    @CollectionTable(name = "audit_inner_sheets",
+    @CollectionTable(name = "audit_inner_sheet",
             joinColumns = @JoinColumn(name = "audit_report_id"))
-    @Column(name = "sheet_id")
+    @Column(name = "audit_inner_sheet_id")
     private List<Long> auditInnerSheetIds = new ArrayList<>();
 
     // getters & setters

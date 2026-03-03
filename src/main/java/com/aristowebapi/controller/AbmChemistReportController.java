@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.aristowebapi.entity.AuditInnerSheet;
@@ -24,7 +25,6 @@ import com.aristowebapi.response.ChemistAuditMetaResponse;
 import com.aristowebapi.service.AuditInnerSheetService;
 import com.aristowebapi.service.ChemistAuditReportService;
 import com.aristowebapi.utility.AppRequestParameterUtils;
-import com.fasterxml.jackson.databind.JsonNode;
 
 @RestController
 @CrossOrigin 
@@ -62,11 +62,11 @@ public class AbmChemistReportController {
    
     @GetMapping("${mrc_chemistauditreportmeta_path}")
     public ResponseEntity<ChemistAuditMetaResponse> getAuditMeta(
-            @PathVariable Long id,HttpServletRequest req) {
+            @PathVariable Long id, @PathVariable Long psrCode,HttpServletRequest req) {
 	 	int requestValues[]=getRequestData(req);
 	 	int loginId=requestValues[0];
 
-        return ResponseEntity.ok(service.getReportMeta(id,loginId));
+        return ResponseEntity.ok(service.getReportMeta(id,loginId,psrCode));
     }
 	
     
@@ -109,14 +109,38 @@ public class AbmChemistReportController {
                 auditInnerSheetId);    
     }
     
-	 @PostMapping("${mrc_abmchemistreport_savepath}")
-	 public ResponseEntity<?> save(@RequestBody JsonNode jsonNode,HttpServletRequest req) {
+/*	 @PostMapping("${mrc_abmchemistreport_savepath}")
+	 public ResponseEntity<?> saveFinalAudit(@RequestBody ChemistAuditFinalRequestDto request,HttpServletRequest req) {
+
+		 
 		 	int requestValues[]=getRequestData(req);
 		 	int loginId=requestValues[0];
-	        return ResponseEntity.ok(service.saveFinalAudit(jsonNode,loginId));
-	 }
+
+		    return ResponseEntity.ok(
+		    		service.saveFinalAudit(request, loginId)
+		    );
+		}	 
+*/	
 	 
-	
+	 @PostMapping("${mrc_abmchemistreport_savepath}")
+//	    @PostMapping("/finalize")
+	    public ResponseEntity<?> finalizeAudit( @PathVariable Long auditReportId,@PathVariable Long  psrCode,HttpServletRequest req){
+	        try {
+
+			 	int requestValues[]=getRequestData(req);
+			 	int loginId=requestValues[0];
+
+	            String response =service.saveFinalAudit(auditReportId, psrCode, loginId);
+
+	            return ResponseEntity.ok(response);
+
+	        } catch (Exception e) {
+
+	            return ResponseEntity.badRequest()
+	                    .body(e.getMessage());
+	        }
+	    }
+	 
 	 @DeleteMapping("${mrc_abmchemistaudit_deletepath}")
 	    public ResponseEntity<String> deleteReport(
 	            @PathVariable Long reportId) {

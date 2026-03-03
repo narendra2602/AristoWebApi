@@ -30,7 +30,11 @@ public class AuditInnerSheetServiceImpl implements AuditInnerSheetService {
 
         try {
             Optional<AuditInnerSheet> optional =
-                    repository.findByAuditInnerSheetId(request.getAuditInnerSheetId());
+                    repository.findByAuditReportIdAndAuditInnerSheetIdAndPsrCode(
+                            request.getAuditReportId(),
+                            request.getAuditInnerSheetId(),
+                            request.getPsrCode()
+                    );
 
             AuditInnerSheet entity;
 
@@ -41,12 +45,12 @@ public class AuditInnerSheetServiceImpl implements AuditInnerSheetService {
                 // ✅ INSERT
                 entity = new AuditInnerSheet();
                 entity.setAuditInnerSheetId(request.getAuditInnerSheetId());
+                entity.setAuditReportId(request.getAuditReportId());
+                entity.setPsrCode(request.getPsrCode());
             }
 
-            entity.setAuditReportId(request.getAuditReportId());
             entity.setAuditReportStatus(request.getAuditReportStatus());
 
-            // Convert full request JSON to string
             String jsonString = objectMapper.writeValueAsString(request);
             entity.setJsonData(jsonString);
 
@@ -55,8 +59,7 @@ public class AuditInnerSheetServiceImpl implements AuditInnerSheetService {
         } catch (Exception e) {
             throw new RuntimeException("Error while saving/updating audit sheet", e);
         }
-    }
-    
+    }    
     
     @Override
     public Map<String, Object> getByReportIdAndInnerSheetId(

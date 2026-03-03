@@ -16,7 +16,7 @@ public interface ChemistAuditReportRepository
 
 	Optional<ChemistAuditReport> findByAuditReportId(Long reportId);
 	
-	
+	Optional<ChemistAuditReport> findByAbmDraftId(Long abmDraftId);
 	
 	
 	

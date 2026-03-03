@@ -151,7 +151,7 @@ public class MonthlyDevelopmentReportController {
 
     
 
-    @GetMapping(value = "${mrc_abmreport_path}", produces = MediaType.APPLICATION_JSON_VALUE)
+/*    @GetMapping(value = "${mrc_abmreport_path}", produces = MediaType.APPLICATION_JSON_VALUE)
         public ResponseEntity<JsonNode> getDraftJson(@PathVariable Long draftId) {
 
             try {
@@ -163,7 +163,12 @@ public class MonthlyDevelopmentReportController {
                 throw new RuntimeException(
                         "Invalid JSON stored for draftId " + draftId, e);
             }
-        }    
+        } 
+*/    
+    @GetMapping("${mrc_abmreport_path}")
+    public ResponseEntity<Map<String, Object>> getDraft(@PathVariable Long draftId) {
+        return ResponseEntity.ok(draftReportService.getDraftJsonByDraftId(draftId));
+    }
     
     @GetMapping("${mrc_abmjsonreport_path}")
     public ResponseEntity<List<FullReportResponse>> getFullReport(
