@@ -3,6 +3,7 @@ package com.aristowebapi.serviceimpl;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -277,7 +278,7 @@ public class AbmDraftReportServiceImpl implements AbmDraftReportService {
     // =====================================================
     // LIST BY MONTH & YEAR
     // =====================================================
-    @Override
+ /*   @Override
     public List<AbmDraftReportingDto> getByMonthAndYearAndLoginId(
             int month, int year, int loginId) {
 
@@ -292,7 +293,9 @@ public class AbmDraftReportServiceImpl implements AbmDraftReportService {
                 ? reportingList.get(0).getLine1_name()
                 : null;
                
-
+                // here  i want loop of reporting list
+                
+               int empCode=from reportinglist empcode ;  and find by findByMnthCodeAndMyearAndEmpCode 
                 
         return reportRepository
                 .findByMnthCodeAndMyearAndLoginId(month, year, loginId)
@@ -305,15 +308,88 @@ public class AbmDraftReportServiceImpl implements AbmDraftReportService {
                 })
                 .collect(Collectors.toList());
     }
+*/
+    
+    
+    @Override
+    public List<AbmDraftReportingDto> getByMonthAndYearAndLoginId(
+            int month, int year, int loginId) {
 
+        List<AbmReportingDto> reportingList = abmReportingDao.getLine1Reporting(loginId);
+
+        List<AbmDraftReportingDto> finalList = new ArrayList<>();
+
+        if (reportingList != null) {
+
+            // store unique empCode
+            Map<Integer, AbmReportingDto> uniqueEmpMap = new HashMap<>();
+
+            for (AbmReportingDto reporting : reportingList) {
+                uniqueEmpMap.putIfAbsent(reporting.getLine1_empcode(), reporting);
+            }
+
+            // loop only unique empCodes
+            for (Map.Entry<Integer, AbmReportingDto> entry : uniqueEmpMap.entrySet()) {
+
+                int empCode = entry.getKey();
+                AbmReportingDto reporting = entry.getValue();
+
+                String loginName = reporting.getLine1_empname();
+                String terName = reporting.getLine1_name();
+
+                List<AbmDraftReportingDto> temp =
+                        reportRepository
+                                .findByMnthCodeAndMyearAndEmpCode(month, year, empCode)
+                                .stream()
+                                .map(entity -> {
+                                    AbmDraftReportingDto dto = new AbmDraftReportingDto(entity);
+                                    dto.setLoginName(loginName);
+                                    dto.setTerName(terName);
+                                    return dto;
+                                })
+                                .collect(Collectors.toList());
+
+                finalList.addAll(temp);
+            }
+        }
+
+        return finalList;
+    }    
     // =====================================================
     // LIST BY DIV_CODE & DEPO_cODE AND MONTH & YEAR
     // =====================================================
 
-	@Override
+    
+    @Override
+    public List<AbmDraftReportingDto> getByDivCodeAndMnthCodeAndMyear(
+            int divCode, int mnthCode, int myear, int loginId) {
+
+        List<Integer> depoCodes = reportRepository.findDepoCodesByUserId(loginId);
+
+        return reportRepository
+                .findByDivCodeAndMnthCodeAndMyearAndDepoCodeIn(divCode, mnthCode, myear, depoCodes)
+                .stream()
+                .map(entity -> {
+
+                    AbmDraftReportingDto dto = new AbmDraftReportingDto(entity);
+
+                    List<AbmReportingDto> reportingList =
+                            abmReportingDao.getLine1Reporting(dto.getLoginId());
+
+                    if (reportingList != null && !reportingList.isEmpty()) {
+                        dto.setLoginName(reportingList.get(0).getLine1_empname());
+                        dto.setTerName(reportingList.get(0).getLine1_name());
+                    }
+
+                    return dto;
+                })
+                .collect(Collectors.toList());
+    }
+    
+/*	@Override
 	public List<AbmDraftReportingDto> getByDivCodeAndMnthCodeAndMyear(int divCode, int mnthCode, int myear) {
 		
-		
+
   
         return reportRepository
                 .findByDivCodeAndMnthCodeAndMyear(divCode,mnthCode,myear)
@@ -336,15 +412,16 @@ public class AbmDraftReportServiceImpl implements AbmDraftReportService {
                 .collect(Collectors.toList());
     
 	}
-
+*/
 	@Override
-	public List<AbmDraftReportingDto> getMissingAbmReportingList(int myear, int divCode,int depoCode, int mnthCode,int userType,int loginId) {
+	public List<AbmDraftReportingDto> getMissingAbmReportingList(int myear, int divCode, int mnthCode,int userType,int loginId) {
 
 		
-	       List<AbmReportingDto> psrdataList = abmReportingDao.getLine1Reporting(loginId);
-			int empCode=psrdataList.get(0).getLine1_empcode();
+//	       List<AbmReportingDto> psrdataList = abmReportingDao.getLine1Reporting(loginId);
+//			int empCode=psrdataList.get(0).getLine1_empcode();
 
-		List<Object[]> reportingList = abmReportingDao.getMissingAbmReportingList(myear,divCode,depoCode,mnthCode,userType,empCode);
+		int mthcode=abmReportingDao.getMonthCode(myear, mnthCode);
+		List<Object[]> reportingList = abmReportingDao.getMissingAbmReportingList(myear,divCode,mthcode,userType,loginId);
 		
  		   
 		List<AbmDraftReportingDto> dataList = new ArrayList();
@@ -357,7 +434,7 @@ public class AbmDraftReportServiceImpl implements AbmDraftReportService {
 
 		        dto.setHqCode(0);
 		        dto.setDivCode(divCode);
-		        dto.setMnthCode(mnthCode);
+		        dto.setMnthCode(mthcode);
 		        dto.setMyear(myear);
 		        dto.setDepoCode(((Number) row[0]).intValue());
 		        dto.setEmpCode(Integer.parseInt(row[2].toString()));

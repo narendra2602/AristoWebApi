@@ -1,7 +1,5 @@
 package com.aristowebapi.controller;
 
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -13,10 +11,10 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.aristowebapi.constant.AristoWebLogMsgConstant;
-import com.aristowebapi.dto.AbmDraftReportingDto;
 import com.aristowebapi.response.AbmReportingResponse;
 import com.aristowebapi.response.ApiResponse;
 import com.aristowebapi.response.DashBoardDataResponse;
@@ -50,7 +48,7 @@ public class AbmReportingController {
 	
 	}
 
-	@GetMapping("${mrc_dashboardPsrCombo_path}")
+/*	@GetMapping("${mrc_dashboardPsrCombo_path}")
 	public ResponseEntity<ApiResponse<PsrResponse>> getPsrList(HttpServletRequest request)
 	{
 
@@ -62,6 +60,22 @@ public class AbmReportingController {
 
 	
 	}
+*/	
+	@GetMapping("${mrc_dashboardPsrCombo_path}")
+	public ResponseEntity<ApiResponse<PsrResponse>> getPsrList(
+	        HttpServletRequest request,@RequestParam(required = false) Integer createdBy)
+	{
+	    int loginId = getLoginIdFromToken(request)[0];
+
+	    int effectiveloginId = (createdBy != null) ? createdBy : loginId;
+
+	    return new ResponseEntity<>(
+	            abmReportingService.getPsrList(effectiveloginId),
+	            HttpStatus.OK
+	    );
+	}
+	
+	
 	@GetMapping("${mrc_dashboardBrandCombo_path}")
 	public ResponseEntity<ApiResponse<DashBoardDataResponse>> getAristoBrandList(@PathVariable("myear") int myear,@PathVariable("divCode") int divCode,HttpServletRequest request)
 	{

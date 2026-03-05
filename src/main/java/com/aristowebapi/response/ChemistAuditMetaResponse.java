@@ -17,7 +17,7 @@ public class ChemistAuditMetaResponse {
 
     private String auditReportTitle;
     private Long auditReportId;
-    private Long auditDraftId;
+    private Long abmDraftId;
     private Long psrCode;
     private List<Long> auditInnerSheetIds;
     private String auditReportStatus;
@@ -27,6 +27,7 @@ public class ChemistAuditMetaResponse {
     private Integer monthCode;
     private Integer myear;
     private Integer month;
+    private Integer createBy;
 
     // getters & setters
 }

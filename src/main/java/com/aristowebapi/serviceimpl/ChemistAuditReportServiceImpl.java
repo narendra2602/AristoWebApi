@@ -166,15 +166,15 @@ public class ChemistAuditReportServiceImpl implements ChemistAuditReportService 
         return Arrays.asList(1001L, 1002L, 1003L);
     }
 */
-    private ChemistAuditMetaResponse mapToMetaResponse(ChemistAuditReport report,Long psrCode) {
+    private ChemistAuditMetaResponse mapToMetaResponse(
+            ChemistAuditReport report,
+            Long psrCode) {
 
         ChemistAuditMetaResponse response = new ChemistAuditMetaResponse();
 
         response.setAuditReportTitle(report.getAuditReportTitle());
         response.setAuditReportId(report.getAuditReportId());
-        response.setAuditDraftId(report.getAbmDraftId());
-        response.setAuditInnerSheetIds(report.getAuditInnerSheetIds());
-        response.setAuditReportStatus(report.getAuditReportStatus());
+        response.setAbmDraftId(report.getAbmDraftId());
         response.setDivCode(report.getDivCode());
         response.setDepoCode(report.getDepoCode());
         response.setHq(report.getHq());
@@ -182,17 +182,41 @@ public class ChemistAuditReportServiceImpl implements ChemistAuditReportService 
         response.setMyear(report.getMyear());
         response.setMonth(report.getMonth());
         response.setPsrCode(psrCode);
-
+        response.setCreateBy(report.getLoginId());
+        // 🔹 Get inner sheet IDs filtered by PSR
         List<Long> filteredIds =
-                auditInnerSheetRepository.findInnerSheetIdsByAuditReportIdAndPsrCode(
-                        report.getAuditReportId(), psrCode);
-        
-
+                auditInnerSheetRepository
+                        .findInnerSheetIdsByAuditReportIdAndPsrCode(
+                                report.getAuditReportId(),
+                                psrCode);
 
         response.setAuditInnerSheetIds(filteredIds);
+
+        // 🔹 Get all inner sheets
+        List<AuditInnerSheet> innerSheets =
+        	    auditInnerSheetRepository
+        	        .findAllByAuditReportIdAndPsrCode(
+        	            report.getAuditReportId(),
+        	            psrCode);
+        
+        // 🔹 Determine status from inner sheets
+        String finalStatus = "DRAFT";
+
+        if (innerSheets != null && !innerSheets.isEmpty()) {
+
+            boolean allFinal = innerSheets.stream()
+                    .allMatch(sheet ->
+                            "FINAL".equalsIgnoreCase(sheet.getAuditReportStatus()));
+
+            if (allFinal) {
+                finalStatus = "FINAL";
+            }
+        }
+
+        response.setAuditReportStatus(finalStatus);
+
         return response;
     }
-    
     
     
 /*    @Override

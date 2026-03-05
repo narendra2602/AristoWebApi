@@ -146,7 +146,7 @@ public class MonthlyDevelopmentReportController {
 		int loginId=requestValues[0];
 		int mnthCode = abmReportingDao.getMonthCode(myear,mnth);
 		
-        return draftReportService.getByDivCodeAndMnthCodeAndMyear(divCode,mnthCode, myear);
+        return draftReportService.getByDivCodeAndMnthCodeAndMyear(divCode,mnthCode, myear,loginId);
     }
 
     
@@ -196,7 +196,6 @@ public class MonthlyDevelopmentReportController {
     public ResponseEntity<List<AbmDraftReportingDto>> getMissingAbmReportingList(
             @PathVariable int myear,
             @PathVariable int divCode,
-            @PathVariable int depoCode,
             @PathVariable int mnthCode,
             HttpServletRequest req) {
 
@@ -206,7 +205,7 @@ public class MonthlyDevelopmentReportController {
 
         List<AbmDraftReportingDto> list =
                 draftReportService.getMissingAbmReportingList(
-                        myear, divCode, depoCode, mnthCode, userType, loginId);
+                        myear, divCode,  mnthCode, userType, loginId);
 
         if (list.isEmpty()) {
             return ResponseEntity.noContent().build(); // 204

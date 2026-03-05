@@ -25,12 +25,11 @@ public interface AbmReportingDao  extends JpaRepository<MktDataDto, Integer> {
 	
 	   // missing employee code in monthly reporting table 
 
-	@Query(value = "CALL getMissingAbmReportingList(:myear,:div_code,:depo_code,:smon,:userType,:loginId)", 
+	@Query(value = "CALL getMissingAbmReportingList(:myear,:div_code,:smon,:userType,:loginId)", 
 		       nativeQuery = true)
 		List<Object[]> getMissingAbmReportingList(
 		        @Param("myear") int myear,
 		        @Param("div_code") int div_code,
-		        @Param("depo_code") int depo_code,
 		        @Param("smon") int smon,
 		        @Param("userType") int userType,
 		        @Param("loginId") int loginId

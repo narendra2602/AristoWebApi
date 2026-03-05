@@ -12,8 +12,8 @@ public interface AbmDraftReportService {
 	FullReportResponse saveAbmDraftReport(AbmReportingDraftRequest abmReportingDraftRequest);
 	String updateAbmDraftReport(String draftJson ) throws Exception;
 	List<AbmDraftReportingDto> getByMonthAndYearAndLoginId(int month, int year,int loginId);
-	List<AbmDraftReportingDto> getByDivCodeAndMnthCodeAndMyear(int divCode,int mnthCode, int myear);
-	List<AbmDraftReportingDto> getMissingAbmReportingList(int myear,int divCode,int depoCode,int mnthCode,int userType,int loginId);
+	List<AbmDraftReportingDto> getByDivCodeAndMnthCodeAndMyear(int divCode,int mnthCode, int myear,int loginId);
+	List<AbmDraftReportingDto> getMissingAbmReportingList(int myear,int divCode,int mnthCode,int userType,int loginId);
 	public Map<String, Object> getDraftJsonByDraftId(Long draftId);
 	
 }
