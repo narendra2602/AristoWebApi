@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -15,6 +16,7 @@ public interface ChemistAuditReportRepositoryFinal  extends JpaRepository<Chemis
 	
 	Optional<ChemistAuditReportFinal> findByReportId(Long reportId);
 	
+	@Modifying(clearAutomatically = true)
 	void deleteByReportId(Long reportId);
 	
 	boolean existsByReportId(Long reportId);

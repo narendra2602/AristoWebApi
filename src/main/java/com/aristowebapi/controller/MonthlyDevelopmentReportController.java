@@ -108,6 +108,8 @@ public class MonthlyDevelopmentReportController {
 
         String response = reportService.deleteReportByReportId(reportId);
 
+        logger.info("draft id in delete method  "+reportId);
+        logger.info("DELETE RESPONSE  "+response);
         Map<String, Object> responseJson = new HashMap<>();
         responseJson.put("status", "SUCCESS");
         responseJson.put("message", response);

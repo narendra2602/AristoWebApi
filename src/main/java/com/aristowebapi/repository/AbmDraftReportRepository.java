@@ -23,7 +23,7 @@ public interface AbmDraftReportRepository extends JpaRepository<AbmDraftReportEn
 	
 	boolean existsByLoginIdAndMnthCodeAndMyear(int loginId,int mnthCode,int myear);
 
-	@Query(value = "SELECT DISTINCT depo_code FROM user_branch08 WHERE user_id = :userId", nativeQuery = true)
+	@Query(value = "SELECT DISTINCT depo_code FROM user_branch08  WHERE user_id = :userId and depo_code not in(32,90,98,99,58)", nativeQuery = true)
 	List<Integer> findDepoCodesByUserId(@Param("userId") int userId);	
 	
 /*	List<AbmDraftReportEntity> findByDivCodeAndMnthCodeAndMyearAndDepoCodeIn(

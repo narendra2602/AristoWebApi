@@ -377,8 +377,14 @@ public class AbmDraftReportServiceImpl implements AbmDraftReportService {
                             abmReportingDao.getLine1Reporting(dto.getLoginId());
 
                     if (reportingList != null && !reportingList.isEmpty()) {
-                        dto.setLoginName(reportingList.get(0).getLine1_empname());
-                        dto.setTerName(reportingList.get(0).getLine1_name());
+                        
+                        dto.setLoginName(reportingList.get(0).getLine1_empname() != null 
+                                ? reportingList.get(0).getLine1_empname() 
+                                : "");
+
+                        dto.setTerName(reportingList.get(0).getLine1_name() != null 
+                                ? reportingList.get(0).getLine1_name() 
+                                : "");
                     }
 
                     return dto;

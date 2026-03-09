@@ -3,8 +3,11 @@ package com.aristowebapi.serviceimpl;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +20,8 @@ import com.aristowebapi.dto.MonthlyDevelopmentReportDto;
 import com.aristowebapi.dto.MrDto;
 import com.aristowebapi.dto.SelfAssessmentDto;
 import com.aristowebapi.entity.AbmDraftReportEntity;
+import com.aristowebapi.entity.AuditInnerSheet;
+import com.aristowebapi.entity.ChemistAuditReportFinal;
 import com.aristowebapi.entity.DoctorPrescriptionEntity;
 import com.aristowebapi.entity.HeaderEntity;
 import com.aristowebapi.entity.MonthlyDevelopmentReportEntity;
@@ -25,6 +30,8 @@ import com.aristowebapi.entity.SelfAssessmentEntity;
 import com.aristowebapi.exception.DataAlreadyException;
 import com.aristowebapi.exception.DataNotFoundException;
 import com.aristowebapi.repository.AbmDraftReportRepository;
+import com.aristowebapi.repository.AuditInnerSheetRepository;
+import com.aristowebapi.repository.ChemistAuditReportRepositoryFinal;
 import com.aristowebapi.repository.DoctorPrescriptionRepository;
 import com.aristowebapi.repository.HeaderRepository;
 import com.aristowebapi.repository.MonthlyDevelopmentReportRepository;
@@ -41,6 +48,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class MonthlyDevelopmentReportServiceImpl implements MonthlyDevelopmentReportService {
 
+	
+	Logger logger = LoggerFactory.getLogger(MonthlyDevelopmentReportServiceImpl.class);
+
+	
 	 private final AbmDraftReportRepository abmReportRepository;
     private final MonthlyDevelopmentReportRepository reportRepository;
     private final MrRepository mrRepository;
@@ -51,6 +62,11 @@ public class MonthlyDevelopmentReportServiceImpl implements MonthlyDevelopmentRe
     @Autowired
     private  ObjectMapper objectMapper;
     
+    @Autowired
+    private ChemistAuditReportRepositoryFinal finalrepository;
+    
+    @Autowired
+    private AuditInnerSheetRepository auditInnerSheetRepository;
     
 
     @Transactional
@@ -172,8 +188,124 @@ public class MonthlyDevelopmentReportServiceImpl implements MonthlyDevelopmentRe
     }
 
     
+ // method change on 08/03/2026   
     
     @Transactional(rollbackFor = Exception.class)
+    public String saveFinalDraftReport(Long draftId) throws Exception {
+
+        logger.info("Starting final report creation for draftId {}", draftId);
+
+        // 1️⃣ Fetch Draft
+        AbmDraftReportEntity entity = abmReportRepository.findByDraftId(draftId);
+
+        if (entity == null) {
+            throw new IllegalArgumentException("Draft not found for id: " + draftId);
+        }
+
+        // 2️⃣ Prevent duplicate final report
+        if (reportRepository.existsByDraftId(draftId)) {
+            throw new DataAlreadyException("Final report already created for draftId " + draftId);
+        }
+
+        // 3️⃣ Validate Draft JSON
+        String jsonRequest = entity.getDraftJson();
+        if (jsonRequest == null || jsonRequest.isEmpty()) {
+            throw new DataNotFoundException("Draft JSON not found");
+        }
+
+        MonthlyReportRequest reportRequest =
+                objectMapper.readValue(jsonRequest, MonthlyReportRequest.class);
+
+        // 4️⃣ Fetch Reporting Data
+        List<AbmReportingDto> reportingList =
+                abmReportingDao.getLine1Reporting(entity.getLoginId());
+
+        if (reportingList == null || reportingList.isEmpty()) {
+            throw new DataNotFoundException("Reporting data not found");
+        }
+
+        AbmReportingDto abmReportingDto = reportingList.get(0);
+
+        // 5️⃣ Extract Request Data
+        MonthlyDevelopmentReportDto report = reportRequest.getReport();
+        List<MrDto> mrs = reportRequest.getMrs();
+        List<DoctorPrescriptionDto> doctors = reportRequest.getDoctors();
+        SelfAssessmentDto selfAssessment = reportRequest.getSelfAssessment();
+        HeaderDto header = reportRequest.getHeader();
+
+        // 6️⃣ Create Master Report Entity
+        MonthlyDevelopmentReportEntity reportEntity = new MonthlyDevelopmentReportEntity(report);
+
+        reportEntity.setDraftId(draftId);
+        reportEntity.setHqCode(report.getHqCode());
+
+        reportEntity.setLine1EmpCode(abmReportingDto.getLine1_empcode());
+        reportEntity.setLine1EmpName(abmReportingDto.getLine1_empname());
+
+        reportEntity.setLine2EmpCode(abmReportingDto.getLine2_empcode());
+        reportEntity.setLine2EmpName(abmReportingDto.getLine2_empname());
+
+        reportEntity.setLine3EmpCode(abmReportingDto.getLine3_empcode());
+        reportEntity.setLine3EmpName(abmReportingDto.getLine3_empname());
+
+        reportEntity.setCreatedDate(LocalDateTime.now());
+
+        // 7️⃣ Save Master Report
+        MonthlyDevelopmentReportEntity savedReport = reportRepository.save(reportEntity);
+        Long reportId = savedReport.getReportId();
+
+        logger.info("Report created successfully with reportId {}", reportId);
+
+        // 8️⃣ Save Child Entities
+
+        if (mrs != null && !mrs.isEmpty()) {
+            mrs.forEach(mr -> mr.setReportId(reportId));
+
+            List<MrEntity> mrEntities =
+                    mrs.stream()
+                            .map(MrEntity::new)
+                            .collect(Collectors.toList());
+
+            mrRepository.saveAll(mrEntities);
+        }
+
+        if (doctors != null && !doctors.isEmpty()) {
+            doctors.forEach(d -> d.setReportId(reportId));
+
+            List<DoctorPrescriptionEntity> doctorEntities =
+                    doctors.stream()
+                            .map(DoctorPrescriptionEntity::new)
+                            .collect(Collectors.toList());
+
+            doctorRepository.saveAll(doctorEntities);
+        }
+
+        if (selfAssessment != null) {
+            selfAssessment.setReportId(reportId);
+            selfAssessmentRepository.save(new SelfAssessmentEntity(selfAssessment));
+        }
+
+        if (header != null) {
+            header.setReportId(reportId);
+            headerRepository.save(new HeaderEntity(header));
+        }
+
+        // 9️⃣ Update Draft Status AFTER successful report creation
+        reportRequest.setAbmDraftStatus("FINAL");
+        entity.setDraftStatus("FINAL");
+
+        String updatedJson = objectMapper.writeValueAsString(reportRequest);
+        entity.setDraftJson(updatedJson);
+
+        abmReportRepository.save(entity);
+
+        logger.info("Draft status updated to FINAL for draftId {}", draftId);
+
+        // 🔟 Return Updated JSON
+        return updatedJson;
+    }   
+    
+ /*   @Transactional(rollbackFor = Exception.class)
     public String saveFinalDraftReport(Long draftId) throws Exception
     
     {
@@ -187,7 +319,7 @@ public class MonthlyDevelopmentReportServiceImpl implements MonthlyDevelopmentRe
     	if (reportRepository.existsByDraftId(draftId)) {
     	    throw new DataAlreadyException("Final report already created for draftId " + draftId);
     	}
-
+    	
     	
     	// 3️⃣ Get reporting data
         List<AbmReportingDto> reportingList =
@@ -216,16 +348,6 @@ public class MonthlyDevelopmentReportServiceImpl implements MonthlyDevelopmentRe
 
     	MonthlyReportRequest reportRequest = objectMapper.readValue(jsonRequest, MonthlyReportRequest.class);
 
-    	// 5️⃣ 🔥 UPDATE STATUS IN BOTH PLACES
-        entity.setDraftStatus("FINAL");
-        reportRequest.setAbmDraftStatus("FINAL");
-
-     // 6️⃣ Convert updated object back to JSON
-        String updatedJson = objectMapper.writeValueAsString(reportRequest);
-        entity.setDraftJson(updatedJson);
-
-        // 7️⃣ Save updated draft entity
-        abmReportRepository.saveAndFlush(entity);
 
         // ===============================
         // 8️⃣ Now create final report
@@ -255,6 +377,8 @@ public class MonthlyDevelopmentReportServiceImpl implements MonthlyDevelopmentRe
         MonthlyDevelopmentReportEntity savedReport = reportRepository.save(reportEntity);
         Long reportId = savedReport.getReportId();
 
+        logger.info("after save generated report id in service method  "+reportId);
+        
         // 2️⃣ Set reportId in all child entities
 
         mrs.forEach(mr -> mr.setReportId(reportId));
@@ -267,60 +391,136 @@ public class MonthlyDevelopmentReportServiceImpl implements MonthlyDevelopmentRe
  
         if (mrs != null && !mrs.isEmpty()) {
             mrRepository.saveAll(mrs.stream().map(MrEntity::new).collect(Collectors.toList()));
+            logger.info("Saving mr repository for reportId {}", reportId);
         }
 
         
         if (doctors != null && !doctors.isEmpty()) {
         	doctorRepository.saveAll(doctors.stream().map(DoctorPrescriptionEntity::new).collect(Collectors.toList()));
+        	logger.info("Saving doctor repository for reportId {}", reportId);
         }
         
         if(selfAssessment!=null)
+        {
         	selfAssessmentRepository.save(new SelfAssessmentEntity(selfAssessment));
+        	logger.info("Saving self assessment repository for reportId {}", reportId);
+        }
         if(header!=null)
+        {
         	headerRepository.save(new HeaderEntity(header));
+        	logger.info("Saving header repository for reportId {}", reportId);
+        }
         
      // 🔟 Return updated JSON (NOT old jsonRequest)
+        
+    	// 5️⃣ 🔥 UPDATE STATUS IN BOTH PLACES
+        entity.setDraftStatus("FINAL");
+        reportRequest.setAbmDraftStatus("FINAL");
+
+        logger.info("draft status in entity   "+entity.getDraftStatus());
+        
+     // 6️⃣ Convert updated object back to JSON
+        String updatedJson = objectMapper.writeValueAsString(reportRequest);
+        entity.setDraftJson(updatedJson);
+
+        // 7️⃣ Save updated draft entity
+        abmReportRepository.saveAndFlush(entity);
+        
+       
         return updatedJson;
         
 
     }
-
+*/
+    
     @Transactional(rollbackFor = Exception.class)
     public String deleteReportByReportId(Long draftId) {
 
-    	
-
-    	
-        // 1️⃣ Fetch final report safely
-        MonthlyDevelopmentReportEntity reportEntity = reportRepository.findByDraftId(draftId)
-                        .orElseThrow(() -> new DataNotFoundException("Final report not found for draftId: " + draftId));
+        MonthlyDevelopmentReportEntity reportEntity =
+                reportRepository.findByDraftId(draftId)
+                        .orElseThrow(() -> new DataNotFoundException("Final report not found"));
 
         Long reportId = reportEntity.getReportId();
 
- 
-     // 2️⃣ Reset draft status to DRAFT
+        logger.info("DraftId : {}", draftId);
+        logger.info("ReportId : {}", reportId);
+
+        // Step 1 - delete MDR related tables
+        mrRepository.deleteByReportId(reportId);
+        doctorRepository.deleteByReportId(reportId);
+        selfAssessmentRepository.deleteByReportId(reportId);
+        headerRepository.deleteByReportId(reportId);
+
+        reportRepository.delete(reportEntity);
+
+        // Step 3 - delete ChemistAuditReportFinal
+        Optional<ChemistAuditReportFinal> finalReport = finalrepository.findByReportId(draftId);
+
+        if(finalReport.isPresent()){
+        	System.out.println("Chemist audit report found, deleting..."+draftId);
+            logger.info("Chemist audit report found, deleting..."+draftId);
+            finalrepository.delete(finalReport.get());
+        }else{
+            logger.info("Chemist audit report NOT found for reportId {}", draftId);
+        }
+
+        // Step 4 - update audit inner sheet
+        List<AuditInnerSheet> sheets = auditInnerSheetRepository.findByAuditReportId(draftId);
+
+        logger.info("Total audit sheets found : {}", sheets.size());
+
+        if(!sheets.isEmpty()){
+            for (AuditInnerSheet sheet : sheets) {
+            	System.out.println("inner sheet"+draftId);
+                sheet.setAuditReportStatus("DRAFT");
+            }
+            auditInnerSheetRepository.saveAll(sheets);
+        }
+
+        // Step 5 - update draft
         AbmDraftReportEntity draftEntity = abmReportRepository.findByDraftId(draftId);
 
         if (draftEntity != null) {
             draftEntity.setDraftStatus("Draft");
             abmReportRepository.save(draftEntity);
         }
-    	
-     // 3️⃣ Delete children first (FK-safe)    	
-       
+
+        return "Delete Successfully";
+    }    
+    
+ /*   @Transactional(rollbackFor = Exception.class)
+    public String deleteReportByReportId(Long draftId) {
+
+        MonthlyDevelopmentReportEntity reportEntity =
+                reportRepository.findByDraftId(draftId)
+                .orElseThrow(() ->
+                        new DataNotFoundException("Final report not found"));
+
+        Long reportId = reportEntity.getReportId();
+        
+        logger.info("draft id in delete service method  "+draftId);
+        
+        logger.info("report id in delete service method  "+reportId);
+
         mrRepository.deleteByReportId(reportId);
         doctorRepository.deleteByReportId(reportId);
         selfAssessmentRepository.deleteByReportId(reportId);
         headerRepository.deleteByReportId(reportId);
 
-     // 4️⃣ Delete parent last
-        reportRepository.deleteById(reportId);
-        
+        reportRepository.delete(reportEntity);
+
+        AbmDraftReportEntity draftEntity = abmReportRepository.findByDraftId(draftId);
+        if (draftEntity != null) {
+            draftEntity.setDraftStatus("Draft");
+            abmReportRepository.save(draftEntity);
+            
+            logger.info("inside draftEntity if condition  to set status as Draft ");
+
+        }
+
         return "Delete Successfully";
     }
-
-
-
+*/
 	@Override
 	public List<FullReportResponse> getAllReportJson(int divCode, int depoCode, int mnthCode, int myear, int hqCode) {
 		// 1️⃣ Fetch ALL matching reports
@@ -409,5 +609,8 @@ public class MonthlyDevelopmentReportServiceImpl implements MonthlyDevelopmentRe
 	    return responseList;
 
 	}
+
+
+
  
 }

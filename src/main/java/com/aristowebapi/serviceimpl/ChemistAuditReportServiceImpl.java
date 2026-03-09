@@ -2,7 +2,7 @@ package com.aristowebapi.serviceimpl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,15 +12,11 @@ import org.springframework.transaction.annotation.Transactional;
 import com.aristowebapi.dao.AbmReportingDao;
 import com.aristowebapi.dto.AbmReportingDto;
 import com.aristowebapi.dto.ChemistAuditFinalRequestDto;
-import com.aristowebapi.dto.ChemistBrandDto;
-import com.aristowebapi.dto.ChemistCompetitorDto;
 import com.aristowebapi.dto.ChemistSheetDto;
 import com.aristowebapi.dto.PsrDto;
 import com.aristowebapi.entity.AuditInnerSheet;
 import com.aristowebapi.entity.ChemistAuditReport;
 import com.aristowebapi.entity.ChemistAuditReportFinal;
-import com.aristowebapi.entity.ChemistBrand;
-import com.aristowebapi.entity.ChemistCompetitor;
 import com.aristowebapi.entity.ChemistSheet;
 import com.aristowebapi.repository.AuditInnerSheetRepository;
 import com.aristowebapi.repository.ChemistAuditReportRepository;
@@ -306,6 +302,130 @@ public class ChemistAuditReportServiceImpl implements ChemistAuditReportService 
     @Override
     public String saveFinalAudit(Long auditReportId, Long psrCode, int loginId) throws Exception {
 
+    	
+    	
+        // 1️⃣ Get draft sheets
+        List<AuditInnerSheet> draftSheets =
+                auditInnerSheetRepository
+                        .findAllByAuditReportIdAndPsrCodeAndAuditReportStatus(
+                                auditReportId, psrCode, "DRAFT");
+
+        if (draftSheets.isEmpty()) {
+            throw new RuntimeException("No DRAFT records found");
+        }
+
+        // 2️⃣ Get main audit report
+        ChemistAuditReport mainReport = repository.findByAuditReportId(auditReportId)
+                .orElseThrow(() -> new RuntimeException("Audit Report not found"));
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        // 3️⃣ Get reporting hierarchy
+        List<AbmReportingDto> reportingList = abmReportingDao.getLine1Reporting(loginId);
+
+        AbmReportingDto abmReportingDto = null;
+        if (reportingList != null && !reportingList.isEmpty()) {
+            abmReportingDto = reportingList.get(0);
+        }
+
+        // 4️⃣ Find existing final report
+        Optional<ChemistAuditReportFinal> existing =
+                finalrepository.findByReportId(auditReportId);
+
+        ChemistAuditReportFinal auditReport;
+
+        if (existing.isPresent()) {
+
+            auditReport = existing.get();
+
+        } else {
+
+            auditReport = new ChemistAuditReportFinal();
+
+            auditReport.setTitle("Audit Report");
+            auditReport.setReportId(auditReportId);
+            auditReport.setCreatedBy(loginId);
+
+            if (abmReportingDto != null) {
+
+                auditReport.setLine1Name(abmReportingDto.getLine1_name());
+                auditReport.setLine1EmpCode(abmReportingDto.getLine1_empcode());
+                auditReport.setLine1EmpName(abmReportingDto.getLine1_empname());
+
+                auditReport.setLine2EmpCode(abmReportingDto.getLine2_empcode());
+                auditReport.setLine2EmpName(abmReportingDto.getLine2_empname());
+
+                auditReport.setLine3EmpCode(abmReportingDto.getLine3_empcode());
+                auditReport.setLine3EmpName(abmReportingDto.getLine3_empname());
+            }
+
+            auditReport.setDivCode(mainReport.getDivCode());
+            auditReport.setDepoCode(mainReport.getDepoCode());
+            auditReport.setHqCode(mainReport.getHq());
+
+            auditReport.setReportMonth(mainReport.getMonthCode());
+            auditReport.setReportYear(mainReport.getMyear());
+
+            auditReport.setSheets(new ArrayList<>());
+        }
+
+        // 5️⃣ Prevent duplicate PSR finalization
+        boolean psrExists = auditReport.getSheets()
+                .stream()
+                .anyMatch(s -> s.getPsrId() != null && s.getPsrId().equals(psrCode));
+
+        if (psrExists) {
+            throw new RuntimeException("This PSR already finalized");
+        }
+
+        // 6️⃣ Convert draft JSON → sheets
+        for (AuditInnerSheet draft : draftSheets) {
+
+            ChemistAuditFinalRequestDto request =
+                    objectMapper.readValue(
+                            draft.getJsonData(),
+                            ChemistAuditFinalRequestDto.class);
+
+            for (ChemistSheetDto sheetDto : request.getSheets()) {
+
+                ChemistSheet sheet = new ChemistSheet();
+
+                sheet.setSheetName(sheetDto.getSheetName());
+                sheet.setMonth(sheetDto.getMonth());
+                sheet.setDivision(sheetDto.getDivision());
+                sheet.setBranch(sheetDto.getBranch());
+                sheet.setHq(sheetDto.getHq());
+                sheet.setArea(sheetDto.getArea());
+                sheet.setChemistName(sheetDto.getChemistName());
+
+                sheet.setPsrId(sheetDto.getPsrId());
+                sheet.setPsrName(sheetDto.getPsrName());
+
+                sheet.setSheetStatus("FINAL");
+
+                // 🔗 Important relationship
+                sheet.setAuditReport(auditReport);
+
+                auditReport.getSheets().add(sheet);
+            }
+        }
+
+        // 7️⃣ Save parent (cascade will save sheets)
+        finalrepository.save(auditReport);
+
+        // 8️⃣ Update draft status
+        for (AuditInnerSheet sheet : draftSheets) {
+            sheet.setAuditReportStatus("FINAL");
+        }
+
+        auditInnerSheetRepository.saveAll(draftSheets);
+
+        return "PSR finalized successfully";
+    } 
+/*    @Transactional
+    @Override
+    public String saveFinalAudit(Long auditReportId, Long psrCode, int loginId) throws Exception {
+
         // 1️⃣ Get all DRAFT records
         List<AuditInnerSheet> draftSheets =
                 auditInnerSheetRepository
@@ -422,7 +542,7 @@ public class ChemistAuditReportServiceImpl implements ChemistAuditReportService 
         auditInnerSheetRepository.saveAll(draftSheets);
 
         return "All sheets finalized successfully";
-    }
+    }*/
     
 /*    @Transactional
     @Override
@@ -520,16 +640,26 @@ public class ChemistAuditReportServiceImpl implements ChemistAuditReportService 
         );
     }*/    
     @Override
+    @Transactional
     public void deleteByReportId(Long reportId) {
-        finalrepository.deleteByReportId(reportId);
 
-        ChemistAuditReport report = repository.findByAuditReportId(reportId)
+        ChemistAuditReportFinal report1 =
+                finalrepository.findByReportId(reportId)
                 .orElseThrow(() -> new RuntimeException("Report not found"));
 
-        report.setAuditReportStatus("DRAFT");
-        repository.save(report);
-    }
-    
+        // delete final report (cascade deletes sheets)
+        finalrepository.delete(report1);
+
+        // update audit inner sheet status
+        List<AuditInnerSheet> sheets =
+                auditInnerSheetRepository.findByAuditReportId(reportId);
+
+        for (AuditInnerSheet sheet : sheets) {
+            sheet.setAuditReportStatus("DRAFT");
+        }
+
+        auditInnerSheetRepository.saveAll(sheets);
+    }    
     
     
     private String getText(JsonNode node, String fieldName) {

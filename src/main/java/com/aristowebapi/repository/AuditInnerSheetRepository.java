@@ -14,7 +14,7 @@ public interface AuditInnerSheetRepository
     List<AuditInnerSheet> findByAuditReportId(Long auditReportId);
     
    
-    
+
     
     Optional<AuditInnerSheet> findByAuditReportIdAndAuditInnerSheetIdAndPsrCode(
             Long auditReportId,
