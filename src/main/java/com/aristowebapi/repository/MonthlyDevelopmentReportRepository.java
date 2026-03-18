@@ -14,6 +14,9 @@ public interface MonthlyDevelopmentReportRepository extends JpaRepository<Monthl
 
     // ✅ Finds a report by the common reportId
     Optional<MonthlyDevelopmentReportEntity> findByDraftId(Long draftId);
+    
+    
+    
     Long findByReportMonthAndReportYearAndCreatedBy(int month,int year,int loginId);
     
     

@@ -48,8 +48,8 @@ public class StkRepo2ServiceImpl implements StkRepo2Service{
 		
 		StringBuilder title=new StringBuilder();
 		title.append(aristoWebMessageConstant.divisionMap.get(String.valueOf(data.getDiv_code())));
-		title.append(" STOCKIEST : ");
-		title.append(data.getStk_name());
+		title.append(request.getOptType()==2?" STOCKIEST : ":" HQ : ");
+		title.append(request.getOptType()==2?data.getStk_name():stkRepo2Dao.getHqName(request.getDivCode(),request.getDepoCode(),request.getMyear(),request.getHqCode()));
 		title.append(" ");
 		switch(request.getRepType())
 		{
@@ -59,6 +59,9 @@ public class StkRepo2ServiceImpl implements StkRepo2Service{
 		    		break;
 		    case 3: title.append("NET SALE ");
 		    		break;
+		    case 4: title.append("PI SALE ");
+		    
+    		break;
 
 		}
 //		String crtype="";
@@ -115,13 +118,13 @@ public class StkRepo2ServiceImpl implements StkRepo2Service{
 		List<StkRepo2> stkRepo2SaleList=null;
 		if(request.getRepType()==2 && request.getRepTypePgwise()==2 ) // credit note
 			stkRepo2SaleList=stkRepo2Dao.getStockiestRepo2CreditGroup(request.getMyear(),request.getDivCode(),request.getDepoCode()
-					,request.getSmon(),request.getEmon(),request.getCreditNoteType(),request.getStkCode(),request.getLoginId());
+					,request.getSmon(),request.getEmon(),request.getCreditNoteType(),request.getStkCode(),request.getLoginId(),request.getOptType(),request.getHqCode());
 		else if(request.getRepType()==2 && request.getRepTypePgwise()==1 ) // credit note
 			stkRepo2SaleList=stkRepo2Dao.getStockiestRepo2Credit(request.getMyear(),request.getDivCode(),request.getDepoCode()
-					,request.getSmon(),request.getEmon(),request.getCreditNoteType(),request.getStkCode(),request.getLoginId());
+					,request.getSmon(),request.getEmon(),request.getCreditNoteType(),request.getStkCode(),request.getLoginId(),request.getOptType(),request.getHqCode());
 		else
 			stkRepo2SaleList=stkRepo2Dao.getStockiestRepo2(request.getMyear(),request.getDivCode(),request.getDepoCode()
-				,request.getSmon(),request.getEmon(),request.getRepType(),request.getStkCode(),request.getLoginId());
+				,request.getSmon(),request.getEmon(),request.getRepType(),request.getStkCode(),request.getLoginId(),request.getOptType(),request.getHqCode());
 	
 		
 		
@@ -155,6 +158,8 @@ public class StkRepo2ServiceImpl implements StkRepo2Service{
 		int fs=0;
 		int gfs=0;
 		int pcode=0;
+		String stkname="";
+		String city="";
 		for (int i=0;i<size;i++)
 		{
 			StkRepo2 data = stkRepo2SaleList.get(i);
@@ -164,6 +169,8 @@ public class StkRepo2ServiceImpl implements StkRepo2Service{
 				response=new StkRepo2Response();
 				pcode=data.getMcode();
 				name=data.getMname();
+				stkname=data.getStk_name();
+				city=data.getMcity();
 				mgrp=data.getMgrp();
 				gname=data.getGp_name();
 				months=new LinkedHashMap();
@@ -174,9 +181,12 @@ public class StkRepo2ServiceImpl implements StkRepo2Service{
 				title = getTitle(request, data); 
 			}
 
-			if(pcode!=data.getMcode())
+//			if(pcode!=data.getMcode())
+				if((!stkname.equalsIgnoreCase(data.getStk_name()) && request.getOptType()==1) || (pcode!=data.getMcode()) && request.getOptType()==2)
 			{
 				response.setName(name);
+				response.setStockiest_name(stkname);
+				response.setCity(city);
 				z=k;
 				for(int b=k;b<sz;b++)
 				{
@@ -211,6 +221,9 @@ public class StkRepo2ServiceImpl implements StkRepo2Service{
 				saleList.add(response);
 				pcode=data.getMcode();
 				name=data.getMname();
+				stkname=data.getStk_name();
+				city=data.getMcity();
+
 				columnTotal=0;
 				columnTotalVal=0;
 				k=0;
@@ -403,6 +416,9 @@ public class StkRepo2ServiceImpl implements StkRepo2Service{
 			{
 			response=new StkRepo2Response();
 			response.setName(name);
+			response.setStockiest_name(stkname);
+			response.setCity(city);
+
 			z=k;
 			for(int b=k;b<sz;b++)
 			{
@@ -456,6 +472,9 @@ public class StkRepo2ServiceImpl implements StkRepo2Service{
 
 
 			response.setName("Total :");
+			response.setStockiest_name("");
+			response.setCity("");
+
 			months.putAll(total);
 			response.setMonths(months);
 			response.setColor(2);
@@ -495,10 +514,10 @@ public class StkRepo2ServiceImpl implements StkRepo2Service{
 		List<StkRepo2> stkRepo2SaleList=null;
 		if(request.getRepType()==2) // credit note
 			stkRepo2SaleList=stkRepo2Dao.getStockiestRepo2Credit(request.getMyear(),request.getDivCode(),request.getDepoCode()
-					,request.getSmon(),request.getEmon(),request.getCreditNoteType(),request.getStkCode(),request.getLoginId());
+					,request.getSmon(),request.getEmon(),request.getCreditNoteType(),request.getStkCode(),request.getLoginId(),request.getOptType(),request.getHqCode());
 		else
 			stkRepo2SaleList=stkRepo2Dao.getStockiestRepo2(request.getMyear(),request.getDivCode(),request.getDepoCode()
-				,request.getSmon(),request.getEmon(),request.getRepType(),request.getStkCode(),request.getLoginId());
+				,request.getSmon(),request.getEmon(),request.getRepType(),request.getStkCode(),request.getLoginId(),request.getOptType(),request.getHqCode());
 
 		
 //		List<StkRepo2> stkRepo2SaleList=stkRepo2Dao.getStockiestRepo2(request.getMyear(),request.getDivCode(),request.getDepoCode()

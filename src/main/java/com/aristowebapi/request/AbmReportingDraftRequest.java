@@ -19,5 +19,5 @@ public class AbmReportingDraftRequest {
 	private int myear;
 	private String entryDate;
 	private int loginId;
-
+    
 }

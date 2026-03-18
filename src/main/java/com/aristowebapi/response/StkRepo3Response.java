@@ -16,7 +16,9 @@ import lombok.NoArgsConstructor;
 public class StkRepo3Response {
 	
 	private String branch;
+	private String hq;
 	private String name;
+	private String city;
 	private Map<String,Long> months;
 	private int color;
 

@@ -7,11 +7,14 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.aristowebapi.dao.AbmReportingDao;
 import com.aristowebapi.dto.AbmDraftReportingDto;
@@ -21,13 +24,13 @@ import com.aristowebapi.dto.MonthlyDevelopmentReportDto;
 import com.aristowebapi.dto.SelfAssessmentDto;
 import com.aristowebapi.entity.AbmDraftReportEntity;
 import com.aristowebapi.entity.ChemistAuditReport;
+import com.aristowebapi.exception.DataNotFoundException;
 import com.aristowebapi.repository.AbmDraftReportRepository;
 import com.aristowebapi.repository.ChemistAuditReportRepository;
 import com.aristowebapi.request.AbmReportingDraftRequest;
 import com.aristowebapi.response.AuditSheetResponse;
 import com.aristowebapi.response.FullReportResponse;
 import com.aristowebapi.service.AbmDraftReportService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -45,7 +48,203 @@ public class AbmDraftReportServiceImpl implements AbmDraftReportService {
     // =====================================================
     // SAVE/INITIATE DRAFT
     // =====================================================
+    
     @Transactional
+    @Override
+    public FullReportResponse saveAbmDraftReport(
+            AbmReportingDraftRequest abmReportingDraftRequest) {
+
+     	
+        try {
+
+            int mnthCode = abmReportingDao.getMonthCode(
+                    abmReportingDraftRequest.getMyear(),
+                    abmReportingDraftRequest.getMnthCode());
+
+            abmReportingDraftRequest.setMnthCode(mnthCode);
+
+            // 🔹 Check existing draft
+            Optional<AbmDraftReportEntity> existingDraft =
+                    reportRepository.findByLoginIdAndMnthCodeAndMyear(
+                            abmReportingDraftRequest.getLoginId(),
+                            mnthCode,
+                            abmReportingDraftRequest.getMyear());
+
+            System.out.println(abmReportingDraftRequest.getLoginId()+" mnthcode "+mnthCode+" year "+abmReportingDraftRequest.getMyear());
+            
+            if (existingDraft.isPresent()) {
+
+                AbmDraftReportEntity entity = existingDraft.get();
+
+                System.out.println("inside exist "+entity.getDraftStatus());
+                // 🚫 If already FINAL → DO NOTHING
+                if ("FINAL".equalsIgnoreCase(entity.getDraftStatus())) {
+
+                    FullReportResponse response =
+                        objectMapper.readValue(entity.getDraftJson(), FullReportResponse.class);
+
+                    response.setAbmDraftStatus("FINAL");
+
+                    return response;
+                }                
+                // 🔹 If draft exists but not FINAL → return existing draft
+                if (entity.getDraftJson() != null) {
+                    return objectMapper.readValue(entity.getDraftJson(), FullReportResponse.class);
+                }
+            }
+
+            // 🔹 Fetch Reporting Details
+            List<AbmReportingDto> reportingList =
+                    abmReportingDao.getLine1Reporting(abmReportingDraftRequest.getLoginId());
+           String loginName=abmReportingDao.getloginName(abmReportingDraftRequest.getLoginId());
+            AbmReportingDto abmReportingDto =
+                    reportingList != null && !reportingList.isEmpty()
+                            ? reportingList.get(0)
+                            : null;
+
+                       // allowed for creation or not     
+                            if (abmReportingDto == null) {
+                                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Reporting structure not found");
+                            }
+                            System.out.println("login name is "+loginName);
+                            int loginEmpCode = Integer.parseInt(loginName);
+
+                            if (abmReportingDto.getLine1_empcode() != loginEmpCode) {
+                                throw new DataNotFoundException("User not allowed to Create Draft");
+                            }                            
+                           
+            // 🔹 Header Preparation
+            HeaderDto header = new HeaderDto();
+
+            if (abmReportingDto != null) {
+                header.setFromName(abmReportingDto.getLine1_empname());
+                header.setDesignation(abmReportingDto.getLine1_desg());
+                header.setHq(abmReportingDto.getLine1_name());
+                header.setTo(abmReportingDto.getLine2_desg() + " :" + abmReportingDto.getLine2_empname());
+                header.setCc(abmReportingDto.getLine3_desg() + " :" + abmReportingDto.getLine3_empname());
+                header.setDate(abmReportingDraftRequest.getEntryDate());
+            }
+
+            // 🔹 Report DTO
+            MonthlyDevelopmentReportDto reportDto = new MonthlyDevelopmentReportDto();
+
+            reportDto.setCompany("Aristo");
+            reportDto.setMonth(mnthCode);
+            reportDto.setReportTitle("ABM");
+            reportDto.setYear(abmReportingDraftRequest.getMyear());
+            reportDto.setCreatedBy(abmReportingDraftRequest.getLoginId());
+            reportDto.setDivCode(abmReportingDraftRequest.getDivCode());
+            reportDto.setDepoCode(abmReportingDraftRequest.getDepoCode());
+            reportDto.setHqCode(abmReportingDraftRequest.getHqCode());
+            reportDto.setLine1EmpCode(abmReportingDto.getLine1_empcode());
+            reportDto.setLine1EmpName(abmReportingDto.getLine1_empname());
+            reportDto.setLine2EmpCode(abmReportingDto.getLine2_empcode());
+            reportDto.setLine2EmpName(abmReportingDto.getLine2_empname());
+            reportDto.setLine3EmpCode(abmReportingDto.getLine3_empcode());
+            reportDto.setLine3EmpName(abmReportingDto.getLine3_empname());
+            reportDto.setLine1Name(abmReportingDto.getLine1_name());
+
+            // 🔹 Response Object
+            FullReportResponse response = new FullReportResponse();
+
+            response.setAbmDraftStatus("Draft");
+            response.setReport(reportDto);
+            response.setDoctors(new ArrayList<>());
+            response.setMrs(new ArrayList<>());
+            response.setHeader(header);
+            response.setSelfAssessment(new SelfAssessmentDto());
+
+            // 🔹 Create Draft Entity
+            AbmDraftReportEntity entity = new AbmDraftReportEntity();
+
+            entity.setDraftStatus("Draft");
+            entity.setEntryDate(abmReportingDraftRequest.getEntryDate());
+            entity.setLoginId(abmReportingDraftRequest.getLoginId());
+            entity.setMnthCode(mnthCode);
+            entity.setMyear(abmReportingDraftRequest.getMyear());
+            entity.setDivCode(abmReportingDraftRequest.getDivCode());
+            entity.setDepoCode(abmReportingDraftRequest.getDepoCode());
+            entity.setHqCode(abmReportingDraftRequest.getHqCode());
+
+            if (abmReportingDto != null) {
+                entity.setEmpCode(abmReportingDto.getLine1_empcode());
+                entity.setLine1EmpName(abmReportingDto.getLine1_empname());
+                entity.setLine2EmpCode(abmReportingDto.getLine2_empcode());
+                entity.setLine2EmpName(abmReportingDto.getLine2_empname());
+                entity.setLine3EmpCode(abmReportingDto.getLine3_empcode());
+                entity.setLine3EmpName(abmReportingDto.getLine3_empname());
+                entity.setLine1Name(abmReportingDto.getLine1_name());
+            }
+
+            // 🔹 Save Draft First Time
+            AbmDraftReportEntity saved = reportRepository.save(entity);
+
+            response.setAbmDraftId(saved.getDraftId());
+
+            // 🔹 Convert to JSON
+            String jsonString = objectMapper.writeValueAsString(response);
+
+            saved.setDraftJson(jsonString);
+
+            reportRepository.save(saved);
+
+            // ============================
+            // 1️⃣ initiate chemist audit form
+            // ============================
+
+            ChemistAuditReport report = new ChemistAuditReport();
+
+            report.setAbmDraftId(saved.getDraftId());
+            report.setEntryDate(abmReportingDraftRequest.getEntryDate());
+            report.setDivCode(abmReportingDraftRequest.getDivCode());
+            report.setDepoCode(abmReportingDraftRequest.getDepoCode());
+            report.setHq(abmReportingDraftRequest.getHqCode());
+            report.setMonthCode(mnthCode);
+            report.setMyear(abmReportingDraftRequest.getMyear());
+            report.setMonth(0);
+            report.setEmpCode(abmReportingDto.getLine1_empcode());
+            report.setLoginId(abmReportingDraftRequest.getLoginId());
+            report.setAuditReportStatus("DRAFT");
+            report.setAuditReportTitle("CHEMIST AUDIT REPORT - " + mnthCode + " ABM");
+
+            report.setAuditInnerSheetIds(new ArrayList<>());
+
+            report = chemistRepository.save(report);
+
+            // ============================
+            // 2️⃣ Build JSON WITH ID
+            // ============================
+
+            AuditSheetResponse response1 = new AuditSheetResponse();
+
+            response1.setAuditReportTitle(report.getAuditReportTitle());
+            response1.setAuditReportId(report.getAuditReportId());
+            response1.setAuditInnerSheetId(0L);
+            response1.setAuditReportStatus(report.getAuditReportStatus());
+            response1.setSheets(new ArrayList<>());
+
+            String draftJson = objectMapper.writeValueAsString(response1);
+
+            // ============================
+            // 3️⃣ Update JSON
+            // ============================
+
+            report.setDraftJson(draftJson);
+
+            chemistRepository.save(report);
+
+            return response;
+
+        }
+        catch (DataIntegrityViolationException e) {
+            return null;
+        }
+        catch (Exception e) {
+            throw new RuntimeException("Error saving draft report", e);
+        }
+    }
+    
+/*    @Transactional
     @Override
     public FullReportResponse saveAbmDraftReport(
             AbmReportingDraftRequest abmReportingDraftRequest) {
@@ -193,7 +392,7 @@ public class AbmDraftReportServiceImpl implements AbmDraftReportService {
         }
     }
 
-    
+*/    
 
     
     // =====================================================
@@ -334,8 +533,6 @@ public class AbmDraftReportServiceImpl implements AbmDraftReportService {
                 int empCode = entry.getKey();
                 AbmReportingDto reporting = entry.getValue();
 
-                String loginName = reporting.getLine1_empname();
-                String terName = reporting.getLine1_name();
 
                 List<AbmDraftReportingDto> temp =
                         reportRepository
@@ -343,8 +540,6 @@ public class AbmDraftReportServiceImpl implements AbmDraftReportService {
                                 .stream()
                                 .map(entity -> {
                                     AbmDraftReportingDto dto = new AbmDraftReportingDto(entity);
-                                    dto.setLoginName(loginName);
-                                    dto.setTerName(terName);
                                     return dto;
                                 })
                                 .collect(Collectors.toList());
@@ -372,21 +567,7 @@ public class AbmDraftReportServiceImpl implements AbmDraftReportService {
                 .map(entity -> {
 
                     AbmDraftReportingDto dto = new AbmDraftReportingDto(entity);
-
-                    List<AbmReportingDto> reportingList =
-                            abmReportingDao.getLine1Reporting(dto.getLoginId());
-
-                    if (reportingList != null && !reportingList.isEmpty()) {
-                        
-                        dto.setLoginName(reportingList.get(0).getLine1_empname() != null 
-                                ? reportingList.get(0).getLine1_empname() 
-                                : "");
-
-                        dto.setTerName(reportingList.get(0).getLine1_name() != null 
-                                ? reportingList.get(0).getLine1_name() 
-                                : "");
-                    }
-
+                   
                     return dto;
                 })
                 .collect(Collectors.toList());
@@ -446,7 +627,7 @@ public class AbmDraftReportServiceImpl implements AbmDraftReportService {
 		        dto.setEmpCode(Integer.parseInt(row[2].toString()));
 		        dto.setLoginName((String) row[3]);
 		        dto.setTerName((String) row[1]);
-		        dto.setDraftStatus("Pending");
+		        dto.setDraftStatus((String) row[4]);
 		        dto.setDraftId(0L);
 		        dto.setEntryDate(LocalDate.now().format(formatter));
 		        dataList.add(dto);

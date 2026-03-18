@@ -42,7 +42,8 @@ public class MonthlyDevelopmentReportEntity {
     private String  line2EmpName;
     private int line3EmpCode;
     private String  line3EmpName;
-
+    private String line1Name;
+    
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime createdDate;
@@ -67,6 +68,7 @@ public class MonthlyDevelopmentReportEntity {
 		this.line3EmpName=mDevelopmentReportDto.getLine3EmpName();
 		this.createdDate=mDevelopmentReportDto.getCreatedDate();
 		this.modifiedDate=mDevelopmentReportDto.getModifiedDate();
+		this.line1Name=mDevelopmentReportDto.getLine1Name();
 		
 		//		this.draftId=mDevelopmentReportDto.getDraftId();
 	}

@@ -32,6 +32,8 @@ public class MonthlyDevelopmentReportDto {
     private String  line2EmpName;
     private int line3EmpCode;
     private String  line3EmpName;    
+    private String  line1Name;    
+    
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
 	

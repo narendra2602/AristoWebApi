@@ -31,7 +31,13 @@ public class AbmDraftReportingDto {
     private String terName;
     @JsonIgnore
     private String draftJson;
-
+    private String  line1EmpName;
+    private int line2EmpCode;
+    private String  line2EmpName;
+    private int line3EmpCode;
+    private String  line3EmpName;
+    private String  line1Name;
+    
     public AbmDraftReportingDto(AbmDraftReportEntity entity) {
         this.draftId = entity.getDraftId();
         this.draftStatus = entity.getDraftStatus();
@@ -43,6 +49,15 @@ public class AbmDraftReportingDto {
         this.entryDate = entity.getEntryDate();
         this.loginId = entity.getLoginId();
         this.empCode=entity.getEmpCode();
+        this.loginName = entity.getLine1EmpName() != null ? entity.getLine1EmpName() : "";
+        this.terName = entity.getLine1Name() != null ? entity.getLine1Name() : "";
+        
         this.draftJson = entity.getDraftJson();
+        this.line1EmpName=entity.getLine1EmpName();
+        this.line2EmpCode=entity.getLine2EmpCode();
+        this.line2EmpName=entity.getLine2EmpName();
+        this.line3EmpCode=entity.getLine3EmpCode();
+        this.line3EmpName=entity.getLine3EmpName();
+        this.line1Name=entity.getLine1Name();
     }
 }

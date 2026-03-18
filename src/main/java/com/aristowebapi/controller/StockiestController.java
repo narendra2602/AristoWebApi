@@ -103,6 +103,8 @@ public class StockiestController {
 		int requestValues[]=getRequestData(req);
 		request.setLoginId(requestValues[0]);
 		request.setUtype(requestValues[1]);
+		
+		System.out.println("login id in stockiest controller is "+request.getLoginId());
 
 		logger.info(AristoWebLogMsgConstant.STK_REPO3_CONTROLLER,"getStkRepo3", request.getMyear(),request.getDivCode(),request.getDepoCode(),request.getUtype(),request.getLoginId());
 

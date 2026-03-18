@@ -19,7 +19,8 @@ public interface MonthlyDevelopmentReportService {
 	
 	FullReportResponse getFullReport(Long reportId);
 	
-	String saveFinalDraftReport(Long draftId) throws Exception;
+	
+	 FullReportResponse saveFinalDraftReport(Long draftId) throws Exception;
 	
 	String deleteReportByReportId(Long reportId);
 	

@@ -16,6 +16,8 @@ import lombok.NoArgsConstructor;
 public class StkRepo2Response { 
 
 	private String name;
+	private String stockiest_name;
+	private String city;
 	private Map<String,Long> months;
 	private int color;
 

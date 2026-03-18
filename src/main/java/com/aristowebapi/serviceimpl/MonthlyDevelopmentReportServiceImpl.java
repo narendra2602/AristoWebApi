@@ -40,7 +40,9 @@ import com.aristowebapi.repository.SelfAssessmentRepository;
 import com.aristowebapi.request.MonthlyReportRequest;
 import com.aristowebapi.response.FullReportResponse;
 import com.aristowebapi.service.MonthlyDevelopmentReportService;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import lombok.RequiredArgsConstructor;
 
@@ -191,22 +193,47 @@ public class MonthlyDevelopmentReportServiceImpl implements MonthlyDevelopmentRe
  // method change on 08/03/2026   
     
     @Transactional(rollbackFor = Exception.class)
-    public String saveFinalDraftReport(Long draftId) throws Exception {
+    
+    public FullReportResponse saveFinalDraftReport(Long draftId) throws Exception {
+    	logger.info("Thread {} starting final report creation for draftId {}",
+                Thread.currentThread().getName(), draftId);
 
-        logger.info("Starting final report creation for draftId {}", draftId);
+     // 1️⃣ Fetch Draft
+  
+     // 1️⃣ Fetch Draft with lock
+        AbmDraftReportEntity entity = abmReportRepository.findByDraftIdForUpdate(draftId)
+                .orElseThrow(() -> new IllegalArgumentException("Draft not found for id: " + draftId));
 
-        // 1️⃣ Fetch Draft
-        AbmDraftReportEntity entity = abmReportRepository.findByDraftId(draftId);
-
-        if (entity == null) {
-            throw new IllegalArgumentException("Draft not found for id: " + draftId);
+        // Prevent re-finalization
+        if ("FINAL".equals(entity.getDraftStatus())) {
+            throw new DataAlreadyException("Draft already finalized");
         }
+        
 
-        // 2️⃣ Prevent duplicate final report
-        if (reportRepository.existsByDraftId(draftId)) {
-            throw new DataAlreadyException("Final report already created for draftId " + draftId);
-        }
+     // 2️⃣ Prevent duplicate final report
+        
+         if (reportRepository.existsByDraftId(draftId)) {
 
+        	    // update draft status
+        	    entity.setDraftStatus("FINAL");
+
+        	    MonthlyReportRequest reportRequest =
+        	            objectMapper.readValue(entity.getDraftJson(), MonthlyReportRequest.class);
+
+        	    reportRequest.setAbmDraftStatus("FINAL");
+
+        	    String updatedJson = objectMapper.writeValueAsString(reportRequest);
+        	    entity.setDraftJson(updatedJson);
+
+        	    abmReportRepository.save(entity);
+
+        	    FullReportResponse response =
+        	            objectMapper.readValue(updatedJson, FullReportResponse.class);
+
+        	    return response;
+        	}
+         
+         
         // 3️⃣ Validate Draft JSON
         String jsonRequest = entity.getDraftJson();
         if (jsonRequest == null || jsonRequest.isEmpty()) {
@@ -239,18 +266,20 @@ public class MonthlyDevelopmentReportServiceImpl implements MonthlyDevelopmentRe
         reportEntity.setDraftId(draftId);
         reportEntity.setHqCode(report.getHqCode());
 
-        reportEntity.setLine1EmpCode(abmReportingDto.getLine1_empcode());
-        reportEntity.setLine1EmpName(abmReportingDto.getLine1_empname());
+        reportEntity.setLine1EmpCode(entity.getEmpCode());
+        reportEntity.setLine1EmpName(entity.getLine1EmpName());
 
-        reportEntity.setLine2EmpCode(abmReportingDto.getLine2_empcode());
-        reportEntity.setLine2EmpName(abmReportingDto.getLine2_empname());
+        reportEntity.setLine2EmpCode(entity.getLine2EmpCode());
+        reportEntity.setLine2EmpName(entity.getLine2EmpName());
 
-        reportEntity.setLine3EmpCode(abmReportingDto.getLine3_empcode());
-        reportEntity.setLine3EmpName(abmReportingDto.getLine3_empname());
+        reportEntity.setLine3EmpCode(entity.getLine3EmpCode());
+        reportEntity.setLine3EmpName(entity.getLine3EmpName());
+        reportEntity.setLine1Name(entity.getLine1Name());
 
         reportEntity.setCreatedDate(LocalDateTime.now());
 
         // 7️⃣ Save Master Report
+        
         MonthlyDevelopmentReportEntity savedReport = reportRepository.save(reportEntity);
         Long reportId = savedReport.getReportId();
 
@@ -290,7 +319,14 @@ public class MonthlyDevelopmentReportServiceImpl implements MonthlyDevelopmentRe
             headerRepository.save(new HeaderEntity(header));
         }
 
+        
+       
+        
+        
         // 9️⃣ Update Draft Status AFTER successful report creation
+     // 9️⃣ Update Draft Status AFTER successful report creation
+     
+
         reportRequest.setAbmDraftStatus("FINAL");
         entity.setDraftStatus("FINAL");
 
@@ -298,11 +334,17 @@ public class MonthlyDevelopmentReportServiceImpl implements MonthlyDevelopmentRe
         entity.setDraftJson(updatedJson);
 
         abmReportRepository.save(entity);
-
+        
+        
         logger.info("Draft status updated to FINAL for draftId {}", draftId);
-
+        
+        
         // 🔟 Return Updated JSON
-        return updatedJson;
+        
+        FullReportResponse response =
+                objectMapper.readValue(updatedJson, FullReportResponse.class);
+
+        return response;
     }   
     
  /*   @Transactional(rollbackFor = Exception.class)
@@ -477,14 +519,33 @@ public class MonthlyDevelopmentReportServiceImpl implements MonthlyDevelopmentRe
             auditInnerSheetRepository.saveAll(sheets);
         }
 
-        // Step 5 - update draft
-        AbmDraftReportEntity draftEntity = abmReportRepository.findByDraftId(draftId);
+ 
 
-        if (draftEntity != null) {
+     // Step 5 - update draft
+        
+        abmReportRepository.findByDraftId(draftId).ifPresent(draftEntity -> {
+
             draftEntity.setDraftStatus("Draft");
-            abmReportRepository.save(draftEntity);
-        }
 
+            String draftJson = draftEntity.getDraftJson();
+
+            ObjectMapper mapper = new ObjectMapper();
+
+            try {
+                JsonNode node = mapper.readTree(draftJson);
+                ((ObjectNode) node).put("abm_draft_status", "Draft");
+
+                draftEntity.setDraftJson(mapper.writeValueAsString(node));
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            abmReportRepository.save(draftEntity);
+        });
+        
+        
+        
         return "Delete Successfully";
     }    
     

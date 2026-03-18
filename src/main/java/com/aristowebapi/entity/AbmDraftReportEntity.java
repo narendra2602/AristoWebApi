@@ -58,9 +58,19 @@ public class AbmDraftReportEntity {
     @Column(name = "emp_code")
     private int empCode;
 
+    private String  line1Name;
+    private String  line1EmpName;
+    private int line2EmpCode;
+    private String  line2EmpName;
+    private int line3EmpCode;
+    private String  line3EmpName;
     
     @Column(name = "draft_json", columnDefinition = "TEXT")
     private String draftJson;
+    
+    
+
+    
 	public AbmDraftReportEntity(AbmDraftReportingDto abmDraftReportingDto) {
 		
 //		this.draftId = abmDraftReportingDto.getDraftId();
@@ -74,6 +84,13 @@ public class AbmDraftReportEntity {
 		this.loginId = abmDraftReportingDto.getLoginId();
 		this.empCode=abmDraftReportingDto.getEmpCode();
 //		this.draftJson = abmDraftReportingDto.getDraftJson();
+        this.line1EmpName=abmDraftReportingDto.getLine1EmpName();
+        this.line2EmpCode=abmDraftReportingDto.getLine2EmpCode();
+        this.line2EmpName=abmDraftReportingDto.getLine2EmpName();
+        this.line3EmpCode=abmDraftReportingDto.getLine3EmpCode();
+        this.line3EmpName=abmDraftReportingDto.getLine3EmpName();
+        this.line1Name=abmDraftReportingDto.getLine1Name();
+
 	}
 
 	

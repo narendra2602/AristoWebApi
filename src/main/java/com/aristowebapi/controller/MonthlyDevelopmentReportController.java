@@ -44,7 +44,7 @@ public class MonthlyDevelopmentReportController {
     private final ObjectMapper objectMapper;
     private final AbmReportingDao abmReportingDao;
     private final AppRequestParameterUtils appRequestParameterUtils;
-    
+    String name="";    
     @PostMapping("${mrc_abmreport_savepath}")
     public MonthlyDevelopmentReportEntity saveReport(
             @RequestBody MonthlyReportRequest request,HttpServletRequest req
@@ -73,11 +73,8 @@ public class MonthlyDevelopmentReportController {
     	
     	int requestValues[]=getRequestData(req);
 		request.setLoginId(requestValues[0]);
+		
 		FullReportResponse response = draftReportService.saveAbmDraftReport(request);
-
-	    if (response == null) {
-	        throw new DataNotFoundException("Duplicate Entry");
-	    }
 
 	    return response;
     }
@@ -93,15 +90,26 @@ public class MonthlyDevelopmentReportController {
 
     
     //// 3 /abm/report/savefinaldraft/{draftId}
-    @PostMapping("${mrc_abmfinalreport_savepath}")
+/*    @PostMapping("${mrc_abmfinalreport_savepath}")
     public ResponseEntity<JsonNode> saveFinalNewReport(@PathVariable Long draftId) throws Exception {
 
         String returnJson = reportService.saveFinalDraftReport(draftId);
         JsonNode response = objectMapper.readTree(returnJson);
 
         return ResponseEntity.ok(response);
+        
+ 
     }
+*/
+    @PostMapping("${mrc_abmfinalreport_savepath}")
+    public ResponseEntity<FullReportResponse> saveFinalNewReport(@PathVariable Long draftId) throws Exception {
 
+        FullReportResponse response = reportService.saveFinalDraftReport(draftId);
+
+        return ResponseEntity.ok(response);
+    }
+    
+    
     /// 4 /abm/report/deletefinaldraft/{reportId}
     @DeleteMapping("${mrc_abmfinalreport_deletepath}")
     public ResponseEntity<Map<String, Object>> deleteFinalReport( @PathVariable Long reportId) {

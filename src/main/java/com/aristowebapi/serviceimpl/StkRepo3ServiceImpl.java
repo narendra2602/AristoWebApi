@@ -125,6 +125,8 @@ public class StkRepo3ServiceImpl implements StkRepo3Service{
 		String ter_name="";
 		String partyCode="";
 		String partyName="";
+		String city="";
+		String hq="";
 		String branch="";
 		for (int i=0;i<size;i++)
 		{
@@ -134,10 +136,12 @@ public class StkRepo3ServiceImpl implements StkRepo3Service{
 			{
 				response=new StkRepo3Response();
 				partyCode=data.getSprt_cd();
-				partyName=data.getMac_name()+","+data.getMcity();
-				branch=data.getDepo_name();
-				terr_code=data.getTerr_cd();
+				partyName=data.getMac_name();
+				city=data.getMcity();
 				ter_name=data.getTer_name();
+				branch=data.getDepo_name();
+				hq=data.getTer_name();
+				terr_code=data.getTerr_cd();
 				months=new LinkedHashMap();
 				group=new LinkedHashMap();
 				total=new LinkedHashMap();
@@ -149,7 +153,10 @@ public class StkRepo3ServiceImpl implements StkRepo3Service{
 			if(!partyCode.equalsIgnoreCase(data.getSprt_cd()))
 			{
 				response.setBranch(branch);
+				response.setHq(ter_name);
 				response.setName(partyName);
+				response.setCity(city);
+				
 /*				z=k;
 				for(int b=k;b<sz;b++)
 				{
@@ -163,7 +170,9 @@ public class StkRepo3ServiceImpl implements StkRepo3Service{
 				
 				saleList.add(response);
 				partyCode=data.getSprt_cd();
-				partyName=data.getMac_name()+","+data.getMcity();
+				partyName=data.getMac_name();
+				city=data.getMcity();
+				hq=data.getTer_name();
 				columnTotal=0;
 				
 				k=0;
@@ -176,7 +185,9 @@ public class StkRepo3ServiceImpl implements StkRepo3Service{
 			if(terr_code!=data.getTerr_cd())
 			{
 				response.setBranch(branch);
-				response.setName(ter_name);
+				response.setHq(ter_name);
+				response.setName("Total");
+				response.setCity("");
 		
 /*				for(int b=z;b<sz;b++)
 				{
@@ -284,7 +295,9 @@ public class StkRepo3ServiceImpl implements StkRepo3Service{
 			{
 			response=new StkRepo3Response();
 			response.setBranch(branch);
+			response.setHq(ter_name);
 			response.setName(partyName);
+			response.setCity(city);
 /*			z=k;
 			for(int b=k;b<sz;b++)
 			{
@@ -301,7 +314,9 @@ public class StkRepo3ServiceImpl implements StkRepo3Service{
 			months=new LinkedHashMap();
 			response=new StkRepo3Response();
 			response.setBranch(branch);
-			response.setName(ter_name);
+			response.setHq(ter_name);
+			response.setName("Total");
+			response.setCity("");
 /*			for(int b=z;b<sz;b++)
 			{
 				MonthDto mn=monthData.get(b);
@@ -327,7 +342,9 @@ public class StkRepo3ServiceImpl implements StkRepo3Service{
 			months.putAll(total);
 			response=new StkRepo3Response();
 			response.setBranch(request.getDepoCode()==0?"All India ":branch);
-			response.setName("Grand Total");
+			response.setHq("Grand Total");
+			response.setName("");
+			response.setCity("");
 			response.setMonths(months);
 			response.setColor(2);
 			saleList.add(response);		

@@ -32,6 +32,7 @@ public class FullReportResponse {
 
 	@JsonProperty("abm_draft_status")
 	private String abmDraftStatus;
+	
     private MonthlyDevelopmentReportDto report;
     
 
