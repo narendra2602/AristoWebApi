@@ -9,6 +9,9 @@ import com.aristowebapi.response.ChemistAuditReportResponse;
 
 public interface ChemistAuditReportService {
 
+	
+	String regenerateAllFinalReports(int monthCode, int divCode,long reportId) throws Exception;
+	
     ChemistAuditReport initReport(InitChemistAuditRequest request);
 
     ChemistAuditMetaResponse getReportMeta(Long auditReportId, int loginId, Long psrCode);

@@ -173,6 +173,11 @@ public class MktRepo5ServiceImpl  implements MktRepo5Service  {
 			else
 				response.setHqName("");
 			response.setMthFs(data.getMfs());
+			if(data.getBranch_name().contains("Total"))
+				response.setColor(1);
+			else
+				response.setColor(0);
+				
 			
 			if(request.getUv()==1)
 			{
@@ -247,6 +252,10 @@ public class MktRepo5ServiceImpl  implements MktRepo5Service  {
 	    	if(data.getDepo_code()==9997)
 		    	response.setColor(2);
 
+			if(data.getBranch_name().contains("Total"))
+				response.setColor(1);
+
+	    	
 	    	saleList.add(response);
 	    	if(data.getDepo_code()<9996)
 	    	{

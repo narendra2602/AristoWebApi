@@ -14,6 +14,10 @@ import com.aristowebapi.entity.ChemistAuditReportFinal;
 
 public interface ChemistAuditReportRepositoryFinal  extends JpaRepository<ChemistAuditReportFinal, Long>{
 	
+	
+	Optional<ChemistAuditReportFinal> 
+	findByLine1EmpCodeAndReportMonth(Integer line1EmpCode, Integer reportMonth);
+	
 	Optional<ChemistAuditReportFinal> findByReportId(Long reportId);
 	
 	@Modifying(clearAutomatically = true)

@@ -491,7 +491,7 @@ public class StkRepo2ServiceImpl implements StkRepo2Service{
 			return new ApiResponse<StkRepo2Response>(title.toString(),size,lupdate,saleList);
 			}
 			else 
-				return new ApiResponse<StkRepo2Response>(mname.toString(),size,lupdate,saleList);
+				return new ApiResponse<StkRepo2Response>("No Records Found",size,lupdate,saleList);
 
 	}
 	

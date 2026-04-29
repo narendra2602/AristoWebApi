@@ -8,6 +8,8 @@ import java.util.List;
 @Data
 public class ChemistBrandDto {
 
+	private String brandName;
+	
     @JsonProperty("potential_per_month_strips")
     private Integer potentialPerMonthStrips;
 

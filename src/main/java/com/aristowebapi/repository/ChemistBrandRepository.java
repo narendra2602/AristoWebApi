@@ -7,20 +7,19 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.aristowebapi.entity.ChemistSheet;
+import com.aristowebapi.entity.ChemistBrand;
 
 @Repository
-public interface ChemistSheetRepository extends JpaRepository<ChemistSheet, Long> {
+public interface ChemistBrandRepository extends JpaRepository<ChemistBrand, Long> {
 
-	
-	boolean existsByAuditReport_ReportId(Long reportId);
-	
-	@Modifying
+    @Modifying
     @Transactional
-    @Query(value = "DELETE FROM abm_chemist_sheet " +
+    @Query(value = "DELETE FROM abm_chemist_brand " +
+                   "WHERE sheet_id IN ( " +
+                   "SELECT id FROM abm_chemist_sheet " +
                    "WHERE report_id = :reportId " +
-                   "AND psr_id = :psrId",
+                   "AND psr_id = :psrId )",
            nativeQuery = true)
-    void deleteSheet(@Param("reportId") Long reportId,
+    void deleteBrand(@Param("reportId") Long reportId,
                      @Param("psrId") Long psrId);
 }

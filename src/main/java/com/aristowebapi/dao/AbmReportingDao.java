@@ -44,4 +44,8 @@ public interface AbmReportingDao  extends JpaRepository<MktDataDto, Integer> {
 	@Query(value = "select login_name from user_info  where id=:loginId", nativeQuery = true)
 	String getloginName(@Param("loginId") int loginId);
 	
+	@Query(value = "select id from user_info  where id=:loginId", nativeQuery = true)
+	Integer getId(@Param("loginId") int loginId);
+	
+	
 }

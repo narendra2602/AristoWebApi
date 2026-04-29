@@ -19,6 +19,7 @@ public class SampleSm03Response {
 	private long salesValue;
 	private long sampleValue;
 	private double ratio;
+	private int color;
 	
 
 	

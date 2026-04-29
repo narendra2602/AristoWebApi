@@ -922,6 +922,9 @@ public class SampleSm01ServiceImpl implements SampleSm01Service {
 				response.setSalesValue(data.getSales_value());
 				response.setSampleValue(data.getSample_value());
 				response.setRatio(data.getRatio());
+				response.setColor(0);
+				if(data.getGroup_name().contains("Grand Total"))
+					response.setColor(1);
 				saleList.add(response);
 
 			}
