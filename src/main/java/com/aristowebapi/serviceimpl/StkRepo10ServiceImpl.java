@@ -273,6 +273,9 @@ public class StkRepo10ServiceImpl implements StkRepo10Service {
 					}
 					else if(request.getUv()==2)
 					{
+						System.out.println("** data ki value "+data.getSales_val()+" name "+data.getMname());;
+						if(data.getSales_val()>0 )
+							System.out.println("data ki value "+data.getSales_val()+" name "+data.getMname());
 						months.put((data.getMnth_abbr()+" VALUE"),data.getSales_val());
 						columnTotalVal+=data.getSales_val();
 						groupColumnTotalVal+=data.getSales_val();

@@ -141,7 +141,10 @@ public class MonthlyDevelopmentReportController {
 
     	int requestValues[]=getRequestData(req);
 		int loginId=requestValues[0];
+		System.out.println("meyar is "+myear+" mnth "+mnth);
 		int mnthCode = abmReportingDao.getMonthCode(myear,mnth);
+		
+		System.out.println("meyar is "+myear+" mnth "+mnth+" mnthCode "+mnthCode);
 		
         return draftReportService.getByMonthAndYearAndLoginId(mnthCode, myear,loginId);
     }

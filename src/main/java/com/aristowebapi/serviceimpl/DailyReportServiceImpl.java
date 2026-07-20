@@ -3,9 +3,13 @@ package com.aristowebapi.serviceimpl;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.Month;
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -18,16 +22,17 @@ import com.aristowebapi.constant.AristoWebMessageConstant;
 import com.aristowebapi.dao.DailyReportDao;
 import com.aristowebapi.dto.DailyEntryStatus;
 import com.aristowebapi.dto.DailyReport;
+import com.aristowebapi.dto.DayWiseReport;
 import com.aristowebapi.exception.ApiException;
 import com.aristowebapi.request.DailyReportRequest;
 import com.aristowebapi.request.DailyUpdationRequest;
+import com.aristowebapi.request.DayWiseBillingRequest;
 import com.aristowebapi.response.ApiResponse;
 import com.aristowebapi.response.DailyReportResponse;
 import com.aristowebapi.response.DailyStatusResponse;
+import com.aristowebapi.response.DayWiseResponse;
 import com.aristowebapi.service.DailyReportService;
 import com.aristowebapi.utility.AppCalculationUtils;
-
-
 
 @Service
 public class DailyReportServiceImpl  implements DailyReportService{
@@ -422,4 +427,225 @@ public class DailyReportServiceImpl  implements DailyReportService{
 
 	}
 
+	private String getTitle(DayWiseBillingRequest request,DayWiseReport data)
+	{
+		StringBuilder title=new StringBuilder();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat sdf1 = new SimpleDateFormat("dd-MM-yyyy");
+		title.append(" DayWise Billing - "+data.getDiv_name());
+		
+		return title.toString();
+
+	}
+
+	
+	
+	@Override
+	public ApiResponse<DayWiseResponse> getDayWiseReport(DayWiseBillingRequest request) {
+		logger.info(AristoWebLogMsgConstant.DAILY_REPORT_SERVICE,"getDailyEntryStatus");
+		List<DayWiseReport> DailyReportList=null;
+		int size = 0;
+		Map<Integer,String> branchMap = new HashMap<Integer,String>();
+		try {
+
+		DailyReportList=dailyReportDao.getDayWiseReport(request.getDivCode(),request.getMyear(),request.getMonth(),request.getRepType());
+		String wmonth=dailyReportDao.getMonth(request.getMyear(), request.getMonth());
+		size=DailyReportList.size();
+		logger.info("size of the data is {}",size);
+
+		DayWiseResponse response=null;
+		List<DayWiseResponse> saleList = new ArrayList();
+
+		boolean first=true;
+		String title=null;
+		int startIndex=1;
+		LocalDate today = LocalDate.now();
+			
+		String mcode=today.toString().substring(0, 4)+today.toString().substring(5, 7);
+
+		int endIndex;
+
+		if (wmonth.equals(mcode)) {
+		    // Current month -> current date
+		    endIndex = today.getDayOfMonth();
+		} else {
+		    // Previous/Future month -> last day of month
+		    endIndex = getLastDayOfMonth(wmonth);
+		}
+		
+		LinkedHashMap<String, Double> monthArraydata = null;
+		int mnthCode=0;
+		String branchName=null;
+		String divName=null;
+		Map dataMap= null;
+		List months = null;
+		for (int i=0;i<size;i++)
+		{
+			DayWiseReport data = DailyReportList.get(i);
+			
+			
+			if(first)
+			{
+				title = getTitle(request, data);
+				mnthCode=data.getMnth_code();
+				branchName=data.getBranch_name();
+				divName=data.getDiv_name();
+				first=false;
+				monthArraydata = new LinkedHashMap<String,Double>();
+				months = new ArrayList<>();
+			}
+			
+			if(request.getRepType()==1) // branch wise
+			{
+				if(mnthCode!=data.getMnth_code() || !branchName.equals(data.getBranch_name()))
+				{
+					dataMap= new LinkedHashMap<String, LinkedHashMap<String,Double>>();
+					dataMap.put(formatMonthCode(mnthCode), monthArraydata);
+					months.add(dataMap);
+					mnthCode=data.getMnth_code();
+					monthArraydata = new LinkedHashMap<String,Double>();
+
+				}
+				if(!branchName.equals(data.getBranch_name()))
+				{
+					response=new DayWiseResponse();
+					response.setBranch(branchName);
+					response.setMonths(months);
+					saleList.add(response);
+					branchName=data.getBranch_name();
+					months = new ArrayList<>();
+
+				}
+			}
+
+			if(request.getRepType()==2)  // divwise
+			{
+				if(mnthCode!=data.getMnth_code() || !divName.equals(data.getDiv_name()))
+				{
+					dataMap= new LinkedHashMap<String, LinkedHashMap<String,Double>>();
+					dataMap.put(formatMonthCode(mnthCode), monthArraydata);
+					months.add(dataMap);
+					mnthCode=data.getMnth_code();
+					monthArraydata = new LinkedHashMap<String,Double>();
+
+				}
+				if(!divName.equals(data.getDiv_name()))
+				{
+					response=new DayWiseResponse();
+					response.setDivision(divName);
+					response.setMonths(months);
+					saleList.add(response);
+					divName=data.getDiv_name();
+					months = new ArrayList<>();
+
+				}
+			}
+
+			
+			for(int j=startIndex;j<=endIndex;j++)
+			{
+
+				
+
+				if(data.getDt()==j)
+				{
+					monthArraydata.put(String.valueOf(j), data.getAmt());
+					break;
+				}
+				else
+				{
+					if(data.getDt()==98)
+					{
+						if(!monthArraydata.containsKey(String.valueOf(j)) && j==endIndex)
+						{
+							monthArraydata.put(String.valueOf(j), 0.00);
+						
+							monthArraydata.put("Grand Total", data.getAmt());
+						}
+						else if(j==endIndex)
+						{
+							monthArraydata.put("Grand Total", data.getAmt());
+						}
+						else if(!monthArraydata.containsKey(String.valueOf(j)))
+						{
+							monthArraydata.put(String.valueOf(j), 0.00);
+						}
+							
+
+					}
+					else if(data.getDt()==99)
+						monthArraydata.put("Diff", data.getAmt());
+					else if(!monthArraydata.containsKey(String.valueOf(j)))
+						monthArraydata.put(String.valueOf(j), 0.00);
+
+				}
+			}
+			
+
+		} //end of for loop
+
+		if(!first)
+		{
+			
+			
+			if(request.getRepType()==1) // branch wise
+			{
+					dataMap= new LinkedHashMap<String, LinkedHashMap<String,Double>>();
+					dataMap.put(formatMonthCode(mnthCode), monthArraydata);
+					months.add(dataMap);
+
+					response=new DayWiseResponse();
+					response.setBranch(branchName);
+					response.setMonths(months);
+					saleList.add(response);
+			}
+
+			if(request.getRepType()==2)  // divwise
+			{
+					dataMap= new LinkedHashMap<String, LinkedHashMap<String,Double>>();
+					dataMap.put(formatMonthCode(mnthCode), monthArraydata);
+					months.add(dataMap);
+					response=new DayWiseResponse();
+					response.setDivision(divName);
+					response.setMonths(months);
+					saleList.add(response);
+
+			}
+
+		}
+		
+
+		ApiResponse<DayWiseResponse> apiResponse = new ApiResponse<>(title!=null?title.toString():"", size,lupdate,saleList);
+
+		return apiResponse;
+		
+		} catch (Exception e) {
+			logger.error(AristoWebLogMsgConstant.DAILY_REPORT_SERVICE,"getDailyReport");
+			throw new ApiException(e.getMessage());
+		}
+		
+
+		
+	}
+
+	private String formatMonthCode(int monthCode) {
+
+	    String code = String.valueOf(monthCode);
+
+	    int year = Integer.parseInt(code.substring(0, 4));
+	    int month = Integer.parseInt(code.substring(4, 6));
+
+	    YearMonth ym = YearMonth.of(year, month);
+
+	    return ym.format(DateTimeFormatter.ofPattern("MMMM-yyyy", Locale.ENGLISH));
+	}
+
+	private int getLastDayOfMonth(String code) {
+
+	    int year = Integer.parseInt(code.substring(0, 4));
+	    int month = Integer.parseInt(code.substring(4, 6));
+
+	    return YearMonth.of(year, month).lengthOfMonth();
+	}
+	
 }

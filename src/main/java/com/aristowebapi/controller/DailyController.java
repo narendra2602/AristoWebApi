@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,10 +20,12 @@ import com.aristowebapi.dto.DailyEntry;
 import com.aristowebapi.request.DailyEntryListRequest;
 import com.aristowebapi.request.DailyReportRequest;
 import com.aristowebapi.request.DailyUpdationRequest;
+import com.aristowebapi.request.DayWiseBillingRequest;
 import com.aristowebapi.response.ApiResponse;
 import com.aristowebapi.response.DailyEntryListResponse;
 import com.aristowebapi.response.DailyReportResponse;
 import com.aristowebapi.response.DailyStatusResponse;
+import com.aristowebapi.response.DayWiseResponse;
 import com.aristowebapi.service.DailyEntryService;
 import com.aristowebapi.service.DailyReportService;
 import com.aristowebapi.utility.AppRequestParameterUtils;
@@ -77,6 +80,48 @@ public class DailyController {
 	}
 
 
+/*	@GetMapping("${mrc_day_wise_path}")
+	public ResponseEntity<ApiResponse<DayWiseResponse>> getDaywiseReport(@RequestBody DayWiseBillingRequest request,HttpServletRequest req)
+	{
+		
+		int requestValues[]=getRequestData(req);
+		request.setLoginId(requestValues[0]);
+//		request.setUtype(requestValues[1]);
+		logger.info(AristoWebLogMsgConstant.DAILY_REPORT_CONTROLLER,"getDaywiseReport", request.getDivCode(),request.getLoginId());
+//		return new ResponseEntity<ApiResponse<DayWiseResponse>>(dailyReportService.getDayWiseReport(request), HttpStatus.OK);
+		
+		ApiResponse<DayWiseResponse> response = dailyReportService.getDayWiseReport(request);
+		System.out.println("Before return");
+		return ResponseEntity.ok(response);
+		
+	
+	}
+*/	
+	@GetMapping(value="${mrc_day_wise_path}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<ApiResponse<DayWiseResponse>> getDaywiseReport(
+	        @RequestBody DayWiseBillingRequest request,
+	        HttpServletRequest req) {
+
+	    try {
+	        int[] requestValues = getRequestData(req);
+	        request.setLoginId(requestValues[0]);
+
+	        ApiResponse<DayWiseResponse> response =
+	                dailyReportService.getDayWiseReport(request);
+
+	        System.out.println("Controller completed successfully");
+
+	        return ResponseEntity.ok(response);
+	        
+
+	    } catch (Exception e) {
+	        e.printStackTrace();   // VERY IMPORTANT
+	        throw e;
+	    }
+	}
+	
+
+		
 	@GetMapping("${mrc_daily_path_status}")
 	public ResponseEntity<ApiResponse<DailyStatusResponse>> getDailyEntryStatus(@RequestBody DailyUpdationRequest request,HttpServletRequest req)
 	{

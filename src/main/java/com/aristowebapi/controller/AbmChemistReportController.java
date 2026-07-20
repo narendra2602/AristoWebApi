@@ -23,6 +23,7 @@ import com.aristowebapi.request.InitChemistAuditRequest;
 import com.aristowebapi.response.ChemistAuditMetaResponse;
 import com.aristowebapi.service.AuditInnerSheetService;
 import com.aristowebapi.service.ChemistAuditReportService;
+import com.aristowebapi.serviceimpl.FinalizationService;
 import com.aristowebapi.utility.AppRequestParameterUtils;
 
 @RestController
@@ -30,6 +31,9 @@ import com.aristowebapi.utility.AppRequestParameterUtils;
 @RequestMapping("${mrc_base_path}")
 public class AbmChemistReportController {
 	
+	
+	@Autowired
+	private FinalizationService finalizationService;
 	
 	@Autowired
     private ChemistAuditReportService service;
@@ -122,13 +126,12 @@ public class AbmChemistReportController {
 */	
 	 
 	 @PostMapping("${mrc_abmchemistreport_savepath}")
-//	    @PostMapping("/finalize")
 	    public ResponseEntity<?> finalizeAudit( @PathVariable Long auditReportId,@PathVariable Long  psrCode,HttpServletRequest req){
 	        try {
 
 			 	int requestValues[]=getRequestData(req);
 			 	int loginId=requestValues[0];
-//			 	loginId=100372;   
+   
 
 			 	String response =service.saveFinalAudit(auditReportId, psrCode, loginId);
 			 	
@@ -142,7 +145,35 @@ public class AbmChemistReportController {
 	        }
 	    }
 
+	 // new controller   for bot api chmist and abm  
 	 
+/*	 @PostMapping("${mrc_abmchemistfinal_savepath}")
+	 public ResponseEntity<?> finalizeAll(
+	         @PathVariable Long auditReportId,
+	         @PathVariable Long psrCode,
+	         @PathVariable Long draftId,
+	         HttpServletRequest req) {
+
+	     try {
+
+	         int requestValues[] = getRequestData(req);
+	         int loginId = requestValues[0];
+
+	         finalizationService.finalizeAll(
+	                 auditReportId,
+	                 psrCode,
+	                 loginId,
+	                 draftId);
+
+	         return ResponseEntity.ok("Both APIs finalized successfully");
+
+	     } catch (Exception e) {
+
+	         return ResponseEntity.badRequest()
+	                 .body(e.getMessage());
+	     }
+	 }
+*/	 
 	 
 	 @PostMapping("${mrc_regeneratechemistreportfinal_path}")
 //	    @PostMapping("/finalize")
